@@ -1,0 +1,41 @@
+stages:
+  - test
+
+application test:
+  stage: test
+  image: gradle:jdk17-focal
+  cache:
+    key: "${CI_JOB_NAME}"
+  script:
+    - cd backend/application
+    - gradle clean test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - backend/application/build/test-results/test/**/TEST-*.xml
+
+adapter tests:
+  stage: test
+  image: gradle:jdk17-focal
+  variables:
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  services:
+    - name: docker:dind
+      command:
+        - "--tls=false"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - cd backend
+    - gradle clean test codeCoverageReport --stacktrace
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - backend/adapters/build/test-results/test/**/TEST-*.xml

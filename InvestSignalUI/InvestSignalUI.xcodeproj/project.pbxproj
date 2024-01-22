@@ -1,0 +1,578 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7B1C2F092B2370530019AE13 /* InvestSignalUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C2F082B2370530019AE13 /* InvestSignalUIApp.swift */; };
+		7B1C2F0B2B2370530019AE13 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C2F0A2B2370530019AE13 /* ContentView.swift */; };
+		7B1C2F0D2B2370540019AE13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B1C2F0C2B2370540019AE13 /* Assets.xcassets */; };
+		7B1C2F102B2370540019AE13 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B1C2F0F2B2370540019AE13 /* Preview Assets.xcassets */; };
+		7B1C2F1B2B2370540019AE13 /* InvestSignalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C2F1A2B2370540019AE13 /* InvestSignalUITests.swift */; };
+		7B1C2F252B2370540019AE13 /* InvestSignalUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C2F242B2370540019AE13 /* InvestSignalUIUITests.swift */; };
+		7B1C2F272B2370540019AE13 /* InvestSignalUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C2F262B2370540019AE13 /* InvestSignalUIUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7B1C2F172B2370540019AE13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B1C2EFD2B2370530019AE13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B1C2F042B2370530019AE13;
+			remoteInfo = InvestSignalUI;
+		};
+		7B1C2F212B2370540019AE13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B1C2EFD2B2370530019AE13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B1C2F042B2370530019AE13;
+			remoteInfo = InvestSignalUI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7B1C2F052B2370530019AE13 /* InvestSignalUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InvestSignalUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B1C2F082B2370530019AE13 /* InvestSignalUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestSignalUIApp.swift; sourceTree = "<group>"; };
+		7B1C2F0A2B2370530019AE13 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7B1C2F0C2B2370540019AE13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7B1C2F0F2B2370540019AE13 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		7B1C2F112B2370540019AE13 /* InvestSignalUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InvestSignalUI.entitlements; sourceTree = "<group>"; };
+		7B1C2F162B2370540019AE13 /* InvestSignalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InvestSignalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B1C2F1A2B2370540019AE13 /* InvestSignalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestSignalUITests.swift; sourceTree = "<group>"; };
+		7B1C2F202B2370540019AE13 /* InvestSignalUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InvestSignalUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B1C2F242B2370540019AE13 /* InvestSignalUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestSignalUIUITests.swift; sourceTree = "<group>"; };
+		7B1C2F262B2370540019AE13 /* InvestSignalUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestSignalUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7B1C2F022B2370530019AE13 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F132B2370540019AE13 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F1D2B2370540019AE13 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7B1C2EFC2B2370530019AE13 = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F072B2370530019AE13 /* InvestSignalUI */,
+				7B1C2F192B2370540019AE13 /* InvestSignalUITests */,
+				7B1C2F232B2370540019AE13 /* InvestSignalUIUITests */,
+				7B1C2F062B2370530019AE13 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7B1C2F062B2370530019AE13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F052B2370530019AE13 /* InvestSignalUI.app */,
+				7B1C2F162B2370540019AE13 /* InvestSignalUITests.xctest */,
+				7B1C2F202B2370540019AE13 /* InvestSignalUIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7B1C2F072B2370530019AE13 /* InvestSignalUI */ = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F082B2370530019AE13 /* InvestSignalUIApp.swift */,
+				7B1C2F0A2B2370530019AE13 /* ContentView.swift */,
+				7B1C2F0C2B2370540019AE13 /* Assets.xcassets */,
+				7B1C2F112B2370540019AE13 /* InvestSignalUI.entitlements */,
+				7B1C2F0E2B2370540019AE13 /* Preview Content */,
+			);
+			path = InvestSignalUI;
+			sourceTree = "<group>";
+		};
+		7B1C2F0E2B2370540019AE13 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F0F2B2370540019AE13 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		7B1C2F192B2370540019AE13 /* InvestSignalUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F1A2B2370540019AE13 /* InvestSignalUITests.swift */,
+			);
+			path = InvestSignalUITests;
+			sourceTree = "<group>";
+		};
+		7B1C2F232B2370540019AE13 /* InvestSignalUIUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B1C2F242B2370540019AE13 /* InvestSignalUIUITests.swift */,
+				7B1C2F262B2370540019AE13 /* InvestSignalUIUITestsLaunchTests.swift */,
+			);
+			path = InvestSignalUIUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7B1C2F042B2370530019AE13 /* InvestSignalUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B1C2F2A2B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUI" */;
+			buildPhases = (
+				7B1C2F012B2370530019AE13 /* Sources */,
+				7B1C2F022B2370530019AE13 /* Frameworks */,
+				7B1C2F032B2370530019AE13 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = InvestSignalUI;
+			productName = InvestSignalUI;
+			productReference = 7B1C2F052B2370530019AE13 /* InvestSignalUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7B1C2F152B2370540019AE13 /* InvestSignalUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B1C2F2D2B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUITests" */;
+			buildPhases = (
+				7B1C2F122B2370540019AE13 /* Sources */,
+				7B1C2F132B2370540019AE13 /* Frameworks */,
+				7B1C2F142B2370540019AE13 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B1C2F182B2370540019AE13 /* PBXTargetDependency */,
+			);
+			name = InvestSignalUITests;
+			productName = InvestSignalUITests;
+			productReference = 7B1C2F162B2370540019AE13 /* InvestSignalUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7B1C2F1F2B2370540019AE13 /* InvestSignalUIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B1C2F302B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUIUITests" */;
+			buildPhases = (
+				7B1C2F1C2B2370540019AE13 /* Sources */,
+				7B1C2F1D2B2370540019AE13 /* Frameworks */,
+				7B1C2F1E2B2370540019AE13 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B1C2F222B2370540019AE13 /* PBXTargetDependency */,
+			);
+			name = InvestSignalUIUITests;
+			productName = InvestSignalUIUITests;
+			productReference = 7B1C2F202B2370540019AE13 /* InvestSignalUIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7B1C2EFD2B2370530019AE13 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					7B1C2F042B2370530019AE13 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					7B1C2F152B2370540019AE13 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 7B1C2F042B2370530019AE13;
+					};
+					7B1C2F1F2B2370540019AE13 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 7B1C2F042B2370530019AE13;
+					};
+				};
+			};
+			buildConfigurationList = 7B1C2F002B2370530019AE13 /* Build configuration list for PBXProject "InvestSignalUI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7B1C2EFC2B2370530019AE13;
+			productRefGroup = 7B1C2F062B2370530019AE13 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7B1C2F042B2370530019AE13 /* InvestSignalUI */,
+				7B1C2F152B2370540019AE13 /* InvestSignalUITests */,
+				7B1C2F1F2B2370540019AE13 /* InvestSignalUIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7B1C2F032B2370530019AE13 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B1C2F102B2370540019AE13 /* Preview Assets.xcassets in Resources */,
+				7B1C2F0D2B2370540019AE13 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F142B2370540019AE13 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F1E2B2370540019AE13 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7B1C2F012B2370530019AE13 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B1C2F0B2B2370530019AE13 /* ContentView.swift in Sources */,
+				7B1C2F092B2370530019AE13 /* InvestSignalUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F122B2370540019AE13 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B1C2F1B2B2370540019AE13 /* InvestSignalUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B1C2F1C2B2370540019AE13 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B1C2F252B2370540019AE13 /* InvestSignalUIUITests.swift in Sources */,
+				7B1C2F272B2370540019AE13 /* InvestSignalUIUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7B1C2F182B2370540019AE13 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B1C2F042B2370530019AE13 /* InvestSignalUI */;
+			targetProxy = 7B1C2F172B2370540019AE13 /* PBXContainerItemProxy */;
+		};
+		7B1C2F222B2370540019AE13 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B1C2F042B2370530019AE13 /* InvestSignalUI */;
+			targetProxy = 7B1C2F212B2370540019AE13 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7B1C2F282B2370540019AE13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7B1C2F292B2370540019AE13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		7B1C2F2B2B2370540019AE13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = InvestSignalUI/InvestSignalUI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"InvestSignalUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		7B1C2F2C2B2370540019AE13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = InvestSignalUI/InvestSignalUI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"InvestSignalUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		7B1C2F2E2B2370540019AE13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InvestSignalUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InvestSignalUI";
+			};
+			name = Debug;
+		};
+		7B1C2F2F2B2370540019AE13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InvestSignalUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InvestSignalUI";
+			};
+			name = Release;
+		};
+		7B1C2F312B2370540019AE13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = InvestSignalUI;
+			};
+			name = Debug;
+		};
+		7B1C2F322B2370540019AE13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ioque.InvestSignalUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = InvestSignalUI;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7B1C2F002B2370530019AE13 /* Build configuration list for PBXProject "InvestSignalUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B1C2F282B2370540019AE13 /* Debug */,
+				7B1C2F292B2370540019AE13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B1C2F2A2B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B1C2F2B2B2370540019AE13 /* Debug */,
+				7B1C2F2C2B2370540019AE13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B1C2F2D2B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B1C2F2E2B2370540019AE13 /* Debug */,
+				7B1C2F2F2B2370540019AE13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B1C2F302B2370540019AE13 /* Build configuration list for PBXNativeTarget "InvestSignalUIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B1C2F312B2370540019AE13 /* Debug */,
+				7B1C2F322B2370540019AE13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7B1C2EFD2B2370530019AE13 /* Project object */;
+}

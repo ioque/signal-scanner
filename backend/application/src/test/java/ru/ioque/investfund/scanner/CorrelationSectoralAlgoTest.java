@@ -1,0 +1,291 @@
+package ru.ioque.investfund.scanner;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.DomainException;
+import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@DisplayName("SIGNAL SCANNER MANAGER - CORRELATION SECTORAL ALGORITHM")
+public class CorrelationSectoralAlgoTest extends BaseScannerTest {
+    @Test
+    @DisplayName("""
+        T1. В конфигурацию CorrelationSectoralSignalConfig не передан параметр futuresOvernightScale.
+        Результат: ошибка, текст ошибки: "Не передан параметр futuresOvernightScale."
+        """)
+    void testCase1() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(null, 1D, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Не передан параметр futuresOvernightScale.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T2. В конфигурацию CorrelationSectoralSignalConfig не передан параметр stockOvernightScale.
+        Результат: ошибка, текст ошибки: "Не передан параметр stockOvernightScale."
+        """)
+    void testCase2() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(1.5, null, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Не передан параметр stockOvernightScale.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T3. В конфигурацию CorrelationSectoralSignalConfig не передан параметр futuresTicker.
+        Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
+        """)
+    void testCase3() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(1.5, 1D, null),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Не передан параметр futuresTicker.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T4. В конфигурацию CorrelationSectoralSignalConfig параметр futuresTicker передан как пустая строка.
+        Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
+        """)
+    void testCase4() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(1.5, 1D, ""),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Не передан параметр futuresTicker.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T5. В конфигурацию CorrelationSectoralSignalConfig параметр futuresOvernightScale передан со значением = 0.
+        Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
+        """)
+    void testCase5() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(0D, 1D, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T6. В конфигурацию CorrelationSectoralSignalConfig параметр futuresOvernightScale передан со значением < 0.
+        Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
+        """)
+    void testCase6() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(-1D, 1D, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T7. В конфигурацию CorrelationSectoralSignalConfig параметр stockOvernightScale передан со значением = 0.
+        Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
+        """)
+    void testCase7() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(1.5, 0D, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T8. В конфигурацию CorrelationSectoralSignalConfig параметр stockOvernightScale передан со значением < 0.
+        Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
+        """)
+    void testCase8() {
+        var error = assertThrows(DomainException.class, () -> addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(1.5, -1D, "BRF4"),
+            getInstruments().stream().map(Instrument::getId).toList()
+        ));
+        assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T9. TATN росла вчера, BRF4 рос вчера.
+        Сигнал зафиксирован.
+        """)
+    void testCase9() {
+        final var tickers = List.of("TATN", "BRF4");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initInstruments();
+        initPositiveDeals();
+        initPositiveDealResults();
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
+            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+        );
+
+        scheduleManager().executeSchedule();
+
+        assertEquals(2, getTatn().getDailyValues().size());
+        assertEquals(3, getTatn().getIntradayValues().size());
+        assertEquals(1, signalPublisher().reports.get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T10. TATN росла вчера, BRF4 падал вчера.
+        Сигнал не зафиксирован.
+        """)
+    void testCase27() {
+        final var tickers = List.of("TATN", "BRF4");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initInstruments();
+        initNegativeDeals();
+        initNegativeDealResults();
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
+            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+        );
+
+        scheduleManager().executeSchedule();
+
+        assertEquals(2, getTatn().getDailyValues().size());
+        assertEquals(3, getTatn().getIntradayValues().size());
+        assertEquals(0, signalPublisher().reports.get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T11. С последнего запуска прошло меньше 24 часов, сканер не запущен.
+        """)
+    void testCase11() {
+        final var tickers = List.of("TATN", "BRF4");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initInstruments();
+        initPositiveDeals();
+        initPositiveDealResults();
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
+            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+        );
+        loggerProvider().clearLogs();
+        scheduleManager().executeSchedule();
+        initTodayDateTime("2023-12-22T18:00:00");
+
+        scheduleManager().executeSchedule();
+
+        assertEquals(1, signalPublisher().reports.size());
+    }
+
+    @Test
+    @DisplayName("""
+        T12. С последнего запуска прошло 24 часа, сканер запущен.
+        """)
+    void testCase12() {
+        final var tickers = List.of("TATN", "BRF4");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initInstruments();
+        initPositiveDeals();
+        initPositiveDealResults();
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Корреляция сектора с фьючерсом.",
+            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
+            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+        );
+        loggerProvider().clearLogs();
+        scheduleManager().executeSchedule();
+        initTodayDateTime("2023-12-23T13:00:00");
+
+        scheduleManager().executeSchedule();
+
+        assertEquals(2, signalPublisher().reports.size());
+    }
+
+    private void initPositiveDealResults() {
+        exchangeDataFixture().initTradingResults(
+            List.of(
+                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
+                buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 80D, 10D, 1),
+                buildDealResultBy("TATN", "2023-12-20", 251D, 252D, 1D, 1D),
+                buildDealResultBy("TATN", "2023-12-21", 252D, 253D, 1D, 1D)
+            )
+        );
+    }
+
+    private Instrument getTatn() {
+        return getInstruments().stream().filter(row -> row.getTicker().equals("TATN")).findFirst().orElseThrow();
+    }
+
+    private void initNegativeDealResults() {
+        exchangeDataFixture().initTradingResults(
+            List.of(
+                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
+                buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 74D, 10D, 1),
+                buildDealResultBy("TATN", "2023-12-20", 251D, 252D, 1D, 1D),
+                buildDealResultBy("TATN", "2023-12-21", 252D, 253D, 1D, 1D)
+            )
+        );
+    }
+
+    private void initNegativeDeals() {
+        exchangeDataFixture().initDealDatas(
+            List.of(
+                buildFuturesDealBy(1L, "BRF4", "10:00:00", 73D, 1),
+                buildFuturesDealBy(2L, "BRF4", "12:00:00", 72D, 1),
+                buildDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
+                buildDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
+                buildDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
+            )
+        );
+    }
+
+    private void initPositiveDeals() {
+        exchangeDataFixture().initDealDatas(
+            List.of(
+                buildFuturesDealBy(1L, "BRF4", "10:00:00", 78D, 1),
+                buildFuturesDealBy(2L, "BRF4", "12:00:00", 96D, 1),
+                buildDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
+                buildDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
+                buildDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
+            )
+        );
+    }
+
+    private void initInstruments() {
+        exchangeDataFixture()
+            .initInstruments(
+                List.of(
+                    tatn(),
+                    brf4()
+                )
+            );
+    }
+}

@@ -1,0 +1,21 @@
+dependencies {
+    //LIBS
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    //PROJECTS
+    implementation project(path: ':domain')
+    implementation project(path: ':application')
+
+    //SPRING
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //DATA-SOURCE
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.27'
+    implementation "org.liquibase:liquibase-core"
+    testImplementation group: 'com.h2database', name: 'h2', version: '2.1.210'
+}

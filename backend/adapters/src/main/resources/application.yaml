@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: none
+    generate-ddl: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:54321/postgres?reWriteBatchedInserts=true
+    username: postgres
+    password:
+
+exchange:
+  name: 'Московская Биржа'
+  description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
+  url: https://iss.moex.com

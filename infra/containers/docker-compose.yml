@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  postgres-test:
+    container_name: test-db
+    build:
+      context: postgres
+    ports:
+      - "54322:5432"
+    volumes:
+      - test-db:/var/lib/postgresql/data
+  postgres:
+    container_name: db
+    build:
+      context: postgres
+    ports:
+      - "54321:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
+  test-db:
+    driver: local

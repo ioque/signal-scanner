@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: create-drop
+    generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+  liquibase:
+    enabled: false
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:54322/postgres?reWriteBatchedInserts=true
+    username: postgres
+    password:
+
+exchange:
+  name: 'Московская Биржа'
+  description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
+  url: http://localhost:8081
+  startTime: '10:00:00'
+  stopTime: '19:00:00'

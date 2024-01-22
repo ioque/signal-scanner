@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE;mode=MySQL
+    username: sa
+    password: sa
+  jpa:
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: create-drop
+    generate-ddl: true
+  liquibase:
+    enabled: false
+
+exchange:
+  name: 'Московская Биржа'
+  description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
+  url: http://localhost:8081
+  startTime: '10:00:00'
+  stopTime: '19:00:00'
