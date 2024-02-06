@@ -19,14 +19,19 @@ public class ScheduleCommandController {
 
     @PostMapping("/api/v1/schedule")
     public void saveSchedule(@RequestBody SaveScheduleRequest scheduleRequest) {
-        scheduleRequest.getSaveScheduleUnitRequests().forEach(scheduleUnit -> scheduleManager.saveScheduleUnit(
-            new ScheduleCommand(
-                scheduleUnit.getSystemModuleCode(),
-                scheduleUnit.getStartTime(),
-                scheduleUnit.getStopTime(),
-                scheduleUnit.getPriority()
-            )
-        ));
+        scheduleRequest
+            .getSaveScheduleUnitRequests()
+            .forEach(scheduleUnit ->
+                scheduleManager
+                    .saveScheduleUnit(
+                        new ScheduleCommand(
+                            scheduleUnit.getSystemModuleCode(),
+                            scheduleUnit.getStartTime(),
+                            scheduleUnit.getStopTime(),
+                            scheduleUnit.getPriority()
+                        )
+                    )
+            );
     }
 
     @DeleteMapping("/api/v1/schedule")

@@ -37,14 +37,6 @@ public class ExchangeManager {
         exchangeCache.clear();
     }
 
-    public List<Instrument> getInstruments() {
-        return exchangeCache.get().orElseGet(this::getExchangeFromRepo).getInstruments();
-    }
-
-    public Instrument getInstrumentBy(UUID id) {
-        return exchangeCache.get().orElseGet(this::getExchangeFromRepo).getById(id);
-    }
-
     public void enableUpdate(List<UUID> ids) {
         final Exchange exchange = exchangeCache.get().orElseGet(this::getAndCacheInit);
         exchange.enableUpdate(ids);
@@ -66,7 +58,7 @@ public class ExchangeManager {
         loggerFacade.logFinishSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
     }
 
-    public void tradingDataIntegrate() {
+    public void integrateTradingData() {
         final Exchange exchange = exchangeCache.get().orElseGet(this::getAndCacheInit);
         exchange.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());

@@ -12,7 +12,7 @@ import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 @Profile("test")
 @RestController
 @AllArgsConstructor
-public class AggregatorServiceController {
+public class ServiceController {
     InstrumentEntityRepository instrumentEntityRepository;
     DailyValueRepository dailyValueRepository;
     IntradayValueRepository intradayValueRepository;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
+import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("EXCHANGE REST INTERFACE")
 public class ExchangeControllerTest extends BaseControllerTest {
     @Autowired
-    ExchangeManager exchangeManager;
+    InstrumentQueryRepository instrumentQueryRepository;
 
     @Test
     @SneakyThrows
@@ -43,7 +43,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
         List<Instrument> instrumentInLists = getInstruments();
 
         Mockito
-            .when(exchangeManager.getInstruments())
+            .when(instrumentQueryRepository.getAll())
             .thenReturn(instrumentInLists);
 
         mvc
@@ -73,7 +73,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
         UUID id = stock.getId();
 
         Mockito
-            .when(exchangeManager.getInstrumentBy(id))
+            .when(instrumentQueryRepository.getById(id))
             .thenReturn(stock);
 
         mvc

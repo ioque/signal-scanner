@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface ExchangeRepository {
     Exchange get();
-
     /**
      * @param today текущая дата
      * @return стейт биржи на текущую дату

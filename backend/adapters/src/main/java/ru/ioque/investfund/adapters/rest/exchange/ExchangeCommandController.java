@@ -21,8 +21,8 @@ public class ExchangeCommandController {
     }
 
     @PostMapping("/api/v1/instruments/daily-integrate")
-    public void updateInstrument() {
-        exchangeManager.tradingDataIntegrate();
+    public void integrateTradingData() {
+        exchangeManager.integrateTradingData();
     }
 
     @PostMapping("/api/v1/instruments/enable-update")

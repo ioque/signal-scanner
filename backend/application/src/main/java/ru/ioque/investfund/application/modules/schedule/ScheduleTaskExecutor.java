@@ -47,7 +47,7 @@ public class ScheduleTaskExecutor {
 
     private void executeAggregatorScheduleUnit(ScheduleUnit scheduleUnit) {
         if (scheduleUnit.isTimeToExecuteBy(dateTimeProvider.nowDateTime())) {
-            exchangeManager.tradingDataIntegrate();
+            exchangeManager.integrateTradingData();
             scheduleUnit.setLastExecutionLocalDateTime(dateTimeProvider.nowDateTime());
         }
     }

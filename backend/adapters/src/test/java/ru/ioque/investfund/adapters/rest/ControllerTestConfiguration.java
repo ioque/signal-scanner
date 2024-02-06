@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityReposit
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.application.adapters.ReportRepository;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
@@ -74,7 +75,7 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public InstrumentEntityRepository mockInstrumentRepository() {
+    public InstrumentEntityRepository mockInstrumentEntityRepository() {
         return mock(InstrumentEntityRepository.class);
     }
 
@@ -88,6 +89,12 @@ public class ControllerTestConfiguration {
     @Primary
     public ExchangeRepository mockExchangeRepository() {
         return mock(ExchangeRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public InstrumentQueryRepository mockInstrumentRepository() {
+        return mock(InstrumentQueryRepository.class);
     }
 
     @Bean

@@ -51,7 +51,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 
@@ -93,7 +93,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 
@@ -135,7 +135,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 
@@ -177,7 +177,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 
@@ -221,7 +221,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
         assertEquals(0, exchangeManager().getStatistics().size());
     }
 
@@ -243,7 +243,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
         assertEquals(0, exchangeManager().getStatistics().size());
     }
 
@@ -271,7 +271,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 
@@ -307,7 +307,7 @@ public class StatisticCalculatorTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
 
         List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
 

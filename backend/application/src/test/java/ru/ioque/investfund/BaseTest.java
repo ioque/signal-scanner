@@ -163,7 +163,7 @@ public class BaseTest {
     }
 
     protected void intradayIntegrate() {
-        exchangeManager().tradingDataIntegrate();
+        exchangeManager().integrateTradingData();
     }
 
     protected void clearLogs() {
