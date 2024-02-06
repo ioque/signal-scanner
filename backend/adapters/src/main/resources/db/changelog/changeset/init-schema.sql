@@ -45,7 +45,7 @@ create table if not exists exchange_updatable
 alter table exchange_updatable
     owner to postgres;
 
-create table if not exists instrumentInList
+create table if not exists instrument
 (
     annual_high     double precision,
     annual_low      double precision,
@@ -64,11 +64,11 @@ create table if not exists instrumentInList
     name            varchar(255) not null,
     reg_number      varchar(255),
     short_name      varchar(255) not null,
-    ticker          varchar(255) not null
+    ticker          varchar(255) not null,
+    updatable boolean
 );
 
-alter table instrumentInList
-    owner to postgres;
+alter table instrument owner to postgres;
 
 create table if not exists intraday_value
 (

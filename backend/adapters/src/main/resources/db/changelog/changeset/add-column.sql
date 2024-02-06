@@ -1,1 +1,0 @@
-ALTER TABLE instrument ADD COLUMN updatable boolean
