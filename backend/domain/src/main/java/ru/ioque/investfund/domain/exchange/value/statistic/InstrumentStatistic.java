@@ -79,7 +79,7 @@ public class InstrumentStatistic {
             .stream()
             .findFirst()
             .map(TimeSeriesValue::getValue)
-            .orElseThrow(() -> new DomainException("Нет данных по итогам торгов."));
+            .orElse(0.);
     }
 
     public boolean isPref() {

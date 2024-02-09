@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
@@ -27,12 +28,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T16. Хранилище финансовых инструментов не пустое.
+        T1. Хранилище финансовых инструментов не пустое.
         Сохранены торговые данные только по акции AFKS.
         Запрошена статистика по инструментам.
         Результат: статистика успешно расчитана только для акции AFKS.
         """)
-    void testCase16() {
+    void testCase1() {
         exchangeDataFixture().initDealDatas(
             List.of(
                 buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
@@ -69,12 +70,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T17. Хранилище финансовых инструментов не пустое.
+        T2. Хранилище финансовых инструментов не пустое.
         Сохранены торговые данные только по фьючерсу BRF4.
         Запрошена статистика по инструментам.
         Результат: статистика успешно расчитана только для фьючерса BRF4. Значений по средневзвешенной цене нет.
         """)
-    void testCase17() {
+    void testCase2() {
         exchangeDataFixture().initDealDatas(
             List.of(
                 buildFuturesDealBy(1L,"BRF4", "10:00:00", 10D, 10),
@@ -111,12 +112,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T18. Хранилище финансовых инструментов не пустое.
+        T3. Хранилище финансовых инструментов не пустое.
         Сохранены торговые данные только по валютной паре USD000UTSTOM.
         Запрошена статистика по инструментам.
         Результат: статистика успешно расчитана только для валютной пары USD000UTSTOM.
         """)
-    void testCase18() {
+    void testCase3() {
         exchangeDataFixture().initDealDatas(
             List.of(
                 buildDealBy(1L,"USD000UTSTOM", "10:00:00", 10D, 10D, 1),
@@ -153,12 +154,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T19. Хранилище финансовых инструментов не пустое.
+        T4. Хранилище финансовых инструментов не пустое.
         Сохранены торговые данные только по индексу фондового рынка IMOEX.
         Запрошена статистика по инструментам.
         Результат: статистика успешно расчитана только для индекса фондового рынка IMOEX. Значений по средневзвешенной цене нет.
         """)
-    void testCase19() {
+    void testCase4() {
         exchangeDataFixture().initDealDatas(
             List.of(
                 buildDeltaBy(1L,"IMOEX", "10:00:00", 10D, 10D),
@@ -195,23 +196,23 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T20. Хранилище финансовых инструментов не пустое.
+        T5. Хранилище финансовых инструментов не пустое.
         Торговых данных нет.
         Запрошена статистика по инструментам.
         Результат: нет статистических данных.
         """)
-    void testCase20() {
+    void testCase5() {
         assertEquals(0, exchangeManager().getStatistics().size());
     }
 
     @Test
     @DisplayName("""
-        T21. Хранилище финансовых инструментов не пустое.
+        T6. Хранилище финансовых инструментов не пустое.
         Сохранена только история торгов по инструменту AFKS.
         Запрошена статистика по инструментам.
         Результат: нет статистических данных.
         """)
-    void testCase21() {
+    void testCase6() {
         exchangeDataFixture().initTradingResults(
             List.of(
                 buildDealResultBy("AFKS", "2024-01-03", 10D, 10D, 10D, 10D),
@@ -227,12 +228,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T22. Хранилище финансовых инструментов не пустое.
+        T7. Хранилище финансовых инструментов не пустое.
         Сохранены только данные по текущим торгам.
         Запрошена статистика по инструментам.
         Результат: нет статистических данных.
         """)
-    void testCase22() {
+    void testCase7() {
         exchangeDataFixture().initDealDatas(
             List.of(
                 buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
@@ -249,12 +250,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T23. Хранилище финансовых инструментов не пустое.
+        T8. Хранилище финансовых инструментов не пустое.
         Текущий день недели - понедельник. Данные по сделкам есть.
         Исторические данные загружены.
         Результат: статистика посчитана. Рост за предыдущий день определяется.
         """)
-    void testCase23() {
+    void testCase8() {
         initTodayDateTime("2024-01-15T12:00:00");
         exchangeDataFixture().initDealDatas(
             List.of(
@@ -285,12 +286,12 @@ public class StatisticCalculatorTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T24. Хранилище финансовых инструментов не пустое.
+        T9. Хранилище финансовых инструментов не пустое.
         Текущий день недели - понедельник. Данные по сделкам есть.
         Исторические данные загружены, но есть пропуск в днях.
         Результат: статистика посчитана, но определить рост в предыдущий день нельзя.
         """)
-    void testCase24() {
+    void testCase9() {
         initTodayDateTime("2024-01-17T12:00:00");
         exchangeDataFixture().initDealDatas(
             List.of(
@@ -318,5 +319,19 @@ public class StatisticCalculatorTest extends BaseTest {
         assertEquals(19D, instrumentStatistics.get(0).getTodayLastPrice());
         var error = assertThrows(DomainException.class, () -> instrumentStatistics.get(0).isRiseForPrevDay(0.01));
         assertEquals("Нет данных по итогам торгов за 2024-01-15.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName(
+        """
+        T10. Биржа не зарегистрирована. Запрос статистики.
+        Результат: ошибка, "Биржа не зарегистрирована".
+        """
+    )
+    void testCase10() {
+        exchangeRepository().clear();
+
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().getStatistics());
+        assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 }

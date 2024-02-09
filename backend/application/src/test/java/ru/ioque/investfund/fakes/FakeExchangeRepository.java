@@ -26,4 +26,8 @@ public class FakeExchangeRepository implements ExchangeRepository {
     public void save(Exchange exchange) {
         this.exchange = exchange;
     }
+
+    public void clear() {
+        exchange = null;
+    }
 }

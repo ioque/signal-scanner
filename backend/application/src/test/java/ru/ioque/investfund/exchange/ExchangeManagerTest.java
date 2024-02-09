@@ -3,6 +3,7 @@ package ru.ioque.investfund.exchange;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("EXCHANGE MANAGER - INTEGRATION")
@@ -366,5 +368,38 @@ public class ExchangeManagerTest extends BaseTest {
 
         assertEquals(1, getDailyTradingResultsBy("AFKS").size());
         assertEquals(1, getIntradayValue("AFKS").size());
+    }
+
+    @Test
+    @DisplayName("""
+        T16. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        Попытка включить обновление по списку идентификаторов.
+        Результат: ошибка, "Биржа не зарегистрирована".
+        """)
+    void testCase16() {
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(List.of(UUID.randomUUID())));
+        assertEquals("Биржа не зарегистрирована.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T17. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        Попытка выключить обновление по списку идентификаторов.
+        Результат: ошибка, "Биржа не зарегистрирована".
+        """)
+    void testCase17() {
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(List.of(UUID.randomUUID())));
+        assertEquals("Биржа не зарегистрирована.", error.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+        T18. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        Попытка включить интеграцию торговых данных.
+        Результат: ошибка, "Биржа не зарегистрирована".
+        """)
+    void testCase18() {
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().integrateTradingData());
+        assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 }
