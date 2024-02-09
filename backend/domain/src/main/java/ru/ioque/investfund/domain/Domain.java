@@ -20,6 +20,6 @@ public abstract class Domain implements Serializable {
 
     public Domain(UUID id) {
         this.id = id;
-        if (this.id == null) throw new DomainException("id is null");
+        if (this.id == null) throw new DomainException("Не передан идентификатор объекта.");
     }
 }

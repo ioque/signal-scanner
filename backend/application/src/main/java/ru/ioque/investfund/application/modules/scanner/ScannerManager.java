@@ -14,7 +14,6 @@ import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -66,8 +65,7 @@ public class ScannerManager {
     }
 
     private List<Report> runScanners(List<InstrumentStatistic> statistics) {
-        List<Report> reports = new ArrayList<>();
-        scannerRepository
+        return scannerRepository
             .getAll()
             .stream()
             .filter(row ->
@@ -81,21 +79,21 @@ public class ScannerManager {
                     )
                     .orElse(true)
             )
-            .forEach(scanner -> runScanner(statistics, scanner, reports));
-        return reports;
+            .map(scanner -> runScanner(statistics, scanner))
+            .toList();
     }
 
     private Supplier<ApplicationException> scannerNotFound(UpdateScannerCommand command) {
         return () -> new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
     }
 
-    private void runScanner(List<InstrumentStatistic> statistics, SignalScannerBot scanner, List<Report> reports) {
+    private Report runScanner(List<InstrumentStatistic> statistics, SignalScannerBot scanner) {
         loggerFacade.logRunWorkScanner(scanner);
         Report report = scanner.scanning(statistics
             .stream()
             .filter(row -> scanner.getObjectIds().contains(row.getInstrumentId()))
             .toList(), dateTimeProvider.nowDateTime());
-        reports.add(report);
         loggerFacade.logFinishWorkScanner(scanner, report);
+        return report;
     }
 }
