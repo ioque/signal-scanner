@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
@@ -35,16 +35,16 @@ public class BaseJpaTest {
     @Autowired
     protected InstrumentEntityRepository instrumentEntityRepository;
     @Autowired
-    protected DailyValueRepository dailyValueRepository;
+    protected DailyValueEntityRepository dailyValueEntityRepository;
     @Autowired
-    protected IntradayValueRepository intradayValueRepository;
+    protected IntradayValueEntityRepository intradayValueEntityRepository;
 
     @BeforeEach
     void beforeEach() {
         exchangeEntityRepository.deleteAll();
         instrumentEntityRepository.deleteAll();
-        intradayValueRepository.deleteAll();
-        dailyValueRepository.deleteAll();
+        intradayValueEntityRepository.deleteAll();
+        dailyValueEntityRepository.deleteAll();
     }
 
     protected Stock.StockBuilder buildStockWith() {

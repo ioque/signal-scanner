@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.application.adapters.ReportRepository;
@@ -51,26 +51,26 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public SignalScannerRepository mockSignalScannerRepository() {
-        return mock(SignalScannerRepository.class);
+    public SignalScannerEntityRepository mockSignalScannerRepository() {
+        return mock(SignalScannerEntityRepository.class);
     }
 
     @Bean
     @Primary
-    public ScheduleUnitRepository mockScheduleUnitRepository() {
-        return mock(ScheduleUnitRepository.class);
+    public ScheduleUnitEntityRepository mockScheduleUnitRepository() {
+        return mock(ScheduleUnitEntityRepository.class);
     }
 
     @Bean
     @Primary
-    public IntradayValueRepository mockDealDataRepository() {
-        return mock(IntradayValueRepository.class);
+    public IntradayValueEntityRepository mockDealDataRepository() {
+        return mock(IntradayValueEntityRepository.class);
     }
 
     @Bean
     @Primary
-    public DailyValueRepository mockHistoryTradeDataRepository() {
-        return mock(DailyValueRepository.class);
+    public DailyValueEntityRepository mockHistoryTradeDataRepository() {
+        return mock(DailyValueEntityRepository.class);
     }
 
     @Bean

@@ -18,11 +18,11 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrefSimpleRequest extends SignalScannerRequest {
+public class PrefSimpleRequestAdd extends AddSignalScannerRequest {
     Double spreadParam;
 
     @Builder
-    public PrefSimpleRequest(String description, List<UUID> ids, Double spreadParam) {
+    public PrefSimpleRequestAdd(String description, List<UUID> ids, Double spreadParam) {
         super(description, ids);
         this.spreadParam = spreadParam;
     }

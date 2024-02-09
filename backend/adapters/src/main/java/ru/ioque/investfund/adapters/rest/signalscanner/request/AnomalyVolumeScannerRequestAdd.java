@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.SectoralRetardSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.util.List;
@@ -18,24 +18,27 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SectoralRetardScannerRequest extends SignalScannerRequest {
-    Double historyScale;
-    Double intradayScale;
+public class AnomalyVolumeScannerRequestAdd extends AddSignalScannerRequest {
+    Double scaleCoefficient;
+    Integer historyPeriod;
+    String indexTicker;
 
     @Builder
-    public SectoralRetardScannerRequest(
+    public AnomalyVolumeScannerRequestAdd(
         String description,
         List<UUID> ids,
-        Double historyScale,
-        Double intradayScale
+        Double scaleCoefficient,
+        Integer historyPeriod,
+        String indexTicker
     ) {
         super(description, ids);
-        this.historyScale = historyScale;
-        this.intradayScale = intradayScale;
+        this.scaleCoefficient = scaleCoefficient;
+        this.historyPeriod = historyPeriod;
+        this.indexTicker = indexTicker;
     }
 
     @Override
     public SignalConfig buildConfig() {
-        return new SectoralRetardSignalConfig(historyScale, intradayScale);
+        return new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

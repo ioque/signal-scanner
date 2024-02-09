@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.algorithms.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.util.List;
@@ -18,27 +18,24 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CorrelationSectoralScannerRequest extends SignalScannerRequest {
-    Double futuresOvernightScale;
-    Double stockOvernightScale;
-    String futuresTicker;
+public class SectoralRetardScannerRequestAdd extends AddSignalScannerRequest {
+    Double historyScale;
+    Double intradayScale;
 
     @Builder
-    public CorrelationSectoralScannerRequest(
+    public SectoralRetardScannerRequestAdd(
         String description,
         List<UUID> ids,
-        Double futuresOvernightScale,
-        Double stockOvernightScale,
-        String futuresTicker
+        Double historyScale,
+        Double intradayScale
     ) {
         super(description, ids);
-        this.futuresOvernightScale = futuresOvernightScale;
-        this.stockOvernightScale = stockOvernightScale;
-        this.futuresTicker = futuresTicker;
+        this.historyScale = historyScale;
+        this.intradayScale = intradayScale;
     }
 
     @Override
     public SignalConfig buildConfig() {
-        return new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker);
+        return new SectoralRetardSignalConfig(historyScale, intradayScale);
     }
 }

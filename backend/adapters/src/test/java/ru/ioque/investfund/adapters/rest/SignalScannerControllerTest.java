@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleRequestAdd;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
@@ -101,7 +101,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
                 MockMvcRequestBuilders
                     .post("/api/v1/signal-scanner")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(PrefSimpleRequest
+                    .content(toJson(PrefSimpleRequestAdd
                         .builder()
                         .description("Описание")
                         .ids(List.of(UUID.randomUUID()))

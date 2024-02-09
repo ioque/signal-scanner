@@ -10,7 +10,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSector
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
@@ -29,24 +29,24 @@ import java.util.function.Function;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JpaScannerRepo implements ScannerRepository {
-    SignalScannerRepository signalScannerRepository;
+    SignalScannerEntityRepository signalScannerEntityRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<SignalScannerBot> getBy(UUID id) {
-        return signalScannerRepository.findById(id).map(SignalScannerEntity::toDomain);
+        return signalScannerEntityRepository.findById(id).map(SignalScannerEntity::toDomain);
     }
 
     @Override
     @Transactional
     public void save(SignalScannerBot dataScanner) {
-        signalScannerRepository.save(toEntity(dataScanner));
+        signalScannerEntityRepository.save(toEntity(dataScanner));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<SignalScannerBot> getAll() {
-        return signalScannerRepository.findAll().stream().map(SignalScannerEntity::toDomain).toList();
+        return signalScannerEntityRepository.findAll().stream().map(SignalScannerEntity::toDomain).toList();
     }
 
     private SignalScannerEntity toEntity(SignalScannerBot dataScanner) {

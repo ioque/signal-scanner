@@ -8,9 +8,9 @@ import ru.ioque.investfund.adapters.exception.AdapterException;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 
@@ -23,8 +23,8 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JpaInstrumentQueryRepository implements InstrumentQueryRepository {
     InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueRepository dailyValueRepository;
-    IntradayValueRepository intradayValueRepository;
+    DailyValueEntityRepository dailyValueEntityRepository;
+    IntradayValueEntityRepository intradayValueEntityRepository;
 
     @Override
     public List<Instrument> getAll() {
@@ -48,12 +48,12 @@ public class JpaInstrumentQueryRepository implements InstrumentQueryRepository {
         return instrumentEntityRepository
             .findById(id)
             .map(instrumentEntity -> instrumentEntity.toDomain(
-                dailyValueRepository
+                dailyValueEntityRepository
                     .findAllBy(instrumentEntity.getTicker(), today.minusMonths(6))
                     .stream()
                     .map(DailyValueEntity::toDomain)
                     .toList(),
-                intradayValueRepository
+                intradayValueEntityRepository
                     .findAllBy(instrumentEntity.getTicker(), today.atStartOfDay())
                     .stream()
                     .map(IntradayValueEntity::toDomain)

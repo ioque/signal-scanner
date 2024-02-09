@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.util.List;
@@ -18,27 +18,27 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnomalyVolumeScannerRequest extends SignalScannerRequest {
-    Double scaleCoefficient;
-    Integer historyPeriod;
-    String indexTicker;
+public class CorrelationSectoralScannerRequestAdd extends AddSignalScannerRequest {
+    Double futuresOvernightScale;
+    Double stockOvernightScale;
+    String futuresTicker;
 
     @Builder
-    public AnomalyVolumeScannerRequest(
+    public CorrelationSectoralScannerRequestAdd(
         String description,
         List<UUID> ids,
-        Double scaleCoefficient,
-        Integer historyPeriod,
-        String indexTicker
+        Double futuresOvernightScale,
+        Double stockOvernightScale,
+        String futuresTicker
     ) {
         super(description, ids);
-        this.scaleCoefficient = scaleCoefficient;
-        this.historyPeriod = historyPeriod;
-        this.indexTicker = indexTicker;
+        this.futuresOvernightScale = futuresOvernightScale;
+        this.stockOvernightScale = stockOvernightScale;
+        this.futuresTicker = futuresTicker;
     }
 
     @Override
     public SignalConfig buildConfig() {
-        return new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker);
+        return new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker);
     }
 }

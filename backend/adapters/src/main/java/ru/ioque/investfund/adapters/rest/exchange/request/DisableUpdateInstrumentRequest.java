@@ -17,6 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EnableUpdateRequest {
+public class DisableUpdateInstrumentRequest {
     List<UUID> instrumentIds;
 }

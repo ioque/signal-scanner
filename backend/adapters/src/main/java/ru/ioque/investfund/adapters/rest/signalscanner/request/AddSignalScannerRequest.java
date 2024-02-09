@@ -26,12 +26,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = PrefSimpleRequest.class, name = "PrefSimpleRequest"),
-    @JsonSubTypes.Type(value = CorrelationSectoralScannerRequest.class, name = "CorrelationSectoralScannerRequest"),
-    @JsonSubTypes.Type(value = SectoralRetardScannerRequest.class, name = "SectoralRetardScannerRequest"),
-    @JsonSubTypes.Type(value = AnomalyVolumeScannerRequest.class, name = "AnomalyVolumeScannerRequest") }
+    @JsonSubTypes.Type(value = PrefSimpleRequestAdd.class, name = "PrefSimpleRequest"),
+    @JsonSubTypes.Type(value = CorrelationSectoralScannerRequestAdd.class, name = "CorrelationSectoralScannerRequest"),
+    @JsonSubTypes.Type(value = SectoralRetardScannerRequestAdd.class, name = "SectoralRetardScannerRequest"),
+    @JsonSubTypes.Type(value = AnomalyVolumeScannerRequestAdd.class, name = "AnomalyVolumeScannerRequest") }
 )
-public abstract class SignalScannerRequest implements Serializable {
+public abstract class AddSignalScannerRequest implements Serializable {
     String description;
     List<UUID> ids;
     public abstract SignalConfig buildConfig();

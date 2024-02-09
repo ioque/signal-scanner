@@ -11,10 +11,10 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 
@@ -29,8 +29,8 @@ import java.util.concurrent.CompletableFuture;
 public class JpaExchangeRepository implements ExchangeRepository {
     ExchangeEntityRepository exchangeRepository;
     InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueRepository dailyValueRepository;
-    IntradayValueRepository intradayValueRepository;
+    DailyValueEntityRepository dailyValueEntityRepository;
+    IntradayValueEntityRepository intradayValueEntityRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,12 +63,12 @@ public class JpaExchangeRepository implements ExchangeRepository {
                         .findAll()
                         .stream()
                         .map(instrumentEntity -> instrumentEntity.toDomain(
-                                dailyValueRepository
+                                dailyValueEntityRepository
                                     .findAllBy(instrumentEntity.getTicker(), today.minusMonths(6))
                                     .stream()
                                     .map(DailyValueEntity::toDomain)
                                     .toList(),
-                                intradayValueRepository
+                                intradayValueEntityRepository
                                     .findAllBy(instrumentEntity.getTicker(), today.atStartOfDay())
                                     .stream()
                                     .map(IntradayValueEntity::toDomain)
@@ -90,7 +90,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
                 instrumentEntityRepository.save(InstrumentEntity.fromDomain(instrument));
                 final Long lastIntradayValueNumber = getLastNumber(instrument.getTicker());
                 final Optional<LocalDate> lastDailyValueDate = getLastDate(instrument.getTicker());
-                dailyValueRepository.saveAll(instrument
+                dailyValueEntityRepository.saveAll(instrument
                     .getDailyValues()
                     .stream()
                     .filter(row -> lastDailyValueDate
@@ -98,7 +98,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
                         .orElse(true))
                     .map(DailyValueEntity::fromDomain)
                     .toList());
-                intradayValueRepository.saveAll(instrument
+                intradayValueEntityRepository.saveAll(instrument
                     .getIntradayValues()
                     .stream()
                     .filter(value -> value.getNumber() > lastIntradayValueNumber)
@@ -109,10 +109,10 @@ public class JpaExchangeRepository implements ExchangeRepository {
     }
 
     private Optional<LocalDate> getLastDate(String ticker) {
-        return dailyValueRepository.lastDateBy(ticker);
+        return dailyValueEntityRepository.lastDateBy(ticker);
     }
 
     private Long getLastNumber(String ticker) {
-        return intradayValueRepository.lastNumberBy(ticker).orElse(0L);
+        return intradayValueEntityRepository.lastNumberBy(ticker).orElse(0L);
     }
 }

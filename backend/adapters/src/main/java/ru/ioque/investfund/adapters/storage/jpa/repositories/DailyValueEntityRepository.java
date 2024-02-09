@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DailyValueRepository extends JpaRepository<DailyValueEntity, Long> {
+public interface DailyValueEntityRepository extends JpaRepository<DailyValueEntity, Long> {
     @Query("select d from DailyValue d where d.tradeDate >= :from and d.ticker = :ticker")
     List<DailyValueEntity> findAllBy(String ticker, LocalDate from);
 
