@@ -16,16 +16,12 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrefSimpleScannerConfigRequest extends DataScannerConfigRequest {
+public class PrefSimpleRequest extends AddSignalScannerRequest {
     Double spreadParam;
 
     @Builder
-    public PrefSimpleScannerConfigRequest(
-        List<UUID> ids,
-        UUID marketIndexId,
-        Double spreadParam
-    ) {
-        super(ids, marketIndexId);
+    public PrefSimpleRequest(String description, List<UUID> ids, Double spreadParam) {
+        super(description, ids);
         this.spreadParam = spreadParam;
     }
 }

@@ -16,19 +16,22 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnomalyVolumeScannerConfigRequest extends DataScannerConfigRequest {
-    Double startScaleCoefficient;
+public class AnomalyVolumeScannerRequest extends AddSignalScannerRequest {
+    Double scaleCoefficient;
     Integer historyPeriod;
+    String indexTicker;
 
     @Builder
-    public AnomalyVolumeScannerConfigRequest(
+    public AnomalyVolumeScannerRequest(
+        String description,
         List<UUID> ids,
-        UUID marketIndexId,
-        Double startScaleCoefficient,
-        Integer historyPeriod
+        Double scaleCoefficient,
+        Integer historyPeriod,
+        String indexTicker
     ) {
-        super(ids, marketIndexId);
-        this.startScaleCoefficient = startScaleCoefficient;
+        super(description, ids);
+        this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
+        this.indexTicker = indexTicker;
     }
 }

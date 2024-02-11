@@ -6,9 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import ru.ioque.acceptance.api.exchange.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
 import ru.ioque.acceptance.client.exchange.ExchangeRestClient;
 import ru.ioque.acceptance.client.signalscanner.SignalScannerRestClient;
+import ru.ioque.acceptance.client.signalscanner.request.AnomalyVolumeScannerRequest;
+import ru.ioque.acceptance.domain.exchange.InstrumentInList;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -16,21 +23,38 @@ public class SignalScannerAcceptanceTest {
     @Autowired
     ExchangeRestClient exchangeRestClient;
     @Autowired
-    SignalScannerRestClient dataScannerRestClient;
+    SignalScannerRestClient signalScannerRestClient;
     @Autowired
     DatasetManager datasetManager;
-
+    InstrumentsFixture instrumentsFixture = new InstrumentsFixture();
     @BeforeEach
     void beforeEach() {
         exchangeRestClient.clear();
     }
-
+    private InstrumentsFixture instruments() {
+        return instrumentsFixture;
+    }
     @Test
     @DisplayName("""
         T1. Создание сканера сигналов с алгоритмом "Аномальные объемы".
         """)
     void testCase1() {
-
+        datasetManager.initDataset(
+            List.of(
+                instruments().imoex().build(),
+                instruments().sber().build()
+            )
+        );
+        exchangeRestClient.integrateWithDataSource();
+        AnomalyVolumeScannerRequest request = AnomalyVolumeScannerRequest.builder()
+            .scaleCoefficient(1.5)
+            .description("desc")
+            .historyPeriod(180)
+            .indexTicker("IMOEX")
+            .ids(exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList())
+            .build();
+        signalScannerRestClient.saveDataScannerConfig(request);
+        assertEquals(1, signalScannerRestClient.getDataScanners().size());
     }
 
     @Test

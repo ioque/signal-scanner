@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -24,12 +25,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = PrefSimpleScannerConfigRequest.class, name = "PrefSimpleScannerConfigRequest"),
-    @JsonSubTypes.Type(value = CorrelationScannerConfigRequest.class, name = "CorrelationScannerConfigRequest"),
-    @JsonSubTypes.Type(value = SectoralRetardScannerConfigRequest.class, name = "SectoralRetardScannerConfigRequest"),
-    @JsonSubTypes.Type(value = AnomalyVolumeScannerConfigRequest.class, name = "AnomalyVolumeScannerConfigRequest") }
+    @JsonSubTypes.Type(value = PrefSimpleRequest.class, name = "PrefSimpleRequest"),
+    @JsonSubTypes.Type(value = CorrelationSectoralScannerRequest.class, name = "CorrelationSectoralScannerRequest"),
+    @JsonSubTypes.Type(value = SectoralRetardScannerRequest.class, name = "SectoralRetardScannerRequest"),
+    @JsonSubTypes.Type(value = AnomalyVolumeScannerRequest.class, name = "AnomalyVolumeScannerRequest") }
 )
-public class DataScannerConfigRequest implements Serializable {
+public abstract class AddSignalScannerRequest implements Serializable {
+    String description;
     List<UUID> ids;
-    UUID marketIndexId;
 }

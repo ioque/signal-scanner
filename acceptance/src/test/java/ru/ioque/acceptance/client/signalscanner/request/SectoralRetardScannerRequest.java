@@ -16,18 +16,18 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SectoralRetardScannerConfigRequest extends DataScannerConfigRequest {
+public class SectoralRetardScannerRequest extends AddSignalScannerRequest {
     Double historyScale;
     Double intradayScale;
 
     @Builder
-    public SectoralRetardScannerConfigRequest(
+    public SectoralRetardScannerRequest(
+        String description,
         List<UUID> ids,
-        UUID marketIndexId,
         Double historyScale,
         Double intradayScale
     ) {
-        super(ids, marketIndexId);
+        super(description, ids);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

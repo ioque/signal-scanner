@@ -16,19 +16,22 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CorrelationScannerConfigRequest extends DataScannerConfigRequest {
+public class CorrelationSectoralScannerRequest extends AddSignalScannerRequest {
     Double futuresOvernightScale;
     Double stockOvernightScale;
+    String futuresTicker;
 
     @Builder
-    public CorrelationScannerConfigRequest(
+    public CorrelationSectoralScannerRequest(
+        String description,
         List<UUID> ids,
-        UUID marketIndexId,
         Double futuresOvernightScale,
-        Double stockOvernightScale
+        Double stockOvernightScale,
+        String futuresTicker
     ) {
-        super(ids, marketIndexId);
+        super(description, ids);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
+        this.futuresTicker = futuresTicker;
     }
 }
