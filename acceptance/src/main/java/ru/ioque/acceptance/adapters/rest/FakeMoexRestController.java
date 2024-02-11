@@ -54,6 +54,7 @@ public class FakeMoexRestController {
         @RequestParam Integer limit,
         @RequestParam Integer start
     ) {
+        System.out.println(from);
         return getHistoryValues(ticker, from, till, limit, start);
     }
 

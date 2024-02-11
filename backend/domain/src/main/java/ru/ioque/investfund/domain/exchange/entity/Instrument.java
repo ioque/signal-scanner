@@ -106,10 +106,6 @@ public abstract class Instrument extends Domain {
             .sum();
     }
 
-    public Double getHistoryWaValue() {
-        return dailyValues.stream().mapToDouble(DailyValue::getValue).average().orElse(0.D);
-    }
-
     private Double getHistoryMedianValue() {
         var sortedValues = dailyValues.stream().sorted().toList();
         var n = sortedValues.size();

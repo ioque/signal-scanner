@@ -8,10 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.api.exchange.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
-import ru.ioque.acceptance.client.exchange.DailyTradeDateIntegrateRequest;
 import ru.ioque.acceptance.client.exchange.ExchangeRestClient;
+import ru.ioque.acceptance.client.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.acceptance.client.signalscanner.SignalScannerRestClient;
-import ru.ioque.acceptance.client.signalscanner.response.FinancialInstrumentInList;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
 import ru.ioque.acceptance.domain.dataemulator.futures.FuturesDailyResult;
@@ -58,14 +57,17 @@ public class ExchangeAcceptanceTest {
                 instruments().usbRub().build(),
                 instruments().brf4().build(),
                 instruments().sber().build()
-                )
+            )
         );
 
         exchangeRestClient.integrateWithDataSource();
         Exchange exchange = exchangeRestClient.getExchange();
 
         assertEquals("Московская Биржа", exchange.getName());
-        assertEquals("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.", exchange.getDescription());
+        assertEquals(
+            "Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.",
+            exchange.getDescription()
+        );
         assertEquals("http://localhost:8081", exchange.getUrl());
         assertEquals(4, exchange.getInstruments().size());
     }
@@ -74,41 +76,48 @@ public class ExchangeAcceptanceTest {
     @DisplayName("""
         T2. Внутридневная интеграция торговых данных.
         """)
-    void testCase3() {
+    void testCase2() {
         initInstrumentsWithTradingData();
         exchangeRestClient.integrateWithDataSource();
-        List<UUID> ids = exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList();
+        List<UUID> ids =
+            exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList();
 
-        exchangeRestClient.enableUpdateInstruments(ids);
+        exchangeRestClient.enableUpdateInstruments(new EnableUpdateInstrumentRequest(ids));
         exchangeRestClient.integrateTradingData();
 
-        Instrument imoex = exchangeRestClient.getInstrumentBy("IMOEX");
-        Instrument usdRub = exchangeRestClient.getInstrumentBy("USD000UTSTOM");
-        Instrument brf4 = exchangeRestClient.getInstrumentBy("BRF4");
-        Instrument sber = exchangeRestClient.getInstrumentBy("SBER");
-        //assertEquals();
+        List<Instrument> instruments = ids.stream().map(id -> exchangeRestClient.getInstrumentBy(id)).toList();
+        assertEquals(4, instruments.size());
     }
 
     @Test
     @DisplayName("""
         T3. Получение статистики инструмента.
         """)
-    void testCase5() {
+    void testCase3() {
+        initInstrumentsWithTradingData();
         exchangeRestClient.integrateWithDataSource();
-        exchangeRestClient.enableUpdateInstruments(exchangeRestClient.getInstruments().stream().map(InstrumentInList::getId).toList());
-        exchangeRestClient.tradingDataIntegrate();
+        exchangeRestClient.enableUpdateInstruments(
+            new EnableUpdateInstrumentRequest(
+                exchangeRestClient
+                    .getInstruments()
+                    .stream()
+                    .map(InstrumentInList::getId)
+                    .toList())
+        );
+        exchangeRestClient.integrateTradingData();
 
-        InstrumentStatistic instrumentStatistic = exchangeRestClient.getInstrumentStatisticBy("AFKS");
+        InstrumentStatistic instrumentStatistic = exchangeRestClient
+            .getInstrumentStatisticBy(
+                exchangeRestClient
+                    .getInstruments()
+                    .stream()
+                    .filter(row -> row.getTicker().equals("SBER"))
+                    .map(InstrumentInList::getId)
+                    .toList()
+                    .get(0)
+            );
 
-        assertEquals(1D, instrumentStatistic.getTodayValue());
-    }
-
-    private DailyTradeDateIntegrateRequest dailyIntegrateRequest() {
-        return new DailyTradeDateIntegrateRequest(dataScannerRestClient
-            .getInstruments()
-            .stream()
-            .map(FinancialInstrumentInList::getId)
-            .toList());
+        assertEquals(37, Math.round(instrumentStatistic.getTodayValue()));
     }
 
     private InstrumentsFixture instruments() {
@@ -215,6 +224,24 @@ public class ExchangeAcceptanceTest {
                                 .volume(123124124.2)
                                 .secId("SBER")
                                 .tradeDate(time.toLocalDate().minusDays(1))
+                                .build(),
+                            StockDailyResult
+                                .builder()
+                                .close(3451.4)
+                                .open(3411.1)
+                                .value(135132512351.1)
+                                .volume(123124124.2)
+                                .secId("SBER")
+                                .tradeDate(time.toLocalDate().minusDays(2))
+                                .build(),
+                            StockDailyResult
+                                .builder()
+                                .close(3451.4)
+                                .open(3411.1)
+                                .value(135132512351.1)
+                                .volume(123124124.2)
+                                .secId("SBER")
+                                .tradeDate(time.toLocalDate().minusDays(3))
                                 .build()
                         )
                     )
@@ -228,6 +255,24 @@ public class ExchangeAcceptanceTest {
                                 .value(12.3)
                                 .tradeTime(time.toLocalTime())
                                 .sysTime(time)
+                                .build(),
+                            StockTrade
+                                .builder()
+                                .tradeNo(1)
+                                .secId("SBER")
+                                .price(12.1)
+                                .value(12.3)
+                                .tradeTime(time.plusMinutes(1).toLocalTime())
+                                .sysTime(time.plusMinutes(1))
+                                .build(),
+                            StockTrade
+                                .builder()
+                                .tradeNo(1)
+                                .secId("SBER")
+                                .price(12.1)
+                                .value(12.3)
+                                .tradeTime(time.plusMinutes(2).toLocalTime())
+                                .sysTime(time.plusMinutes(2))
                                 .build()
                         )
                     )

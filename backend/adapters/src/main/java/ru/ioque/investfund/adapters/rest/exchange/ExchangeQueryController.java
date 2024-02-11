@@ -27,12 +27,12 @@ public class ExchangeQueryController {
         return ExchangeResponse.fromDomain(exchangeRepository.get());
     }
 
-    @GetMapping("/api/v1/exchange/instruments/{id}")
+    @GetMapping("/api/v1/instruments/{id}")
     public InstrumentResponse getInstrument(@PathVariable UUID id) {
         return InstrumentResponse.fromDomain(instrumentQueryRepository.getById(id));
     }
 
-    @GetMapping("/api/v1/exchange/instruments")
+    @GetMapping("/api/v1/instruments")
     public List<InstrumentInListResponse> getInstruments() {
         return instrumentQueryRepository
             .getAll()
@@ -41,7 +41,7 @@ public class ExchangeQueryController {
             .toList();
     }
 
-    @GetMapping("/api/v1/exchange/instruments/{id}/statistic")
+    @GetMapping("/api/v1/instruments/{id}/statistic")
     public InstrumentStatisticResponse getInstrumentStatistic(@PathVariable UUID id) {
         return InstrumentStatisticResponse
             .fromDomain(

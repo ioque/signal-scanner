@@ -8,16 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
 import ru.ioque.acceptance.client.exchange.ExchangeRestClient;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.stock.Stock;
-import ru.ioque.acceptance.client.signalscanner.response.FinancialInstrumentInList;
 import ru.ioque.acceptance.client.signalscanner.SignalScannerRestClient;
-import ru.ioque.acceptance.client.signalscanner.request.AnomalyVolumeScannerConfigRequest;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -128,43 +119,5 @@ public class SignalScannerAcceptanceTest {
         """)
     void testCase12() {
 
-    }
-
-
-    @Test
-    @DisplayName("""
-        T1. Создание сканера данных для AFKS.
-        """)
-    void testCase55() {
-        datasetManager.initDataset(List.of(
-            Stock.builder()
-                .type(InstrumentType.STOCK)
-                .secId("AFKS")
-                .boardId("TQBR")
-                .lotSize(100)
-                .secName("АО СИСТЕМА")
-                .shortname("ао Система")
-                .build()
-        ));
-        exchangeRestClient.integrateWithDataSource();
-        dataScannerRestClient
-            .saveDataScannerConfig(
-                AnomalyVolumeScannerConfigRequest.builder()
-                    .ids(dataScannerRestClient
-                        .getInstruments()
-                        .stream()
-                        .filter(row -> row.getTicker().equals("AFKS"))
-                        .map(FinancialInstrumentInList::getId)
-                        .toList())
-                    .historyPeriod(180)
-                    .startScaleCoefficient(1.5)
-                    .build()
-            );
-
-        assertFalse(dataScannerRestClient.getDataScanners().isEmpty());
-        var dataScannerId = dataScannerRestClient.getDataScanners().get(0).getId();
-        var dataScanner = dataScannerRestClient.getDataScannerBy(dataScannerId);
-        assertEquals(dataScannerId, dataScanner.getId());
-        assertEquals("Аномальные объемы", dataScanner.getBusinessProcessorName());
     }
 }

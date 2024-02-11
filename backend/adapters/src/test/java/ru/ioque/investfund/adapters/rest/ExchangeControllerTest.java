@@ -37,7 +37,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту GET /api/v1/exchange/instruments.
+        T1. Выполнение запроса по эндпоинту GET /api/v1/instruments.
         """)
     public void testCase1() {
         List<Instrument> instrumentInLists = getInstruments();
@@ -47,7 +47,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .thenReturn(instrumentInLists);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/exchange/instruments"))
+            .perform(MockMvcRequestBuilders.get("/api/v1/instruments"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -66,7 +66,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T2. Выполнение запроса по эндпоинту GET /api/v1/exchange/instruments/{id}
+        T2. Выполнение запроса по эндпоинту GET /api/v1/instruments/{id}
         """)
     public void testCase2() {
         Instrument stock = getInstruments().stream().filter(row -> row.getTicker().equals("TEST_STOCK")).findFirst().get();
@@ -77,7 +77,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .thenReturn(stock);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/exchange/instruments/" + id))
+            .perform(MockMvcRequestBuilders.get("/api/v1/instruments/" + id))
             .andExpect(status().isOk())
             .andExpect(
                 content()

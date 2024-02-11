@@ -1,4 +1,4 @@
-package ru.ioque.acceptance.domain.exchange;
+package ru.ioque.investfund.adapters.rest.exchange.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,18 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InstrumentInList {
-    UUID id;
-    String ticker;
-    String shortName;
-    String name;
-    Boolean updatable;
+public class DisableUpdateInstrumentRequest {
+    List<UUID> instrumentIds;
 }
