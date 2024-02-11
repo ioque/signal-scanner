@@ -57,4 +57,64 @@ public class InstrumentsFixture {
             .intradayValues(List.of())
             .historyValues(List.of());
     }
+
+    public Stock.StockBuilder sberp() {
+        return Stock.builder()
+            .secId("SBERP")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("Сбербанк-п")
+            .shortname("Сбербанк-п")
+            .type(InstrumentType.STOCK)
+            .intradayValues(List.of())
+            .historyValues(List.of());
+    }
+
+    public Stock.StockBuilder sibn() {
+        return Stock.builder()
+            .secId("SIBN")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("Газпромнефть")
+            .shortname("Газпромнефть")
+            .type(InstrumentType.STOCK)
+            .intradayValues(List.of())
+            .historyValues(List.of());
+    }
+
+    public Stock.StockBuilder lkoh() {
+        return Stock.builder()
+            .secId("LKOH")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("Лукойл")
+            .shortname("Лукойл")
+            .type(InstrumentType.STOCK)
+            .intradayValues(List.of())
+            .historyValues(List.of());
+    }
+
+    public Stock.StockBuilder rosn() {
+        return Stock.builder()
+            .secId("ROSN")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("Роснефть")
+            .shortname("Роснефть")
+            .type(InstrumentType.STOCK)
+            .intradayValues(List.of())
+            .historyValues(List.of());
+    }
+
+    public Stock.StockBuilder tatn() {
+        return Stock.builder()
+            .secId("TATN")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("Татнефть")
+            .shortname("Татнефть")
+            .type(InstrumentType.STOCK)
+            .intradayValues(List.of())
+            .historyValues(List.of());
+    }
 }

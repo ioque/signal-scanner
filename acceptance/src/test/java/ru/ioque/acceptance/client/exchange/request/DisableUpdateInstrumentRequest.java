@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest.exchange.request;
+package ru.ioque.acceptance.client.exchange.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

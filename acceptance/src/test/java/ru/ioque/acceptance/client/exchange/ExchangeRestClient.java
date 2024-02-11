@@ -11,7 +11,7 @@ import ru.ioque.acceptance.domain.exchange.Exchange;
 import ru.ioque.acceptance.domain.exchange.Instrument;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
-import ru.ioque.investfund.adapters.rest.exchange.request.DisableUpdateInstrumentRequest;
+import ru.ioque.acceptance.client.exchange.request.DisableUpdateInstrumentRequest;
 
 import java.util.List;
 import java.util.UUID;

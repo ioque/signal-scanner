@@ -11,6 +11,9 @@ import ru.ioque.acceptance.application.datasource.DatasetManager;
 import ru.ioque.acceptance.client.exchange.ExchangeRestClient;
 import ru.ioque.acceptance.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.acceptance.client.signalscanner.request.AnomalyVolumeScannerRequest;
+import ru.ioque.acceptance.client.signalscanner.request.CorrelationSectoralScannerRequest;
+import ru.ioque.acceptance.client.signalscanner.request.PrefSimpleRequest;
+import ru.ioque.acceptance.client.signalscanner.request.SectoralRetardScannerRequest;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 
 import java.util.List;
@@ -62,7 +65,21 @@ public class SignalScannerAcceptanceTest {
         T2. Создание сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка".
         """)
     void testCase2() {
+        datasetManager.initDataset(
+            List.of(
+                instruments().sberp().build(),
+                instruments().sber().build()
+            )
+        );
+        exchangeRestClient.integrateWithDataSource();
 
+        PrefSimpleRequest request = PrefSimpleRequest.builder()
+            .ids(exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList())
+            .description("desc")
+            .spreadParam(1.0)
+            .build();
+        signalScannerRestClient.saveDataScannerConfig(request);
+        assertEquals(1, signalScannerRestClient.getDataScanners().size());
     }
 
     @Test
@@ -70,7 +87,24 @@ public class SignalScannerAcceptanceTest {
         T3. Создание сканера сигналов с алгоритмом "Секторальный отстающий".
         """)
     void testCase3() {
+        datasetManager.initDataset(
+            List.of(
+                instruments().sibn().build(),
+                instruments().lkoh().build(),
+                instruments().tatn().build(),
+                instruments().rosn().build()
+            )
+        );
+        exchangeRestClient.integrateWithDataSource();
 
+        SectoralRetardScannerRequest request = SectoralRetardScannerRequest.builder()
+            .ids(exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList())
+            .description("desc")
+            .historyScale(0.015)
+            .intradayScale(0.015)
+            .build();
+        signalScannerRestClient.saveDataScannerConfig(request);
+        assertEquals(1, signalScannerRestClient.getDataScanners().size());
     }
 
     @Test
@@ -78,7 +112,26 @@ public class SignalScannerAcceptanceTest {
         T4. Создание сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора".
         """)
     void testCase4() {
+        datasetManager.initDataset(
+            List.of(
+                instruments().sibn().build(),
+                instruments().lkoh().build(),
+                instruments().tatn().build(),
+                instruments().rosn().build(),
+                instruments().brf4().build()
+            )
+        );
+        exchangeRestClient.integrateWithDataSource();
 
+        CorrelationSectoralScannerRequest request = CorrelationSectoralScannerRequest.builder()
+            .ids(exchangeRestClient.getExchange().getInstruments().stream().map(InstrumentInList::getId).toList())
+            .description("desc")
+            .futuresTicker("BRF4")
+            .futuresOvernightScale(0.015)
+            .stockOvernightScale(0.015)
+            .build();
+        signalScannerRestClient.saveDataScannerConfig(request);
+        assertEquals(1, signalScannerRestClient.getDataScanners().size());
     }
 
     @Test
