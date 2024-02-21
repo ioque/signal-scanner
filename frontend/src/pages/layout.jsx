@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 export default function Root() {
+    useEffect(() => {
+        document.title = "Система сигналов";
+    }, []);
+
     return (
         <>
             <div id="sidebar">
