@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.exchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
+@Tag(name="ExchangeQueryController", description="Контроллер запросов к модулю \"EXCHANGE\"")
 public class ExchangeQueryController {
     DateTimeProvider dateTimeProvider;
     InstrumentQueryRepository instrumentQueryRepository;

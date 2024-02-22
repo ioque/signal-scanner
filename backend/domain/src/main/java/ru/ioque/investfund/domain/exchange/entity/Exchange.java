@@ -7,12 +7,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.Domain;
-import ru.ioque.investfund.domain.DomainException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,12 +46,6 @@ public class Exchange extends Domain {
                 this.tickerToIds.put(instrument.getTicker(), instrument.getId());
             });
         }
-    }
-
-    public Instrument getById(UUID id) {
-        return Optional
-            .ofNullable(instruments.get(id))
-            .orElseThrow(() -> new DomainException("Инструмент с идентификатором " + id + " не найден."));
     }
 
     public List<Instrument> getInstruments() {

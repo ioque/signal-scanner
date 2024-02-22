@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.signalscanner;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Tag(name="SignalScannerQueryController", description="Контроллер запросов к модулю \"SIGNAL-SCANNER\"")
 public class SignalScannerQueryController {
     JpaScannerRepo dataJpaScannerRepo;
 

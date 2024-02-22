@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.schedule;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Tag(name="ScheduleQueryController", description="Контроллер запросов к модулю \"SCHEDULE\"")
 public class ScheduleQueryController {
     ScheduleManager scheduleManager;
     @GetMapping("/api/v1/schedule")

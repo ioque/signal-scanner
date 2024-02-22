@@ -1,5 +1,7 @@
 package ru.ioque.investfund.adapters.rest.service;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,8 @@ import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 @Profile("test")
 @RestController
 @AllArgsConstructor
+@Hidden
+@Tag(name = "Служебный контролер", description = "Работает в окружении test, позволяет очищать стейт приложения.")
 public class ServiceController {
     ExchangeEntityRepository exchangeEntityRepository;
     InstrumentEntityRepository instrumentEntityRepository;

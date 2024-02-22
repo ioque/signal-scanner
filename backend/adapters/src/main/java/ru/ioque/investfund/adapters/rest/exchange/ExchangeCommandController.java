@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.exchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Tag(name="ExchangeCommandController", description="Контроллер команд к модулю \"EXCHANGE\"")
 public class ExchangeCommandController {
     ExchangeManager exchangeManager;
 

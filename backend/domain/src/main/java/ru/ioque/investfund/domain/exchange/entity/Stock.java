@@ -48,6 +48,10 @@ public class Stock extends Instrument {
 
     @Override
     public List<TimeSeriesValue<Double, ChronoLocalDate>> getWaPriceSeries() {
-        return getDailyValues().stream().map(DealResult.class::cast).map(row -> new TimeSeriesValue<>(row.getWaPrice(), row.getTradeDate())).toList();
+        return getDailyValues()
+            .stream()
+            .map(DealResult.class::cast)
+            .map(row -> new TimeSeriesValue<>(row.getWaPrice(), row.getTradeDate()))
+            .toList();
     }
 }
