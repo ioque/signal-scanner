@@ -15,6 +15,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StockHistoryGeneratorConfig extends GeneratorConfig {
+    LocalDate startDate;
+    int days;
     double startValue;
     double startOpen;
     double startClose;
@@ -34,12 +36,12 @@ public class StockHistoryGeneratorConfig extends GeneratorConfig {
         List<PercentageGrowths> closePricePercentageGrowths,
         List<PercentageGrowths> valuePercentageGrowths
     ) {
-        super(ticker, startDate, days);
+        super(ticker);
+        this.startDate = startDate;
+        this.days = days;
         this.startValue = startValue;
         this.startOpen = startOpen;
         this.startClose = startClose;
-        this.startDate = startDate;
-        this.days = days;
         this.openPricePercentageGrowths = openPricePercentageGrowths;
         this.closePricePercentageGrowths = closePricePercentageGrowths;
         this.valuePercentageGrowths = valuePercentageGrowths;
