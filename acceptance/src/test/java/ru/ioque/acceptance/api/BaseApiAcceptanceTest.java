@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class BaseApiAcceptanceTest {
@@ -98,11 +99,17 @@ public class BaseApiAcceptanceTest {
     }
 
     protected List<InstrumentInList> getInstruments() {
-        return exchangeRestClient.getInstruments();
+        return exchangeRestClient.getInstruments("");
     }
 
     protected List<InstrumentInList> getInstruments(Map<String, String> params) {
-        return exchangeRestClient.getInstruments();
+        return exchangeRestClient
+            .getInstruments(params
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"))
+            );
     }
 
     protected Instrument getInstrumentById(UUID id) {
@@ -113,7 +120,7 @@ public class BaseApiAcceptanceTest {
         return exchangeRestClient
             .getInstrumentStatisticBy(
                 exchangeRestClient
-                    .getInstruments()
+                    .getInstruments("")
                     .stream()
                     .filter(row -> row.getTicker().equals(ticker))
                     .map(InstrumentInList::getId)

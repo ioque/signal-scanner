@@ -36,8 +36,10 @@ public class ExchangeRestClient {
     }
 
     @SneakyThrows
-    public List<InstrumentInList> getInstruments() {
-        return objectMapper.readValue(restTemplateFacade.get("/instruments", String.class), new TypeReference<>(){});
+    public List<InstrumentInList> getInstruments(String params) {
+        String path = "/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
+        System.out.println(path);
+        return objectMapper.readValue(restTemplateFacade.get(path, String.class), new TypeReference<>(){});
     }
 
     @SneakyThrows

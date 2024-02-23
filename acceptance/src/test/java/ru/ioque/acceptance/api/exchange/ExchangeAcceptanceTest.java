@@ -150,7 +150,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
     @Disabled
     @DisplayName("""
-        T4. Поиск финансовых инструментов по названию.
+        T5. Поиск финансовых инструментов по названию.
         """)
     void testCase5() {
         integrateInstruments(
@@ -167,10 +167,67 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("""
-        T6. Получение детализированной информации по финансовому инструменту.
+        T6. Поиск финансовых инструментов по названию и типу.
         """)
     void testCase6() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> instruments = getInstruments(Map.of("shortname", "BR", "type", "futures"));
+
+        assertEquals(1, instruments.size());
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T7. Поиск финансовых инструментов по тикеру и типу.
+        """)
+    void testCase7() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> instruments = getInstruments(Map.of("ticker", "IMOEX", "type", "index"));
+
+        assertEquals(1, instruments.size());
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T8. Поиск финансовых инструментов по тикеру, названию и типу.
+        """)
+    void testCase8() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> instruments = getInstruments(Map.of("shortname", "Сбер", "ticker", "SBER", "type", "stock"));
+
+        assertEquals(2, instruments.size());
+    }
+
+    @Test
+    @DisplayName("""
+        T9. Получение детализированной информации по финансовому инструменту.
+        """)
+    void testCase9() {
         integrateInstruments(instruments().sber().build());
 
         Instrument instrument = getInstrumentById(
@@ -189,9 +246,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T7. Включение обновления торговых данных по финансовым инструментам.
+        T10. Включение обновления торговых данных по финансовым инструментам.
         """)
-    void testCase7() {
+    void testCase10() {
         LocalDateTime time = LocalDateTime.now();
         integrateInstruments(instruments()
             .sber()
@@ -233,9 +290,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T8. Выключение обновления торговых данных по финансовым инструментам.
+        T11. Выключение обновления торговых данных по финансовым инструментам.
         """)
-    void testCase8() {
+    void testCase11() {
         LocalDateTime time = LocalDateTime.now();
         integrateInstruments(instruments().sber()
             .historyValues(
@@ -275,9 +332,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T9. Внутридневная интеграция торговых данных.
+        T12. Внутридневная интеграция торговых данных.
         """)
-    void testCase9() {
+    void testCase12() {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
@@ -289,9 +346,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T10. Получение статистики инструмента.
+        T13. Получение статистики инструмента.
         """)
-    void testCase10() {
+    void testCase13() {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
@@ -303,9 +360,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
     @Disabled
     @DisplayName("""
-        T11. Архивация и очистка торговых данных по финансовому инструменту.
+        T14. Архивация и очистка торговых данных по финансовому инструменту.
         """)
-    void testCase11() {
+    void testCase14() {
 
     }
 
