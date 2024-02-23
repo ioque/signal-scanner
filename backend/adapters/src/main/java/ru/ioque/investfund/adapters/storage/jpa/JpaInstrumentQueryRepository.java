@@ -11,6 +11,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.In
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.specification.FilterParams;
 import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 
@@ -25,6 +26,10 @@ public class JpaInstrumentQueryRepository implements InstrumentQueryRepository {
     InstrumentEntityRepository instrumentEntityRepository;
     DailyValueEntityRepository dailyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
+
+    public List<Instrument> getBy(FilterParams filterParams) {
+        return List.of();
+    }
 
     @Override
     public List<Instrument> getAll() {

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
@@ -14,6 +15,7 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -42,7 +44,11 @@ public class ExchangeQueryController {
     }
 
     @GetMapping("/api/v1/instruments")
-    public List<InstrumentInListResponse> getInstruments() {
+    public List<InstrumentInListResponse> getInstruments(
+        @RequestParam Optional<String> ticker,
+        @RequestParam Optional<String> type,
+        @RequestParam Optional<String> shortname
+    ) {
         return instrumentQueryRepository
             .getAll()
             .stream()

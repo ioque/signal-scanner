@@ -11,6 +11,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
 import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
@@ -58,6 +59,15 @@ public class BaseJpaTest {
             .regNumber("regNumber")
             .isin("isin")
             .listLevel(1);
+    }
+
+    protected Index.IndexBuilder buildIndexWith() {
+        return Index
+            .builder()
+            .id(uuidProvider.generate())
+            .ticker("INDEX")
+            .shortName("Какой-то индекс")
+            .name("Какой-то индекс");
     }
 
     protected IntradayValue buildDealWith(String ticker, LocalDateTime dateTime) {
