@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@Tag(name="ExchangeQueryController", description="Контроллер запросов к модулю \"EXCHANGE\"")
+@Tag(name = "ExchangeQueryController", description = "Контроллер запросов к модулю \"EXCHANGE\"")
 public class ExchangeQueryController {
     DateTimeProvider dateTimeProvider;
     InstrumentQueryRepository instrumentQueryRepository;
@@ -31,7 +31,14 @@ public class ExchangeQueryController {
 
     @GetMapping("/api/v1/instruments/{id}")
     public InstrumentResponse getInstrument(@PathVariable UUID id) {
-        return InstrumentResponse.fromDomain(instrumentQueryRepository.getById(id));
+        return InstrumentResponse
+            .fromDomain(
+                instrumentQueryRepository
+                    .getWithTradingDataBy(
+                        id,
+                        dateTimeProvider.nowDate()
+                    )
+            );
     }
 
     @GetMapping("/api/v1/instruments")

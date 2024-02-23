@@ -18,14 +18,14 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class DailyTradingResultResponse implements Serializable {
+public class DailyValueResponse implements Serializable {
     LocalDate tradeDate;
     String ticker;
     Double value;
     Double openPrice;
     Double closePrice;
-    public static DailyTradingResultResponse fromDomain(DailyValue dailyValue) {
-        return DailyTradingResultResponse.builder()
+    public static DailyValueResponse fromDomain(DailyValue dailyValue) {
+        return DailyValueResponse.builder()
             .tradeDate(dailyValue.getTradeDate())
             .ticker(dailyValue.getTicker())
             .value(dailyValue.getValue())

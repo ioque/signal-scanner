@@ -22,7 +22,7 @@ public class ExchangeRestClient {
     RestTemplateFacade restTemplateFacade;
     ObjectMapper objectMapper;
 
-    public void integrateWithDataSource() {
+    public void synchronizeWithDataSource() {
         restTemplateFacade.post("/instruments/integrate", null);
     }
 

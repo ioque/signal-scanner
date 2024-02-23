@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.adapters.client.exchange.ExchangeRestClient;
+import ru.ioque.acceptance.adapters.client.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.acceptance.adapters.client.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.acceptance.adapters.client.service.ServiceClient;
 import ru.ioque.acceptance.adapters.client.signalscanner.SignalScannerRestClient;
@@ -20,6 +21,7 @@ import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -51,7 +53,11 @@ public class BaseApiAcceptanceTest {
         InstrumentValue... instruments
     ) {
         datasetManager().initDataset(Arrays.asList(instruments));
-        exchangeRestClient.integrateWithDataSource();
+        synchronizeWithDataSource();
+    }
+
+    protected void synchronizeWithDataSource() {
+        exchangeRestClient.synchronizeWithDataSource();
     }
 
     protected void addSignalScanner(AddSignalScannerRequest request) {
@@ -59,9 +65,7 @@ public class BaseApiAcceptanceTest {
     }
 
     protected List<UUID> getInstrumentIds() {
-        return exchangeRestClient
-            .getExchange()
-            .getInstruments()
+        return getInstruments()
             .stream()
             .map(InstrumentInList::getId)
             .toList();
@@ -76,20 +80,33 @@ public class BaseApiAcceptanceTest {
     }
 
     protected void fullIntegrate() {
-        exchangeRestClient.integrateWithDataSource();
-        exchangeRestClient.enableUpdateInstruments(
-            new EnableUpdateInstrumentRequest(
-                exchangeRestClient
-                    .getInstruments()
-                    .stream()
-                    .map(InstrumentInList::getId)
-                    .toList())
-        );
+        synchronizeWithDataSource();
+        enableUpdateInstrumentBy(getInstrumentIds());
+        integrateTradingData();
+    }
+
+    protected void integrateTradingData() {
         exchangeRestClient.integrateTradingData();
     }
 
-    protected List<Instrument> getInstruments() {
-        return getInstrumentIds().stream().map(id -> exchangeRestClient.getInstrumentBy(id)).toList();
+    protected void enableUpdateInstrumentBy(List<UUID> ids) {
+        exchangeRestClient.enableUpdateInstruments(new EnableUpdateInstrumentRequest(ids));
+    }
+
+    protected void disableUpdateInstrumentBy(List<UUID> ids) {
+        exchangeRestClient.disableUpdateInstruments(new DisableUpdateInstrumentRequest(ids));
+    }
+
+    protected List<InstrumentInList> getInstruments() {
+        return exchangeRestClient.getInstruments();
+    }
+
+    protected List<InstrumentInList> getInstruments(Map<String, String> params) {
+        return exchangeRestClient.getInstruments();
+    }
+
+    protected Instrument getInstrumentById(UUID id) {
+        return exchangeRestClient.getInstrumentBy(id);
     }
 
     protected InstrumentStatistic getInstrumentStatisticBy(String ticker) {

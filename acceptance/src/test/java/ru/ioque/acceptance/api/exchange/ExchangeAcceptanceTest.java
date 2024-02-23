@@ -1,5 +1,6 @@
 package ru.ioque.acceptance.api.exchange;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +16,13 @@ import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 import ru.ioque.acceptance.domain.exchange.Exchange;
 import ru.ioque.acceptance.domain.exchange.Instrument;
+import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
     @DisplayName("""
-        T1. Интеграция с Московской Биржей.
+        T1. Интеграция с Биржей.
         """)
     void testCase1() {
         integrateInstruments(
@@ -38,6 +42,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         Exchange exchange = getExchange();
+        List<InstrumentInList> instruments = getInstruments();
 
         assertEquals("Московская Биржа", exchange.getName());
         assertEquals(
@@ -45,32 +50,263 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
             exchange.getDescription()
         );
         assertEquals("http://localhost:8081", exchange.getUrl());
-        assertEquals(4, exchange.getInstruments().size());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. Внутридневная интеграция торговых данных.
-        """)
-    void testCase2() {
-        initInstrumentsWithTradingData();
-        fullIntegrate();
-
-        List<Instrument> instruments = getInstruments();
         assertEquals(4, instruments.size());
     }
 
     @Test
     @DisplayName("""
-        T3. Получение статистики инструмента.
+        T2. Повторная синхронизация с источником биржевых данных.
+        """)
+    void testCase2() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build()
+        );
+        Exchange exchange = getExchange();
+        List<InstrumentInList> instruments = getInstruments();
+
+        integrateInstruments(
+            instruments().imoex().shortName("Индекс мосбиржи").build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().shortname("Сбербанкич").build()
+        );
+        Exchange updatedExchange = getExchange();
+        List<InstrumentInList> updatedInstruments = getInstruments();
+
+        assertEquals(exchange.getName(), updatedExchange.getName());
+        assertEquals(
+            exchange.getDescription(),
+            updatedExchange.getDescription()
+        );
+        assertEquals(exchange.getUrl(), updatedExchange.getUrl());
+        assertEquals(instruments.size(), updatedInstruments.size());
+        assertEquals(
+            "Индекс фондового рынка мосбиржи",
+            updatedInstruments
+                .stream()
+                .filter(row -> row.getTicker().equals("IMOEX"))
+                .findFirst()
+                .orElseThrow()
+                .getShortName()
+        );
+        assertEquals(
+            "Сбербанк",
+            updatedInstruments
+                .stream()
+                .filter(row -> row.getTicker().equals("SBER"))
+                .findFirst()
+                .orElseThrow()
+                .getShortName()
+        );
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T3. Поиск финансовых инструментов по тикеру.
         """)
     void testCase3() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> instruments = getInstruments(Map.of("ticker", "SBER"));
+
+        assertEquals(2, instruments.size());
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T4. Поиск финансовых инструментов по типу.
+        """)
+    void testCase4() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> stocks = getInstruments(Map.of("type", "stock"));
+        List<InstrumentInList> currencyPairs = getInstruments(Map.of("type", "currencyPair"));
+        List<InstrumentInList> futures = getInstruments(Map.of("type", "futures"));
+        List<InstrumentInList> indexes = getInstruments(Map.of("type", "index"));
+
+        assertEquals(2, stocks.size());
+        assertEquals(1, currencyPairs.size());
+        assertEquals(1, futures.size());
+        assertEquals(1, indexes.size());
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T4. Поиск финансовых инструментов по названию.
+        """)
+    void testCase5() {
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().usbRub().build(),
+            instruments().brf4().build(),
+            instruments().sber().build(),
+            instruments().sberp().build()
+        );
+
+        List<InstrumentInList> instruments = getInstruments(Map.of("shortname", "Сбер"));
+
+        assertEquals(2, instruments.size());
+    }
+
+    @Test
+    @DisplayName("""
+        T6. Получение детализированной информации по финансовому инструменту.
+        """)
+    void testCase6() {
+        integrateInstruments(instruments().sber().build());
+
+        Instrument instrument = getInstrumentById(
+            getInstruments()
+                .stream()
+                .filter(row -> row.getTicker().equals("SBER"))
+                .findFirst()
+                .map(InstrumentInList::getId)
+                .orElseThrow()
+        );
+
+        assertEquals("SBER", instrument.getTicker());
+        assertEquals("Сбербанк", instrument.getShortName());
+        assertEquals("ПАО Сбербанк", instrument.getName());
+    }
+
+    @Test
+    @DisplayName("""
+        T7. Включение обновления торговых данных по финансовым инструментам.
+        """)
+    void testCase7() {
+        LocalDateTime time = LocalDateTime.now();
+        integrateInstruments(instruments()
+            .sber()
+            .historyValues(
+                List.of(
+                    StockDailyResult
+                        .builder()
+                        .close(3451.4)
+                        .open(3411.1)
+                        .value(135132512351.1)
+                        .volume(123124124.2)
+                        .secId("SBER")
+                        .tradeDate(time.toLocalDate().minusDays(1))
+                        .build()
+                )
+            )
+            .intradayValues(
+                List.of(
+                    StockTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("SBER")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.toLocalTime())
+                        .sysTime(time)
+                        .build()
+                )
+            )
+            .build());
+
+        enableUpdateInstrumentBy(getInstrumentIds());
+        integrateTradingData();
+
+        Instrument sber = getInstrumentById(getInstrumentIds().get(0));
+        assertEquals(1, sber.getDailyValues().size());
+        assertEquals(1, sber.getIntradayValues().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T8. Выключение обновления торговых данных по финансовым инструментам.
+        """)
+    void testCase8() {
+        LocalDateTime time = LocalDateTime.now();
+        integrateInstruments(instruments().sber()
+            .historyValues(
+                List.of(
+                    StockDailyResult
+                        .builder()
+                        .close(3451.4)
+                        .open(3411.1)
+                        .value(135132512351.1)
+                        .volume(123124124.2)
+                        .secId("SBER")
+                        .tradeDate(time.toLocalDate().minusDays(1))
+                        .build()
+                )
+            )
+            .intradayValues(
+                List.of(
+                    StockTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("SBER")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.toLocalTime())
+                        .sysTime(time)
+                        .build()
+                )
+            )
+            .build());
+        List<UUID> ids = getInstrumentIds();
+        disableUpdateInstrumentBy(ids);
+
+        Instrument sber = getInstrumentById(ids.get(0));
+        assertEquals(0, sber.getDailyValues().size());
+        assertEquals(0, sber.getIntradayValues().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T9. Внутридневная интеграция торговых данных.
+        """)
+    void testCase9() {
+        initInstrumentsWithTradingData();
+        fullIntegrate();
+
+        List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+
+        assertEquals(4, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
+        assertEquals(4, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T10. Получение статистики инструмента.
+        """)
+    void testCase10() {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
         InstrumentStatistic instrumentStatistic = getInstrumentStatisticBy("SBER");
 
         assertEquals(37, Math.round(instrumentStatistic.getTodayValue()));
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T11. Архивация и очистка торговых данных по финансовому инструменту.
+        """)
+    void testCase11() {
+
     }
 
     private void initInstrumentsWithTradingData() {

@@ -21,7 +21,7 @@ public class InstrumentResponse implements Serializable {
     String name;
     String shortName;
     String ticker;
-    List<DailyTradingResultResponse> dailyTradingResults;
+    List<DailyValueResponse> dailyValues;
     List<IntradayValueResponse> intradayValues;
 
     public static InstrumentResponse fromDomain(Instrument instrument) {
@@ -30,7 +30,7 @@ public class InstrumentResponse implements Serializable {
             .ticker(instrument.getTicker())
             .name(instrument.getName())
             .shortName(instrument.getShortName())
-            .dailyTradingResults(instrument.getDailyValues().stream().map(DailyTradingResultResponse::fromDomain).toList())
+            .dailyValues(instrument.getDailyValues().stream().map(DailyValueResponse::fromDomain).toList())
             .intradayValues(instrument.getIntradayValues().stream().map(IntradayValueResponse::fromDomain).toList())
             .build();
 

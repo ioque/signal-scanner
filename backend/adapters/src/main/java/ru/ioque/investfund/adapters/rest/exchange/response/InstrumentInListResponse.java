@@ -30,7 +30,7 @@ public class InstrumentInListResponse implements Serializable {
     public static InstrumentInListResponse fromDomain(Instrument instrument) {
         return InstrumentInListResponse.builder()
             .id(instrument.getId())
-            .shortName(instrument.getName())
+            .shortName(instrument.getShortName())
             .ticker(instrument.getTicker())
             .build();
     }
