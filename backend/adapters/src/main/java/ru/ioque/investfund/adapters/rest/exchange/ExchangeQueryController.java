@@ -54,9 +54,7 @@ public class ExchangeQueryController {
         @RequestParam(defaultValue = "shortName") String orderField
     ) {
         return instrumentQueryRepository
-            .getAll(
-                new InstrumentFilterParams(ticker, type, shortname, pageNumber, pageSize, orderValue, orderField)
-            )
+            .getAll(new InstrumentFilterParams(ticker, type, shortname, pageNumber, pageSize, orderValue, orderField))
             .stream()
             .map(InstrumentInListResponse::fromDomain)
             .toList();

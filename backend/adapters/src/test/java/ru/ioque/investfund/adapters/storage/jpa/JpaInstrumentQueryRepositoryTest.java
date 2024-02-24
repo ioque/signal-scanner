@@ -220,7 +220,37 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
         T8. Постраничное получение данных
         """)
     void testCase8() {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID id3 = UUID.randomUUID();
+        UUID id4 = UUID.randomUUID();
+        Exchange exchange = new Exchange(
+            UUID.randomUUID(),
+            "test",
+            "test",
+            "test",
+            Set.of(id1, id2),
+            List.of(
+                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildStockWith().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
+                buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+            )
+        );
+        exchangeRepository.save(exchange);
+        List<Instrument> instruments1 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(1).orderField("ticker").orderDirection("ASC").build());
+        List<Instrument> instruments2 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(1).pageSize(1).orderField("ticker").orderDirection("ASC").build());
+        List<Instrument> instruments3 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(1).pageSize(2).orderField("ticker").orderDirection("ASC").build());
+        List<Instrument> instruments4 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(3).orderField("ticker").orderDirection("ASC").build());
 
+        assertEquals(1, instruments1.size());
+        assertEquals(1, instruments2.size());
+        assertEquals(2, instruments3.size());
+        assertEquals(3, instruments4.size());
+        assertTrue(instruments1.stream().map(Instrument::getTicker).toList().contains("AFKS"));
+        assertTrue(instruments2.stream().map(Instrument::getTicker).toList().contains("IMOEX"));
+        assertTrue(instruments3.stream().map(Instrument::getTicker).toList().containsAll(List.of("SBER", "SBERP")));
+        assertTrue(instruments4.stream().map(Instrument::getTicker).toList().containsAll(List.of("AFKS", "IMOEX", "SBER")));
     }
 
     @Test
@@ -228,6 +258,36 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
         T9. Сортировка данных
         """)
     void testCase9() {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID id3 = UUID.randomUUID();
+        UUID id4 = UUID.randomUUID();
+        Exchange exchange = new Exchange(
+            UUID.randomUUID(),
+            "test",
+            "test",
+            "test",
+            Set.of(id1, id2),
+            List.of(
+                buildStockWith().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
+                buildStockWith().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
+                buildStockWith().id(id3).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
+                buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+            )
+        );
+        exchangeRepository.save(exchange);
 
+        List<Instrument> instruments = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(4).orderDirection("DESC").orderField("shortName").build());
+        List<Instrument> instruments2 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(4).orderDirection("ASC").orderField("shortName").build());
+
+        assertEquals("AFKS", instruments.get(0).getTicker());
+        assertEquals("SBERP", instruments.get(1).getTicker());
+        assertEquals("SBER", instruments.get(2).getTicker());
+        assertEquals("IMOEX", instruments.get(3).getTicker());
+
+        assertEquals("IMOEX", instruments2.get(0).getTicker());
+        assertEquals("SBER", instruments2.get(1).getTicker());
+        assertEquals("SBERP", instruments2.get(2).getTicker());
+        assertEquals("AFKS", instruments2.get(3).getTicker());
     }
 }

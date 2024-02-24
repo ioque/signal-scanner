@@ -58,7 +58,7 @@ public class InstrumentFilterParams {
     }
 
     public boolean pageRequestIsEmpty() {
-        return pageNumber == null || pageSize == null || orderDirection == null || orderField == null;
+        return pageNumber == null || pageSize == null;
     }
 
     private List<Specification<InstrumentEntity>> specifications() {
@@ -72,6 +72,9 @@ public class InstrumentFilterParams {
     public PageRequest pageRequest() {
         if (pageRequestIsEmpty()) {
             throw new RuntimeException();
+        }
+        if (orderDirection == null || orderField == null) {
+            return PageRequest.of(pageNumber, pageSize);
         }
         return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.valueOf(orderDirection), orderField));
     }
