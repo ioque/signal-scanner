@@ -23,12 +23,12 @@ public class ExchangeRestClient {
     ObjectMapper objectMapper;
 
     public void synchronizeWithDataSource() {
-        restTemplateFacade.post("/instruments/integrate", null);
+        restTemplateFacade.post("/integrate", null);
     }
 
     @SneakyThrows
     public void integrateTradingData() {
-        restTemplateFacade.post("/instruments/daily-integrate", null);
+        restTemplateFacade.post("/daily-integrate", null);
     }
 
     public Exchange getExchange() {
@@ -44,12 +44,12 @@ public class ExchangeRestClient {
 
     @SneakyThrows
     public void enableUpdateInstruments(EnableUpdateInstrumentRequest request) {
-        restTemplateFacade.patch("/instruments/enable-update", objectMapper.writeValueAsString(request), String.class);
+        restTemplateFacade.patch("/enable-update", objectMapper.writeValueAsString(request), String.class);
     }
 
     @SneakyThrows
     public void disableUpdateInstruments(DisableUpdateInstrumentRequest request) {
-        restTemplateFacade.patch("/instruments/disable-update", objectMapper.writeValueAsString(request), String.class);
+        restTemplateFacade.patch("/disable-update", objectMapper.writeValueAsString(request), String.class);
     }
 
     public Instrument getInstrumentBy(UUID id) {
@@ -58,5 +58,9 @@ public class ExchangeRestClient {
 
     public InstrumentStatistic getInstrumentStatisticBy(UUID id) {
         return restTemplateFacade.get("/instruments/" + id + "/statistic", InstrumentStatistic.class);
+    }
+
+    public void clearIntradayValue() {
+        restTemplateFacade.delete("/intraday-value");
     }
 }

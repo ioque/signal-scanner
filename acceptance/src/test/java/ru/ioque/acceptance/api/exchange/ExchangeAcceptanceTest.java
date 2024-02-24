@@ -1,6 +1,5 @@
 package ru.ioque.acceptance.api.exchange;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +25,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("МОДУЛЬ \"АГРЕГАТОР\"")
+@DisplayName("МОДУЛЬ \"EXCHANGE\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
@@ -352,12 +351,18 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
-        T14. Архивация и очистка торговых данных по финансовому инструменту.
+        T14. Очистка внутридневных данных.
         """)
     void testCase14() {
+        initInstrumentsWithTradingData();
+        fullIntegrate();
+        clearIntradayValue();
 
+        List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+
+        assertEquals(4, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
+        assertEquals(0, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
     }
 
     private void initInstrumentsWithTradingData() {

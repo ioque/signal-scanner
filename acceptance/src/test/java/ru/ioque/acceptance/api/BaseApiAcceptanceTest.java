@@ -86,6 +86,10 @@ public class BaseApiAcceptanceTest {
         integrateTradingData();
     }
 
+    protected void clearIntradayValue() {
+        exchangeRestClient.clearIntradayValue();
+    }
+
     protected void integrateTradingData() {
         exchangeRestClient.integrateTradingData();
     }
