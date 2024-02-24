@@ -104,7 +104,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T3. Поиск финансовых инструментов по тикеру.
         """)
@@ -123,7 +122,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T4. Поиск финансовых инструментов по типу.
         """)
@@ -148,7 +146,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T5. Поиск финансовых инструментов по названию.
         """)
@@ -167,7 +164,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T6. Поиск финансовых инструментов по названию и типу.
         """)
@@ -186,7 +182,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T7. Поиск финансовых инструментов по тикеру и типу.
         """)
@@ -205,7 +200,6 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
         T8. Поиск финансовых инструментов по тикеру, названию и типу.
         """)

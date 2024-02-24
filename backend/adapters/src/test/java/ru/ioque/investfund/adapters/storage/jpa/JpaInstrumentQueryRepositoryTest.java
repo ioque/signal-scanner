@@ -190,7 +190,7 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
         T7. Фильтрация инструментов по их тикеру, типу и краткому наименованию.
         """
     )
-    void testCase8() {
+    void testCase7() {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
         UUID id3 = UUID.randomUUID();
@@ -213,5 +213,21 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
 
         assertEquals(1, sberp.size());
         assertEquals(1, imoex.size());
+    }
+
+    @Test
+    @DisplayName("""
+        T8. Постраничное получение данных
+        """)
+    void testCase8() {
+
+    }
+
+    @Test
+    @DisplayName("""
+        T9. Сортировка данных
+        """)
+    void testCase9() {
+
     }
 }

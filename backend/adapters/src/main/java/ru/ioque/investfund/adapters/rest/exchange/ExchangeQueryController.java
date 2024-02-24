@@ -45,9 +45,9 @@ public class ExchangeQueryController {
 
     @GetMapping("/api/v1/instruments")
     public List<InstrumentInListResponse> getInstruments(
-        @RequestParam String ticker,
-        @RequestParam String type,
-        @RequestParam String shortname,
+        @RequestParam(required = false) String ticker,
+        @RequestParam(required = false) String type,
+        @RequestParam(required = false) String shortname,
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize,
         @RequestParam(defaultValue = "ASC") String orderValue,
