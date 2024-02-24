@@ -10,12 +10,12 @@ import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentStatisticResponse;
+import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Tag(name = "ExchangeQueryController", description = "Контроллер запросов к модулю \"EXCHANGE\"")
 public class ExchangeQueryController {
     DateTimeProvider dateTimeProvider;
-    InstrumentQueryRepository instrumentQueryRepository;
+    JpaInstrumentQueryRepository instrumentQueryRepository;
     ExchangeRepository exchangeRepository;
 
     @GetMapping("/api/v1/exchange")
@@ -45,12 +45,18 @@ public class ExchangeQueryController {
 
     @GetMapping("/api/v1/instruments")
     public List<InstrumentInListResponse> getInstruments(
-        @RequestParam Optional<String> ticker,
-        @RequestParam Optional<String> type,
-        @RequestParam Optional<String> shortname
+        @RequestParam String ticker,
+        @RequestParam String type,
+        @RequestParam String shortname,
+        @RequestParam(defaultValue = "0") Integer pageNumber,
+        @RequestParam(defaultValue = "100") Integer pageSize,
+        @RequestParam(defaultValue = "ASC") String orderValue,
+        @RequestParam(defaultValue = "shortName") String orderField
     ) {
         return instrumentQueryRepository
-            .getAll()
+            .getAll(
+                new InstrumentFilterParams(ticker, type, shortname, pageNumber, pageSize, orderValue, orderField)
+            )
             .stream()
             .map(InstrumentInListResponse::fromDomain)
             .toList();

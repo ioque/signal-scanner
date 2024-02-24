@@ -4,6 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
+import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
@@ -13,12 +14,11 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityReposit
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
 import ru.ioque.investfund.application.adapters.ReportRepository;
+import ru.ioque.investfund.application.adapters.ScheduleRepository;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.modules.schedule.ScheduleManager;
-import ru.ioque.investfund.application.adapters.ScheduleRepository;
 
 import static org.mockito.Mockito.mock;
 
@@ -93,8 +93,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public InstrumentQueryRepository mockInstrumentRepository() {
-        return mock(InstrumentQueryRepository.class);
+    public JpaInstrumentQueryRepository mockInstrumentRepository() {
+        return mock(JpaInstrumentQueryRepository.class);
     }
 
     @Bean

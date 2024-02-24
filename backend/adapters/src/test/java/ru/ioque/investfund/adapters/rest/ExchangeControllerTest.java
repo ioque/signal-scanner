@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
-import ru.ioque.investfund.application.adapters.InstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("EXCHANGE REST INTERFACE")
 public class ExchangeControllerTest extends BaseControllerTest {
     @Autowired
-    InstrumentQueryRepository instrumentQueryRepository;
+    JpaInstrumentQueryRepository instrumentQueryRepository;
 
     @Test
     @SneakyThrows
