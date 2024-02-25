@@ -63,4 +63,8 @@ public class ExchangeRestClient {
     public void clearIntradayValue() {
         restTemplateFacade.delete("/intraday-value");
     }
+
+    public void runDataTransfer() {
+        restTemplateFacade.delete("/run-data-transfer");
+    }
 }

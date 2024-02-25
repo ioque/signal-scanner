@@ -1,23 +1,33 @@
 version: "3.9"
 services:
-  postgres-test:
-    container_name: test-db
-    build:
-      context: postgres
-    ports:
-      - "54322:5432"
-    volumes:
-      - test-db:/var/lib/postgresql/data
-  postgres:
-    container_name: db
+  signal-scanner-db:
+    container_name: signal-scanner-db
     build:
       context: postgres
     ports:
       - "54321:5432"
     volumes:
-      - db:/var/lib/postgresql/data
+      - signal-scanner-db:/var/lib/postgresql/data
+  signal-scanner-test-db:
+    container_name: signal-scanner-test-db
+    build:
+      context: postgres
+    ports:
+      - "54322:5432"
+    volumes:
+      - signal-scanner-test-db:/var/lib/postgresql/data
+  testing-system-db:
+    container_name: testing-system-db
+    build:
+      context: postgres
+    ports:
+      - "54323:5432"
+    volumes:
+      - testing-system-db:/var/lib/postgresql/data
 volumes:
-  db:
+  signal-scanner-db:
     driver: local
-  test-db:
+  signal-scanner-test-db:
+    driver: local
+  testing-system-db:
     driver: local

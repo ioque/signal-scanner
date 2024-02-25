@@ -365,6 +365,23 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         assertEquals(0, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
     }
 
+    @Test
+    @DisplayName(
+        """
+        T15. Перенос данных в хранилище системы тестирования.
+        """)
+    void testCase15() {
+        initInstrumentsWithTradingData();
+        fullIntegrate();
+
+        runDataTransfer();
+
+        List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+
+        assertEquals(4, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
+        assertEquals(0, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+    }
+
     private void initInstrumentsWithTradingData() {
         LocalDateTime time = LocalDateTime.now().minusMinutes(5);
         datasetManager()
