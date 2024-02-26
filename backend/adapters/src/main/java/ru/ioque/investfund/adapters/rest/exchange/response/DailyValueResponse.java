@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.adapters.storage.jpa.entity.testingsystem.dailyvalue.ArchivedDailyValueEntity;
 import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
 
 import java.io.Serializable;
@@ -31,6 +32,16 @@ public class DailyValueResponse implements Serializable {
             .value(dailyValue.getValue())
             .openPrice(dailyValue.getOpenPrice())
             .closePrice(dailyValue.getClosePrice())
+            .build();
+    }
+
+    public static DailyValueResponse fromEntity(ArchivedDailyValueEntity dailyValueEntity) {
+        return DailyValueResponse.builder()
+            .tradeDate(dailyValueEntity.getTradeDate())
+            .ticker(dailyValueEntity.getTicker())
+            .value(dailyValueEntity.getValue())
+            .openPrice(dailyValueEntity.getOpenPrice())
+            .closePrice(dailyValueEntity.getClosePrice())
             .build();
     }
 }

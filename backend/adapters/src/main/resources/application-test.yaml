@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate.ddl-auto: create-drop
-    generate-ddl: true
+    generate-ddl: false
     properties:
       hibernate:
         jdbc:
@@ -10,7 +10,7 @@ spring:
         order_inserts: true
         order_updates: true
   liquibase:
-    enabled: false
+    change-log: classpath:/db/changelog/db.changelog-test.yaml
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:54322/postgres?reWriteBatchedInserts=true

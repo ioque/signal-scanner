@@ -11,6 +11,9 @@ import ru.ioque.acceptance.adapters.client.service.ServiceClient;
 import ru.ioque.acceptance.adapters.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.AddSignalScannerRequest;
 import ru.ioque.acceptance.adapters.client.signalscanner.response.SignalScannerInList;
+import ru.ioque.acceptance.adapters.client.testingsystem.TestingSystemRestClient;
+import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
+import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 public class BaseApiAcceptanceTest {
     @Autowired
     ExchangeRestClient exchangeRestClient;
+    @Autowired
+    TestingSystemRestClient testingSystemRestClient;
     @Autowired
     SignalScannerRestClient signalScannerRestClient;
     @Autowired
@@ -135,5 +140,12 @@ public class BaseApiAcceptanceTest {
                     .toList()
                     .get(0)
             );
+    }
+
+    protected List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
+        return testingSystemRestClient.getIntradayValues(pageNumber, pageSize);
+    }
+    protected List<DailyValueResponse> getDailyValues(int pageNumber, int pageSize) {
+        return testingSystemRestClient.getDailyValues(pageNumber, pageSize);
     }
 }

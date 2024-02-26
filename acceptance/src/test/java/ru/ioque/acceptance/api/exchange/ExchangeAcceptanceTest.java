@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
+import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
@@ -377,9 +379,13 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         runDataTransfer();
 
         List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+        List<IntradayValueResponse> intradayValues = getIntradayValues(0, 4);
+        List<DailyValueResponse> dailyValues = getDailyValues(0, 4);
 
         assertEquals(4, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
-        assertEquals(0, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+        assertEquals(4, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+        assertEquals(4, intradayValues.size());
+        assertEquals(4, dailyValues.size());
     }
 
     private void initInstrumentsWithTradingData() {

@@ -16,18 +16,8 @@ services:
       - "54322:5432"
     volumes:
       - signal-scanner-test-db:/var/lib/postgresql/data
-  testing-system-db:
-    container_name: testing-system-db
-    build:
-      context: postgres
-    ports:
-      - "54323:5432"
-    volumes:
-      - testing-system-db:/var/lib/postgresql/data
 volumes:
   signal-scanner-db:
     driver: local
   signal-scanner-test-db:
-    driver: local
-  testing-system-db:
     driver: local

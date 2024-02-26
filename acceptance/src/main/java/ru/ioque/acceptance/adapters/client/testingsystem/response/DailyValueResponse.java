@@ -1,4 +1,4 @@
-package ru.ioque.acceptance.adapters.client.exchange;
+package ru.ioque.acceptance.adapters.client.testingsystem.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Getter
 @ToString
@@ -17,6 +16,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DailyTradeDateIntegrateRequest {
-    List<UUID> instrumentIds;
+public class DailyValueResponse {
+    LocalDate tradeDate;
+    String ticker;
+    Double openPrice;
+    Double closePrice;
+    Double minPrice;
+    Double maxPrice;
+    Double value;
 }

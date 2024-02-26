@@ -10,6 +10,6 @@ public class ServiceClient {
     RestTemplateFacade restTemplateFacade;
 
     public void clearState() {
-        restTemplateFacade.delete("/service/state");
+        restTemplateFacade.delete("/api/v1/service/state");
     }
 }

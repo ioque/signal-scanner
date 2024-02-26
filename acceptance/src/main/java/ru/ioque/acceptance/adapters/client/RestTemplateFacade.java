@@ -1,6 +1,7 @@
 package ru.ioque.acceptance.adapters.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,11 +11,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestTemplateFacade {
-    @Value("${variables.api_url}")
-    String url;
-    @Autowired
-    RestTemplate restTemplate;
+    final RestTemplate restTemplate;
+    @Value("${variables.system_host}")
+    String host;
+
+    public RestTemplateFacade(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    protected String url(String path) {
+        return host + path;
+    }
 
     public <T> T get(String path, Class<T> responseType) {
         try {
@@ -58,10 +67,6 @@ public class RestTemplateFacade {
 
     private HttpEntity<String> httpEntity(String data) {
         return getRequestEntity(data);
-    }
-
-    private String url(String path) {
-        return url + path;
     }
 
     private HttpEntity<String> getRequestEntity(String body) {
