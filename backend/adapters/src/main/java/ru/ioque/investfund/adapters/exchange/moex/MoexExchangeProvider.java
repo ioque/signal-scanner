@@ -1,12 +1,13 @@
-package ru.ioque.investfund.adapters.exchagne.moex;
+package ru.ioque.investfund.adapters.exchange.moex;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.exchagne.moex.client.MoexRestClient;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.InstrumentDto;
+import ru.ioque.investfund.adapters.exchange.moex.client.MoexRestClient;
+import ru.ioque.investfund.adapters.exchange.moex.client.dto.InstrumentDto;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Profile("!test")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MoexExchangeProvider implements ExchangeProvider {
