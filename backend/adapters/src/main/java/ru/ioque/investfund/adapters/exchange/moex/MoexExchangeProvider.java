@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.exchange.moex.client.MoexRestClient;
 import ru.ioque.investfund.adapters.exchange.moex.client.dto.InstrumentDto;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("!test")
+//@Profile("!test")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MoexExchangeProvider implements ExchangeProvider {

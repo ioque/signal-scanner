@@ -1,4 +1,4 @@
-package ru.ioque.acceptance.application.tradingdatagenerator;
+package ru.ioque.investfund.adapters.exchange.emulator.generator;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

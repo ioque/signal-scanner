@@ -12,20 +12,22 @@ import java.util.List;
 // Данные инициализируются через генератор случайных значений, на базе исторических данных или из excel
 // Достаточно загрузить массив данных, а система тестирования сэмулирует поток данных, сдвигая программно время системы.
 @Component
-@Profile("test")
+@Profile("emulator")
 public class EmulatorExchangeProvider implements ExchangeProvider {
+    Datasource datasource;
+
     @Override
     public List<DailyValue> fetchDailyTradingResultsBy(Instrument instrument) {
-        return null;
+        return datasource.getDailyValue(instrument.getTicker());
     }
 
     @Override
     public List<IntradayValue> fetchIntradayValuesBy(Instrument instrument) {
-        return null;
+        return datasource.getIntradayValue(instrument.getTicker());
     }
 
     @Override
     public List<Instrument> fetchInstruments() {
-        return null;
+        return datasource.getInstruments();
     }
 }
