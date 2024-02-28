@@ -30,15 +30,15 @@ public class TradingDataGeneratorTest {
                 .startValue(1000D)
                 .days(180)
                 .startDate(LocalDate.parse("2022-01-10"))
-                .openPricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                .closePricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                .valuePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                .openPricePercentageGrowths(List.of(new PercentageGrowths(10D, 0.5), new PercentageGrowths(-10D, 0.5)))
+                .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
                 .build()
         );
 
         assertEquals(180, stockDailyResults.size());
-        assertEquals(1050D, stockDailyResults.get(179).getValue().getValue());
-        assertEquals(10.5, stockDailyResults.get(179).getClose().getValue());
+        assertEquals(1092.5, stockDailyResults.get(179).getValue().getValue());
+        assertEquals(10.925, stockDailyResults.get(179).getClose().getValue());
     }
 
     @Test

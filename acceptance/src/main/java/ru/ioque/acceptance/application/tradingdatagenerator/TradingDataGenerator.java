@@ -10,56 +10,88 @@ import java.util.List;
 
 public class TradingDataGenerator {
     public List<StockDailyResult> generateStockHistory(StockHistoryGeneratorConfig config) {
-        if (config.getClosePricePercentageGrowths().size() == 1 &&
-            config.getOpenPricePercentageGrowths().size() == 1 &&
-            config.getValuePercentageGrowths().size() == 1) {
+        List<StockDailyResult> stockDailyResults = new ArrayList<>();
+        for (int i = 0; i < config.getValuePercentageGrowths().size(); i++) {
+            Double startClose = getStartClose(config, stockDailyResults);
+            Double startOpen = getStartOpen(config, stockDailyResults);
+            Double startValue = getStartValue(config, stockDailyResults);
+            LocalDate startDate = getStartDate(config, stockDailyResults);
+            int days = (int) (config.getDays() * config.getValuePercentageGrowths().get(0).weight);
+            stockDailyResults.addAll(generateStockDailyResultBatch(
+                config.getOpenPricePercentageGrowths().get(i),
+                config.getClosePricePercentageGrowths().get(i),
+                config.getValuePercentageGrowths().get(i),
+                config.getTicker(),
+                startClose,
+                startOpen,
+                startValue,
+                days,
+                startDate
+            ));
+        }
+        return stockDailyResults;
+    }
 
-            Double startClose = config.getStartClose();
-            Double startOpen = config.getStartOpen();
-            Double startValue = config.getStartValue();
-            int days = config.getDays();
-            double finalOpen = startOpen + config.getOpenPricePercentageGrowths().get(0).value * startOpen / 100;
-            double deltaOpen = (finalOpen - startOpen) / (days - 1);
+    private LocalDate getStartDate(StockHistoryGeneratorConfig config, List<StockDailyResult> stockDailyResults) {
+        return stockDailyResults.isEmpty() ? config.getStartDate() : (LocalDate) stockDailyResults.get(
+            stockDailyResults.size() - 1).getTradeDate().getValue();
+    }
 
-            double finalClose = startClose + config.getOpenPricePercentageGrowths().get(0).value * startClose / 100;
-            double deltaClose = (finalClose - startClose) / (days - 1);
+    private double getStartValue(StockHistoryGeneratorConfig config, List<StockDailyResult> stockDailyResults) {
+        return stockDailyResults.isEmpty() ? config.getStartValue() : (double) stockDailyResults.get(
+            stockDailyResults.size() - 1).getValue().getValue();
+    }
 
-            double finalValue = startValue + config.getOpenPricePercentageGrowths().get(0).value * startValue / 100;
-            double deltaValue = (finalValue - startValue) / (days - 1);
+    private double getStartOpen(StockHistoryGeneratorConfig config, List<StockDailyResult> stockDailyResults) {
+        return stockDailyResults.isEmpty() ? config.getStartOpen() : (double) stockDailyResults.get(
+            stockDailyResults.size() - 1).getOpen().getValue();
+    }
 
-            List<StockDailyResult> dailyResults = new ArrayList<>(
-                List.of(
-                    StockDailyResult.builder()
-                        .secId(config.getTicker())
-                        .tradeDate(config.getStartDate())
-                        .open(startOpen)
-                        .close(startClose)
-                        .value(startValue)
-                        .build()
-                )
+    private double getStartClose(StockHistoryGeneratorConfig config, List<StockDailyResult> stockDailyResults) {
+        return stockDailyResults.isEmpty() ? config.getStartClose() : (double) stockDailyResults.get(
+            stockDailyResults.size() - 1).getClose().getValue();
+    }
+
+    private static List<StockDailyResult> generateStockDailyResultBatch(
+        PercentageGrowths openPricePercentageGrowths,
+        PercentageGrowths closePricePercentageGrowths,
+        PercentageGrowths valuePercentageGrowths,
+        String ticker,
+        Double startClose,
+        Double startOpen,
+        Double startValue,
+        int days,
+        LocalDate startDate
+    ) {
+        double finalOpen = startOpen + openPricePercentageGrowths.value * startOpen / 100;
+        double deltaOpen = (finalOpen - startOpen) / (days - 1);
+
+        double finalClose = startClose + closePricePercentageGrowths.value * startClose / 100;
+        double deltaClose = (finalClose - startClose) / (days - 1);
+
+        double finalValue = startValue + valuePercentageGrowths.value * startValue / 100;
+        double deltaValue = (finalValue - startValue) / (days - 1);
+
+        List<StockDailyResult> dailyResults = new ArrayList<>();
+
+        for (int i = 0; i < days; i++) {
+            double open = startOpen + deltaOpen * i;
+            double close = startClose + deltaClose * i;
+            double value = startValue + deltaValue * i;
+            double volume = (long) value / ((open + close) / 2);
+            dailyResults.add(
+                StockDailyResult.builder()
+                    .secId(ticker)
+                    .tradeDate(startDate.plusDays(i))
+                    .open(open)
+                    .close(close)
+                    .value(value)
+                    .volume(volume)
+                    .build()
             );
-
-            for (int i = 1; i < days; i++) {
-                double open = startOpen + deltaOpen * i;
-                double close = startClose + deltaClose * i;
-                double value = startValue + deltaValue * i;
-                double volume = (long) value / ((open + close) / 2);
-                dailyResults.add(
-                    StockDailyResult.builder()
-                        .secId(config.getTicker())
-                        .tradeDate(config.getStartDate().plusDays(i))
-                        .open(open)
-                        .close(close)
-                        .value(value)
-                        .volume(volume)
-                        .build()
-                );
-            }
-
-            return dailyResults;
         }
 
-        return List.of();
+        return dailyResults;
     }
 
     public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
@@ -90,7 +122,10 @@ public class TradingDataGenerator {
     }
 
     private LocalTime getStartTime(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
-        return stockTrades.isEmpty() ? config.getStartTime() : (LocalTime) stockTrades.get(stockTrades.size() - 1).getTradeTime().getValue();
+        return stockTrades.isEmpty() ? config.getStartTime() : (LocalTime) stockTrades
+            .get(stockTrades.size() - 1)
+            .getTradeTime()
+            .getValue();
     }
 
     private int getTradeNumber(List<StockTrade> stockTrades) {

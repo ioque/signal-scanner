@@ -2,6 +2,7 @@ package ru.ioque.acceptance.domain.dataemulator.core;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public abstract class DailyResultValue implements DatasetObject {
     protected StringValue secId;
+    @Getter
     protected LocalDateValue tradeDate;
     public boolean equalsBy(String secId) {
         return Objects.equals(this.secId.getValue(), secId);
