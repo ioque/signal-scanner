@@ -1,13 +1,13 @@
-package ru.ioque.investfund.adapters.exchange.moex.client.parser;
+package ru.ioque.investfund.adapters.exchagne.moex.client.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.CurrencyPairDto;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.FuturesDto;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.IndexDto;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.InstrumentDto;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.StockDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.CurrencyPairDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.FuturesDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.IndexDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.InstrumentDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.StockDto;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;

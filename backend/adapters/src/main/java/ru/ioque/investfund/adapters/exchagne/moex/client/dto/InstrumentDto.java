@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchange.moex.client.dto;
+package ru.ioque.investfund.adapters.exchagne.moex.client.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

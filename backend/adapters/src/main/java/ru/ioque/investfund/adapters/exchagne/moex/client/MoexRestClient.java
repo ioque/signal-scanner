@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchange.moex.client;
+package ru.ioque.investfund.adapters.exchagne.moex.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,10 +9,10 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import ru.ioque.investfund.adapters.exchange.moex.client.dto.InstrumentDto;
-import ru.ioque.investfund.adapters.exchange.moex.client.parser.DailyTradingResultMoexParser;
-import ru.ioque.investfund.adapters.exchange.moex.client.parser.InstrumentMoexParser;
-import ru.ioque.investfund.adapters.exchange.moex.client.parser.IntradayValueMoexParser;
+import ru.ioque.investfund.adapters.exchagne.moex.client.dto.InstrumentDto;
+import ru.ioque.investfund.adapters.exchagne.moex.client.parser.DailyTradingResultMoexParser;
+import ru.ioque.investfund.adapters.exchagne.moex.client.parser.InstrumentMoexParser;
+import ru.ioque.investfund.adapters.exchagne.moex.client.parser.IntradayValueMoexParser;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
 import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;

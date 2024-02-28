@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchange.moex.client.dto;
+package ru.ioque.investfund.adapters.exchagne.moex.client.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.entity.Stock;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -16,40 +16,26 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class StockDto extends InstrumentDto {
+public class CurrencyPairDto extends InstrumentDto {
     Integer lotSize;
-    String isin;
-    String regNumber;
-    Integer listLevel;
+    String faceUnit;
 
     @Builder
-    public StockDto(
-        String ticker,
-        String shortName,
-        String name,
-        Integer lotSize,
-        String isin,
-        String regNumber,
-        Integer listLevel
-    ) {
+    public CurrencyPairDto(String ticker, String shortName, String name, Integer lotSize, String faceUnit) {
         super(ticker, shortName, name);
         this.lotSize = lotSize;
-        this.isin = isin;
-        this.regNumber = regNumber;
-        this.listLevel = listLevel;
+        this.faceUnit = faceUnit;
     }
 
     @Override
     public Instrument toDomain(UUID id) {
-        return Stock.builder()
+        return CurrencyPair.builder()
             .id(id)
+            .faceUnit(faceUnit)
+            .lotSize(lotSize)
             .ticker(ticker)
             .shortName(shortName)
             .name(name)
-            .lotSize(lotSize)
-            .isin(isin)
-            .regNumber(regNumber)
-            .listLevel(listLevel)
             .dailyValues(new ArrayList<>())
             .intradayValues(new ArrayList<>())
             .build();

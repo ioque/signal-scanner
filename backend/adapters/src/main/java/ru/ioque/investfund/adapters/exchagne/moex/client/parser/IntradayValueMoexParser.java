@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchange.moex.client.parser;
+package ru.ioque.investfund.adapters.exchagne.moex.client.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AccessLevel;
