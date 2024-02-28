@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
@@ -28,6 +30,8 @@ public class ServiceController {
     ReportEntityRepository reportEntityRepository;
     ScheduleUnitEntityRepository scheduleUnitEntityRepository;
     SignalScannerEntityRepository signalScannerEntityRepository;
+    ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
+    ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
     ExchangeManager exchangeManager;
 
     @DeleteMapping("/api/v1/service/state")
@@ -39,6 +43,8 @@ public class ServiceController {
         reportEntityRepository.deleteAll();
         signalScannerEntityRepository.deleteAll();
         scheduleUnitEntityRepository.deleteAll();
+        archivedIntradayValueEntityRepository.deleteAll();
+        archivedDailyValueEntityRepository.deleteAll();
         exchangeManager.clearCache();
     }
 }

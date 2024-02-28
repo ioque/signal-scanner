@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ArchivedIntradayValueEntityRepository extends JpaRepository<ArchivedIntradayValueEntity, Long> {
-    @Query("select d.dateTime from ArchivedIntradayValue d order by d.dateTime DESC limit 1")
-    Optional<LocalDateTime> lastDateTime();
 
     @Procedure(procedureName = "archiving_intraday_values")
     void archivingIntradayValues();

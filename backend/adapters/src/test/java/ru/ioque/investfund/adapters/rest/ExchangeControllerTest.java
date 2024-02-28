@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
 import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
@@ -33,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ExchangeControllerTest extends BaseControllerTest {
     @Autowired
     JpaInstrumentQueryRepository instrumentQueryRepository;
+    @Autowired
+    DateTimeProvider dateTimeProvider;
 
     @Test
     @SneakyThrows
@@ -43,7 +47,15 @@ public class ExchangeControllerTest extends BaseControllerTest {
         List<Instrument> instrumentInLists = getInstruments();
 
         Mockito
-            .when(instrumentQueryRepository.getAll())
+            .when(instrumentQueryRepository.getAll(new InstrumentFilterParams(
+                null,
+                null,
+                null,
+                0,
+                100,
+                "ASC",
+                "shortName"
+            )))
             .thenReturn(instrumentInLists);
 
         mvc
@@ -69,11 +81,20 @@ public class ExchangeControllerTest extends BaseControllerTest {
         T2. Выполнение запроса по эндпоинту GET /api/v1/instruments/{id}
         """)
     public void testCase2() {
-        Instrument stock = getInstruments().stream().filter(row -> row.getTicker().equals("TEST_STOCK")).findFirst().get();
+
+        Instrument stock = getInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("TEST_STOCK"))
+            .findFirst()
+            .orElseThrow();
         UUID id = stock.getId();
+        LocalDate date = LocalDate.now();
 
         Mockito
-            .when(instrumentQueryRepository.getById(id))
+            .when(dateTimeProvider.nowDate())
+            .thenReturn(date);
+        Mockito
+            .when(instrumentQueryRepository.getWithTradingDataBy(id, date))
             .thenReturn(stock);
 
         mvc

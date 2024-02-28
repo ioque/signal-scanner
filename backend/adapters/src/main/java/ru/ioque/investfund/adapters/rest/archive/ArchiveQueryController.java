@@ -1,10 +1,9 @@
-package ru.ioque.investfund.adapters.rest.testingsystem;
+package ru.ioque.investfund.adapters.rest.archive;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.exchange.response.DailyValueResponse;
@@ -17,15 +16,9 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Tag(name = "TestingSystemQueryController", description = "Контроллер запросов к модулю \"Система тестирования\"")
-public class TestingSystemQueryController {
+public class ArchiveQueryController {
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
-
-    @PostMapping("/api/v1/run-data-transfer")
-    public void runDataTransfer() {
-        archivedDailyValueEntityRepository.archivingDailyValues();
-        archivedIntradayValueEntityRepository.archivingIntradayValues();
-    }
 
     @GetMapping("/api/v1/daily-values")
     public List<DailyValueResponse> getDailyValues(

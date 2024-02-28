@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
@@ -13,6 +15,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntity
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.ReportRepository;
 import ru.ioque.investfund.application.adapters.ScheduleRepository;
@@ -113,5 +116,23 @@ public class ControllerTestConfiguration {
     @Primary
     public ReportEntityRepository mockReportEntityRepository() {
         return mock(ReportEntityRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public ArchivedIntradayValueEntityRepository mockArchivedIntradayValueEntityRepository() {
+        return mock(ArchivedIntradayValueEntityRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public ArchivedDailyValueEntityRepository mockArchivedDailyValueEntityRepository() {
+        return mock(ArchivedDailyValueEntityRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public DateTimeProvider mockDateTimeProvider() {
+        return mock(DateTimeProvider.class);
     }
 }

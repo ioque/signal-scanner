@@ -370,13 +370,13 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
     @DisplayName(
         """
-        T15. Перенос данных в хранилище системы тестирования.
+        T15. Перенос торговых данных в архив.
         """)
     void testCase15() {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
-        runDataTransfer();
+        runArchiving();
 
         List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
         List<IntradayValueResponse> intradayValues = getIntradayValues(0, 4);
