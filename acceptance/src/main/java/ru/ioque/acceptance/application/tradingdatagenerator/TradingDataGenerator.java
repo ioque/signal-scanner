@@ -63,50 +63,114 @@ public class TradingDataGenerator {
     }
 
     public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
-        if (config.getValuePercentageGrowths().size() == 1 && config.getPricePercentageGrowths().size() == 1) {
+        List<StockTrade> stockTrades = new ArrayList<>();
+        for (int i = 0; i < config.getValuePercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
-            Double startValue = config.getStartValue();
-            Double startPrice = config.getStartPrice();
-            long numTrades = config.getNumTrades();
+            Double startValue = getStartValue(config, stockTrades);
+            Double startPrice = getStartPrice(config, stockTrades);
+            int tradeNumber = getTradeNumber(stockTrades);
+            long numTrades = (long) (config.getNumTrades() * config.getValuePercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
-            LocalTime startTime = config.getStartTime();
-            String buysell = config.getPricePercentageGrowths().get(0).value >= 0 ? "BUY" : "SELL";
-            double finalPrice = startPrice + config.getPricePercentageGrowths().get(0).value * startPrice / 100;
-            double deltaPrice = (finalPrice - startPrice) / (numTrades - 1);
-
-            double finalValue = startValue + config.getValuePercentageGrowths().get(0).value * startValue / 100;
-            double deltaValue = (finalValue - startValue) / (numTrades - 1);
-
-            List<StockTrade> stockTrades = new ArrayList<>(
-                List.of(
-                    StockTrade.builder()
-                        .secId(ticker)
-                        .tradeNo(1)
-                        .tradeTime(startTime)
-                        .value(startValue)
-                        .price(startPrice)
-                        .buySell(buysell)
-                        .sysTime(nowDate.atTime(startTime))
-                        .build()
-                )
-            );
-
-            for (int i = 2; i <= numTrades; i++) {
-                stockTrades.add(
-                    StockTrade.builder()
-                        .secId(ticker)
-                        .tradeNo(i)
-                        .tradeTime(startTime.plusSeconds(i))
-                        .value(startValue + deltaValue * i)
-                        .price(startPrice + deltaPrice * i)
-                        .buySell(buysell)
-                        .sysTime(nowDate.atTime(startTime.plusSeconds(i)))
-                        .build()
-                );
-            }
-
-            return stockTrades;
+            LocalTime startTime = getStartTime(config, stockTrades);
+            stockTrades.addAll(
+                generateStockTradesBatch(
+                    config.getPricePercentageGrowths().get(i),
+                    config.getValuePercentageGrowths().get(i),
+                    tradeNumber,
+                    startPrice,
+                    numTrades,
+                    startValue,
+                    ticker,
+                    startTime,
+                    nowDate
+                ));
         }
-        return List.of();
+
+        return stockTrades;
+    }
+
+    private LocalTime getStartTime(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
+        return stockTrades.isEmpty() ? config.getStartTime() : (LocalTime) stockTrades.get(stockTrades.size() - 1).getTradeTime().getValue();
+    }
+
+    private int getTradeNumber(List<StockTrade> stockTrades) {
+        return stockTrades.isEmpty() ? 1 : (Integer) stockTrades.get(stockTrades.size() - 1).getTradeNo().getValue();
+    }
+
+    private Double getStartPrice(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
+        return stockTrades.isEmpty() ? config.getStartPrice() : (Double) stockTrades
+            .get(stockTrades.size() - 1)
+            .getPrice()
+            .getValue();
+    }
+
+    private Double getStartValue(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
+        return stockTrades.isEmpty() ? config.getStartValue() : (Double) stockTrades
+            .get(stockTrades.size() - 1)
+            .getValue()
+            .getValue();
+    }
+
+    private List<StockTrade> generateStockTradesBatch(
+        PercentageGrowths pricePercentageGrowths,
+        PercentageGrowths valuePercentageGrowths,
+        int tradeNumber,
+        Double startPrice,
+        long numTrades,
+        Double startValue,
+        String ticker,
+        LocalTime startTime,
+        LocalDate nowDate
+    ) {
+        int buyQnt = (int) numTrades / 2;
+        int sellQnt = (int) numTrades / 2;
+        if (valuePercentageGrowths.value > 5) {
+            buyQnt = buyQnt + sellQnt / 2;
+            sellQnt = sellQnt - sellQnt / 2;
+        }
+        if (valuePercentageGrowths.value < 0) {
+            buyQnt = buyQnt - buyQnt / 2;
+            sellQnt = sellQnt + buyQnt / 2;
+        }
+        double finalPrice = startPrice + pricePercentageGrowths.value * startPrice / 100;
+        double deltaPrice = (finalPrice - startPrice) / (numTrades - 1);
+
+        double finalValue = startValue + valuePercentageGrowths.value * startValue / 100;
+        double deltaValue = (finalValue - startValue) / (numTrades - 1);
+
+        List<StockTrade> stockTrades = new ArrayList<>();
+
+        for (int i = 0; i < numTrades; i++) {
+            String buysell = buysell(buyQnt > 0, sellQnt > 0);
+            if (buysell.equals("SELL")) {
+                sellQnt--;
+            }
+            if (buysell.equals("BUY")) {
+                buyQnt--;
+            }
+            stockTrades.add(
+                StockTrade.builder()
+                    .secId(ticker)
+                    .tradeNo(tradeNumber + i)
+                    .tradeTime(startTime.plusSeconds(i))
+                    .value(startValue + deltaValue * i)
+                    .price(startPrice + deltaPrice * i)
+                    .buySell(buysell)
+                    .sysTime(nowDate.atTime(startTime.plusSeconds(i)))
+                    .build()
+            );
+        }
+
+        return stockTrades;
+    }
+
+    public String buysell(boolean buyIsPossible, boolean sellIsPossible) {
+        if (!buyIsPossible) return "SELL";
+        if (!sellIsPossible) return "BUY";
+        if (Math.random() > 0.5) {
+            return "BUY";
+        } else {
+            return "SELL";
+        }
     }
 }

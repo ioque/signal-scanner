@@ -97,4 +97,14 @@ public class InstrumentsFixture {
             .shortname("Татнефть")
             .type(InstrumentType.STOCK);
     }
+
+    public Stock.StockBuilder tgkn() {
+        return Stock.builder()
+            .secId("TGKN")
+            .boardId("TQBR")
+            .lotSize(100)
+            .secName("ТГК-14")
+            .shortname("ТГК-14")
+            .type(InstrumentType.STOCK);
+    }
 }

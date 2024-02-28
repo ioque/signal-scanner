@@ -9,6 +9,15 @@ import ru.ioque.acceptance.adapters.client.signalscanner.request.CorrelationSect
 import ru.ioque.acceptance.adapters.client.signalscanner.request.PrefSimpleRequest;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.SectoralRetardScannerRequest;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
+import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,14 +36,14 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         addSignalScanner(
-                AnomalyVolumeScannerRequest.builder()
-                    .scaleCoefficient(1.5)
-                    .description("desc")
-                    .historyPeriod(180)
-                    .indexTicker("IMOEX")
-                    .ids(getInstrumentIds())
-                    .build()
-            );
+            AnomalyVolumeScannerRequest.builder()
+                .scaleCoefficient(1.5)
+                .description("desc")
+                .historyPeriod(180)
+                .indexTicker("IMOEX")
+                .ids(getInstrumentIds())
+                .build()
+        );
 
         assertEquals(1, getSignalScanners().size());
     }
@@ -50,12 +59,12 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         addSignalScanner(
-                PrefSimpleRequest.builder()
-                    .ids(getInstrumentIds())
-                    .description("desc")
-                    .spreadParam(1.0)
-                    .build()
-            );
+            PrefSimpleRequest.builder()
+                .ids(getInstrumentIds())
+                .description("desc")
+                .spreadParam(1.0)
+                .build()
+        );
 
         assertEquals(1, getSignalScanners().size());
     }
@@ -73,13 +82,13 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         addSignalScanner(
-                SectoralRetardScannerRequest.builder()
-                    .ids(getInstrumentIds())
-                    .description("desc")
-                    .historyScale(0.015)
-                    .intradayScale(0.015)
-                    .build()
-            );
+            SectoralRetardScannerRequest.builder()
+                .ids(getInstrumentIds())
+                .description("desc")
+                .historyScale(0.015)
+                .intradayScale(0.015)
+                .build()
+        );
 
         assertEquals(1, getSignalScanners().size());
     }
@@ -98,14 +107,14 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         addSignalScanner(
-                CorrelationSectoralScannerRequest.builder()
-                    .ids(getInstrumentIds())
-                    .description("desc")
-                    .futuresTicker("BRF4")
-                    .futuresOvernightScale(0.015)
-                    .stockOvernightScale(0.015)
-                    .build()
-            );
+            CorrelationSectoralScannerRequest.builder()
+                .ids(getInstrumentIds())
+                .description("desc")
+                .futuresTicker("BRF4")
+                .futuresOvernightScale(0.015)
+                .stockOvernightScale(0.015)
+                .build()
+        );
 
         assertEquals(1, getSignalScanners().size());
     }
@@ -115,7 +124,91 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T5. Запуск сканера сигналов с алгоритмом "Аномальные объемы", в торговых данных есть сигнал к покупке.
         """)
     void testCase5() {
-
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate startDate = now.toLocalDate().minusMonths(1);
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().tgkn().build()
+        );
+        datasetManager().initDailyResultValue(
+            Stream.concat(
+                    generator()
+                        .generateStockHistory(
+                            StockHistoryGeneratorConfig
+                                .builder()
+                                .ticker("TGKN")
+                                .startClose(10.)
+                                .startOpen(10.)
+                                .startValue(1_000_000D)
+                                .days(30)
+                                .startDate(startDate)
+                                .openPricePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
+                                .closePricePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
+                                .valuePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
+                                .build()
+                        )
+                        .stream(),
+                    generator()
+                        .generateStockHistory(
+                            StockHistoryGeneratorConfig
+                                .builder()
+                                .ticker("IMOEX")
+                                .startClose(10.)
+                                .startOpen(10.)
+                                .startValue(2_000_000D)
+                                .days(30)
+                                .startDate(startDate)
+                                .openPricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                .closePricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                .valuePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                .build()
+                        )
+                        .stream()
+                )
+                .toList()
+        );
+        datasetManager().initIntradayValue(
+            Stream
+                .concat(
+                    generator().generateStockTrades(
+                        StockTradesGeneratorConfig
+                            .builder()
+                            .ticker("IMOEX")
+                            .numTrades(2000)
+                            .startPrice(10.)
+                            .startValue(200_000D)
+                            .date(now.toLocalDate())
+                            .startTime(LocalTime.parse("10:00"))
+                            .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
+                            .build()
+                    ).stream(),
+                    generator().generateStockTrades(
+                        StockTradesGeneratorConfig
+                            .builder()
+                            .ticker("TGKN")
+                            .numTrades(2000)
+                            .startPrice(10.)
+                            .startValue(200_000D)
+                            .date(now.toLocalDate())
+                            .startTime(LocalTime.parse("10:00"))
+                            .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
+                            .build()
+                    ).stream()
+                )
+                .toList()
+        );
+        integrateTradingData();
+        addSignalScanner(
+            AnomalyVolumeScannerRequest.builder()
+                .scaleCoefficient(1.5)
+                .description("desc")
+                .historyPeriod(180)
+                .indexTicker("IMOEX")
+                .ids(getInstrumentIds())
+                .build()
+        );
     }
 
     @Test

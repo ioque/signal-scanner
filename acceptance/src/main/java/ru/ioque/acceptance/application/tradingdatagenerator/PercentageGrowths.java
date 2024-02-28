@@ -10,6 +10,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class PercentageGrowths {
-    Integer value;
-    Integer weight;
+    Double value;
+    Double weight;
 }

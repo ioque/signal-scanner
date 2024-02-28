@@ -269,8 +269,8 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
                     .startValue(100D)
                     .date(time.toLocalDate())
                     .startTime(LocalTime.parse("10:00"))
-                    .pricePercentageGrowths(List.of(new PercentageGrowths(9, 1)))
-                    .valuePercentageGrowths(List.of(new PercentageGrowths(9, 1)))
+                    .pricePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
+                    .valuePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
                     .build()
             )
         );
@@ -284,9 +284,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
                     .startValue(1000D)
                     .days(180)
                     .startDate(startDate)
-                    .openPricePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
-                    .closePricePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
-                    .valuePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
+                    .openPricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                    .closePricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                    .valuePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
                     .build()
             )
         );
