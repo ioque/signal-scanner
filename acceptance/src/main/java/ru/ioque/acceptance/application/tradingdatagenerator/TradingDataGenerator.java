@@ -3,6 +3,7 @@ package ru.ioque.acceptance.application.tradingdatagenerator;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -73,16 +74,19 @@ public class TradingDataGenerator {
         double deltaValue = (finalValue - startValue) / (days - 1);
 
         List<StockDailyResult> dailyResults = new ArrayList<>();
-
         for (int i = 0; i < days; i++) {
+            LocalDate date = startDate.plusDays(i);
             double open = startOpen + deltaOpen * i;
             double close = startClose + deltaClose * i;
             double value = startValue + deltaValue * i;
             double volume = (long) value / ((open + close) / 2);
+            if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+                continue;
+            }
             dailyResults.add(
                 StockDailyResult.builder()
                     .secId(ticker)
-                    .tradeDate(startDate.plusDays(i))
+                    .tradeDate(date)
                     .open(open)
                     .close(close)
                     .value(value)

@@ -36,9 +36,9 @@ public class TradingDataGeneratorTest {
                 .build()
         );
 
-        assertEquals(180, stockDailyResults.size());
-        assertEquals(1092.5, stockDailyResults.get(179).getValue().getValue());
-        assertEquals(10.925, stockDailyResults.get(179).getClose().getValue());
+        assertEquals(129, stockDailyResults.size());
+        assertEquals(1091, Math.round((Double) stockDailyResults.get(128).getValue().getValue()));
+        assertEquals(11, Math.round((Double) stockDailyResults.get(128).getClose().getValue()));
     }
 
     @Test
