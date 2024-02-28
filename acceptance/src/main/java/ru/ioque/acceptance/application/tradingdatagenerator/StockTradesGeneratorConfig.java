@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchange.emulator.generator;
+package ru.ioque.acceptance.application.tradingdatagenerator;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class StockDealsGeneratorConfig extends GeneratorConfig {
+public class StockTradesGeneratorConfig extends GeneratorConfig{
     LocalDate date;
     LocalTime startTime;
     long numTrades;
@@ -25,7 +25,7 @@ public class StockDealsGeneratorConfig extends GeneratorConfig {
     List<PercentageGrowths> valuePercentageGrowths;
 
     @Builder
-    public StockDealsGeneratorConfig(
+    public StockTradesGeneratorConfig(
         String ticker,
         LocalDate date,
         LocalTime startTime,

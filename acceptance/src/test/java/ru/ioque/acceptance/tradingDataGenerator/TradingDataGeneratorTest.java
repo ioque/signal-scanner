@@ -1,13 +1,13 @@
-package ru.ioque.investfund.adapters.tradingDataGenerator;
+package ru.ioque.acceptance.tradingDataGenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.adapters.exchange.emulator.generator.PercentageGrowths;
-import ru.ioque.investfund.adapters.exchange.emulator.generator.StockDealResultsGeneratorConfig;
-import ru.ioque.investfund.adapters.exchange.emulator.generator.StockDealsGeneratorConfig;
-import ru.ioque.investfund.adapters.exchange.emulator.generator.TradingDataGenerator;
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
+import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGenerator;
+import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,8 +22,8 @@ public class TradingDataGeneratorTest {
         T1. Генерация исторических данных для акций
         """)
     void testCase1() {
-        List<DealResult> stockDailyResults = generator.generateStockDealResults(
-            StockDealResultsGeneratorConfig
+        List<StockDailyResult> stockDailyResults = generator.generateStockHistory(
+            StockHistoryGeneratorConfig
                 .builder()
                 .startClose(10.)
                 .startOpen(10.)
@@ -37,8 +37,8 @@ public class TradingDataGeneratorTest {
         );
 
         assertEquals(180, stockDailyResults.size());
-        assertEquals(1050D, stockDailyResults.get(179).getValue());
-        assertEquals(10.5, stockDailyResults.get(179).getClosePrice());
+        assertEquals(1050D, stockDailyResults.get(179).getValue().getValue());
+        assertEquals(10.5, stockDailyResults.get(179).getClose().getValue());
     }
 
     @Test
@@ -46,8 +46,8 @@ public class TradingDataGeneratorTest {
         T2. Генерация внутридневных данных для акций
         """)
     void testCase2() {
-        List<Deal> stockTrades = generator.generateStockDeals(
-            StockDealsGeneratorConfig
+        List<StockTrade> stockTrades = generator.generateStockTrades(
+            StockTradesGeneratorConfig
                 .builder()
                 .numTrades(10)
                 .startPrice(10.)
@@ -59,7 +59,7 @@ public class TradingDataGeneratorTest {
                 .build()
         );
         assertEquals(10, stockTrades.size());
-        assertEquals(11.0, stockTrades.get(9).getPrice());
-        assertEquals(110.0, stockTrades.get(9).getValue());
+        assertEquals(11.0, stockTrades.get(9).getPrice().getValue());
+        assertEquals(110.0, stockTrades.get(9).getValue().getValue());
     }
 }

@@ -1,7 +1,7 @@
-package ru.ioque.investfund.adapters.exchange.emulator.generator;
+package ru.ioque.acceptance.application.tradingdatagenerator;
 
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
+import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TradingDataGenerator {
-    public List<DealResult> generateStockDealResults(StockDealResultsGeneratorConfig config) {
+    public List<StockDailyResult> generateStockHistory(StockHistoryGeneratorConfig config) {
         if (config.getClosePricePercentageGrowths().size() == 1 &&
             config.getOpenPricePercentageGrowths().size() == 1 &&
             config.getValuePercentageGrowths().size() == 1) {
@@ -27,13 +27,13 @@ public class TradingDataGenerator {
             double finalValue = startValue + config.getOpenPricePercentageGrowths().get(0).value * startValue / 100;
             double deltaValue = (finalValue - startValue) / (days - 1);
 
-            List<DealResult> dailyResults = new ArrayList<>(
+            List<StockDailyResult> dailyResults = new ArrayList<>(
                 List.of(
-                    DealResult.builder()
-                        .ticker(config.getTicker())
+                    StockDailyResult.builder()
+                        .secId(config.getTicker())
                         .tradeDate(config.getStartDate())
-                        .openPrice(startOpen)
-                        .closePrice(startClose)
+                        .open(startOpen)
+                        .close(startClose)
                         .value(startValue)
                         .build()
                 )
@@ -45,11 +45,11 @@ public class TradingDataGenerator {
                 double value = startValue + deltaValue * i;
                 double volume = (long) value / ((open + close) / 2);
                 dailyResults.add(
-                    DealResult.builder()
-                        .ticker(config.getTicker())
+                    StockDailyResult.builder()
+                        .secId(config.getTicker())
                         .tradeDate(config.getStartDate().plusDays(1))
-                        .openPrice(open)
-                        .closePrice(close)
+                        .open(open)
+                        .close(close)
                         .value(value)
                         .volume(volume)
                         .build()
@@ -62,7 +62,7 @@ public class TradingDataGenerator {
         return List.of();
     }
 
-    public List<Deal> generateStockDeals(StockDealsGeneratorConfig config) {
+    public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
         if (config.getValuePercentageGrowths().size() == 1 && config.getPricePercentageGrowths().size() == 1) {
             String ticker = config.getTicker();
             Double startValue = config.getStartValue();
@@ -70,35 +70,37 @@ public class TradingDataGenerator {
             long numTrades = config.getNumTrades();
             LocalDate nowDate = config.getDate();
             LocalTime startTime = config.getStartTime();
-            boolean isBuy = config.getPricePercentageGrowths().get(0).value >= 0;
+            String buysell = config.getPricePercentageGrowths().get(0).value >= 0 ? "BUY" : "SELL";
             double finalPrice = startPrice + config.getPricePercentageGrowths().get(0).value * startPrice / 100;
             double deltaPrice = (finalPrice - startPrice) / (numTrades - 1);
 
             double finalValue = startValue + config.getValuePercentageGrowths().get(0).value * startValue / 100;
             double deltaValue = (finalValue - startValue) / (numTrades - 1);
 
-            List<Deal> stockTrades = new ArrayList<>(
+            List<StockTrade> stockTrades = new ArrayList<>(
                 List.of(
-                    Deal.builder()
-                        .ticker(ticker)
-                        .number(1L)
+                    StockTrade.builder()
+                        .secId(ticker)
+                        .tradeNo(1)
+                        .tradeTime(startTime)
                         .value(startValue)
                         .price(startPrice)
-                        .isBuy(isBuy)
-                        .dateTime(nowDate.atTime(startTime))
+                        .buySell(buysell)
+                        .sysTime(nowDate.atTime(startTime))
                         .build()
                 )
             );
 
             for (int i = 2; i <= numTrades; i++) {
                 stockTrades.add(
-                    Deal.builder()
-                        .ticker(ticker)
-                        .number((long) i)
+                    StockTrade.builder()
+                        .secId(ticker)
+                        .tradeNo(i)
+                        .tradeTime(startTime.plusSeconds(i))
                         .value(startValue + deltaValue * i)
                         .price(startPrice + deltaPrice * i)
-                        .isBuy(isBuy)
-                        .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
+                        .buySell(buysell)
+                        .sysTime(nowDate.atTime(startTime.plusSeconds(i)))
                         .build()
                 );
             }
