@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatasetStorage {
-    List<? extends Instrument> instruments = new ArrayList<>();
+    List<? extends InstrumentValue> instruments = new ArrayList<>();
     List<? extends IntradayValue> intradayValues;
     List<? extends DailyResultValue> dailyResultValues;
 
-    public List<? extends Instrument> getInstrumentsBy(InstrumentType instrumentType) {
+    public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
         return instruments.stream().filter(instrument -> instrument.equalsBy(instrumentType)).toList();
     }
 
@@ -26,7 +26,7 @@ public class DatasetStorage {
             .toList();
     }
 
-    public void setInstruments(List<? extends Instrument> instruments) {
+    public void setInstruments(List<? extends InstrumentValue> instruments) {
         this.instruments = instruments;
     }
 

@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
+import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 import ru.ioque.acceptance.domain.dataemulator.core.IntegerValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateTimeValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateValue;
@@ -23,7 +23,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Futures extends Instrument {
+public class Futures extends InstrumentValue {
     StringValue boardId;
     StringValue shortname;
     StringValue secName;

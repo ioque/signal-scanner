@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
+import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 import ru.ioque.acceptance.domain.dataemulator.core.IntegerValue;
 import ru.ioque.acceptance.domain.dataemulator.core.StringValue;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Index extends Instrument {
+public class Index extends InstrumentValue {
     StringValue boardId;
     StringValue name;
     IntegerValue decimals;

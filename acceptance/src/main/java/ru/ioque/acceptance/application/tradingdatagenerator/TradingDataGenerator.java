@@ -47,7 +47,7 @@ public class TradingDataGenerator {
                 dailyResults.add(
                     StockDailyResult.builder()
                         .secId(config.getTicker())
-                        .tradeDate(config.getStartDate().plusDays(1))
+                        .tradeDate(config.getStartDate().plusDays(i))
                         .open(open)
                         .close(close)
                         .value(value)

@@ -7,6 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
+import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
 import ru.ioque.acceptance.domain.dataemulator.futures.FuturesDailyResult;
@@ -20,7 +23,9 @@ import ru.ioque.acceptance.domain.exchange.Instrument;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -252,30 +257,36 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase10() {
         LocalDateTime time = LocalDateTime.now();
+        LocalDate startDate = time.toLocalDate().minusMonths(6);
         integrateInstruments(instruments().sber().build());
         datasetManager().initIntradayValue(
-            List.of(
-                StockTrade
+            generator().generateStockTrades(
+                StockTradesGeneratorConfig
                     .builder()
-                    .tradeNo(1)
-                    .secId("SBER")
-                    .price(12.1)
-                    .value(12.3)
-                    .tradeTime(time.toLocalTime())
-                    .sysTime(time)
+                    .ticker("SBER")
+                    .numTrades(10)
+                    .startPrice(10.)
+                    .startValue(100D)
+                    .date(time.toLocalDate())
+                    .startTime(LocalTime.parse("10:00"))
+                    .pricePercentageGrowths(List.of(new PercentageGrowths(9, 1)))
+                    .valuePercentageGrowths(List.of(new PercentageGrowths(9, 1)))
                     .build()
             )
         );
         datasetManager().initDailyResultValue(
-            List.of(
-                StockDailyResult
+            generator().generateStockHistory(
+                StockHistoryGeneratorConfig
                     .builder()
-                    .close(3451.4)
-                    .open(3411.1)
-                    .value(135132512351.1)
-                    .volume(123124124.2)
-                    .secId("SBER")
-                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .ticker("SBER")
+                    .startClose(10.)
+                    .startOpen(10.)
+                    .startValue(1000D)
+                    .days(180)
+                    .startDate(startDate)
+                    .openPricePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
+                    .closePricePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
+                    .valuePercentageGrowths(List.of(new PercentageGrowths(5, 1)))
                     .build()
             )
         );
@@ -283,8 +294,8 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         integrateTradingData();
 
         Instrument sber = getInstrumentById(getInstrumentIds().get(0));
-        assertEquals(1, sber.getDailyValues().size());
-        assertEquals(1, sber.getIntradayValues().size());
+        assertEquals(180, sber.getDailyValues().size());
+        assertEquals(10, sber.getIntradayValues().size());
     }
 
     @Test
@@ -371,10 +382,9 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     @Test
-    @DisplayName(
-        """
-            T15. Перенос торговых данных в архив.
-            """)
+    @DisplayName("""
+        T15. Перенос торговых данных в архив.
+        """)
     void testCase15() {
         initInstrumentsWithTradingData();
         fullIntegrate();

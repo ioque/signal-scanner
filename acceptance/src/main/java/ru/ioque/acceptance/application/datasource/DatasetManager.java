@@ -9,7 +9,7 @@ import ru.ioque.acceptance.application.adapters.DateTimeProvider;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetStorage;
 import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
+import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 
 import javax.naming.OperationNotSupportedException;
@@ -24,7 +24,7 @@ public class DatasetManager {
     DateTimeProvider dateTimeProvider;
 
     @SneakyThrows
-    public List<? extends Instrument> getInstrumentsBy(InstrumentType instrumentType) {
+    public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
         return dataSetStorage.getInstrumentsBy(instrumentType);
     }
 
@@ -53,7 +53,7 @@ public class DatasetManager {
             .toList();
     }
 
-    public void initInstruments(List<? extends Instrument> instruments) {
+    public void initInstruments(List<? extends InstrumentValue> instruments) {
         dataSetStorage.setInstruments(instruments);
     }
 

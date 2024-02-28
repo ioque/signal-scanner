@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
+import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class SecuritiesResponse {
     ObjectsWrapper securities;
 
-    public static SecuritiesResponse fromBy(List<? extends Instrument> instrumentValues) {
+    public static SecuritiesResponse fromBy(List<? extends InstrumentValue> instrumentValues) {
         return new SecuritiesResponse(ObjectsWrapper.fromDataset(instrumentValues));
     }
 }

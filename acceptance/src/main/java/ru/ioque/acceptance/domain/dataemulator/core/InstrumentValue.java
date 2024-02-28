@@ -9,7 +9,7 @@ import java.util.Objects;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public abstract class Instrument implements DatasetObject {
+public abstract class InstrumentValue implements DatasetObject {
     protected InstrumentType type;
     protected StringValue secId;
     public boolean equalsBy(InstrumentType type) {
