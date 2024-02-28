@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
-import ru.ioque.acceptance.domain.dataemulator.core.HistoryValue;
+import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateValue;
 import ru.ioque.acceptance.domain.dataemulator.core.StringValue;
 
@@ -19,10 +19,9 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class CurrencyPairDailyResult extends HistoryValue {
+public class CurrencyPairDailyResult extends DailyResultValue {
     StringValue boardId;
     StringValue shortName;
-    StringValue secId;
     DoubleValue open;
     DoubleValue low;
     DoubleValue high;
@@ -45,10 +44,9 @@ public class CurrencyPairDailyResult extends HistoryValue {
         Double volRur,
         Double waPrice
     ) {
-        super(new LocalDateValue("TRADEDATE", 2, tradeDate));
+        super(new StringValue("SECID", 4, secId), new LocalDateValue("TRADEDATE", 2, tradeDate));
         this.boardId = new StringValue("BOARDID", 1, boardId);
         this.shortName = new StringValue("SHORTNAME", 3, shortName);
-        this.secId = new StringValue("SECID", 4, secId);
         this.open = new DoubleValue("OPEN", 5, open);
         this.low = new DoubleValue("LOW", 6, low);
         this.high = new DoubleValue("HIGH", 7, high);

@@ -8,11 +8,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
-import ru.ioque.acceptance.domain.dataemulator.core.HistoryValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
+import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
 import ru.ioque.acceptance.domain.dataemulator.core.IntegerValue;
-import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateValue;
 import ru.ioque.acceptance.domain.dataemulator.core.StringValue;
 
@@ -23,7 +21,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class CurrencyPair extends InstrumentValue {
+public class CurrencyPair extends Instrument {
     StringValue boardId;
     StringValue shortname;
     IntegerValue lotSize;
@@ -47,8 +45,6 @@ public class CurrencyPair extends InstrumentValue {
     public CurrencyPair(
         InstrumentType type,
         String secId,
-        List<? extends IntradayValue> intradayValues,
-        List<? extends HistoryValue> historyValues,
         String boardId,
         String shortname,
         Integer lotSize,
@@ -68,7 +64,7 @@ public class CurrencyPair extends InstrumentValue {
         String latName,
         Integer lotDivider
     ) {
-        super(type, new StringValue("SECID", 1, secId), intradayValues, historyValues);
+        super(type, new StringValue("SECID", 1, secId));
         this.boardId = new StringValue("BOARDID", 2, boardId);
         this.shortname = new StringValue("SHORTNAME", 3, shortname);
         this.lotSize = new IntegerValue("LOTSIZE", 4, lotSize);

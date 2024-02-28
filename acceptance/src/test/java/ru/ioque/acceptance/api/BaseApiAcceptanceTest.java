@@ -16,9 +16,8 @@ import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResp
 import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
+import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
 import ru.ioque.acceptance.domain.exchange.Exchange;
-import ru.ioque.acceptance.domain.exchange.Instrument;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
@@ -56,9 +55,9 @@ public class BaseApiAcceptanceTest {
     }
 
     protected void integrateInstruments(
-        InstrumentValue... instruments
+        Instrument... instruments
     ) {
-        datasetManager().initDataset(Arrays.asList(instruments));
+        datasetManager().initInstruments(Arrays.asList(instruments));
         synchronizeWithDataSource();
     }
 
@@ -125,7 +124,7 @@ public class BaseApiAcceptanceTest {
             );
     }
 
-    protected Instrument getInstrumentById(UUID id) {
+    protected ru.ioque.acceptance.domain.exchange.Instrument getInstrumentById(UUID id) {
         return exchangeRestClient.getInstrumentBy(id);
     }
 

@@ -7,9 +7,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.acceptance.application.adapters.DateTimeProvider;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetStorage;
-import ru.ioque.acceptance.domain.dataemulator.core.HistoryValue;
+import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
+import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
 import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 
 import javax.naming.OperationNotSupportedException;
@@ -24,11 +24,11 @@ public class DatasetManager {
     DateTimeProvider dateTimeProvider;
 
     @SneakyThrows
-    public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
+    public List<? extends Instrument> getInstrumentsBy(InstrumentType instrumentType) {
         return dataSetStorage.getInstrumentsBy(instrumentType);
     }
 
-    public List<? extends HistoryValue> getHistoryValuesBy(
+    public List<? extends DailyResultValue> getHistoryValuesBy(
         String ticker,
         LocalDate from,
         LocalDate till,
@@ -53,8 +53,15 @@ public class DatasetManager {
             .toList();
     }
 
-    public void initDataset(List<? extends InstrumentValue> instruments) {
-        dataSetStorage.initInstruments(instruments);
+    public void initInstruments(List<? extends Instrument> instruments) {
+        dataSetStorage.setInstruments(instruments);
+    }
+
+    public void initIntradayValue(List<? extends IntradayValue> intradayValues) {
+        dataSetStorage.setIntradayValues(intradayValues);
+    }
+    public void initDailyResultValue(List<? extends DailyResultValue> dailyResultValues) {
+        dataSetStorage.setDailyResultValues(dailyResultValues);
     }
 
     @SneakyThrows

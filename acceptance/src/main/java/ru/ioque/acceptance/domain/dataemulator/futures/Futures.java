@@ -8,11 +8,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
-import ru.ioque.acceptance.domain.dataemulator.core.HistoryValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
+import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
 import ru.ioque.acceptance.domain.dataemulator.core.IntegerValue;
-import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateTimeValue;
 import ru.ioque.acceptance.domain.dataemulator.core.LocalDateValue;
 import ru.ioque.acceptance.domain.dataemulator.core.StringValue;
@@ -25,7 +23,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Futures extends InstrumentValue {
+public class Futures extends Instrument {
     StringValue boardId;
     StringValue shortname;
     StringValue secName;
@@ -55,8 +53,6 @@ public class Futures extends InstrumentValue {
     public Futures(
         InstrumentType type,
         String secId,
-        List<? extends IntradayValue> intradayValues,
-        List<? extends HistoryValue> historyValues,
         String boardId,
         String shortname,
         String secName,
@@ -82,7 +78,7 @@ public class Futures extends InstrumentValue {
         Double negotiatedFee,
         Double exerciseFee
     ) {
-        super(type, new StringValue("SECID", 1, secId), intradayValues, historyValues);
+        super(type, new StringValue("SECID", 1, secId));
         this.boardId = new StringValue("BOARDID", 2, boardId);
         this.shortname = new StringValue("SHORTNAME", 3, shortname);
         this.secName = new StringValue("SECNAME", 4, secName);

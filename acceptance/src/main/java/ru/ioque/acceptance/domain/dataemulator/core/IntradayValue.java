@@ -5,19 +5,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 public abstract class IntradayValue implements DatasetObject, Comparable<IntradayValue> {
+    protected StringValue secId;
     protected IntegerValue tradeNo;
     protected LocalDateTimeValue sysTime;
 
-    public boolean isBeforeOrEqual(LocalDateTime dateTime) {
-        var sysTime = ((LocalDateTime) this.sysTime.getValue());
-        return sysTime.isBefore(dateTime) || sysTime.isEqual(dateTime);
+    public boolean equalsBy(String secId) {
+        return Objects.equals(this.secId.getValue(), secId);
     }
 
     @Override

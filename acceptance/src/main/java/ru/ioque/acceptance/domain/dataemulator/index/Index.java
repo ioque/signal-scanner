@@ -8,11 +8,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DoubleValue;
-import ru.ioque.acceptance.domain.dataemulator.core.HistoryValue;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
-import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
+import ru.ioque.acceptance.domain.dataemulator.core.Instrument;
 import ru.ioque.acceptance.domain.dataemulator.core.IntegerValue;
-import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 import ru.ioque.acceptance.domain.dataemulator.core.StringValue;
 
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Index extends InstrumentValue {
+public class Index extends Instrument {
     StringValue boardId;
     StringValue name;
     IntegerValue decimals;
@@ -35,8 +33,6 @@ public class Index extends InstrumentValue {
     public Index(
         InstrumentType type,
         String secId,
-        List<? extends IntradayValue> intradayValues,
-        List<? extends HistoryValue> historyValues,
         String boardId,
         String name,
         Integer decimals,
@@ -46,7 +42,7 @@ public class Index extends InstrumentValue {
         String currencyId,
         String calcMode
     ) {
-        super(type, new StringValue("SECID", 1, secId), intradayValues, historyValues);
+        super(type, new StringValue("SECID", 1, secId));
         this.boardId = new StringValue("BOARDID", 2, boardId);
         this.name = new StringValue("NAME", 3, name);
         this.decimals = new IntegerValue("DECIMALS", 4, decimals);

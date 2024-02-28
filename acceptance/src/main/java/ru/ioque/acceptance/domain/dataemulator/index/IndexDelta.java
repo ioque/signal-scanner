@@ -26,7 +26,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IndexDelta extends IntradayValue {
     StringValue boardId;
-    StringValue secId;
     LocalDateValue tradeDate;
     LocalTimeValue tradeTime;
     DoubleValue price;
@@ -46,11 +45,11 @@ public class IndexDelta extends IntradayValue {
         Integer decimals
     ) {
         super(
+            new StringValue("SECID", 3, secId),
             new IntegerValue("TRADENO", 1, tradeNo),
             new LocalDateTimeValue("SYSTIME", 8, sysTime)
         );
         this.boardId = new StringValue("BOARDID", 2, boardId);
-        this.secId = new StringValue("SECID", 3, secId);
         this.tradeDate = new LocalDateValue("TRADEDATE", 4, tradeDate);
         this.tradeTime = new LocalTimeValue("TRADETIME", 5, tradeTime);
         this.price = new DoubleValue("PRICE", 6, price);

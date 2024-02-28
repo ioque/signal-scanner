@@ -6,8 +6,6 @@ import ru.ioque.acceptance.domain.dataemulator.futures.Futures;
 import ru.ioque.acceptance.domain.dataemulator.index.Index;
 import ru.ioque.acceptance.domain.dataemulator.stock.Stock;
 
-import java.util.List;
-
 public class InstrumentsFixture {
     public Index.IndexBuilder imoex() {
         return Index.builder()
@@ -19,9 +17,7 @@ public class InstrumentsFixture {
             .annualLow(2126.4)
             .currencyId("RUB")
             .decimals(2)
-            .type(InstrumentType.INDEX)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.INDEX);
     }
 
     public CurrencyPair.CurrencyPairBuilder usbRub() {
@@ -30,9 +26,7 @@ public class InstrumentsFixture {
             .shortname("USDRUB_TOM")
             .secName("USDRUB_TOM - USD/РУБ")
             .lotSize(1000)
-            .type(InstrumentType.CURRENCY)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.CURRENCY);
     }
 
     public Futures.FuturesBuilder brf4() {
@@ -41,9 +35,7 @@ public class InstrumentsFixture {
             .boardId("RFUD")
             .secName("Фьючерсный контракт BR-1.24")
             .shortname("BR-1.24")
-            .type(InstrumentType.FUTURES)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.FUTURES);
     }
 
     public Stock.StockBuilder sber() {
@@ -53,9 +45,7 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("ПАО Сбербанк")
             .shortname("Сбербанк")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 
     public Stock.StockBuilder sberp() {
@@ -65,9 +55,7 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("Сбербанк-п")
             .shortname("Сбербанк-п")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 
     public Stock.StockBuilder sibn() {
@@ -77,9 +65,7 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("Газпромнефть")
             .shortname("Газпромнефть")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 
     public Stock.StockBuilder lkoh() {
@@ -89,9 +75,7 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("Лукойл")
             .shortname("Лукойл")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 
     public Stock.StockBuilder rosn() {
@@ -101,9 +85,7 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("Роснефть")
             .shortname("Роснефть")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 
     public Stock.StockBuilder tatn() {
@@ -113,8 +95,6 @@ public class InstrumentsFixture {
             .lotSize(100)
             .secName("Татнефть")
             .shortname("Татнефть")
-            .type(InstrumentType.STOCK)
-            .intradayValues(List.of())
-            .historyValues(List.of());
+            .type(InstrumentType.STOCK);
     }
 }

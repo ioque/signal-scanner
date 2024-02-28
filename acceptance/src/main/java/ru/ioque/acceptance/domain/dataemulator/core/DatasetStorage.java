@@ -1,39 +1,40 @@
 package ru.ioque.acceptance.domain.dataemulator.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class DatasetStorage {
-    List<? extends InstrumentValue> instruments = new ArrayList<>();
+    List<? extends Instrument> instruments = new ArrayList<>();
+    List<? extends IntradayValue> intradayValues;
+    List<? extends DailyResultValue> dailyResultValues;
 
-    public void initInstruments(List<? extends InstrumentValue> instruments) {
-        this.instruments = instruments;
-    }
-
-    public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
+    public List<? extends Instrument> getInstrumentsBy(InstrumentType instrumentType) {
         return instruments.stream().filter(instrument -> instrument.equalsBy(instrumentType)).toList();
     }
 
     public List<? extends IntradayValue> getIntradayValuesBy(String ticker) {
-        return instruments
+        return intradayValues
             .stream()
             .filter(row -> row.equalsBy(ticker))
-            .findFirst()
-            .map(InstrumentValue::getIntradayValues)
-            .stream()
-            .flatMap(Collection::stream)
             .toList();
     }
 
-    public List<? extends HistoryValue> getHistoryValuesBy(String ticker) {
-        return instruments
+    public List<? extends DailyResultValue> getHistoryValuesBy(String ticker) {
+        return dailyResultValues
             .stream()
             .filter(row -> row.equalsBy(ticker))
-            .findFirst()
-            .map(InstrumentValue::getHistoryValues)
-            .stream()
-            .flatMap(Collection::stream)
             .toList();
+    }
+
+    public void setInstruments(List<? extends Instrument> instruments) {
+        this.instruments = instruments;
+    }
+
+    public void setIntradayValues(List<? extends IntradayValue> intradayValues) {
+        this.intradayValues = intradayValues;
+    }
+
+    public void setDailyResultValues(List<? extends DailyResultValue> dailyResultValues) {
+        this.dailyResultValues = dailyResultValues;
     }
 }

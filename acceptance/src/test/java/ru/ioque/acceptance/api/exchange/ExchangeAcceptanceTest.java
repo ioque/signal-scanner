@@ -213,7 +213,14 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
             instruments().sberp().build()
         );
 
-        List<InstrumentInList> instruments = getInstruments(Map.of("shortname", "Сбер", "ticker", "SBER", "type", "stock"));
+        List<InstrumentInList> instruments = getInstruments(Map.of(
+            "shortname",
+            "Сбер",
+            "ticker",
+            "SBER",
+            "type",
+            "stock"
+        ));
 
         assertEquals(2, instruments.size());
     }
@@ -245,36 +252,33 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase10() {
         LocalDateTime time = LocalDateTime.now();
-        integrateInstruments(instruments()
-            .sber()
-            .historyValues(
-                List.of(
-                    StockDailyResult
-                        .builder()
-                        .close(3451.4)
-                        .open(3411.1)
-                        .value(135132512351.1)
-                        .volume(123124124.2)
-                        .secId("SBER")
-                        .tradeDate(time.toLocalDate().minusDays(1))
-                        .build()
-                )
+        integrateInstruments(instruments().sber().build());
+        datasetManager().initIntradayValue(
+            List.of(
+                StockTrade
+                    .builder()
+                    .tradeNo(1)
+                    .secId("SBER")
+                    .price(12.1)
+                    .value(12.3)
+                    .tradeTime(time.toLocalTime())
+                    .sysTime(time)
+                    .build()
             )
-            .intradayValues(
-                List.of(
-                    StockTrade
-                        .builder()
-                        .tradeNo(1)
-                        .secId("SBER")
-                        .price(12.1)
-                        .value(12.3)
-                        .tradeTime(time.toLocalTime())
-                        .sysTime(time)
-                        .build()
-                )
+        );
+        datasetManager().initDailyResultValue(
+            List.of(
+                StockDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("SBER")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build()
             )
-            .build());
-
+        );
         enableUpdateInstrumentBy(getInstrumentIds());
         integrateTradingData();
 
@@ -289,34 +293,33 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase11() {
         LocalDateTime time = LocalDateTime.now();
-        integrateInstruments(instruments().sber()
-            .historyValues(
-                List.of(
-                    StockDailyResult
-                        .builder()
-                        .close(3451.4)
-                        .open(3411.1)
-                        .value(135132512351.1)
-                        .volume(123124124.2)
-                        .secId("SBER")
-                        .tradeDate(time.toLocalDate().minusDays(1))
-                        .build()
-                )
+        integrateInstruments(instruments().sber().build());
+        datasetManager().initIntradayValue(
+            List.of(
+                StockTrade
+                    .builder()
+                    .tradeNo(1)
+                    .secId("SBER")
+                    .price(12.1)
+                    .value(12.3)
+                    .tradeTime(time.toLocalTime())
+                    .sysTime(time)
+                    .build()
             )
-            .intradayValues(
-                List.of(
-                    StockTrade
-                        .builder()
-                        .tradeNo(1)
-                        .secId("SBER")
-                        .price(12.1)
-                        .value(12.3)
-                        .tradeTime(time.toLocalTime())
-                        .sysTime(time)
-                        .build()
-                )
+        );
+        datasetManager().initDailyResultValue(
+            List.of(
+                StockDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("SBER")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build()
             )
-            .build());
+        );
         List<UUID> ids = getInstrumentIds();
         disableUpdateInstrumentBy(ids);
 
@@ -370,8 +373,8 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     @Test
     @DisplayName(
         """
-        T15. Перенос торговых данных в архив.
-        """)
+            T15. Перенос торговых данных в архив.
+            """)
     void testCase15() {
         initInstrumentsWithTradingData();
         fullIntegrate();
@@ -390,158 +393,130 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     private void initInstrumentsWithTradingData() {
         LocalDateTime time = LocalDateTime.now().minusMinutes(5);
+        datasetManager().initInstruments(
+            List.of(
+                instruments().imoex().build(),
+                instruments().usbRub().build(),
+                instruments().brf4().build(),
+                instruments().sber().build(),
+                instruments().imoex().build()
+            )
+        );
+        datasetManager().initDailyResultValue(
+            List.of(
+                CurrencyPairDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .volRur(135132512351.1)
+                    .numTrades(1000D)
+                    .secId("USD000UTSTOM")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build(),
+                IndexDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("IMOEX")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build(),
+                FuturesDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124)
+                    .secId("BRF4")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build(),
+                StockDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("SBER")
+                    .tradeDate(time.toLocalDate().minusDays(1))
+                    .build(),
+                StockDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("SBER")
+                    .tradeDate(time.toLocalDate().minusDays(2))
+                    .build(),
+                StockDailyResult
+                    .builder()
+                    .close(3451.4)
+                    .open(3411.1)
+                    .value(135132512351.1)
+                    .volume(123124124.2)
+                    .secId("SBER")
+                    .tradeDate(time.toLocalDate().minusDays(3))
+                    .build()
+            )
+        );
         datasetManager()
-            .initDataset(
+            .initIntradayValue(
                 List.of(
-                    instruments()
-                        .imoex()
-                        .historyValues(
-                            List.of(
-                                IndexDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .value(135132512351.1)
-                                    .volume(123124124.2)
-                                    .secId("IMOEX")
-                                    .tradeDate(time.toLocalDate().minusDays(1))
-                                    .build()
-                            )
-                        )
-                        .intradayValues(
-                            List.of(
-                                IndexDelta
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("IMOEX")
-                                    .price(12.1)
-                                    .value(12.3)
-                                    .tradeTime(time.toLocalTime())
-                                    .tradeDate(time.toLocalDate())
-                                    .sysTime(time)
-                                    .build()
-                            )
-                        )
+                    IndexDelta
+                        .builder()
+                        .tradeNo(1)
+                        .secId("IMOEX")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.toLocalTime())
+                        .tradeDate(time.toLocalDate())
+                        .sysTime(time)
                         .build(),
-                    instruments().usbRub()
-                        .historyValues(
-                            List.of(
-                                CurrencyPairDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .volRur(135132512351.1)
-                                    .numTrades(1000D)
-                                    .secId("USD000UTSTOM")
-                                    .tradeDate(time.toLocalDate().minusDays(1))
-                                    .build()
-                            )
-                        )
-                        .intradayValues(
-                            List.of(
-                                CurrencyPairTrade
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("USD000UTSTOM")
-                                    .price(12.1)
-                                    .value(12.3)
-                                    .tradeTime(time.toLocalTime())
-                                    .sysTime(time)
-                                    .build()
-                            )
-                        )
+                    CurrencyPairTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("USD000UTSTOM")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.toLocalTime())
+                        .sysTime(time)
                         .build(),
-                    instruments().brf4()
-                        .historyValues(
-                            List.of(
-                                FuturesDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .value(135132512351.1)
-                                    .volume(123124124)
-                                    .secId("BRF4")
-                                    .tradeDate(time.toLocalDate().minusDays(1))
-                                    .build()
-                            )
-                        )
-                        .intradayValues(
-                            List.of(
-                                FuturesTrade
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("BRF4")
-                                    .price(12.1)
-                                    .tradeTime(time.toLocalTime())
-                                    .tradeDate(time.toLocalDate())
-                                    .sysTime(time)
-                                    .build()
-                            )
-                        )
+                    FuturesTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("BRF4")
+                        .price(12.1)
+                        .tradeTime(time.toLocalTime())
+                        .tradeDate(time.toLocalDate())
+                        .sysTime(time)
                         .build(),
-                    instruments().sber()
-                        .historyValues(
-                            List.of(
-                                StockDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .value(135132512351.1)
-                                    .volume(123124124.2)
-                                    .secId("SBER")
-                                    .tradeDate(time.toLocalDate().minusDays(1))
-                                    .build(),
-                                StockDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .value(135132512351.1)
-                                    .volume(123124124.2)
-                                    .secId("SBER")
-                                    .tradeDate(time.toLocalDate().minusDays(2))
-                                    .build(),
-                                StockDailyResult
-                                    .builder()
-                                    .close(3451.4)
-                                    .open(3411.1)
-                                    .value(135132512351.1)
-                                    .volume(123124124.2)
-                                    .secId("SBER")
-                                    .tradeDate(time.toLocalDate().minusDays(3))
-                                    .build()
-                            )
-                        )
-                        .intradayValues(
-                            List.of(
-                                StockTrade
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("SBER")
-                                    .price(12.1)
-                                    .value(12.3)
-                                    .tradeTime(time.toLocalTime())
-                                    .sysTime(time)
-                                    .build(),
-                                StockTrade
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("SBER")
-                                    .price(12.1)
-                                    .value(12.3)
-                                    .tradeTime(time.plusMinutes(1).toLocalTime())
-                                    .sysTime(time.plusMinutes(1))
-                                    .build(),
-                                StockTrade
-                                    .builder()
-                                    .tradeNo(1)
-                                    .secId("SBER")
-                                    .price(12.1)
-                                    .value(12.3)
-                                    .tradeTime(time.plusMinutes(2).toLocalTime())
-                                    .sysTime(time.plusMinutes(2))
-                                    .build()
-                            )
-                        )
+                    StockTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("SBER")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.toLocalTime())
+                        .sysTime(time)
+                        .build(),
+                    StockTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("SBER")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.plusMinutes(1).toLocalTime())
+                        .sysTime(time.plusMinutes(1))
+                        .build(),
+                    StockTrade
+                        .builder()
+                        .tradeNo(1)
+                        .secId("SBER")
+                        .price(12.1)
+                        .value(12.3)
+                        .tradeTime(time.plusMinutes(2).toLocalTime())
+                        .sysTime(time.plusMinutes(2))
                         .build()
                 )
             );

@@ -25,7 +25,6 @@ import java.util.List;
 public class CurrencyPairTrade extends IntradayValue {
     LocalTimeValue tradeTime;
     StringValue boardId;
-    StringValue secId;
     DoubleValue price;
     IntegerValue quantity;
     DoubleValue value;
@@ -50,12 +49,12 @@ public class CurrencyPairTrade extends IntradayValue {
         Integer decimals
     ) {
         super(
+            new StringValue("SECID", 4, secId),
             new IntegerValue("TRADENO", 1, tradeNo),
             new LocalDateTimeValue("SYSTIME", 8, sysTime)
         );
         this.tradeTime = new LocalTimeValue("TRADETIME", 2, tradeTime);
         this.boardId = new StringValue("BOARDID", 3, boardId);
-        this.secId = new StringValue("SECID", 4, secId);
         this.price = new DoubleValue("PRICE", 5, price);
         this.quantity = new IntegerValue("QUANTITY", 6, quantity);
         this.value = new DoubleValue("VALUE", 7, value);
