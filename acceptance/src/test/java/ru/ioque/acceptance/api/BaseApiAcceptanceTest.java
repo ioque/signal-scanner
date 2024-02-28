@@ -16,7 +16,7 @@ import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResp
 import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
-import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGenerator;
+import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 import ru.ioque.acceptance.domain.exchange.Exchange;
 import ru.ioque.acceptance.domain.exchange.Instrument;
@@ -41,7 +41,7 @@ public class BaseApiAcceptanceTest {
     ServiceClient serviceClient;
     @Autowired
     DatasetManager datasetManager;
-    TradingDataGenerator generator = new TradingDataGenerator();
+    TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
     InstrumentsFixture instrumentsFixture = new InstrumentsFixture();
 
     @BeforeEach
@@ -151,7 +151,7 @@ public class BaseApiAcceptanceTest {
         return testingSystemRestClient.getDailyValues(pageNumber, pageSize);
     }
 
-    protected TradingDataGenerator generator() {
+    protected TradingDataGeneratorFacade generator() {
         return generator;
     }
 }

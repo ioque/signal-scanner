@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
 import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGenerator;
+import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
@@ -15,8 +15,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TradingDataGeneratorTest {
-    TradingDataGenerator generator = new TradingDataGenerator();
+public class TradingDataGeneratorFacadeTest {
+    TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
     @Test
     @DisplayName("""
         T1. Генерация исторических данных для акций
