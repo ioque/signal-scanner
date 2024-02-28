@@ -203,8 +203,8 @@ public class ExchangeDataFixture {
             .lowLimit(futures.getLowLimit())
             .highLimit(futures.getHighLimit())
             .lotVolume(futures.getLotVolume())
-            .dailyValues(futures.getDailyValues())
-            .intradayValues(futures.getIntradayValues())
+            .dailyValues(futures.getDailyValues().stream().toList())
+            .intradayValues(futures.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -217,8 +217,8 @@ public class ExchangeDataFixture {
             .shortName(index.getShortName())
             .annualHigh(index.getAnnualHigh())
             .annualLow(index.getAnnualLow())
-            .dailyValues(index.getDailyValues())
-            .intradayValues(index.getIntradayValues())
+            .dailyValues(index.getDailyValues().stream().toList())
+            .intradayValues(index.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -231,8 +231,8 @@ public class ExchangeDataFixture {
             .shortName(currencyPair.getShortName())
             .lotSize(currencyPair.getLotSize())
             .faceUnit(currencyPair.getFaceUnit())
-            .dailyValues(currencyPair.getDailyValues())
-            .intradayValues(currencyPair.getIntradayValues())
+            .dailyValues(currencyPair.getDailyValues().stream().toList())
+            .intradayValues(currencyPair.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -246,8 +246,8 @@ public class ExchangeDataFixture {
             .isin(stock.getIsin())
             .regNumber(stock.getRegNumber())
             .listLevel(stock.getListLevel())
-            .dailyValues(stock.getDailyValues())
-            .intradayValues(stock.getIntradayValues())
+            .dailyValues(stock.getDailyValues().stream().toList())
+            .intradayValues(stock.getIntradayValues().stream().toList())
             .build();
     }
 }

@@ -5,14 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.acceptance.application.adapters.DateTimeProvider;
-import ru.ioque.acceptance.domain.dataemulator.core.DatasetStorage;
 import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
+import ru.ioque.acceptance.domain.dataemulator.core.DatasetStorage;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
 import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 
-import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,8 +19,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DatasetManager {
     DatasetStorage dataSetStorage = new DatasetStorage();
-    DateTimeProvider dateTimeProvider;
-
     @SneakyThrows
     public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
         return dataSetStorage.getInstrumentsBy(instrumentType);
@@ -62,10 +58,5 @@ public class DatasetManager {
     }
     public void initDailyResultValue(List<? extends DailyResultValue> dailyResultValues) {
         dataSetStorage.setDailyResultValues(dailyResultValues);
-    }
-
-    @SneakyThrows
-    public void initFromDatabase() {
-        throw new OperationNotSupportedException();
     }
 }

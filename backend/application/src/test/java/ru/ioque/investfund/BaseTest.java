@@ -155,11 +155,11 @@ public class BaseTest {
 
 
     protected List<IntradayValue> getIntradayValue(String ticker) {
-        return getInstrumentBy(ticker).getIntradayValues();
+        return getInstrumentBy(ticker).getIntradayValues().stream().toList();
     }
 
     protected List<DailyValue> getDailyTradingResultsBy(String ticker) {
-        return getInstrumentBy(ticker).getDailyValues();
+        return getInstrumentBy(ticker).getDailyValues().stream().toList();
     }
 
     protected void intradayIntegrate() {

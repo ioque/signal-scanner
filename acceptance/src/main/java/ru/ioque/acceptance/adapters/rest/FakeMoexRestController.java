@@ -39,7 +39,6 @@ public class FakeMoexRestController {
                                          @RequestParam Integer limit,
                                          @RequestParam Integer start
     ) {
-        System.out.println(getIntradayValuesBy(ticker, limit, start));
         return getIntradayValuesBy(ticker, limit, start);
     }
 
@@ -54,7 +53,6 @@ public class FakeMoexRestController {
         @RequestParam Integer limit,
         @RequestParam Integer start
     ) {
-        System.out.println(from);
         return getHistoryValues(ticker, from, till, limit, start);
     }
 

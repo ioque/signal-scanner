@@ -15,9 +15,9 @@ import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
@@ -30,8 +30,8 @@ public abstract class Instrument extends Domain {
     String name;
     @NonFinal
     Boolean updatable;
-    List<IntradayValue> intradayValues;
-    List<DailyValue> dailyValues;
+    TreeSet<IntradayValue> intradayValues;
+    TreeSet<DailyValue> dailyValues;
 
     public Instrument(
         UUID id,
@@ -47,8 +47,8 @@ public abstract class Instrument extends Domain {
         this.shortName = shortName;
         this.name = name;
         this.updatable = updatable;
-        this.intradayValues = intradayValues == null ? new ArrayList<>() : new ArrayList<>(intradayValues);
-        this.dailyValues = dailyValues == null ? new ArrayList<>() : new ArrayList<>(dailyValues);
+        this.intradayValues = intradayValues == null ? new TreeSet<>() : new TreeSet<>(intradayValues);
+        this.dailyValues = dailyValues == null ? new TreeSet<>() : new TreeSet<>(dailyValues);
     }
 
     public void enableUpdate() {
@@ -88,11 +88,13 @@ public abstract class Instrument extends Domain {
     }
 
     public Optional<IntradayValue> lastIntradayValue() {
-        return this.intradayValues.stream().max(IntradayValue::compareTo);
+        if (this.intradayValues.isEmpty()) return Optional.empty();
+        return Optional.of(this.intradayValues.last());
     }
 
     public Optional<IntradayValue> firstIntradayValue() {
-        return this.intradayValues.stream().min(IntradayValue::compareTo);
+        if (this.intradayValues.isEmpty()) return Optional.empty();
+        return Optional.of(this.intradayValues.first());
     }
 
     public Optional<Long> getLastDealNumber() {

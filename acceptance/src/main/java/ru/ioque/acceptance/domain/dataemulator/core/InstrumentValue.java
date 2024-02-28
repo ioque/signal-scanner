@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
@@ -14,8 +12,5 @@ public abstract class InstrumentValue implements DatasetObject {
     protected StringValue secId;
     public boolean equalsBy(InstrumentType type) {
         return this.type.equals(type);
-    }
-    public boolean equalsBy(String secId) {
-        return Objects.equals(this.secId.getValue(), secId);
     }
 }
