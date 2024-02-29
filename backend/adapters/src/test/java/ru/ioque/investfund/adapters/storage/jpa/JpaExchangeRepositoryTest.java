@@ -89,7 +89,7 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
         assertEquals(instrument, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0));
         assertEquals(1, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getDailyValues().size());
         assertEquals(1, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().size());
-        assertEquals(dailyTradingResult, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getDailyValues().get(0));
-        assertEquals(intradayValue, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().get(0));
+        assertEquals(dailyTradingResult, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getDailyValues().first());
+        assertEquals(intradayValue, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().first());
     }
 }
