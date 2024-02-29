@@ -11,6 +11,7 @@ import ru.ioque.acceptance.adapters.client.signalscanner.request.SectoralRetardS
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 
 import java.time.LocalDate;
@@ -126,9 +127,11 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase5() {
         LocalDateTime now = LocalDateTime.now();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
-        integrateInstruments(
-            instruments().imoex().build(),
-            instruments().tgkn().build()
+        datasetManager().initInstruments(
+            List.of(
+                instruments().imoex().build(),
+                instruments().tgkn().build()
+            )
         );
         datasetManager().initDailyResultValue(
             Stream.concat(
@@ -149,7 +152,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                         )
                         .stream(),
                     generator()
-                        .generateStockHistory(
+                        .generateIndexHistory(
                             HistoryGeneratorConfig
                                 .builder()
                                 .ticker("IMOEX")
@@ -170,8 +173,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         datasetManager().initIntradayValue(
             Stream
                 .concat(
-                    generator().generateStockTrades(
-                        StockTradesGeneratorConfig
+                    generator().generateIndexDeltas(
+                        IndexDeltasGeneratorConfig
                             .builder()
                             .ticker("IMOEX")
                             .numTrades(2000)
@@ -199,7 +202,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 )
                 .toList()
         );
-        integrateTradingData();
+        fullIntegrate();
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
                 .scaleCoefficient(1.5)
@@ -209,6 +212,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .ids(getInstrumentIds())
                 .build()
         );
+        runScanning();
     }
 
     @Test

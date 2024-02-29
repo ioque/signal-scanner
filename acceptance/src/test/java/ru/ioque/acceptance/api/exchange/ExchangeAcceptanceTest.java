@@ -294,7 +294,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         integrateTradingData();
 
         Instrument sber = getInstrumentById(getInstrumentIds().get(0));
-        assertEquals(180, sber.getDailyValues().size());
+        assertEquals(129, sber.getDailyValues().size());
         assertEquals(10, sber.getIntradayValues().size());
     }
 

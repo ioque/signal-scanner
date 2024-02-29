@@ -72,6 +72,10 @@ public class BaseApiAcceptanceTest {
         signalScannerRestClient.saveDataScannerConfig(request);
     }
 
+    protected void runScanning() {
+        signalScannerRestClient.runScanning();
+    }
+
     protected List<UUID> getInstrumentIds() {
         return getInstruments()
             .stream()
