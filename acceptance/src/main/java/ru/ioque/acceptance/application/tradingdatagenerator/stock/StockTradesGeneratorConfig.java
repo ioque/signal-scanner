@@ -20,7 +20,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StockTradesGeneratorConfig extends IntradayGeneratorConfig {
     ParameterConfig value;
-
     @Builder
     public StockTradesGeneratorConfig(
         String ticker,

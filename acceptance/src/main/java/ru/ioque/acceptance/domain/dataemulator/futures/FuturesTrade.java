@@ -28,7 +28,6 @@ public class FuturesTrade extends IntradayValue {
     LocalDateValue tradeDate;
     IntegerValue quantity;
     IntegerValue recNo;
-
     @Builder
     public FuturesTrade(
         Integer tradeNo,

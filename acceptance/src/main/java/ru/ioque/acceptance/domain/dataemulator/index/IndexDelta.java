@@ -28,7 +28,6 @@ public class IndexDelta extends IntradayValue {
     LocalDateValue tradeDate;
     DoubleValue value;
     IntegerValue decimals;
-
     @Builder
     public IndexDelta(
         Integer tradeNo,

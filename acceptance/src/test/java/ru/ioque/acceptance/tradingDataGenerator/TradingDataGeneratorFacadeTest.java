@@ -105,7 +105,16 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase4() {
         List<IndexDelta> indexDeltas = generator.generateIndexDeltas(
-            IndexDeltasGeneratorConfig.builder().build()
+            IndexDeltasGeneratorConfig.builder()
+                .ticker("IMOEX")
+                .numTrades(20)
+                .startPrice(10.)
+                .startValue(100D)
+                .date(LocalDate.parse("2022-01-10"))
+                .startTime(LocalTime.parse("10:00"))
+                .pricePercentageGrowths(List.of(new PercentageGrowths(20D, 0.5), new PercentageGrowths(-9D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(20D, 0.5), new PercentageGrowths(-40D, 0.5)))
+                .build()
         );
         assertFalse(indexDeltas.isEmpty());
     }
@@ -138,7 +147,16 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase6() {
         List<CurrencyPairTrade> currencyPairTrades = generator.generateCurrencyPairTrades(
-            CurrencyPairTradeGeneratorConfig.builder().build()
+            CurrencyPairTradeGeneratorConfig.builder()
+                .ticker("USDRUB")
+                .numTrades(20)
+                .startPrice(10.)
+                .startValue(100D)
+                .date(LocalDate.parse("2022-01-10"))
+                .startTime(LocalTime.parse("10:00"))
+                .pricePercentageGrowths(List.of(new PercentageGrowths(20D, 0.5), new PercentageGrowths(-9D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(20D, 0.5), new PercentageGrowths(-40D, 0.5)))
+                .build()
         );
         assertFalse(currencyPairTrades.isEmpty());
     }
@@ -171,7 +189,14 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase8() {
         List<FuturesTrade> futuresTrades = generator.generateFuturesTrades(
-            FuturesTradesGeneratorConfig.builder().build()
+            FuturesTradesGeneratorConfig.builder()
+                .ticker("BRF4")
+                .numTrades(20)
+                .startPrice(10.)
+                .date(LocalDate.parse("2022-01-10"))
+                .startTime(LocalTime.parse("10:00"))
+                .pricePercentageGrowths(List.of(new PercentageGrowths(20D, 0.5), new PercentageGrowths(-9D, 0.5)))
+                .build()
         );
         assertFalse(futuresTrades.isEmpty());
     }

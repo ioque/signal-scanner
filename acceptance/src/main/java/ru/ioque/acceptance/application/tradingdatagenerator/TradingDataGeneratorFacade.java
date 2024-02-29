@@ -2,11 +2,14 @@ package ru.ioque.acceptance.application.tradingdatagenerator;
 
 import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairDailyResultGenerator;
+import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairIntradayGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairTradeGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesDailyResultGenerator;
+import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesIntradayGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDailyResultGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexIntradayGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockDailyResultGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockIntradayGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
@@ -27,6 +30,9 @@ public class TradingDataGeneratorFacade {
     FuturesDailyResultGenerator futuresDailyResultGenerator = new FuturesDailyResultGenerator();
     CurrencyPairDailyResultGenerator currencyPairDailyResultGenerator = new CurrencyPairDailyResultGenerator();
     StockIntradayGenerator stockIntradayValueGenerator = new StockIntradayGenerator();
+    CurrencyPairIntradayGenerator currencyPairIntradayGenerator = new CurrencyPairIntradayGenerator();
+    FuturesIntradayGenerator futuresIntradayGenerator = new FuturesIntradayGenerator();
+    IndexIntradayGenerator indexIntradayGenerator = new IndexIntradayGenerator();
     public List<StockDailyResult> generateStockHistory(HistoryGeneratorConfig config) {
         return stockDailyResultGenerator.generateHistory(config);
     }
@@ -40,7 +46,7 @@ public class TradingDataGeneratorFacade {
     }
 
     public List<IndexDelta> generateIndexDeltas(IndexDeltasGeneratorConfig config) {
-        return List.of();
+        return indexIntradayGenerator.generateIntradayValues(config);
     }
 
     public List<CurrencyPairDailyResult> generateCurrencyPairHistory(HistoryGeneratorConfig config) {
@@ -48,7 +54,7 @@ public class TradingDataGeneratorFacade {
     }
 
     public List<CurrencyPairTrade> generateCurrencyPairTrades(CurrencyPairTradeGeneratorConfig config) {
-        return List.of();
+        return currencyPairIntradayGenerator.generateIntradayValues(config);
     }
 
     public List<FuturesDailyResult> generateFuturesHistory(HistoryGeneratorConfig config) {
@@ -56,6 +62,6 @@ public class TradingDataGeneratorFacade {
     }
 
     public List<FuturesTrade> generateFuturesTrades(FuturesTradesGeneratorConfig config) {
-        return List.of();
+        return futuresIntradayGenerator.generateIntradayValues(config);
     }
 }
