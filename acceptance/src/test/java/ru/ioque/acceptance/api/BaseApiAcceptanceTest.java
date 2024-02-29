@@ -10,6 +10,7 @@ import ru.ioque.acceptance.adapters.client.exchange.request.EnableUpdateInstrume
 import ru.ioque.acceptance.adapters.client.service.ServiceClient;
 import ru.ioque.acceptance.adapters.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.AddSignalScannerRequest;
+import ru.ioque.acceptance.adapters.client.signalscanner.response.Signal;
 import ru.ioque.acceptance.adapters.client.signalscanner.response.SignalScannerInList;
 import ru.ioque.acceptance.adapters.client.testingsystem.TestingSystemRestClient;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
@@ -74,6 +75,10 @@ public class BaseApiAcceptanceTest {
 
     protected void runScanning() {
         signalScannerRestClient.runScanning();
+    }
+
+    protected List<Signal> getSignals() {
+        return signalScannerRestClient.getSignals();
     }
 
     protected List<UUID> getInstrumentIds() {

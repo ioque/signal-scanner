@@ -7,8 +7,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalResponse;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +21,7 @@ import java.util.UUID;
 @Tag(name="SignalScannerQueryController", description="Контроллер запросов к модулю \"SIGNAL-SCANNER\"")
 public class SignalScannerQueryController {
     JpaScannerRepo dataJpaScannerRepo;
-
+    SignalEntityRepository signalEntityRepository;
     @GetMapping("/api/v1/signal-scanner")
     public List<SignalScannerResponse> signalProducers() {
         return dataJpaScannerRepo
@@ -35,5 +37,14 @@ public class SignalScannerQueryController {
             .getBy(id)
             .map(SignalScannerResponse::fromDomain)
             .orElseThrow();
+    }
+
+    @GetMapping("/api/v1/signals")
+    public List<SignalResponse> signals() {
+        return signalEntityRepository
+            .findAll()
+            .stream()
+            .map(SignalResponse::from)
+            .toList();
     }
 }

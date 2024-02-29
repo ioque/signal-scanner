@@ -213,6 +213,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .build()
         );
         runScanning();
+
+        assertEquals(1, getSignals().size());
     }
 
     @Test
