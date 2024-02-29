@@ -2,10 +2,22 @@ package ru.ioque.acceptance.tradingDataGenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairTradeGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
+import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
+import ru.ioque.acceptance.domain.dataemulator.futures.FuturesDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.futures.FuturesTrade;
+import ru.ioque.acceptance.domain.dataemulator.index.IndexDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.index.IndexDelta;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
@@ -14,6 +26,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TradingDataGeneratorFacadeTest {
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
@@ -63,5 +76,71 @@ public class TradingDataGeneratorFacadeTest {
         assertEquals(120.0, stockTrades.get(9).getValue().getValue());
         assertEquals(10.92, stockTrades.get(19).getPrice().getValue());
         assertEquals(72.0, stockTrades.get(19).getValue().getValue());
+    }
+
+    @Test
+    @DisplayName("""
+        T3. Генерация исторических данных для индексов
+        """)
+    void testCase3() {
+        List<IndexDailyResult> indexDailyResults = generator.generateIndexHistory(
+            IndexHistoryGeneratorConfig.builder().build()
+        );
+        assertFalse(indexDailyResults.isEmpty());
+    }
+
+    @Test
+    @DisplayName("""
+        T4. Генерация внутридневных данных для индексов
+        """)
+    void testCase4() {
+        List<IndexDelta> indexDeltas = generator.generateIndexDeltas(
+            IndexDeltasGeneratorConfig.builder().build()
+        );
+        assertFalse(indexDeltas.isEmpty());
+    }
+
+    @Test
+    @DisplayName("""
+        T5. Генерация исторических данных для валютных пар
+        """)
+    void testCase5() {
+        List<CurrencyPairDailyResult> currencyPairDailyResults = generator.generateCurrencyPairHistory(
+            CurrencyPairHistoryGeneratorConfig.builder().build()
+        );
+        assertFalse(currencyPairDailyResults.isEmpty());
+    }
+
+    @Test
+    @DisplayName("""
+        T6. Генерация внутридневных данных для валютных пар
+        """)
+    void testCase6() {
+        List<CurrencyPairTrade> currencyPairTrades = generator.generateCurrencyPairTrades(
+            CurrencyPairTradeGeneratorConfig.builder().build()
+        );
+        assertFalse(currencyPairTrades.isEmpty());
+    }
+
+    @Test
+    @DisplayName("""
+        T7. Генерация исторических данных для фьючерсов
+        """)
+    void testCase7() {
+        List<FuturesDailyResult> futuresDailyResults = generator.generateFuturesHistory(
+            FuturesHistoryGeneratorConfig.builder().build()
+        );
+        assertFalse(futuresDailyResults.isEmpty());
+    }
+
+    @Test
+    @DisplayName("""
+        T8. Генерация внутридневных данных для фьючерсов
+        """)
+    void testCase8() {
+        List<FuturesTrade> futuresTrades = generator.generateFuturesTrades(
+            FuturesTradesGeneratorConfig.builder().build()
+        );
+        assertFalse(futuresTrades.isEmpty());
     }
 }

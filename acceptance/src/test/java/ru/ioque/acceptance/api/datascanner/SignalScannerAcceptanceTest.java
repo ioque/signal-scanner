@@ -9,9 +9,9 @@ import ru.ioque.acceptance.adapters.client.signalscanner.request.CorrelationSect
 import ru.ioque.acceptance.adapters.client.signalscanner.request.PrefSimpleRequest;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.SectoralRetardScannerRequest;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
-import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

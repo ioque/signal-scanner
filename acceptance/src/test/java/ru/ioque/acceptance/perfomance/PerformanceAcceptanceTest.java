@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
-import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockHistoryGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 import ru.ioque.acceptance.domain.exchange.Instrument;
 
 import java.time.LocalDate;

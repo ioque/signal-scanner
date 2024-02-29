@@ -1,7 +1,6 @@
 package ru.ioque.acceptance.application.tradingdatagenerator.stock;
 
-import ru.ioque.acceptance.application.tradingdatagenerator.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.AbstractValueGenerator;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 

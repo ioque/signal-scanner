@@ -1,4 +1,4 @@
-package ru.ioque.acceptance.application.tradingdatagenerator;
+package ru.ioque.acceptance.application.tradingdatagenerator.core;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public abstract class GeneratorConfig {
-    String ticker;
+public class PercentageGrowths {
+    Double value;
+    Double weight;
 }
