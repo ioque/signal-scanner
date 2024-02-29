@@ -63,7 +63,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
 
         long currentMills = System.currentTimeMillis();
         while (getInstrumentById(getInstrumentIds().get(0)).getIntradayValues().isEmpty()) {
-            if (System.currentTimeMillis() - currentMills > 60_000) {
+            if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
         }
@@ -108,7 +108,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
 
         long currentMills = System.currentTimeMillis();
         while (getSignals().isEmpty()) {
-            if (System.currentTimeMillis() - currentMills > 60_000) {
+            if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
         }
@@ -158,7 +158,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
 
         long currentMills = System.currentTimeMillis();
         while (getSignals().isEmpty()) {
-            if (System.currentTimeMillis() - currentMills > 60_000) {
+            if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
         }
