@@ -25,10 +25,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IndexDelta extends IntradayValue {
-    StringValue boardId;
     LocalDateValue tradeDate;
-    LocalTimeValue tradeTime;
-    DoubleValue price;
     DoubleValue value;
     IntegerValue decimals;
 
@@ -47,12 +44,12 @@ public class IndexDelta extends IntradayValue {
         super(
             new StringValue("SECID", 3, secId),
             new IntegerValue("TRADENO", 1, tradeNo),
-            new LocalDateTimeValue("SYSTIME", 8, sysTime)
+            new LocalDateTimeValue("SYSTIME", 8, sysTime),
+            new LocalTimeValue("TRADETIME", 5, tradeTime),
+            new StringValue("BOARDID", 2, boardId),
+            new DoubleValue("PRICE", 6, price)
         );
-        this.boardId = new StringValue("BOARDID", 2, boardId);
         this.tradeDate = new LocalDateValue("TRADEDATE", 4, tradeDate);
-        this.tradeTime = new LocalTimeValue("TRADETIME", 5, tradeTime);
-        this.price = new DoubleValue("PRICE", 6, price);
         this.value = new DoubleValue("VALUE", 7, value);
         this.decimals = new IntegerValue("DECIMALS", 9, decimals);
     }

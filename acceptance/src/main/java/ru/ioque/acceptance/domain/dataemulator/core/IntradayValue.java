@@ -1,9 +1,11 @@
 package ru.ioque.acceptance.domain.dataemulator.core;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Objects;
 
@@ -11,10 +13,14 @@ import java.util.Objects;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public abstract class IntradayValue implements DatasetObject, Comparable<IntradayValue> {
-    protected StringValue secId;
-    protected IntegerValue tradeNo;
-    protected LocalDateTimeValue sysTime;
+    StringValue secId;
+    IntegerValue tradeNo;
+    LocalDateTimeValue sysTime;
+    LocalTimeValue tradeTime;
+    StringValue boardId;
+    DoubleValue price;
 
     public boolean equalsBy(String secId) {
         return Objects.equals(this.secId.getValue(), secId);

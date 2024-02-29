@@ -25,17 +25,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FuturesTrade extends IntradayValue {
-    StringValue boardName;
     LocalDateValue tradeDate;
-    LocalTimeValue tradeTime;
-    DoubleValue price;
     IntegerValue quantity;
     IntegerValue recNo;
 
     @Builder
     public FuturesTrade(
         Integer tradeNo,
-        String boardName,
+        String boardId,
         String secId,
         LocalDate tradeDate,
         LocalTime tradeTime,
@@ -47,12 +44,12 @@ public class FuturesTrade extends IntradayValue {
         super(
             new StringValue("SECID", 3, secId),
             new IntegerValue("TRADENO", 1, tradeNo),
-            new LocalDateTimeValue("SYSTIME", 8, sysTime)
+            new LocalDateTimeValue("SYSTIME", 8, sysTime),
+            new LocalTimeValue("TRADETIME", 5, tradeTime),
+            new StringValue("BOARDNAME", 2, boardId),
+            new DoubleValue("PRICE", 6, price)
         );
-        this.boardName = new StringValue("BOARDNAME", 2, boardName);
         this.tradeDate = new LocalDateValue("TRADEDATE", 4, tradeDate);
-        this.tradeTime = new LocalTimeValue("TRADETIME", 5, tradeTime);
-        this.price = new DoubleValue("PRICE", 6, price);
         this.quantity = new IntegerValue("QUANTITY", 7, quantity);
         this.recNo = new IntegerValue("RECNO", 9, recNo);
     }
@@ -60,7 +57,7 @@ public class FuturesTrade extends IntradayValue {
     @Override
     public List<? extends DatasetValue> getRow() {
         return List.of(
-            tradeNo, boardName,secId,tradeDate,tradeTime,price,quantity,sysTime,recNo
+            tradeNo,boardId,secId,tradeDate,tradeTime,price,quantity,sysTime,recNo
         );
     }
 }
