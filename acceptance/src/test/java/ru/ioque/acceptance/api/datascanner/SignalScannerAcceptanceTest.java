@@ -11,12 +11,17 @@ import ru.ioque.acceptance.adapters.client.signalscanner.request.SectoralRetardS
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
+import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
+import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
+import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -145,9 +150,18 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                                 .startValue(1_000_000D)
                                 .days(30)
                                 .startDate(startDate)
-                                .openPricePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
-                                .closePricePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
-                                .valuePercentageGrowths(List.of(new PercentageGrowths(50D, 0.5), new PercentageGrowths(-50D, 0.5)))
+                                .openPricePercentageGrowths(List.of(
+                                    new PercentageGrowths(50D, 0.5),
+                                    new PercentageGrowths(-50D, 0.5)
+                                ))
+                                .closePricePercentageGrowths(List.of(
+                                    new PercentageGrowths(50D, 0.5),
+                                    new PercentageGrowths(-50D, 0.5)
+                                ))
+                                .valuePercentageGrowths(List.of(
+                                    new PercentageGrowths(50D, 0.5),
+                                    new PercentageGrowths(-50D, 0.5)
+                                ))
                                 .build()
                         )
                         .stream(),
@@ -307,6 +321,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .ids(getInstrumentIds())
                 .build()
         );
+
         runScanning();
 
         assertEquals(1, getSignals().size());
@@ -317,7 +332,126 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T7. Запуск сканера сигналов с алгоритмом "Секторальный отстающий", в торговых данных есть сигнал к покупке.
         """)
     void testCase7() {
+        LocalDate now = LocalDate.parse("2024-02-29");
+        LocalDate startDate = LocalDate.parse("2024-02-26");
+        long days = ChronoUnit.DAYS.between(startDate, now);
+        datasetManager().initInstruments(
+            List.of(
+                instruments().sibn().build(),
+                instruments().lkoh().build(),
+                instruments().tatn().build(),
+                instruments().rosn().build()
+            )
+        );
+        List<DailyResultValue> dailyResultValues = new ArrayList<>();
+        dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("SIBN")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .build()));
+        dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("LKOH")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .build()));
+        dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("TATN")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .build()));
+        dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("ROSN")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(-2D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(-5D, 1D)))
+            .build()));
+        datasetManager().initDailyResultValue(dailyResultValues);
+        List<IntradayValue> intradayValues = new ArrayList<>();
+        intradayValues.addAll(generator().generateStockTrades(StockTradesGeneratorConfig
+            .builder()
+            .ticker("SIBN")
+            .numTrades(2000)
+            .startPrice(120.)
+            .startValue(200_000D)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+            .build()));
+        intradayValues.addAll(generator().generateStockTrades(StockTradesGeneratorConfig
+            .builder()
+            .ticker("LKOH")
+            .numTrades(2000)
+            .startPrice(120.)
+            .startValue(200_000D)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+            .build()));
+        intradayValues.addAll(generator().generateStockTrades(StockTradesGeneratorConfig
+            .builder()
+            .ticker("TATN")
+            .numTrades(2000)
+            .startPrice(120.)
+            .startValue(200_000D)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+            .build()));
+        intradayValues.addAll(generator().generateStockTrades(StockTradesGeneratorConfig
+            .builder()
+            .ticker("ROSN")
+            .numTrades(2000)
+            .startPrice(99.)
+            .startValue(200_000D)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(1D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(1D, 1D)))
+            .build()));
+        datasetManager().initIntradayValue(intradayValues);
+        fullIntegrate();
+        addSignalScanner(
+            SectoralRetardScannerRequest.builder()
+                .ids(getInstrumentIds())
+                .description("desc")
+                .historyScale(0.015)
+                .intradayScale(0.015)
+                .build()
+        );
 
+        runScanning();
+
+        assertEquals(1, getSignals().size());
     }
 
     @Test
@@ -325,6 +459,76 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T8. Запуск сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора", в торговых данных есть сигнал к покупке.
         """)
     void testCase8() {
+        LocalDate now = LocalDate.parse("2024-02-29");
+        LocalDate startDate = LocalDate.parse("2024-02-26");
+        long days = ChronoUnit.DAYS.between(startDate, now);
+        datasetManager().initInstruments(
+            List.of(
+                instruments().sibn().build(),
+                instruments().brf4().build()
+            )
+        );
+        List<DailyResultValue> dailyResultValues = new ArrayList<>();
+        dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("SIBN")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .build()));
+        dailyResultValues.addAll(generator().generateFuturesHistory(HistoryGeneratorConfig
+            .builder()
+            .ticker("BRF4")
+            .startClose(105.)
+            .startOpen(100.)
+            .startValue(1_000_000D)
+            .days((int) days)
+            .startDate(startDate)
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
+            .build()));
+        datasetManager().initDailyResultValue(dailyResultValues);
+        List<IntradayValue> intradayValues = new ArrayList<>();
+        intradayValues.addAll(generator().generateStockTrades(StockTradesGeneratorConfig
+            .builder()
+            .ticker("SIBN")
+            .numTrades(2000)
+            .startPrice(120.)
+            .startValue(200_000D)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+            .build()));
+        intradayValues.addAll(generator().generateFuturesTrades(FuturesTradesGeneratorConfig
+            .builder()
+            .ticker("BRF4")
+            .numTrades(2000)
+            .startPrice(120.)
+            .date(now)
+            .startTime(LocalTime.parse("10:00"))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
+            .build()));
+        datasetManager().initIntradayValue(intradayValues);
+        fullIntegrate();
+        addSignalScanner(
+            CorrelationSectoralScannerRequest.builder()
+                .ids(getInstrumentIds())
+                .description("desc")
+                .futuresTicker("BRF4")
+                .futuresOvernightScale(0.015)
+                .stockOvernightScale(0.015)
+                .build()
+        );
 
+        runScanning();
+
+        assertEquals(1, getSignals().size());
     }
 }
