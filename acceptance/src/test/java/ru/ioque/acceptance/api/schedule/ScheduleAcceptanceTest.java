@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.adapters.client.schedule.ScheduleRestClient;
 import ru.ioque.acceptance.adapters.client.schedule.request.SaveScheduleRequest;
 import ru.ioque.acceptance.adapters.client.schedule.request.SaveScheduleUnitRequest;
-import ru.ioque.acceptance.adapters.client.schedule.response.Schedule;
 import ru.ioque.acceptance.adapters.client.schedule.response.SystemModuleCode;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.PrefSimpleRequest;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
@@ -259,8 +258,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
             .priority(1);
     }
 
-    private Schedule saveSchedule(SaveScheduleRequest scheduleRequest) {
+    private void saveSchedule(SaveScheduleRequest scheduleRequest) {
         scheduleRestClient.saveSchedule(scheduleRequest);
-        return scheduleRestClient.getSchedule();
     }
 }
