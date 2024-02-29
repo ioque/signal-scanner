@@ -1,9 +1,11 @@
 package ru.ioque.acceptance.application.tradingdatagenerator.core;
 
+import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-public class AbstractValueGenerator {
+public abstract class AbstractGenerator<T extends DailyResultValue> {
     // Генерировать целиком массив double, тогда можно будет постепенно перейти к использованию статистик.
     // Задавать растущий тренд, а значения генерировать более менее случайно в определенном разбросе
     // Определять покупка или продажа как? растущий тренд - больше покупок, чем продаж.

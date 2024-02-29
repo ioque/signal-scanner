@@ -1,13 +1,13 @@
-package ru.ioque.acceptance.application.tradingdatagenerator.stock;
+package ru.ioque.acceptance.application.tradingdatagenerator.index;
 
 import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGenerator;
-import ru.ioque.acceptance.domain.dataemulator.stock.StockDailyResult;
+import ru.ioque.acceptance.domain.dataemulator.index.IndexDailyResult;
 
 import java.time.LocalDate;
 
-public class StockDailyResultGenerator extends HistoryGenerator<StockDailyResult> {
+public class IndexDailyResultGenerator extends HistoryGenerator<IndexDailyResult> {
     @Override
-    public StockDailyResult buildHistoryValue(
+    public IndexDailyResult buildHistoryValue(
         String ticker,
         LocalDate date,
         double open,
@@ -15,7 +15,7 @@ public class StockDailyResultGenerator extends HistoryGenerator<StockDailyResult
         double value,
         double volume
     ) {
-        return StockDailyResult.builder()
+        return IndexDailyResult.builder()
             .secId(ticker)
             .tradeDate(date)
             .open(open)

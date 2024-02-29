@@ -21,11 +21,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FuturesDailyResult extends DailyResultValue {
-    StringValue boardId;
-    DoubleValue open;
-    DoubleValue low;
-    DoubleValue high;
-    DoubleValue close;
     DoubleValue openPositionValue;
     DoubleValue value;
     IntegerValue volume;
@@ -49,12 +44,14 @@ public class FuturesDailyResult extends DailyResultValue {
         Double settlePrice,
         Double swapRate
     ) {
-        super(new StringValue("SECID", 3, secId), new LocalDateValue("TRADEDATE", 2, tradeDate));
-        this.boardId = new StringValue("BOARDID", 1, boardId);
-        this.open = new DoubleValue("OPEN", 4, open);
-        this.low = new DoubleValue("LOW", 5, low);
-        this.high = new DoubleValue("HIGH", 6, high);
-        this.close = new DoubleValue("CLOSE", 7, close);
+        super(new StringValue("SECID", 3, secId),
+            new LocalDateValue("TRADEDATE", 2, tradeDate),
+            new StringValue("BOARDID", 1, boardId),
+            new DoubleValue("OPEN", 4, open),
+            new DoubleValue("LOW", 5, low),
+            new DoubleValue("HIGH", 6, high),
+            new DoubleValue("CLOSE", 7, close)
+        );
         this.openPositionValue = new DoubleValue("OPENPOSITIONVALUE", 8, openPositionValue);
         this.value = new DoubleValue("VALUE", 9, value);
         this.volume = new IntegerValue("VOLUME", 10, volume);

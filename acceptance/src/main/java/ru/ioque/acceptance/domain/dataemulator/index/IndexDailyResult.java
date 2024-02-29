@@ -21,13 +21,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IndexDailyResult extends DailyResultValue {
-    StringValue boardId;
     StringValue shortName;
     StringValue name;
-    DoubleValue close;
-    DoubleValue open;
-    DoubleValue high;
-    DoubleValue low;
     DoubleValue value;
     IntegerValue duration;
     DoubleValue yield;
@@ -59,15 +54,17 @@ public class IndexDailyResult extends DailyResultValue {
         String tradingSession,
         Double volume
     ) {
-        super(new StringValue("SECID", 2, secId), new LocalDateValue("TRADEDATE", 3, tradeDate));
-        this.boardId = new StringValue("BOARDID", 1, boardId);
-        this.secId = new StringValue("SECID", 2, secId);
+        super(
+            new StringValue("SECID", 2, secId),
+            new LocalDateValue("TRADEDATE", 3, tradeDate),
+            new StringValue("BOARDID", 1, boardId),
+            new DoubleValue("OPEN", 7, open),
+            new DoubleValue("LOW", 9, low),
+            new DoubleValue("HIGH", 8, high),
+            new DoubleValue("CLOSE", 6, close)
+        );
         this.shortName = new StringValue("SHORTNAME", 4, shortName);
         this.name = new StringValue("NAME", 5, name);
-        this.close = new DoubleValue("CLOSE", 6, close);
-        this.open = new DoubleValue("OPEN", 7, open);
-        this.high = new DoubleValue("HIGH", 8, high);
-        this.low = new DoubleValue("LOW", 9, low);
         this.value = new DoubleValue("VALUE", 10, value);
         this.duration = new IntegerValue("DURATION", 11, duration);
         this.yield = new DoubleValue("YIELD", 12, yield);

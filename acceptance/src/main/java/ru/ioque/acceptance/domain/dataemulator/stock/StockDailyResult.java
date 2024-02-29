@@ -21,16 +21,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StockDailyResult extends DailyResultValue {
-    StringValue boardId;
     StringValue shortName;
     DoubleValue numTrades;
     DoubleValue value;
-    DoubleValue open;
-    DoubleValue low;
-    DoubleValue high;
     DoubleValue legalClosePrice;
     DoubleValue waPrice;
-    DoubleValue close;
     DoubleValue volume;
     DoubleValue marketPrice2;
     DoubleValue marketPrice3;
@@ -69,17 +64,20 @@ public class StockDailyResult extends DailyResultValue {
         String currencyId,
         Double trendClsPr
     ) {
-        super(new StringValue("SECID", 4, secId), new LocalDateValue("TRADEDATE", 2, tradeDate));
-        this.boardId = new StringValue("BOARDID", 1, boardId);
+        super(
+            new StringValue("SECID", 4, secId),
+            new LocalDateValue("TRADEDATE", 2, tradeDate),
+            new StringValue("BOARDID", 1, boardId),
+            new DoubleValue("OPEN", 7, open),
+            new DoubleValue("LOW", 8, low),
+            new DoubleValue("HIGH", 9, high),
+            new DoubleValue("CLOSE", 12, close)
+        );
         this.shortName = new StringValue("SHORTNAME", 3, shortName);
         this.numTrades = new DoubleValue("NUMTRADES", 5, numTrades);
         this.value = new DoubleValue("VALUE", 6, value);
-        this.open = new DoubleValue("OPEN", 7, open);
-        this.low = new DoubleValue("LOW", 8, low);
-        this.high = new DoubleValue("HIGH", 9, high);
         this.legalClosePrice = new DoubleValue("LEGALCLOSEPRICE", 10, legalClosePrice);
         this.waPrice = new DoubleValue("WAPRICE", 11, waPrice);
-        this.close = new DoubleValue("CLOSE", 12, close);
         this.volume = new DoubleValue("VOLUME", 13, volume);
         this.marketPrice2 = new DoubleValue("MARKETPRICE2", 14, marketPrice2);
         this.marketPrice3 = new DoubleValue("MARKETPRICE3", 15, marketPrice3);

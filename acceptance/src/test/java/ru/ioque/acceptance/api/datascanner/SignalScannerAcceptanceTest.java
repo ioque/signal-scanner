@@ -9,8 +9,8 @@ import ru.ioque.acceptance.adapters.client.signalscanner.request.CorrelationSect
 import ru.ioque.acceptance.adapters.client.signalscanner.request.PrefSimpleRequest;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.SectoralRetardScannerRequest;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 
 import java.time.LocalDate;
@@ -134,7 +134,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             Stream.concat(
                     generator()
                         .generateStockHistory(
-                            StockHistoryGeneratorConfig
+                            HistoryGeneratorConfig
                                 .builder()
                                 .ticker("TGKN")
                                 .startClose(10.)
@@ -150,7 +150,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                         .stream(),
                     generator()
                         .generateStockHistory(
-                            StockHistoryGeneratorConfig
+                            HistoryGeneratorConfig
                                 .builder()
                                 .ticker("IMOEX")
                                 .startClose(10.)

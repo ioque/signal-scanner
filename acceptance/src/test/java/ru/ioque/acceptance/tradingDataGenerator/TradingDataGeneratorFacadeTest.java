@@ -2,16 +2,13 @@ package ru.ioque.acceptance.tradingDataGenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.currencypair.CurrencyPairTradeGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.index.IndexHistoryGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
-import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
 import ru.ioque.acceptance.domain.dataemulator.futures.FuturesDailyResult;
@@ -36,8 +33,9 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase1() {
         List<StockDailyResult> stockDailyResults = generator.generateStockHistory(
-            StockHistoryGeneratorConfig
+            HistoryGeneratorConfig
                 .builder()
+                .ticker("SBER")
                 .startClose(10.)
                 .startOpen(10.)
                 .startValue(1000D)
@@ -62,6 +60,7 @@ public class TradingDataGeneratorFacadeTest {
         List<StockTrade> stockTrades = generator.generateStockTrades(
             StockTradesGeneratorConfig
                 .builder()
+                .ticker("SBER")
                 .numTrades(20)
                 .startPrice(10.)
                 .startValue(100D)
@@ -84,7 +83,18 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase3() {
         List<IndexDailyResult> indexDailyResults = generator.generateIndexHistory(
-            IndexHistoryGeneratorConfig.builder().build()
+            HistoryGeneratorConfig
+                .builder()
+                .ticker("IMOEX")
+                .startClose(10.)
+                .startOpen(10.)
+                .startValue(1000D)
+                .days(180)
+                .startDate(LocalDate.parse("2022-01-10"))
+                .openPricePercentageGrowths(List.of(new PercentageGrowths(10D, 0.5), new PercentageGrowths(-10D, 0.5)))
+                .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .build()
         );
         assertFalse(indexDailyResults.isEmpty());
     }
@@ -106,7 +116,18 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase5() {
         List<CurrencyPairDailyResult> currencyPairDailyResults = generator.generateCurrencyPairHistory(
-            CurrencyPairHistoryGeneratorConfig.builder().build()
+            HistoryGeneratorConfig
+                .builder()
+                .ticker("USDRUB")
+                .startClose(10.)
+                .startOpen(10.)
+                .startValue(1000D)
+                .days(180)
+                .startDate(LocalDate.parse("2022-01-10"))
+                .openPricePercentageGrowths(List.of(new PercentageGrowths(10D, 0.5), new PercentageGrowths(-10D, 0.5)))
+                .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .build()
         );
         assertFalse(currencyPairDailyResults.isEmpty());
     }
@@ -128,7 +149,18 @@ public class TradingDataGeneratorFacadeTest {
         """)
     void testCase7() {
         List<FuturesDailyResult> futuresDailyResults = generator.generateFuturesHistory(
-            FuturesHistoryGeneratorConfig.builder().build()
+            HistoryGeneratorConfig
+                .builder()
+                .ticker("BRF4")
+                .startClose(10.)
+                .startOpen(10.)
+                .startValue(1000D)
+                .days(180)
+                .startDate(LocalDate.parse("2022-01-10"))
+                .openPricePercentageGrowths(List.of(new PercentageGrowths(10D, 0.5), new PercentageGrowths(-10D, 0.5)))
+                .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 0.5), new PercentageGrowths(-5D, 0.5)))
+                .build()
         );
         assertFalse(futuresDailyResults.isEmpty());
     }

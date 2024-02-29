@@ -1,20 +1,31 @@
 package ru.ioque.acceptance.domain.dataemulator.core;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Getter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public abstract class DailyResultValue implements DatasetObject {
-    protected StringValue secId;
-    @Getter
-    protected LocalDateValue tradeDate;
+    StringValue secId;
+    LocalDateValue tradeDate;
+    StringValue boardId;
+    DoubleValue open;
+    DoubleValue low;
+    DoubleValue high;
+    DoubleValue close;
+
+    public abstract DoubleValue getValue();
+
     public boolean equalsBy(String secId) {
         return Objects.equals(this.secId.getValue(), secId);
     }

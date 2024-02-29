@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
 import ru.ioque.acceptance.api.BaseApiAcceptanceTest;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockHistoryGeneratorConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.stock.StockTradesGeneratorConfig;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairDailyResult;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPairTrade;
@@ -276,7 +276,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         );
         datasetManager().initDailyResultValue(
             generator().generateStockHistory(
-                StockHistoryGeneratorConfig
+                HistoryGeneratorConfig
                     .builder()
                     .ticker("SBER")
                     .startClose(10.)
