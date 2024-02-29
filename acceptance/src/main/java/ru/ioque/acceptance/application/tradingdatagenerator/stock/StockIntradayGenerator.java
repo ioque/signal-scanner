@@ -12,18 +12,18 @@ import java.util.List;
 public class StockIntradayGenerator extends IntradayGenerator<StockTrade, StockTradesGeneratorConfig> {
     public List<StockTrade> generateIntradayValues(StockTradesGeneratorConfig config) {
         List<StockTrade> stockTrades = new ArrayList<>();
-        for (int i = 0; i < config.getValuePercentageGrowths().size(); i++) {
+        for (int i = 0; i < config.getValue().getPercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, stockTrades);
             Double startPrice = getStartPrice(config, stockTrades);
             int tradeNumber = getTradeNumber(stockTrades);
-            long numTrades = (long) (config.getNumTrades() * config.getValuePercentageGrowths().get(i).getWeight());
+            long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, stockTrades);
             stockTrades.addAll(
                 generateStockTradesBatch(
-                    config.getPricePercentageGrowths().get(i),
-                    config.getValuePercentageGrowths().get(i),
+                    config.getPrice().getPercentageGrowths().get(i),
+                    config.getValue().getPercentageGrowths().get(i),
                     tradeNumber,
                     startPrice,
                     numTrades,
@@ -38,7 +38,7 @@ public class StockIntradayGenerator extends IntradayGenerator<StockTrade, StockT
     }
 
     private Double getStartValue(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
-        return stockTrades.isEmpty() ? config.getStartValue() : (Double) stockTrades
+        return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
             .get(stockTrades.size() - 1)
             .getValue()
             .getValue();

@@ -6,7 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.acceptance.application.tradingdatagenerator.core.GeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.IntradayGeneratorConfig;
+import ru.ioque.acceptance.application.tradingdatagenerator.core.ParameterConfig;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
 
 import java.time.LocalDate;
@@ -17,14 +18,8 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class StockTradesGeneratorConfig extends GeneratorConfig {
-    LocalDate date;
-    LocalTime startTime;
-    long numTrades;
-    double startPrice;
-    double startValue;
-    List<PercentageGrowths> pricePercentageGrowths;
-    List<PercentageGrowths> valuePercentageGrowths;
+public class StockTradesGeneratorConfig extends IntradayGeneratorConfig {
+    ParameterConfig value;
 
     @Builder
     public StockTradesGeneratorConfig(
@@ -37,13 +32,7 @@ public class StockTradesGeneratorConfig extends GeneratorConfig {
         List<PercentageGrowths> pricePercentageGrowths,
         List<PercentageGrowths> valuePercentageGrowths
     ) {
-        super(ticker);
-        this.date = date;
-        this.startTime = startTime;
-        this.numTrades = numTrades;
-        this.startPrice = startPrice;
-        this.startValue = startValue;
-        this.pricePercentageGrowths = pricePercentageGrowths;
-        this.valuePercentageGrowths = valuePercentageGrowths;
+        super(ticker, date, startTime, numTrades, startPrice, pricePercentageGrowths);
+        this.value = new ParameterConfig("value", startValue, valuePercentageGrowths);
     }
 }

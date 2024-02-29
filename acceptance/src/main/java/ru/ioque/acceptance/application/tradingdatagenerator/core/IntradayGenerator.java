@@ -21,7 +21,7 @@ public abstract class IntradayGenerator<T extends IntradayValue, C extends Gener
     }
 
     protected Double getStartPrice(StockTradesGeneratorConfig config, List<T> stockTrades) {
-        return stockTrades.isEmpty() ? config.getStartPrice() : (Double) stockTrades
+        return stockTrades.isEmpty() ? config.getPrice().getStartValue() : (Double) stockTrades
             .get(stockTrades.size() - 1)
             .getPrice()
             .getValue();
