@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class SpringScheduler {
     ScheduleManager scheduleManager;
     @Async
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void scheduleManagerRunTasks() {
         scheduleManager.executeSchedule();
     }
