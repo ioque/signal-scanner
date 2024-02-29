@@ -222,7 +222,94 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T6. Запуск сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка", в торговых данных есть сигнал к покупке.
         """)
     void testCase6() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate startDate = now.toLocalDate().minusMonths(1);
+        datasetManager().initInstruments(
+            List.of(
+                instruments().sber().build(),
+                instruments().sberp().build()
+            )
+        );
+        datasetManager().initDailyResultValue(
+            Stream.concat(
+                    generator()
+                        .generateStockHistory(
+                            HistoryGeneratorConfig
+                                .builder()
+                                .ticker("SBER")
+                                .startClose(245.)
+                                .startOpen(242.)
+                                .startValue(1_000_000D)
+                                .days(30)
+                                .startDate(startDate)
+                                .openPricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                .closePricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                .valuePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                .build()
+                        )
+                        .stream(),
+                    generator()
+                        .generateStockHistory(
+                            HistoryGeneratorConfig
+                                .builder()
+                                .ticker("SBERP")
+                                .startClose(242.)
+                                .startOpen(239.)
+                                .startValue(1_000_000D)
+                                .days(30)
+                                .startDate(startDate)
+                                .openPricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                .closePricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                .valuePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                .build()
+                        )
+                        .stream()
+                )
+                .toList()
+        );
+        datasetManager().initIntradayValue(
+            Stream
+                .concat(
+                    generator().generateStockTrades(
+                        StockTradesGeneratorConfig
+                            .builder()
+                            .ticker("SBER")
+                            .numTrades(2000)
+                            .startPrice(245.)
+                            .startValue(200_000D)
+                            .date(now.toLocalDate())
+                            .startTime(LocalTime.parse("10:00"))
+                            .pricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+                            .build()
+                    ).stream(),
+                    generator().generateStockTrades(
+                        StockTradesGeneratorConfig
+                            .builder()
+                            .ticker("SBERP")
+                            .numTrades(2000)
+                            .startPrice(242.)
+                            .startValue(200_000D)
+                            .date(now.toLocalDate())
+                            .startTime(LocalTime.parse("10:00"))
+                            .pricePercentageGrowths(List.of(new PercentageGrowths(-15D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(-2D, 1D)))
+                            .build()
+                    ).stream()
+                )
+                .toList()
+        );
+        fullIntegrate();
+        addSignalScanner(
+            PrefSimpleRequest.builder()
+                .spreadParam(1D)
+                .description("desc")
+                .ids(getInstrumentIds())
+                .build()
+        );
+        runScanning();
 
+        assertEquals(1, getSignals().size());
     }
 
     @Test
@@ -238,38 +325,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T8. Запуск сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора", в торговых данных есть сигнал к покупке.
         """)
     void testCase8() {
-
-    }
-
-    @Test
-    @DisplayName("""
-        T9. Запуск сканера сигналов с алгоритмом "Аномальные объемы", в торговых данных нет сигнала к покупке.
-        """)
-    void testCase9() {
-
-    }
-
-    @Test
-    @DisplayName("""
-        T10. Запуск сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка", в торговых данных нет сигнала к покупке.
-        """)
-    void testCase10() {
-
-    }
-
-    @Test
-    @DisplayName("""
-        T11. Запуск сканера сигналов с алгоритмом "Секторальный отстающий", в торговых данных нет сигнала к покупке.
-        """)
-    void testCase11() {
-
-    }
-
-    @Test
-    @DisplayName("""
-        T12. Запуск сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора", в торговых данных нет сигнала к покупке.
-        """)
-    void testCase12() {
 
     }
 }
