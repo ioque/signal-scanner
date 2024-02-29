@@ -1,7 +1,7 @@
 package ru.ioque.acceptance.application.tradingdatagenerator.stock;
 
+import ru.ioque.acceptance.application.tradingdatagenerator.core.IntradayGenerator;
 import ru.ioque.acceptance.application.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.acceptance.application.tradingdatagenerator.core.AbstractGenerator;
 import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 
 import java.time.LocalDate;
@@ -9,8 +9,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockIntradayGenerator extends AbstractGenerator {
-    public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
+public class StockIntradayGenerator extends IntradayGenerator<StockTrade, StockTradesGeneratorConfig> {
+    public List<StockTrade> generateIntradayValues(StockTradesGeneratorConfig config) {
         List<StockTrade> stockTrades = new ArrayList<>();
         for (int i = 0; i < config.getValuePercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
@@ -35,24 +35,6 @@ public class StockIntradayGenerator extends AbstractGenerator {
         }
 
         return stockTrades;
-    }
-
-    private LocalTime getStartTime(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
-        return stockTrades.isEmpty() ? config.getStartTime() : (LocalTime) stockTrades
-            .get(stockTrades.size() - 1)
-            .getTradeTime()
-            .getValue();
-    }
-
-    private int getTradeNumber(List<StockTrade> stockTrades) {
-        return stockTrades.isEmpty() ? 1 : (Integer) stockTrades.get(stockTrades.size() - 1).getTradeNo().getValue();
-    }
-
-    private Double getStartPrice(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {
-        return stockTrades.isEmpty() ? config.getStartPrice() : (Double) stockTrades
-            .get(stockTrades.size() - 1)
-            .getPrice()
-            .getValue();
     }
 
     private Double getStartValue(StockTradesGeneratorConfig config, List<StockTrade> stockTrades) {

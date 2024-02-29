@@ -32,7 +32,7 @@ public class TradingDataGeneratorFacade {
     }
 
     public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
-        return stockIntradayValueGenerator.generateStockTrades(config);
+        return stockIntradayValueGenerator.generateIntradayValues(config);
     }
 
     public List<IndexDailyResult> generateIndexHistory(HistoryGeneratorConfig config) {
