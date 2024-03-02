@@ -15,10 +15,7 @@ export default function Root() {
                             <a href={`/instruments`}>Финансовые инструменты</a>
                         </li>
                         <li>
-                            <a href={`/signal-scanners`}>Сканеры</a>
-                        </li>
-                        <li>
-                            <a href={`/schedule`}>Расписание</a>
+                            <a href={`/scanners`}>Сканеры</a>
                         </li>
                     </ul>
                 </nav>
