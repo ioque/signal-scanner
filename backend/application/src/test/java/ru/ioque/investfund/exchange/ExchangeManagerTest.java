@@ -1,5 +1,6 @@
 package ru.ioque.investfund.exchange;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
@@ -401,5 +402,23 @@ public class ExchangeManagerTest extends BaseTest {
     void testCase18() {
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().integrateTradingData());
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T19. После успешной синхронизации создается событие "Синхронизация завершена".
+        """)
+    void testCase19() {
+
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T20. После успешной интеграции торговых данных создается событие "Интеграция торговых данных завершена".
+        """)
+    void testCase20() {
+
     }
 }

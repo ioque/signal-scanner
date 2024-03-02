@@ -1,6 +1,7 @@
 package ru.ioque.investfund.exchange;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
@@ -333,5 +334,15 @@ public class StatisticCalculatorTest extends BaseTest {
 
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().getStatistics());
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
+    }
+
+
+    @Test
+    @Disabled
+    @DisplayName("""
+        T11. Успешный расчет статистических данных создает событие "Статистика обновлена"
+        """)
+    void testCase11() {
+
     }
 }
