@@ -23,7 +23,6 @@ public class Exchange extends Domain {
     String url;
     String description;
     Map<UUID, Instrument> instruments;
-    Map<String, UUID> tickerToIds;
 
     @Builder
     public Exchange(
@@ -39,11 +38,9 @@ public class Exchange extends Domain {
         this.url = url;
         this.description = description;
         this.instruments = new HashMap<>();
-        this.tickerToIds = new HashMap<>();
         if (instruments != null) {
             instruments.forEach(instrument -> {
                 this.instruments.put(instrument.getId(), instrument);
-                this.tickerToIds.put(instrument.getTicker(), instrument.getId());
             });
         }
     }
@@ -56,9 +53,8 @@ public class Exchange extends Domain {
     }
 
     public void saveInstrument(Instrument instrument) {
-        if (!tickerToIds.containsKey(instrument.getTicker())) {
+        if (!instrumentExists(instrument)) {
             instruments.put(instrument.getId(), instrument);
-            tickerToIds.put(instrument.getTicker(), instrument.getId());
         }
     }
 
@@ -80,5 +76,9 @@ public class Exchange extends Domain {
                 instruments.get(id).disableUpdate();
             }
         });
+    }
+
+    private boolean instrumentExists(Instrument instrument) {
+        return instruments.values().stream().anyMatch(row -> row.getTicker().equals(instrument.getTicker()));
     }
 }
