@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage";
 import InstrumentsPage from "./pages/InstrumentsPage";
 import ScannersPage from "./pages/ScannersPage";
 import StatisticPage from "./pages/StatisticPage";
+import InstrumentDetailsPage from "./pages/InstrumentDetailsPage";
 
 const router = createBrowserRouter([
     {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
                 element: <InstrumentsPage />,
             },
             {
-                path: "instruments/:ticker/statistic",
+                path: "instruments/:id",
+                element: <InstrumentDetailsPage />
+            },
+            {
+                path: "instruments/:id/statistic",
                 element: <StatisticPage />
             },
             {

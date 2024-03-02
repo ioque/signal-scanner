@@ -1,21 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './style.scss'
 import {Statistic} from "../../entities/Statistic";
+import {fetchInstrumentStatistic} from "../../../../share/api/restClient";
+import ErrorPage from "../../../../pages/ErrorPage";
 
 export type StatisticViewParams = {
-    ticker: string
-}
-
-const statistic: Statistic = {
-    ticker: "AFKS",
-    todayValue: 10,
-    medianHistoryValue: 10,
-    todayLastPrice: 10,
-    todayOpenPrice: 10
+    id: string
 }
 
 export default function StatisticView(params: StatisticViewParams) {
-    console.log(params)
+    const [statistic, setStatistic] = useState<Statistic>();
+    useEffect(() => {
+        fetchInstrumentStatistic(params.id).then((data) => setStatistic(data));
+    }, []);
+
+    if (!statistic) {
+        return <ErrorPage />
+    }
     return (
         <div className="instrument-item-list">
             <p>{statistic.ticker}</p>

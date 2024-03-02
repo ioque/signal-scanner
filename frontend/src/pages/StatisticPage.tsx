@@ -5,8 +5,8 @@ import ErrorPage from "./ErrorPage";
 
 const StatisticPage: React.FC = () => {
     const params = useParams<StatisticViewParams>()
-    if (!params.ticker) return <ErrorPage />;
-    return <StatisticView ticker={params.ticker} />
+    if (!params.id) return <ErrorPage />;
+    return <StatisticView id={params.id} />
 }
 
 export default StatisticPage
