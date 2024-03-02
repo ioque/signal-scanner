@@ -1,4 +1,4 @@
-package ru.ioque.acceptance.api.fixture;
+package ru.ioque.acceptance.fixture;
 
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
 import ru.ioque.acceptance.domain.dataemulator.currencyPair.CurrencyPair;

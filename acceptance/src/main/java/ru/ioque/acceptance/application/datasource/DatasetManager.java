@@ -1,10 +1,10 @@
 package ru.ioque.acceptance.application.datasource;
 
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.acceptance.application.datasource.datasets.DefaultDataset;
 import ru.ioque.acceptance.domain.dataemulator.core.DailyResultValue;
 import ru.ioque.acceptance.domain.dataemulator.core.DatasetStorage;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentType;
@@ -15,10 +15,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DatasetManager {
     DatasetStorage dataSetStorage = new DatasetStorage();
+
+    public DatasetManager() {
+        initInstruments(DefaultDataset.getInstruments());
+        initIntradayValue(DefaultDataset.getIntradayValues());
+        initDailyResultValue(DefaultDataset.getDailyResults());
+    }
+
     @SneakyThrows
     public List<? extends InstrumentValue> getInstrumentsBy(InstrumentType instrumentType) {
         return dataSetStorage.getInstrumentsBy(instrumentType);

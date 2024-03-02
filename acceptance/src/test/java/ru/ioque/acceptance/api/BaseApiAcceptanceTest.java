@@ -15,7 +15,7 @@ import ru.ioque.acceptance.adapters.client.signalscanner.response.SignalScannerI
 import ru.ioque.acceptance.adapters.client.testingsystem.TestingSystemRestClient;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.DailyValueResponse;
 import ru.ioque.acceptance.adapters.client.testingsystem.response.IntradayValueResponse;
-import ru.ioque.acceptance.api.fixture.InstrumentsFixture;
+import ru.ioque.acceptance.fixture.InstrumentsFixture;
 import ru.ioque.acceptance.application.datasource.DatasetManager;
 import ru.ioque.acceptance.application.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.acceptance.domain.dataemulator.core.InstrumentValue;
