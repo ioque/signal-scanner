@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './style.scss'
 import {Instrument} from "../../entities/Instrument";
 import {Link} from "react-router-dom";
-
-const instruments: Array<Instrument> = [
-    { id: "1", ticker: 'AFKS', shortName: "ао Система", isGrow: true, lastPrice: 18.41 },
-    { id: "2", ticker: 'SBER', shortName: "Сбербанк", isGrow: false, lastPrice: 260.45  },
-    { id: "3", ticker: 'ROSN', shortName: "Роснефть", isGrow: false, lastPrice: 350.11 },
-];
+import {fetchInstruments} from "../../../../share/api/restClient";
 
 export default function InstrumentList() {
+    const [instruments, setInstruments] = useState<Array<Instrument>>([]);
+
+    useEffect(() => {
+        fetchInstruments().then((data) => setInstruments(data));
+    }, []);
+
     const listItems = instruments.map(instrument =>
         <li
             key={instrument.ticker}
