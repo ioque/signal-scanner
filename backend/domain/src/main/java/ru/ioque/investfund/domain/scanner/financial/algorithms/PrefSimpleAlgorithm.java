@@ -39,7 +39,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
             final double multiplier = currentDelta / historyDelta;
             logs.add(parametersMessage(pair, currentDelta, historyDelta, multiplier));
             if (multiplier > spreadParam) {
-                signals.add(new Signal(pair.getPref().getInstrumentId(), true));
+                signals.add(new Signal(dateTimeNow, pair.getPref().getInstrumentId(), true));
             }
         });
         logs.add(finishWorkMessage(signals));

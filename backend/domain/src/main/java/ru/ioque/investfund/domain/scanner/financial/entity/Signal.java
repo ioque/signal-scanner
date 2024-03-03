@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Signal {
+    LocalDateTime dateTime;
     UUID instrumentId;
     boolean isBuy;
 }

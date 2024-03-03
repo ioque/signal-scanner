@@ -9,8 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,14 +27,39 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalScannerResponse {
+public class SignalScannerResponse implements Serializable {
     UUID id;
-    String businessProcessorName;
+    String description;
+    SignalConfigResponse config;
+    List<InstrumentInListResponse> instruments;
+    List<ReportResponse> reports;
+    List<SignalResponse> signals;
 
-    public static SignalScannerResponse fromDomain(SignalScannerBot dataScanner) {
+    public static SignalScannerResponse from(
+        SignalScannerEntity scanner,
+        List<InstrumentEntity> instruments,
+        List<ReportEntity> reports,
+        List<SignalEntity> signals
+    ) {
         return SignalScannerResponse.builder()
-            .id(dataScanner.getId())
-            .businessProcessorName(dataScanner.getConfig().factorySearchAlgorithm().getName())
+            .id(scanner.getId())
+            .description(scanner.getDescription())
+            .config(SignalConfigResponse.from(scanner))
+            .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
+            .reports(reports.stream().map(ReportResponse::from).toList())
+            .signals(signals
+                .stream()
+                .map(signal -> SignalResponse
+                    .from(
+                        signal,
+                        instruments
+                            .stream()
+                            .filter(instrument -> instrument.getId().equals(signal.getInstrumentId()))
+                            .findFirst()
+                            .orElseThrow()
+                    )
+                )
+                .toList())
             .build();
     }
 }

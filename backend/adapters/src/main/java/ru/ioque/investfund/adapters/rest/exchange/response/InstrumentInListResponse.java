@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 
 import java.io.Serializable;
@@ -28,6 +29,14 @@ public class InstrumentInListResponse implements Serializable {
     String ticker;
 
     public static InstrumentInListResponse fromDomain(Instrument instrument) {
+        return InstrumentInListResponse.builder()
+            .id(instrument.getId())
+            .shortName(instrument.getShortName())
+            .ticker(instrument.getTicker())
+            .build();
+    }
+
+    public static InstrumentInListResponse from(InstrumentEntity instrument) {
         return InstrumentInListResponse.builder()
             .id(instrument.getId())
             .shortName(instrument.getShortName())

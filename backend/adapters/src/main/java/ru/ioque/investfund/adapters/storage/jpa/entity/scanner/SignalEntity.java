@@ -18,6 +18,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -39,9 +40,11 @@ public class SignalEntity {
     ReportEntity report;
     UUID instrumentId;
     boolean isBuy;
+    LocalDateTime dateTime;
 
     public Signal toDomain() {
         return Signal.builder()
+            .dateTime(dateTime)
             .instrumentId(instrumentId)
             .isBuy(isBuy)
             .build();

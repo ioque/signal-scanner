@@ -44,7 +44,7 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
         for (var statistic : analyzeInstruments(statistics)) {
             logs.add(parametersMessage(statistic));
             if (futuresIsRiseOvernight && statistic.isRiseOvernight(stockOvernightScale)) {
-                signals.add(new Signal(statistic.getInstrumentId(), true));
+                signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), true));
             }
         }
         logs.add(finishWorkMessage(signals));

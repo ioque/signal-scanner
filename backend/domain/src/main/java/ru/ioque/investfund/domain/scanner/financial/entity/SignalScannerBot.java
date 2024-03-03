@@ -19,6 +19,7 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalScannerBot extends Domain {
     String description;
+    //Грузить сюда сразу статистики, потому как этот лист нахер не нужен, данные агрегат работает со статистиками
     List<UUID> objectIds;
     SignalConfig config;
 
@@ -37,9 +38,6 @@ public class SignalScannerBot extends Domain {
     public Report scanning(List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         if (statistics.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
-        }
-        if (statistics.stream().anyMatch(row -> !objectIds.contains(row.getInstrumentId()))) {
-            throw new DomainException("Некорректный список статистик.");
         }
         return config.factorySearchAlgorithm().run(getId(), statistics, dateTimeNow);
     }

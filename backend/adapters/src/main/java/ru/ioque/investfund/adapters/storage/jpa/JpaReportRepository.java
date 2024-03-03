@@ -59,6 +59,7 @@ public class JpaReportRepository implements ReportRepository {
             .getSignals()
             .stream()
             .map(row -> SignalEntity.builder()
+                .dateTime(row.getDateTime())
                 .instrumentId(row.getInstrumentId())
                 .isBuy(row.isBuy())
                 .report(reportEntity)

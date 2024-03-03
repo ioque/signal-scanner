@@ -34,7 +34,7 @@ public class JpaReportRepositoryTest extends BaseJpaTest {
             .scannerId(scannerId)
             .time(LocalDateTime.now())
             .logs(List.of(new ReportLog("test", Instant.now().truncatedTo(ChronoUnit.SECONDS))))
-            .signals(List.of(new Signal(UUID.randomUUID(), true)))
+            .signals(List.of(new Signal(LocalDateTime.now(), UUID.randomUUID(), true)))
             .build();
 
         reportRepository.save(List.of(report));

@@ -23,7 +23,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("AnomalyVolumeScannerEntity")
 public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
-    Double startScaleCoefficient;
+    Double scaleCoefficient;
     Integer historyPeriod;
     String indexTicker;
 
@@ -32,12 +32,12 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
         UUID id,
         String description,
         List<UUID> objectIds,
-        Double startScaleCoefficient,
+        Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
         super(id, description, objectIds);
-        this.startScaleCoefficient = startScaleCoefficient;
+        this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
     }
@@ -48,7 +48,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             .id(signalScannerBot.getId())
             .description(signalScannerBot.getDescription())
             .objectIds(signalScannerBot.getObjectIds())
-            .startScaleCoefficient(config.getScaleCoefficient())
+            .scaleCoefficient(config.getScaleCoefficient())
             .historyPeriod(config.getHistoryPeriod())
             .indexTicker(config.getIndexTicker())
             .build();
@@ -60,7 +60,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             getObjectIds(),
-            new AnomalyVolumeSignalConfig(startScaleCoefficient, historyPeriod, indexTicker)
+            new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker)
         );
     }
 }

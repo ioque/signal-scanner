@@ -38,7 +38,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
         List<InstrumentStatistic> otherInstruments = getSectoralRetards(statistics, riseInstruments);
         logs.add(parametersMessage(riseInstruments, otherInstruments));
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / statistics.size() * 100) >= 70) {
-            otherInstruments.forEach(row -> signals.add(new Signal(row.getInstrumentId(), true)));
+            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getInstrumentId(), true)));
         }
         logs.add(finishWorkMessage(signals));
         return Report
