@@ -68,7 +68,7 @@ public class IndexIntradayGenerator extends IntradayGenerator<IndexDelta, IndexD
                 IndexDelta.builder()
                     .secId(ticker)
                     .tradeNo(tradeNumber + i)
-                    .tradeTime(startTime.plusSeconds(i))
+                    .tradeTime(startTime.plusSeconds(i * 10L))
                     .value(startValue + deltaValue * i)
                     .price(startPrice + deltaPrice * i)
                     .sysTime(nowDate.atTime(startTime.plusSeconds(i)))

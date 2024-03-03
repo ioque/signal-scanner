@@ -38,6 +38,9 @@ public class TradingDataGeneratorFacade {
     }
 
     public List<StockTrade> generateStockTrades(StockTradesGeneratorConfig config) {
+        if (config.getTicker().equals("TGKN")) {
+            System.out.println("LOH");
+        }
         return stockIntradayValueGenerator.generateIntradayValues(config);
     }
 

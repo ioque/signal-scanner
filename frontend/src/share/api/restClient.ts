@@ -1,6 +1,7 @@
 import {Instrument} from "../../module/dataSource/entities/Instrument";
 import {Exchange} from "../../module/dataSource/entities/Exchange";
 import {Statistic} from "../../module/statistic/entities/Statistic";
+import {Scanner} from "../../module/scanner/entities/Scanner";
 
 const baseUrl: string = "http://localhost:8080/api/v1";
 
@@ -29,5 +30,15 @@ export const fetchInstrumentDetails = async (ticker: string): Promise<Instrument
 
 export const fetchInstrumentStatistic = async (ticker: string): Promise<Statistic> => {
     const response = await fetch(baseUrl + "/instruments/" + ticker + "/statistic", headersForGetRequest());
+    return await response.json();
+}
+
+export const fetchScanners = async (): Promise<Array<Scanner>> => {
+    const response = await fetch(baseUrl + "/signal-scanner");
+    return await response.json();
+}
+
+export const fetchScanner = async (id: string): Promise<Scanner> => {
+    const response = await fetch(baseUrl + "/signal-scanner/" + id);
     return await response.json();
 }

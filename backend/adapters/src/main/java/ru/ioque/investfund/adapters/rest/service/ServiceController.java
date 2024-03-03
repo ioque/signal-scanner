@@ -5,7 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
@@ -15,6 +18,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntity
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 
 @Profile("test")
@@ -33,6 +37,12 @@ public class ServiceController {
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
     ExchangeManager exchangeManager;
+    DateTimeProvider dateTimeProvider;
+
+    @PostMapping("/api/v1/service/date-time")
+    public void initDateTime(@RequestBody InitDateTimeRequest request) {
+        dateTimeProvider.initToday(request.getDate().atTime(request.getTime()));
+    }
 
     @DeleteMapping("/api/v1/service/state")
     public void clearState() {
@@ -46,5 +56,6 @@ public class ServiceController {
         archivedIntradayValueEntityRepository.deleteAll();
         archivedDailyValueEntityRepository.deleteAll();
         exchangeManager.clearCache();
+        dateTimeProvider.initToday(null);
     }
 }
