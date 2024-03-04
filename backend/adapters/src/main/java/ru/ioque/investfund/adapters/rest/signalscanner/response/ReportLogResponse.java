@@ -20,7 +20,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportLogResponse implements Serializable {
-    Instant time;
+    Instant dateTime;
     String message;
 
     public static ReportLogResponse from(ReportLogEntity reportLogEntity) {

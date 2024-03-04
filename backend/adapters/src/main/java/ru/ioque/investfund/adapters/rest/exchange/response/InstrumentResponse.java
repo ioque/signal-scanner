@@ -33,6 +33,5 @@ public class InstrumentResponse implements Serializable {
             .dailyValues(instrument.getDailyValues().stream().map(DailyValueResponse::fromDomain).toList())
             .intradayValues(instrument.getIntradayValues().stream().map(IntradayValueResponse::fromDomain).toList())
             .build();
-
     }
 }

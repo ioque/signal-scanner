@@ -147,6 +147,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
                             .dateTime(LocalDateTime.now())
                             .price(1D)
                             .qnt(1)
+                            .value(1D)
                             .isBuy(true)
                             .build()
                     )

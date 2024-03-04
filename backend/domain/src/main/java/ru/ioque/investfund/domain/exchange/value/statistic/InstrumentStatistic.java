@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -34,6 +35,13 @@ public class InstrumentStatistic {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
+
+    public Optional<Boolean> isGrow() {
+        if (todayLastPrice != null && todayOpenPrice != null && getLastClosePrice() > 0) {
+            return Optional.of(isRiseToday());
+        }
+        return Optional.empty();
+    }
 
     public boolean isRiseToday() {
         return todayLastPrice > getLastClosePrice() && todayLastPrice > todayOpenPrice;

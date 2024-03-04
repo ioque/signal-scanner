@@ -116,8 +116,8 @@ public abstract class Instrument extends Domain {
         return (sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0;
     }
 
-    public Double getLastDealPrice() {
-        return lastIntradayValue().map(IntradayValue::getPrice).orElse(0.0);
+    public Optional<Double> getLastDealPrice() {
+        return lastIntradayValue().map(IntradayValue::getPrice);
     }
 
     public Double getFirstDealPrice() {
@@ -162,7 +162,7 @@ public abstract class Instrument extends Domain {
             .builder()
             .instrumentId(getId())
             .ticker(ticker)
-            .todayLastPrice(getLastDealPrice())
+            .todayLastPrice(getLastDealPrice().orElse(0.0))
             .todayOpenPrice(getFirstDealPrice())
             .todayValue(getTodayValue())
             .historyMedianValue(getHistoryMedianValue())

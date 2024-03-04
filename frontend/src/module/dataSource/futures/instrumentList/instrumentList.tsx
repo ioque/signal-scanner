@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
-import {Instrument} from "../../entities/Instrument";
 import {Link} from "react-router-dom";
 import {fetchExchange, fetchInstruments} from "../../../../share/api/restClient";
-import {Exchange} from "../../entities/Exchange";
+import {Exchange, InstrumentInList} from "../../entities/Exchange";
 import ErrorPage from "../../../../pages/ErrorPage";
 
 export default function InstrumentList() {
     const [exchange, setExchange] = useState<Exchange>();
-    const [instruments, setInstruments] = useState<Array<Instrument>>([]);
+    const [instruments, setInstruments] = useState<Array<InstrumentInList>>([]);
 
     useEffect(() => {
         fetchExchange().then((data) => setExchange(data));
@@ -21,10 +20,9 @@ export default function InstrumentList() {
         >
             <div className="instrument-item-list">
                 <Link to={`${instrument.id}`}>
-                    <p style={{color: instrument.isGrow ? 'green' : 'darkred'}}>{instrument.shortName}</p>
+                    <p>{instrument.shortName}</p>
                 </Link>
                 <p>{instrument.ticker}</p>
-                <p>{instrument.lastPrice}</p>
                 <p>
                     <Link to={`${instrument.id}/statistic`}>Статистика</Link>
                 </p>

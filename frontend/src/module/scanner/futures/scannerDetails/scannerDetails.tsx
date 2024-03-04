@@ -18,10 +18,36 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
         return <ErrorPage />
     }
 
+    const signals = scanner.signals.map(signal =>
+        <li
+            key={signal.dateTime.toString()}
+        >
+            <div className="instrument-item-list">
+                <p>{signal.ticker}</p>
+                <p>{signal.dateTime.toString()}</p>
+                <p>{signal.isBuy ? "Сигнал к покупке" : "Сигнал к продаже"}</p>
+            </div>
+        </li>
+    );
+
+    const logs = scanner.reports.map(report => report.logs).flat().map(log =>
+        <li key={log.dateTime.toString()}>
+            <div className="instrument-item-list">
+                <p>{log.dateTime.toString()}</p>
+                <p>{log.message}</p>
+            </div>
+        </li>
+    )
+
     return <>
         <div className="instrument-item-list">
             <p>{scanner.id}</p>
             <p>{scanner.description}</p>
+            <p>{JSON.stringify(scanner.config)}</p>
+            <p>Зарегистрированные сигналы:</p>
+            <ul>{signals}</ul>
+            <p>Лог работы</p>
+            <ul>{logs}</ul>
         </div>
     </>
 }
