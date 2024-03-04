@@ -12,7 +12,7 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
     const [scanner, setScanner] = useState<Scanner>();
     useEffect(() => {
         fetchScanner(params.id).then((data) => setScanner(data));
-    }, []);
+    }, [params.id]);
 
     if (!scanner) {
         return <ErrorPage />

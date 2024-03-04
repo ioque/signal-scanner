@@ -7,7 +7,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import ru.ioque.acceptance.adapters.client.RestTemplateFacade;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.AddSignalScannerRequest;
-import ru.ioque.acceptance.adapters.client.signalscanner.response.Signal;
 import ru.ioque.acceptance.adapters.client.signalscanner.response.SignalScannerInList;
 import ru.ioque.acceptance.domain.scanner.SignalScanner;
 
@@ -37,10 +36,5 @@ public class SignalScannerRestClient {
     @SneakyThrows
     public void runScanning() {
         restTemplateFacade.post("/api/v1/signal-scanner/run", null);
-    }
-
-    @SneakyThrows
-    public List<Signal> getSignals() {
-        return objectMapper.readValue(restTemplateFacade.get("/api/v1/signals", String.class), new TypeReference<>(){});
     }
 }

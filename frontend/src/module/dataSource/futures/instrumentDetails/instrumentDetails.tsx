@@ -12,7 +12,7 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
     const [instrument, setInstrument] = useState<Instrument>();
     useEffect(() => {
         fetchInstrumentDetails(params.id).then((data) => setInstrument(data));
-    }, []);
+    }, [params.id]);
 
     if (!instrument) {
         return <ErrorPage />
