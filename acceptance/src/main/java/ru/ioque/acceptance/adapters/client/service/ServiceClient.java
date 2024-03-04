@@ -13,6 +13,7 @@ import ru.ioque.acceptance.adapters.client.RestTemplateFacade;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
@@ -26,12 +27,12 @@ public class ServiceClient {
     }
 
     @SneakyThrows
-    public void initDateTime(LocalDate date) {
-        restTemplateFacade.post("/api/v1/service/date-time", objectMapper.writeValueAsString(getInitDateTimRequest(date)));
+    public void initDateTime(LocalDateTime date) {
+        restTemplateFacade.post("/api/v1/service/date-time", objectMapper.writeValueAsString(getInitDateTimeRequest(date)));
     }
 
-    private InitDateTimRequest getInitDateTimRequest(LocalDate date) {
-        return new InitDateTimRequest(date, LocalTime.parse("10:00:00"));
+    private InitDateTimRequest getInitDateTimeRequest(LocalDateTime date) {
+        return new InitDateTimRequest(date.toLocalDate(), date.toLocalTime());
     }
 
     @Getter

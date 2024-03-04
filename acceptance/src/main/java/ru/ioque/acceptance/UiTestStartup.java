@@ -12,6 +12,8 @@ import ru.ioque.acceptance.adapters.client.signalscanner.SignalScannerRestClient
 import ru.ioque.acceptance.application.datasource.datasets.DefaultDataset;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 
+import java.time.LocalTime;
+
 @Component
 @Profile("ui-test")
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class UiTestStartup implements ApplicationListener<ApplicationReadyEvent>
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         serviceClient.clearState();
-        serviceClient.initDateTime(DefaultDataset.getLastWorkDay());
+        serviceClient.initDateTime(DefaultDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
         exchangeRestClient.synchronizeWithDataSource();
         exchangeRestClient
             .enableUpdateInstruments(

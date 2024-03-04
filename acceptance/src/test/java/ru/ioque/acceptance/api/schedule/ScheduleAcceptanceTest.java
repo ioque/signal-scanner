@@ -39,7 +39,8 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         Внутридневные данные проинтегрированы.
         """)
     void testCase1() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.parse("2024-03-01T11:00:00");
+        initDateTime(now);
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         integrateInstruments(
                 instruments().sber().build(),
@@ -77,11 +78,12 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
     @SneakyThrows
     @DisplayName("""
         T2. Биржа зарегистрирована, внутридневные данные проинтегрированы, создан сканер сигналов по аномальным объемам.
-        Создается юнит расписания для работы модуля "Сканер сигнало".
+        Создается юнит расписания для работы модуля "Сканер сигналов".
         Сгенерирован сигнал к покупке.
         """)
     void testCase2() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.parse("2024-03-01T11:00:00");
+        initDateTime(now);
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         datasetManager().initInstruments(
             List.of(
@@ -107,12 +109,12 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         long currentMills = System.currentTimeMillis();
-        while (getSignals().isEmpty()) {
+        while (getSignalsBy(getSignalScanners().get(0).getId()).isEmpty()) {
             if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
         }
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
     @Test
@@ -126,7 +128,8 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         Порядок работы модулей соблюден.
         """)
     void testCase3() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.parse("2024-03-01T11:00:00");
+        initDateTime(now);
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         integrateInstruments(
             instruments().sber().build(),
@@ -157,7 +160,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         long currentMills = System.currentTimeMillis();
-        while (getSignals().isEmpty()) {
+        while (getSignalsBy(getSignalScanners().get(0).getId()).isEmpty()) {
             if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
@@ -165,7 +168,7 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
         assertEquals(2, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
         assertEquals(2, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
     private void prepareSignalScanner() {

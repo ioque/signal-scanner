@@ -1,5 +1,6 @@
 package ru.ioque.acceptance.api.exchange;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("МОДУЛЬ \"EXCHANGE\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
+    @BeforeEach
+    void initDateTime() {
+        initDateTime(getDateTimeNow());
+    }
+
     @Test
     @DisplayName("""
         T1. Интеграция с Биржей.
@@ -256,7 +262,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         T10. Включение обновления торговых данных по финансовым инструментам.
         """)
     void testCase10() {
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = getDateTimeNow();
         LocalDate startDate = time.toLocalDate().minusMonths(6);
         integrateInstruments(instruments().sber().build());
         datasetManager().initIntradayValue(
@@ -294,8 +300,12 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         integrateTradingData();
 
         Instrument sber = getInstrumentById(getInstrumentIds().get(0));
-        assertEquals(129, sber.getDailyValues().size());
+        assertEquals(130, sber.getDailyValues().size());
         assertEquals(10, sber.getIntradayValues().size());
+    }
+
+    private static LocalDateTime getDateTimeNow() {
+        return LocalDateTime.parse("2024-03-04T11:00:00");
     }
 
     @Test
@@ -303,7 +313,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
         T11. Выключение обновления торговых данных по финансовым инструментам.
         """)
     void testCase11() {
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = getDateTimeNow();
         integrateInstruments(instruments().sber().build());
         datasetManager().initIntradayValue(
             List.of(
@@ -402,7 +412,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
     }
 
     private void initInstrumentsWithTradingData() {
-        LocalDateTime time = LocalDateTime.now().minusMinutes(5);
+        LocalDateTime time = getDateTimeNow().minusMinutes(5);
         datasetManager().initInstruments(
             List.of(
                 instruments().imoex().build(),

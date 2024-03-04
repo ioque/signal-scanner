@@ -24,6 +24,7 @@ import ru.ioque.acceptance.domain.exchange.Instrument;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,10 @@ public class BaseApiAcceptanceTest {
     @BeforeEach
     void beforeEach() {
         serviceClient.clearState();
+    }
+
+    protected void initDateTime(LocalDateTime dateTime) {
+        serviceClient.initDateTime(dateTime);
     }
 
     protected DatasetManager datasetManager() {
@@ -77,8 +82,8 @@ public class BaseApiAcceptanceTest {
         signalScannerRestClient.runScanning();
     }
 
-    protected List<Signal> getSignals() {
-        return signalScannerRestClient.getSignals();
+    protected List<Signal> getSignalsBy(UUID id) {
+        return signalScannerRestClient.getSignalScannerBy(id).getSignals();
     }
 
     protected List<UUID> getInstrumentIds() {

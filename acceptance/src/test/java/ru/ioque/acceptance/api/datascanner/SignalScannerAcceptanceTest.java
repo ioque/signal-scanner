@@ -1,5 +1,6 @@
 package ru.ioque.acceptance.api.datascanner;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +21,6 @@ import ru.ioque.acceptance.domain.dataemulator.core.IntradayValue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,6 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
+    @BeforeEach
+    void initDateTime() {
+        initDateTime(getDateTimeNow());
+    }
+
+    private static LocalDateTime getDateTimeNow() {
+        return LocalDateTime.parse("2024-03-04T11:00:00");
+    }
 
     @Test
     @DisplayName("""
@@ -130,7 +138,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T5. Запуск сканера сигналов с алгоритмом "Аномальные объемы", в торговых данных есть сигнал к покупке.
         """)
     void testCase5() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         datasetManager().initInstruments(
             List.of(
@@ -228,7 +236,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         runScanning();
 
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
     @Test
@@ -236,7 +244,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T6. Запуск сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка", в торговых данных есть сигнал к покупке.
         """)
     void testCase6() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         datasetManager().initInstruments(
             List.of(
@@ -324,7 +332,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         runScanning();
 
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
     @Test
@@ -332,9 +340,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T7. Запуск сканера сигналов с алгоритмом "Секторальный отстающий", в торговых данных есть сигнал к покупке.
         """)
     void testCase7() {
-        LocalDate now = LocalDate.parse("2024-02-29");
-        LocalDate startDate = LocalDate.parse("2024-02-26");
-        long days = ChronoUnit.DAYS.between(startDate, now);
+        LocalDateTime now = getDateTimeNow();
         datasetManager().initInstruments(
             List.of(
                 instruments().sibn().build(),
@@ -350,8 +356,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
             .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
@@ -362,8 +368,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
             .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
@@ -374,8 +380,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
             .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
@@ -386,11 +392,11 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
-            .openPricePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
-            .closePricePercentageGrowths(List.of(new PercentageGrowths(-2D, 1D)))
-            .valuePercentageGrowths(List.of(new PercentageGrowths(-5D, 1D)))
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
+            .openPricePercentageGrowths(List.of(new PercentageGrowths(-10D, 1D)))
+            .closePricePercentageGrowths(List.of(new PercentageGrowths(-20D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(-15D, 1D)))
             .build()));
         datasetManager().initDailyResultValue(dailyResultValues);
         List<IntradayValue> intradayValues = new ArrayList<>();
@@ -398,9 +404,9 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .builder()
             .ticker("SIBN")
             .numTrades(2000)
-            .startPrice(120.)
+            .startPrice(200.)
             .startValue(200_000D)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
@@ -409,9 +415,9 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .builder()
             .ticker("LKOH")
             .numTrades(2000)
-            .startPrice(120.)
+            .startPrice(200.)
             .startValue(200_000D)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
@@ -420,9 +426,9 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .builder()
             .ticker("TATN")
             .numTrades(2000)
-            .startPrice(120.)
+            .startPrice(200.)
             .startValue(200_000D)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
@@ -431,12 +437,12 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .builder()
             .ticker("ROSN")
             .numTrades(2000)
-            .startPrice(99.)
+            .startPrice(70.)
             .startValue(200_000D)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
-            .pricePercentageGrowths(List.of(new PercentageGrowths(1D, 1D)))
-            .valuePercentageGrowths(List.of(new PercentageGrowths(1D, 1D)))
+            .pricePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
+            .valuePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
             .build()));
         datasetManager().initIntradayValue(intradayValues);
         fullIntegrate();
@@ -451,7 +457,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         runScanning();
 
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
     @Test
@@ -459,9 +465,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T8. Запуск сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора", в торговых данных есть сигнал к покупке.
         """)
     void testCase8() {
-        LocalDate now = LocalDate.parse("2024-02-29");
-        LocalDate startDate = LocalDate.parse("2024-02-26");
-        long days = ChronoUnit.DAYS.between(startDate, now);
+        LocalDateTime now = getDateTimeNow();
         datasetManager().initInstruments(
             List.of(
                 instruments().sibn().build(),
@@ -475,8 +479,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
             .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
@@ -487,8 +491,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startClose(105.)
             .startOpen(100.)
             .startValue(1_000_000D)
-            .days((int) days)
-            .startDate(startDate)
+            .days((int) 10)
+            .startDate(now.minusDays(10).toLocalDate())
             .openPricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
@@ -501,7 +505,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .numTrades(2000)
             .startPrice(120.)
             .startValue(200_000D)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
@@ -511,7 +515,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .ticker("BRF4")
             .numTrades(2000)
             .startPrice(120.)
-            .date(now)
+            .date(now.toLocalDate())
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .build()));
@@ -529,6 +533,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         runScanning();
 
-        assertEquals(1, getSignals().size());
+        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 }

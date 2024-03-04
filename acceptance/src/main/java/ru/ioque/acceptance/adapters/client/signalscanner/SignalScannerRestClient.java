@@ -9,8 +9,10 @@ import ru.ioque.acceptance.adapters.client.RestTemplateFacade;
 import ru.ioque.acceptance.adapters.client.signalscanner.request.AddSignalScannerRequest;
 import ru.ioque.acceptance.adapters.client.signalscanner.response.Signal;
 import ru.ioque.acceptance.adapters.client.signalscanner.response.SignalScannerInList;
+import ru.ioque.acceptance.domain.scanner.SignalScanner;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -21,6 +23,10 @@ public class SignalScannerRestClient {
     @SneakyThrows
     public List<SignalScannerInList> getDataScanners() {
         return objectMapper.readValue(restTemplateFacade.get("/api/v1/signal-scanner", String.class), new TypeReference<>(){});
+    }
+
+    public SignalScanner getSignalScannerBy(UUID id) {
+        return restTemplateFacade.get("/api/v1/signal-scanner/" + id, SignalScanner.class);
     }
 
     @SneakyThrows
