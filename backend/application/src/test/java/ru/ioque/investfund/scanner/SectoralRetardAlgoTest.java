@@ -215,7 +215,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T14:00:00");
 
         scheduleManager().executeSchedule();
-        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     private void initOilCompanyData() {
@@ -239,15 +239,15 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             List.of(
                 buildFuturesDealBy(1L, "BRF4",  "10:00:00",78D, 1),
                 buildFuturesDealBy(1L, "BRF4", "12:00:00", 96D, 1),
-                buildDealBy(1L, "ROSN", "10:00:00", 250.1D,136926D, 1),
-                buildDealBy(2L, "ROSN", "12:00:00", 255.1D,136926D, 1),
-                buildDealBy(1L, "LKOH", "10:00:00", 248.1D,136926D, 1),
-                buildDealBy(2L, "LKOH", "12:00:00", 255.1D,136926D, 1),
-                buildDealBy(1L, "SIBN", "10:00:00", 248.1D,136926D, 1),
-                buildDealBy(2L, "SIBN", "12:00:00", 255.1D,136926D, 1),
-                buildDealBy(1L, "TATN", "10:00:00", 251.1D,136926D, 1),
-                buildDealBy(2L, "TATN", "12:00:00", 247.1D,136926D, 1),
-                buildDealBy(3L, "TATN", "13:45:00", 280.1D,136926D, 1)
+                buildBuyDealBy(1L, "ROSN", "10:00:00", 250.1D,136926D, 1),
+                buildBuyDealBy(2L, "ROSN", "12:00:00", 255.1D,136926D, 1),
+                buildBuyDealBy(1L, "LKOH", "10:00:00", 248.1D,136926D, 1),
+                buildBuyDealBy(2L, "LKOH", "12:00:00", 255.1D,136926D, 1),
+                buildBuyDealBy(1L, "SIBN", "10:00:00", 248.1D,136926D, 1),
+                buildBuyDealBy(2L, "SIBN", "12:00:00", 255.1D,136926D, 1),
+                buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D,136926D, 1),
+                buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D,136926D, 1),
+                buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D,136926D, 1)
             )
         );
     }

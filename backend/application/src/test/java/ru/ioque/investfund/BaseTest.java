@@ -170,12 +170,24 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected Deal buildDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
+    protected Deal buildBuyDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
         return Deal.builder()
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .value(value)
             .isBuy(true)
+            .qnt(qnt)
+            .price(price)
+            .number(number)
+            .build();
+    }
+
+    protected Deal buildSellDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
+        return Deal.builder()
+            .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
+            .ticker(ticker)
+            .value(value)
+            .isBuy(false)
             .qnt(qnt)
             .price(price)
             .number(number)

@@ -57,4 +57,9 @@ public class Futures extends Instrument {
     public Double getTodayValue() {
         return super.getTodayValue() * lotVolume;
     }
+
+    @Override
+    public Double getBuyToSellValueRatio() {
+        return 1D;
+    }
 }

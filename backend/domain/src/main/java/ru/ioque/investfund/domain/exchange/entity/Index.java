@@ -43,4 +43,9 @@ public class Index extends Instrument {
     public List<TimeSeriesValue<Double, ChronoLocalDate>> getWaPriceSeries() {
         return List.of();
     }
+
+    @Override
+    public Double getBuyToSellValueRatio() {
+        return 1D;
+    }
 }

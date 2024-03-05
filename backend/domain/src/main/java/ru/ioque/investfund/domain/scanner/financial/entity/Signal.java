@@ -21,4 +21,12 @@ public class Signal {
     LocalDateTime dateTime;
     UUID instrumentId;
     boolean isBuy;
+
+    public boolean sameByInstrumentId(Signal signal) {
+        return signal.getInstrumentId().equals(instrumentId);
+    }
+
+    public boolean sameByIsBuy(Signal signal) {
+        return signal.isBuy == this.isBuy;
+    }
 }

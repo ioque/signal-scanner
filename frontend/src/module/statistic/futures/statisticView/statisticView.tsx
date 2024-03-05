@@ -12,7 +12,7 @@ export default function StatisticView(params: StatisticViewParams) {
     const [statistic, setStatistic] = useState<Statistic>();
     useEffect(() => {
         fetchInstrumentStatistic(params.id).then((data) => setStatistic(data));
-    }, []);
+    }, [params.id]);
 
     if (!statistic) {
         return <ErrorPage />

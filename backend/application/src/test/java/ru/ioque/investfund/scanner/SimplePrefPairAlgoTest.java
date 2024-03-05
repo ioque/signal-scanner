@@ -199,15 +199,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initNegativeDeals() {
         initDealDatas(
-            buildDealBy(1L, "SBER", "10:55:00", 250.1D,136926D, 1),
-            buildDealBy(1L, "SBERP", "10:54:00", 250D,136926D, 1)
+            buildBuyDealBy(1L, "SBER", "10:55:00", 250.1D,136926D, 1),
+            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D,136926D, 1)
         );
     }
 
     private void initPositiveDeals() {
         initDealDatas(
-            buildDealBy(1L, "SBER", "10:55:00", 251D,136926D, 1),
-            buildDealBy(1L, "SBERP", "10:54:00", 250D,136926D, 1)
+            buildBuyDealBy(1L, "SBER", "10:55:00", 251D,136926D, 1),
+            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D,136926D, 1)
         );
     }
 }

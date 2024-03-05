@@ -37,11 +37,11 @@ public class StatisticCalculatorTest extends BaseTest {
     void testCase1() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "12:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "13:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "14:00:00", 10D, 10D, 1)
+                buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "12:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "13:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "14:00:00", 10D, 10D, 1)
             )
         );
         exchangeDataFixture().initTradingResults(
@@ -121,11 +121,11 @@ public class StatisticCalculatorTest extends BaseTest {
     void testCase3() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDealBy(1L,"USD000UTSTOM", "10:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"USD000UTSTOM", "11:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"USD000UTSTOM", "12:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"USD000UTSTOM", "13:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"USD000UTSTOM", "14:00:00", 10D, 10D, 1)
+                buildBuyDealBy(1L,"USD000UTSTOM", "10:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"USD000UTSTOM", "11:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"USD000UTSTOM", "12:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"USD000UTSTOM", "13:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"USD000UTSTOM", "14:00:00", 10D, 10D, 1)
             )
         );
         exchangeDataFixture().initTradingResults(
@@ -237,11 +237,11 @@ public class StatisticCalculatorTest extends BaseTest {
     void testCase7() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "12:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "13:00:00", 10D, 10D, 1),
-                buildDealBy(1L,"AFKS", "14:00:00", 10D, 10D, 1)
+                buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "12:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "13:00:00", 10D, 10D, 1),
+                buildBuyDealBy(1L,"AFKS", "14:00:00", 10D, 10D, 1)
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
@@ -260,9 +260,9 @@ public class StatisticCalculatorTest extends BaseTest {
         initTodayDateTime("2024-01-15T12:00:00");
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDealBy(1L,"AFKS", "10:00:00", 16D, 160000D, 10),
-                buildDealBy(1L,"AFKS", "11:00:00", 17D, 85000D, 5),
-                buildDealBy(1L,"AFKS", "12:00:00", 19D, 26000D, 2)
+                buildBuyDealBy(1L,"AFKS", "10:00:00", 16D, 160000D, 10),
+                buildBuyDealBy(1L,"AFKS", "11:00:00", 17D, 85000D, 5),
+                buildBuyDealBy(1L,"AFKS", "12:00:00", 19D, 26000D, 2)
             )
         );
         exchangeDataFixture().initTradingResults(
@@ -296,9 +296,9 @@ public class StatisticCalculatorTest extends BaseTest {
         initTodayDateTime("2024-01-17T12:00:00");
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDealBy(1L,"AFKS", "10:00:00", 16D, 160000D, 10),
-                buildDealBy(1L,"AFKS", "11:00:00", 17D, 85000D, 5),
-                buildDealBy(1L,"AFKS", "12:00:00", 19D, 26000D, 2)
+                buildBuyDealBy(1L,"AFKS", "10:00:00", 16D, 160000D, 10),
+                buildBuyDealBy(1L,"AFKS", "11:00:00", 17D, 85000D, 5),
+                buildBuyDealBy(1L,"AFKS", "12:00:00", 19D, 26000D, 2)
             )
         );
         exchangeDataFixture().initTradingResults(

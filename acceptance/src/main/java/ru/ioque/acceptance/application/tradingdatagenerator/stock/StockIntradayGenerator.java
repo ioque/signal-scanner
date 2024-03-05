@@ -57,7 +57,7 @@ public class StockIntradayGenerator extends IntradayGenerator<StockTrade, StockT
     ) {
         int buyQnt = (int) numTrades / 2;
         int sellQnt = (int) numTrades / 2;
-        if (valuePercentageGrowths.getValue() > 5) {
+        if (valuePercentageGrowths.getValue() > 0) {
             buyQnt = buyQnt + sellQnt / 2;
             sellQnt = sellQnt - sellQnt / 2;
         }

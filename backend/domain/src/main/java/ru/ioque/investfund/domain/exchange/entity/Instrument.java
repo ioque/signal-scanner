@@ -165,6 +165,7 @@ public abstract class Instrument extends Domain {
             .todayLastPrice(getLastDealPrice().orElse(0.0))
             .todayOpenPrice(getFirstDealPrice())
             .todayValue(getTodayValue())
+            .buyToSellValuesRatio(getBuyToSellValueRatio())
             .historyMedianValue(getHistoryMedianValue())
             .closePriceSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate())).toList())
             .openPriceSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate())).toList())
@@ -174,4 +175,6 @@ public abstract class Instrument extends Domain {
             .todayPriceSeries(getIntradayValues().stream().map(intradayValue -> new TimeSeriesValue<>(intradayValue.getPrice(), intradayValue.getDateTime().toLocalTime())).toList())
             .build();
     }
+
+    public abstract Double getBuyToSellValueRatio();
 }

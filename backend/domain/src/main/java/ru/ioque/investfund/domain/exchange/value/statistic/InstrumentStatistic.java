@@ -34,6 +34,7 @@ public class InstrumentStatistic {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
+    Double buyToSellValuesRatio;
 
     public boolean isRiseToday() {
         return todayLastPrice > getLastClosePrice() && todayLastPrice > todayOpenPrice;

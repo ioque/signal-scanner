@@ -58,8 +58,23 @@ public class SignalScannerBot extends Domain {
         }
         lastExecutionDateTime = dateTimeNow;
         ScanningResult scanningResult = config.factorySearchAlgorithm().run(getId(), statistics, dateTimeNow);
-        signals.addAll(scanningResult.getSignals());
+        processSignals(scanningResult);
         return scanningResult.getLogs();
+    }
+
+    private void processSignals(ScanningResult scanningResult) {
+        List<Signal> oldSignals = List.copyOf(this.signals);
+        List<Signal> newSignals = List.copyOf(scanningResult.getSignals());
+        List<Signal> finalSignalList = new ArrayList<>(newSignals);
+        oldSignals.forEach(oldSignal -> {
+            boolean alreadyExists = newSignals.stream().anyMatch(row -> row.sameByInstrumentId(oldSignal) && row.sameByIsBuy(oldSignal));
+            boolean isSellAfterBuy = newSignals.stream().anyMatch(row -> row.sameByInstrumentId(oldSignal) && oldSignal.isBuy() && !row.isBuy());
+            if (!alreadyExists && !isSellAfterBuy) {
+                finalSignalList.add(oldSignal);
+            }
+        });
+        signals.clear();
+        signals.addAll(finalSignalList);
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {

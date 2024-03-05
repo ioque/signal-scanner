@@ -349,7 +349,7 @@ public class ExchangeManagerTest extends BaseTest {
     void testCase15() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
-        initDealDatas(buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
+        initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
@@ -357,8 +357,8 @@ public class ExchangeManagerTest extends BaseTest {
 
         exchangeManager().disableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         initDealDatas(
-            buildDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
-            buildDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1)
+            buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
+            buildBuyDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1)
         );
         initTradingResults(
             buildDealResultBy("AFKS", "2023-12-06", 10D, 10D, 10D, 10D),

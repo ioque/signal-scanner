@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.exchange.value.statistic.TimeSeriesValue;
 import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
 import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
 import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
 
@@ -47,5 +48,22 @@ public class CurrencyPair extends Instrument {
             .map(DealResult.class::cast)
             .map(row -> new TimeSeriesValue<>(row.getWaPrice(), row.getTradeDate()))
             .toList();
+    }
+
+    @Override
+    public Double getBuyToSellValueRatio() {
+        Double buyValue = getIntradayValues()
+            .stream()
+            .map(Deal.class::cast)
+            .filter(row -> row.getIsBuy().equals(Boolean.TRUE))
+            .mapToDouble(Deal::getValue)
+            .sum();
+        Double sellValue = getIntradayValues()
+            .stream()
+            .map(Deal.class::cast)
+            .filter(row -> row.getIsBuy().equals(Boolean.TRUE))
+            .mapToDouble(Deal::getValue)
+            .sum();
+        return buyValue / sellValue;
     }
 }

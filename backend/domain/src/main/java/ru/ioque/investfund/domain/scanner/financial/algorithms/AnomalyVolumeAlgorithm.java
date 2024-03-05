@@ -51,8 +51,12 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
             final double value = statistic.getTodayValue();
             final double multiplier = value / medianHistoryValue;
             logs.add(parametersMessage(statistic, value, medianHistoryValue, multiplier));
-            if (multiplier > scaleCoefficient && indexIsRiseToday && statistic.isRiseToday()) {
+            if (multiplier > scaleCoefficient && indexIsRiseToday && statistic.isRiseToday() && statistic.getBuyToSellValuesRatio() > 0.5) {
                 signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), true));
+            }
+
+            if (multiplier > scaleCoefficient && !indexIsRiseToday && !statistic.isRiseToday() && statistic.getBuyToSellValuesRatio() < 0.5) {
+                signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), false));
             }
         }
         logs.add(finishWorkMessage(signals));

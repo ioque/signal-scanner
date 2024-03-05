@@ -78,7 +78,7 @@ public class IntradayValueMoexParser {
             .dateTime(parseDateTime(node, extractor))
             .ticker(extractor.extractValue(node, "SECID").asText())
             .value(extractor.extractValue(node, "VALUE").asDouble())
-            .isBuy(extractor.extractValue(node, "BUYSELL").asText().equals("B"))
+            .isBuy(extractor.extractValue(node, "BUYSELL").asText().equals("BUY"))
             .qnt(extractor.extractValue(node, "QUANTITY").asInt())
             .price(extractor.extractValue(node, "PRICE").asDouble())
             .number(extractor.extractValue(node, "TRADENO").asLong())

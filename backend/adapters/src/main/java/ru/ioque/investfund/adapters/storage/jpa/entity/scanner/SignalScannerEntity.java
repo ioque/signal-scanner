@@ -20,6 +20,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.AbstractEntity;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public abstract class SignalScannerEntity extends AbstractEntity {
         this.description = description;
         this.objectIds = objectIds;
         this.lastWorkDateTime = lastWorkDateTime;
-        this.signals = signals.stream().peek(row -> row.setScanner(this)).toList();
+        this.signals = new ArrayList<>(signals.stream().peek(row -> row.setScanner(this)).toList());
     }
 
     public abstract SignalScannerBot toDomain();
