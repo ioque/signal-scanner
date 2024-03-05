@@ -15,6 +15,7 @@ import ru.ioque.investfund.domain.scanner.financial.entity.Report;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -38,14 +39,14 @@ public class ScannerManager {
 
     public void addNewScanner(AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
-        final SignalScannerBot bot = new SignalScannerBot(
-            uuidProvider.generate(),
-            command.getDescription(),
-            command.getIds(),
-            command.getSignalConfig()
-        );
-        scannerRepository.save(bot);
-        loggerFacade.logSaveNewDataScanner(bot.getId());
+        final UUID id = uuidProvider.generate();
+        scannerRepository.save(SignalScannerBot.builder()
+            .id(id)
+            .description(command.getDescription())
+            .objectIds(command.getIds())
+            .config(command.getSignalConfig())
+            .build());
+        loggerFacade.logSaveNewDataScanner(id);
     }
 
     public void updateScanner(UpdateScannerCommand command) {
@@ -58,7 +59,8 @@ public class ScannerManager {
                 scannerBot.getId(),
                 command.getDescription(),
                 command.getIds(),
-                scannerBot.getConfig()
+                scannerBot.getConfig(),
+                scannerBot.getLastExecutionDateTime().orElse(null)
             )
         );
         loggerFacade.logUpdateSignalScanner(command);
@@ -68,17 +70,7 @@ public class ScannerManager {
         return scannerRepository
             .getAll()
             .stream()
-            .filter(row ->
-                reportRepository
-                    .getLastReportBy(row.getId())
-                    .map(report ->
-                        row.isTimeForExecution(
-                            report.getTime(),
-                            dateTimeProvider.nowDateTime()
-                        )
-                    )
-                    .orElse(true)
-            )
+            .filter(row -> row.isTimeForExecution(dateTimeProvider.nowDateTime()))
             .map(scanner -> runScanner(statistics, scanner))
             .toList();
     }

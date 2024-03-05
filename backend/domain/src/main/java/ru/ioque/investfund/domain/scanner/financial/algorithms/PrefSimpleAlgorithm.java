@@ -7,7 +7,7 @@ import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -31,7 +31,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
     @Override
     public Report run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ReportLog> logs = new ArrayList<>();
+        List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
         findAllPrefAndSimplePairs(statistics).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
@@ -70,8 +70,8 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
             .orElseThrow(() -> new DomainException("Для привилегированной акции " + statistic.getTicker() + " не найдена обычная акция."));
     }
 
-    private ReportLog runWorkMessage() {
-        return new ReportLog(
+    private ScannerLog runWorkMessage() {
+        return new ScannerLog(
             String
                 .format(
                     "Начата обработка данных по алгоритму %s. Параметр spreadParam = %s.",
@@ -82,13 +82,13 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog parametersMessage(
+    private ScannerLog parametersMessage(
         PrefSimplePair prefSimplePair,
         double currentDelta,
         double historyDelta,
         double multiplier
     ) {
-        return new ReportLog(
+        return new ScannerLog(
             String.format(
                 "Пара преф-обычка %s-%s, текущая дельта внутри дня: %s, историческая дельта: %s, отношение текущей дельты к исторической: %s.",
                 prefSimplePair.getPref().getTicker(),
@@ -101,8 +101,8 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog finishWorkMessage(List<Signal> signals) {
-        return new ReportLog(
+    private ScannerLog finishWorkMessage(List<Signal> signals) {
+        return new ScannerLog(
             String.format(
                 "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
                 getName(),

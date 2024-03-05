@@ -11,7 +11,7 @@ import java.time.Instant;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class ReportLog {
+public class ScannerLog {
     String message;
     Instant time;
 }

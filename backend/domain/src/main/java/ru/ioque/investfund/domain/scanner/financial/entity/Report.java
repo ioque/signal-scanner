@@ -21,7 +21,7 @@ import java.util.UUID;
 public class Report implements Comparable<Report> {
     UUID scannerId;
     LocalDateTime time;
-    List<ReportLog> logs;
+    List<ScannerLog> logs;
     List<Signal> signals;
 
     @Override

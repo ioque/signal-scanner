@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -32,7 +32,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
     @Override
     public Report run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ReportLog> logs = new ArrayList<>();
+        List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
         List<InstrumentStatistic> riseInstruments = getRiseInstruments(statistics);
         List<InstrumentStatistic> otherInstruments = getSectoralRetards(statistics, riseInstruments);
@@ -67,8 +67,8 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
             .toList();
     }
 
-    private ReportLog parametersMessage(List<InstrumentStatistic> riseInstruments, List<InstrumentStatistic> otherInstruments) {
-        return new ReportLog(
+    private ScannerLog parametersMessage(List<InstrumentStatistic> riseInstruments, List<InstrumentStatistic> otherInstruments) {
+        return new ScannerLog(
             String.format(
                 "Растущие инструменты сектора: %s, секторальные отстающий(е): %s.",
                 riseInstruments.stream().map(InstrumentStatistic::getTicker).toList(),
@@ -78,8 +78,8 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog runWorkMessage() {
-        return new ReportLog(
+    private ScannerLog runWorkMessage() {
+        return new ScannerLog(
             String
                 .format(
                     "Начата обработка данных по алгоритму %s. Параметр historyScale = %s, параметр intradayScale = %s.",
@@ -91,8 +91,8 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog finishWorkMessage(List<Signal> signals) {
-        return new ReportLog(
+    private ScannerLog finishWorkMessage(List<Signal> signals) {
+        return new ScannerLog(
             String.format(
                 "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
                 getName(),

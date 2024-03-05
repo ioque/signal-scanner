@@ -6,7 +6,7 @@ import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -44,7 +44,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
     @Override
     public Report run(UUID scannerId, final List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ReportLog> logs = new ArrayList<>();
+        List<ScannerLog> logs = new ArrayList<>();
         final boolean indexIsRiseToday = getMarketIndex(statistics).isRiseToday();
         logs.add(runWorkMessage(indexIsRiseToday));
         for (final InstrumentStatistic statistic : getAnalyzeStatistics(statistics)) {
@@ -77,13 +77,13 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
             .orElseThrow(() -> new DomainException("Не добавлен индекс рынка."));
     }
 
-    private ReportLog parametersMessage(
+    private ScannerLog parametersMessage(
         InstrumentStatistic statistic,
         double value,
         double waHistoryValue,
         double multiplier
     ) {
-        return new ReportLog(
+        return new ScannerLog(
             String.format(
                 "Инструмент %s, текущий объем торгов внутри дня: %s, средневзвешенный исторический объем: %s, отношение текущего объема к историческому: %s.",
                 statistic.getTicker(),
@@ -95,8 +95,8 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog runWorkMessage(boolean indexIsRiseToday) {
-        return new ReportLog(
+    private ScannerLog runWorkMessage(boolean indexIsRiseToday) {
+        return new ScannerLog(
             String
                 .format(
                     "Начата обработка данных по алгоритму %s. Параметр scaleCoefficient = %s, параметр historyPeriod = %s, в качестве индекса рынка выбран %s. ",
@@ -110,8 +110,8 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog finishWorkMessage(List<Signal> signals) {
-        return new ReportLog(
+    private ScannerLog finishWorkMessage(List<Signal> signals) {
+        return new ScannerLog(
             String.format(
                 "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
                 getName(),

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 
 import java.time.Instant;
 
@@ -41,7 +41,7 @@ public class ReportLogEntity {
     String message;
     Instant time;
 
-    public ReportLog toDomain() {
-        return new ReportLog(message, time);
+    public ScannerLog toDomain() {
+        return new ScannerLog(message, time);
     }
 }

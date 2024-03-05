@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.application.adapters.ReportRepository;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 
 import java.time.Instant;
@@ -33,7 +33,7 @@ public class JpaReportRepositoryTest extends BaseJpaTest {
         Report report = Report.builder()
             .scannerId(scannerId)
             .time(LocalDateTime.now())
-            .logs(List.of(new ReportLog("test", Instant.now().truncatedTo(ChronoUnit.SECONDS))))
+            .logs(List.of(new ScannerLog("test", Instant.now().truncatedTo(ChronoUnit.SECONDS))))
             .signals(List.of(new Signal(LocalDateTime.now(), UUID.randomUUID(), true)))
             .build();
 

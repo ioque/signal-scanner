@@ -6,7 +6,7 @@ import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.Report;
-import ru.ioque.investfund.domain.scanner.financial.entity.ReportLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -38,7 +38,7 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
     @Override
     public Report run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ReportLog> logs = new ArrayList<>();
+        List<ScannerLog> logs = new ArrayList<>();
         boolean futuresIsRiseOvernight = getFuturesStatistic(statistics).isRiseOvernight(futuresOvernightScale);
         logs.add(runWorkMessage(futuresIsRiseOvernight));
         for (var statistic : analyzeInstruments(statistics)) {
@@ -68,10 +68,10 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
         return statistics.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
     }
 
-    private ReportLog parametersMessage(
+    private ScannerLog parametersMessage(
         InstrumentStatistic statistic
     ) {
-        return new ReportLog(
+        return new ScannerLog(
             String
                 .format(
                     "Инструмент %s. ",
@@ -83,8 +83,8 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog runWorkMessage(boolean futuresIsRiseToday) {
-        return new ReportLog(
+    private ScannerLog runWorkMessage(boolean futuresIsRiseToday) {
+        return new ScannerLog(
             String
                 .format(
                     "Начата обработка данных по алгоритму %s. Параметр futuresOvernightScale = %s, параметр stockOvernightScale = %s, в качестве фьючерса сектора выбран %s. ",
@@ -98,8 +98,8 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ReportLog finishWorkMessage(List<Signal> signals) {
-        return new ReportLog(
+    private ScannerLog finishWorkMessage(List<Signal> signals) {
+        return new ScannerLog(
             String.format(
                 "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
                 getName(),
