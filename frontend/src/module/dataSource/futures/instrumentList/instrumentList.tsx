@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
 import {Link} from "react-router-dom";
-import {fetchExchange, fetchInstruments} from "../../../../share/api/restClient";
 import {Exchange, InstrumentInList} from "../../entities/Exchange";
 import ErrorPage from "../../../../pages/ErrorPage";
+import {fetchExchange, fetchInstruments} from "../../api/dataSourceRestClient";
 
 export default function InstrumentList() {
     const [exchange, setExchange] = useState<Exchange>();

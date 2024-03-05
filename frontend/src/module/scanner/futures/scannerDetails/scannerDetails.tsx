@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
-import {fetchScanner} from "../../../../share/api/restClient";
 import ErrorPage from "../../../../pages/ErrorPage";
 import {Scanner} from "../../entities/Scanner";
+import {fetchScanner} from "../../api/scannerRestClient";
 
 export type ScannerDetailsParams = {
     id: string
@@ -30,7 +30,7 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
         </li>
     );
 
-    const logs = scanner.reports.map(report => report.logs).flat().map(log =>
+    const logs = scanner.logs.map(log =>
         <li key={log.dateTime.toString()}>
             <div className="instrument-item-list">
                 <p>{log.dateTime.toString()}</p>

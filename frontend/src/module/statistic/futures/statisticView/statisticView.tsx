@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
 import {Statistic} from "../../entities/Statistic";
-import {fetchInstrumentStatistic} from "../../../../share/api/restClient";
 import ErrorPage from "../../../../pages/ErrorPage";
+import {fetchInstrumentStatistic} from "../../api/statisticRestClient";
 
 export type StatisticViewParams = {
     id: string

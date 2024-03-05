@@ -5,7 +5,7 @@ export type Scanner = {
     description: string;
     config: AnomalyVolumeScannerConfig | CorrelationSectoralConfig | PrefSimpleConfig | SectoralRetardScannerConfig;
     instruments: Array<InstrumentInList>;
-    reports: Array<Report>
+    logs: Array<ScannerLog>
     signals: Array<Signal>
 }
 
@@ -20,12 +20,7 @@ export type Signal = {
     isBuy: boolean;
 }
 
-export type Report = {
-    dateTime: Date;
-    logs: Array<ReportLog>
-}
-
-export type ReportLog = {
+export type ScannerLog = {
     dateTime: Date;
     message: string;
 }

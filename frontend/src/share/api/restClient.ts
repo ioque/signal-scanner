@@ -1,20 +1,20 @@
-import {Exchange, Instrument, InstrumentInList} from "../../module/dataSource/entities/Exchange";
-import {Statistic} from "../../module/statistic/entities/Statistic";
-import {Scanner, ScannerInList} from "../../module/scanner/entities/Scanner";
-
 const baseUrl: string = "http://localhost:8080/api/v1";
 
-export const fetchExchange = async (): Promise<Exchange> => {
-    const response = await fetch(baseUrl + "/exchange", headersForGetRequest());
-    return await response.json();
+export type QueryParam = {
+    name: string;
+    value: string;
 }
 
-export const fetchInstruments = async (): Promise<Array<InstrumentInList>> => {
-    const response = await fetch(baseUrl + "/instruments", headersForGetRequest());
-    return await response.json();
+const paramsToString = (params: Array<QueryParam>) => {
+    if (params.length === 0) return "";
+    let str = "?";
+    params.forEach(row => {
+        str = str + row.name + "=" + row.value + "&"
+    })
+    return str;
 }
 
-function headersForGetRequest(): RequestInit {
+const GetRequestInit = (): RequestInit => {
     return {
         headers: {'Content-Type': 'application/json'},
         mode: 'cors',
@@ -22,22 +22,10 @@ function headersForGetRequest(): RequestInit {
     };
 }
 
-export const fetchInstrumentDetails = async (ticker: string): Promise<Instrument> => {
-    const response = await fetch(baseUrl + "/instruments/" + ticker, headersForGetRequest());
-    return await response.json();
+const url = (path: string, params: Array<QueryParam>) => {
+    return baseUrl + path + paramsToString(params)
 }
 
-export const fetchInstrumentStatistic = async (ticker: string): Promise<Statistic> => {
-    const response = await fetch(baseUrl + "/instruments/" + ticker + "/statistic", headersForGetRequest());
-    return await response.json();
-}
-
-export const fetchScanners = async (): Promise<Array<ScannerInList>> => {
-    const response = await fetch(baseUrl + "/signal-scanner");
-    return await response.json();
-}
-
-export const fetchScanner = async (id: string): Promise<Scanner> => {
-    const response = await fetch(baseUrl + "/signal-scanner/" + id);
-    return await response.json();
+export const GetRequest = async (path: string, params: Array<QueryParam>) => {
+    return await fetch(url(path, params), GetRequestInit());
 }

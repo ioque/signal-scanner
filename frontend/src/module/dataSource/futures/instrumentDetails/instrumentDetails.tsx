@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
-import {fetchInstrumentDetails} from "../../../../share/api/restClient";
 import ErrorPage from "../../../../pages/ErrorPage";
 import {Instrument} from "../../entities/Exchange";
+import {fetchInstrumentDetails} from "../../api/dataSourceRestClient";
 
 export type InstrumentDetailsParams = {
     id: string

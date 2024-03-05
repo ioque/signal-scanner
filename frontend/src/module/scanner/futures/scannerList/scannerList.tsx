@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './style.scss'
 import {ScannerInList} from "../../entities/Scanner";
-import {fetchScanners} from "../../../../share/api/restClient";
 import {Link} from "react-router-dom";
+import {fetchScanners} from "../../api/scannerRestClient";
 
 export default function ScannerList() {
     const [scanners, setScanners] = useState<Array<ScannerInList>>([]);
