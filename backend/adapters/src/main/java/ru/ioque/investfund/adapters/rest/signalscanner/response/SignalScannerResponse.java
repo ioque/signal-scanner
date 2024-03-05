@@ -31,7 +31,7 @@ public class SignalScannerResponse implements Serializable {
     String description;
     SignalConfigResponse config;
     List<InstrumentInListResponse> instruments;
-    List<ReportLogResponse> logs;
+    List<ScannerLogResponse> logs;
     List<SignalResponse> signals;
 
     public static SignalScannerResponse from(
@@ -44,7 +44,7 @@ public class SignalScannerResponse implements Serializable {
             .description(scanner.getDescription())
             .config(SignalConfigResponse.from(scanner))
             .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
-            .logs(logs.stream().map(ReportLogResponse::from).toList())
+            .logs(logs.stream().map(ScannerLogResponse::from).toList())
             .signals(scanner.getSignals()
                 .stream()
                 .map(signal -> SignalResponse

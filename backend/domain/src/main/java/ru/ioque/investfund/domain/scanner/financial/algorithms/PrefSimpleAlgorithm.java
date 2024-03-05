@@ -6,7 +6,7 @@ import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.financial.entity.Report;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
@@ -28,7 +28,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
     }
 
     @Override
-    public Report run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
@@ -42,9 +42,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
             }
         });
         logs.add(finishWorkMessage(signals));
-        return Report.builder()
-            .scannerId(scannerId)
-            .time(dateTimeNow)
+        return ScanningResult.builder()
             .signals(signals)
             .logs(logs)
             .build();

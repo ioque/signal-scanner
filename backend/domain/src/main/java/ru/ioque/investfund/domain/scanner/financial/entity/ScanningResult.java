@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -18,14 +16,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Report implements Comparable<Report> {
-    UUID scannerId;
-    LocalDateTime time;
+public class ScanningResult {
     List<ScannerLog> logs;
     List<Signal> signals;
-
-    @Override
-    public int compareTo(Report report) {
-        return time.compareTo(report.getTime());
-    }
 }

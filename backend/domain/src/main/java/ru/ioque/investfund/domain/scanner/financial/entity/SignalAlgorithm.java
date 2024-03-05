@@ -15,5 +15,5 @@ public abstract class SignalAlgorithm {
     public SignalAlgorithm(String name) {
         this.name = name;
     }
-    public abstract Report run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow);
+    public abstract ScanningResult run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow);
 }

@@ -57,9 +57,9 @@ public class SignalScannerBot extends Domain {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
         lastExecutionDateTime = dateTimeNow;
-        Report report = config.factorySearchAlgorithm().run(getId(), statistics, dateTimeNow);
-        signals.addAll(report.getSignals());
-        return report.getLogs();
+        ScanningResult scanningResult = config.factorySearchAlgorithm().run(getId(), statistics, dateTimeNow);
+        signals.addAll(scanningResult.getSignals());
+        return scanningResult.getLogs();
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {

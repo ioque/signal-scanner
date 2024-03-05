@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReportLogResponse implements Serializable {
+public class ScannerLogResponse implements Serializable {
     LocalDateTime dateTime;
     String message;
 
-    public static ReportLogResponse from(ScannerLogEntity scannerLogEntity) {
-        return new ReportLogResponse(scannerLogEntity.getDateTime(), scannerLogEntity.getMessage());
+    public static ScannerLogResponse from(ScannerLogEntity scannerLogEntity) {
+        return new ScannerLogResponse(scannerLogEntity.getDateTime(), scannerLogEntity.getMessage());
     }
 }
