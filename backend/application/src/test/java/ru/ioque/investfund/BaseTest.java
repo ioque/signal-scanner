@@ -23,7 +23,7 @@ import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeExchangeRepository;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
-import ru.ioque.investfund.fakes.FakeReportRepository;
+import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
@@ -60,8 +60,8 @@ public class BaseTest {
         return fakeDIContainer.getScannerManager();
     }
 
-    protected final FakeReportRepository signalPublisher() {
-        return (FakeReportRepository) fakeDIContainer.getReportRepository();
+    protected final FakeScannerLogRepository scannerLogRepository() {
+        return (FakeScannerLogRepository) fakeDIContainer.getScannerLogRepository();
     }
 
     protected final ScheduleManager scheduleManager() {

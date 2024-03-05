@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +26,7 @@ import java.util.UUID;
 public class SignalScannerQueryController {
     SignalScannerEntityRepository signalScannerEntityRepository;
     InstrumentEntityRepository instrumentEntityRepository;
-    ReportEntityRepository reportEntityRepository;
+    ScannerLogEntityRepository scannerLogEntityRepository;
     @GetMapping("/api/v1/signal-scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerEntityRepository
@@ -42,8 +40,7 @@ public class SignalScannerQueryController {
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         SignalScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllById(scanner.getObjectIds());
-        List<ReportEntity> reports = reportEntityRepository.findAllByScannerId(scanner.getId());
-        List<SignalEntity> signals = reports.stream().map(ReportEntity::getSignals).flatMap(Collection::stream).toList();
-        return SignalScannerResponse.from(scanner, instruments, reports, signals);
+        List<ScannerLogEntity> logs = scannerLogEntityRepository.findAllByScannerId(scanner.getId());
+        return SignalScannerResponse.from(scanner, instruments, logs);
     }
 }

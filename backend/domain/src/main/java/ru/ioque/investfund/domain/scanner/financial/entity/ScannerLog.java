@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -13,5 +13,5 @@ import java.time.Instant;
 @AllArgsConstructor
 public class ScannerLog {
     String message;
-    Instant time;
+    LocalDateTime dateTime;
 }

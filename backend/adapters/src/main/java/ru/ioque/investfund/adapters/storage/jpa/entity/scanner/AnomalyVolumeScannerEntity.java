@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,11 +33,13 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
         UUID id,
         String description,
         List<UUID> objectIds,
+        LocalDateTime lastWorkDateTime,
+        List<SignalEntity> signals,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(id, description, objectIds);
+        super(id, description, objectIds, lastWorkDateTime, signals);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
@@ -48,6 +51,8 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             .id(signalScannerBot.getId())
             .description(signalScannerBot.getDescription())
             .objectIds(signalScannerBot.getObjectIds())
+            .lastWorkDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
+            .signals(signalScannerBot.getSignals().stream().map(SignalEntity::from).toList())
             .scaleCoefficient(config.getScaleCoefficient())
             .historyPeriod(config.getHistoryPeriod())
             .indexTicker(config.getIndexTicker())
@@ -60,7 +65,9 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             getObjectIds(),
-            new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker)
+            new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker),
+            getLastWorkDateTime(),
+            getSignals().stream().map(SignalEntity::toDomain).toList()
         );
     }
 }

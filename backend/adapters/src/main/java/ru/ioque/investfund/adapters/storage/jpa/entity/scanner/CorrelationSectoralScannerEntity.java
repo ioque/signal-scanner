@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,11 +33,13 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
         UUID id,
         String description,
         List<UUID> objectIds,
+        List<SignalEntity> signals,
+        LocalDateTime lastWorkDateTime,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(id, description, objectIds);
+        super(id, description, objectIds, lastWorkDateTime, signals);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
@@ -48,6 +51,8 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             .id(signalScannerBot.getId())
             .description(signalScannerBot.getDescription())
             .objectIds(signalScannerBot.getObjectIds())
+            .lastWorkDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
+            .signals(signalScannerBot.getSignals().stream().map(SignalEntity::from).toList())
             .futuresOvernightScale(config.getFuturesOvernightScale())
             .stockOvernightScale(config.getStockOvernightScale())
             .futuresTicker(config.getFuturesTicker())
@@ -60,7 +65,9 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             getObjectIds(),
-            new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker)
+            new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker),
+            getLastWorkDateTime(),
+            getSignals().stream().map(SignalEntity::toDomain).toList()
         );
     }
 }

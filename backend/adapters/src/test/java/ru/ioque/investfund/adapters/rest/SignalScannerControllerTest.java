@@ -14,19 +14,16 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.Index
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.StockEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.AnomalyVolumeScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportLogEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,7 +40,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Autowired
     InstrumentEntityRepository instrumentEntityRepository;
     @Autowired
-    ReportEntityRepository reportEntityRepository;
+    ScannerLogEntityRepository scannerLogEntityRepository;
 
     private static final UUID SIGNAL_PRODUCER_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
@@ -87,8 +84,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     public void testCase2() {
         final SignalScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
         final List<InstrumentEntity> instruments = getInstruments();
-        final List<ReportEntity> reports = getReports();
-        final List<SignalEntity> signals = getReports().stream().map(ReportEntity::getSignals).flatMap(Collection::stream).toList();
+        final List<ScannerLogEntity> logs = getLogs();
         Mockito
             .when(signalScannerEntityRepository.findById(scanner.getId()))
             .thenReturn(Optional.of(scanner));
@@ -99,8 +95,8 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             )
             .thenReturn(instruments);
         Mockito
-            .when(reportEntityRepository.findAllByScannerId(scanner.getId()))
-            .thenReturn(reports);
+            .when(scannerLogEntityRepository.findAllByScannerId(scanner.getId()))
+            .thenReturn(logs);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/v1/signal-scanner/" + scanner.getId()))
             .andExpect(status().isOk())
@@ -108,7 +104,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
                 content()
                     .json(
                         objectMapper
-                            .writeValueAsString(SignalScannerResponse.from(scanner, instruments, reports, signals))
+                            .writeValueAsString(SignalScannerResponse.from(scanner, instruments, logs))
                     )
             );
     }
@@ -165,38 +161,29 @@ public class SignalScannerControllerTest extends BaseControllerTest {
         );
     }
 
-    private List<ReportEntity> getReports() {
-        return List.of(ReportEntity.builder()
-            .id(1L)
-            .scannerId(SIGNAL_PRODUCER_ID)
-            .time(NOW)
-            .logs(List.of(
-                ReportLogEntity.builder()
-                    .id(1L)
-                    .message("msg")
-                    .time(Instant.now().truncatedTo(ChronoUnit.SECONDS))
-                    .build()
-            ))
-            .signals(List.of(
-                SignalEntity.builder()
-                    .dateTime(NOW)
-                    .isBuy(true)
-                    .instrumentId(AFKS_ID)
-                    .build()
-            ))
-            .build());
+    private List<ScannerLogEntity> getLogs() {
+        return List.of(
+            ScannerLogEntity.builder()
+                .id(1L)
+                .dateTime(LocalDateTime.now())
+                .message("msg")
+                .scannerId(SIGNAL_PRODUCER_ID)
+                .build()
+        );
     }
 
     private List<SignalScannerEntity> getSignalScanners() {
-        return List.of(
-            new AnomalyVolumeScannerEntity(
-                SIGNAL_PRODUCER_ID,
-                "Описание",
-                List.of(AFKS_ID, IMOEX_ID),
-                1.5,
-                180,
-                "IMOEX"
-            )
+        var scanner = new AnomalyVolumeScannerEntity(
+            SIGNAL_PRODUCER_ID,
+            "Описание",
+            List.of(AFKS_ID, IMOEX_ID),
+            LocalDateTime.now(),
+            new ArrayList<>(),
+            1.5,
+            180,
+            "IMOEX"
         );
+        scanner.getSignals().add(new SignalEntity(1L, scanner, AFKS_ID, true, LocalDateTime.now()));
+        return List.of(scanner);
     }
 }

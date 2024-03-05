@@ -130,7 +130,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertEquals(2, lkoh.getIntradayValues().size());
         assertEquals(2, sibn.getIntradayValues().size());
         assertEquals(3, tatn.getIntradayValues().size());
-        assertEquals(0, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -167,7 +167,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertEquals(2, lkoh.getIntradayValues().size());
         assertEquals(2, sibn.getIntradayValues().size());
         assertEquals(3, tatn.getIntradayValues().size());
-        assertEquals(1, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -191,7 +191,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:30:00");
 
         scheduleManager().executeSchedule();
-        assertEquals(1, signalPublisher().reports.size());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -215,7 +215,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T14:00:00");
 
         scheduleManager().executeSchedule();
-        assertEquals(2, signalPublisher().reports.size());
+        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     private void initOilCompanyData() {

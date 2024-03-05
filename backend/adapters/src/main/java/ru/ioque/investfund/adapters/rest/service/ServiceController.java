@@ -15,7 +15,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -31,7 +31,7 @@ public class ServiceController {
     InstrumentEntityRepository instrumentEntityRepository;
     DailyValueEntityRepository dailyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
-    ReportEntityRepository reportEntityRepository;
+    ScannerLogEntityRepository scannerLogEntityRepository;
     ScheduleUnitEntityRepository scheduleUnitEntityRepository;
     SignalScannerEntityRepository signalScannerEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
@@ -50,7 +50,7 @@ public class ServiceController {
         dailyValueEntityRepository.deleteAll();
         intradayValueEntityRepository.deleteAll();
         exchangeEntityRepository.deleteAll();
-        reportEntityRepository.deleteAll();
+        scannerLogEntityRepository.deleteAll();
         signalScannerEntityRepository.deleteAll();
         scheduleUnitEntityRepository.deleteAll();
         archivedIntradayValueEntityRepository.deleteAll();

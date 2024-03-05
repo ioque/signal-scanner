@@ -11,8 +11,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 
 import java.io.Serializable;
@@ -32,22 +31,21 @@ public class SignalScannerResponse implements Serializable {
     String description;
     SignalConfigResponse config;
     List<InstrumentInListResponse> instruments;
-    List<ReportResponse> reports;
+    List<ReportLogResponse> logs;
     List<SignalResponse> signals;
 
     public static SignalScannerResponse from(
         SignalScannerEntity scanner,
         List<InstrumentEntity> instruments,
-        List<ReportEntity> reports,
-        List<SignalEntity> signals
+        List<ScannerLogEntity> logs
     ) {
         return SignalScannerResponse.builder()
             .id(scanner.getId())
             .description(scanner.getDescription())
             .config(SignalConfigResponse.from(scanner))
             .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
-            .reports(reports.stream().map(ReportResponse::from).toList())
-            .signals(signals
+            .logs(logs.stream().map(ReportLogResponse::from).toList())
+            .signals(scanner.getSignals()
                 .stream()
                 .map(signal -> SignalResponse
                     .from(

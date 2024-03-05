@@ -11,6 +11,8 @@ import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSign
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -51,7 +53,9 @@ public class FinDataJpaScannerRepoTest extends BaseJpaTest {
             id,
             "Описание",
             finInstruments.stream().map(Instrument::getId).toList(),
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
+            LocalDateTime.now(),
+            new ArrayList<>()
         );
         dataJpaScannerRepo.save(dataScanner);
         assertEquals(dataScanner, dataJpaScannerRepo.getAll().get(0));

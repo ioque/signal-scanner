@@ -9,7 +9,6 @@ import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
                 riseInstruments.stream().map(InstrumentStatistic::getTicker).toList(),
                 otherInstruments.stream().map(InstrumentStatistic::getTicker).toList()
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -87,7 +86,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
                     historyScale,
                     intradayScale
                 ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -98,7 +97,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
                 getName(),
                 signals.size()
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 }

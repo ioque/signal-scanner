@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.PrefSimpleSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,9 +31,11 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
         UUID id,
         String description,
         List<UUID> objectIds,
+        LocalDateTime lastWorkDateTime,
+        List<SignalEntity> signals,
         Double spreadParam
     ) {
-        super(id, description, objectIds);
+        super(id, description, objectIds, lastWorkDateTime, signals);
         this.spreadParam = spreadParam;
     }
 
@@ -42,6 +45,8 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
             .id(signalScannerBot.getId())
             .description(signalScannerBot.getDescription())
             .objectIds(signalScannerBot.getObjectIds())
+            .lastWorkDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
+            .signals(signalScannerBot.getSignals().stream().map(SignalEntity::from).toList())
             .spreadParam(config.getSpreadParam())
             .build();
     }
@@ -52,7 +57,9 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             getObjectIds(),
-            new PrefSimpleSignalConfig(spreadParam)
+            new PrefSimpleSignalConfig(spreadParam),
+            getLastWorkDateTime(),
+            getSignals().stream().map(SignalEntity::toDomain).toList()
         );
     }
 }

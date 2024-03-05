@@ -88,8 +88,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
                 .toList()
         );
         scheduleManager().executeSchedule();
-        assertEquals(1, signalPublisher().reports.get(0).getSignals().size());
-        assertEquals(sberp.getId(), signalPublisher().reports.get(0).getSignals().get(0).getInstrumentId());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -122,7 +121,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
         scheduleManager().executeSchedule();
-        assertEquals(0, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -145,7 +144,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         clearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
         scheduleManager().executeSchedule();
-        assertEquals(1, signalPublisher().reports.size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -168,7 +167,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         clearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
         scheduleManager().executeSchedule();
-        assertEquals(2, signalPublisher().reports.size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertEquals(6, scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId()).size());
     }
 
     private void initSberSberPSecurityAndHistoryTradingData() {

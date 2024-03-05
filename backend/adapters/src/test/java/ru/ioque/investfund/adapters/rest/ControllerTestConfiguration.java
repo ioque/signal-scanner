@@ -12,13 +12,12 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ReportEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.adapters.ReportRepository;
 import ru.ioque.investfund.application.adapters.ScheduleRepository;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
@@ -109,14 +108,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public ReportRepository mockReportRepository() {
-        return mock(ReportRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public ReportEntityRepository mockReportEntityRepository() {
-        return mock(ReportEntityRepository.class);
+    public ScannerLogEntityRepository mockScannerLogEntityRepository() {
+        return mock(ScannerLogEntityRepository.class);
     }
 
     @Bean

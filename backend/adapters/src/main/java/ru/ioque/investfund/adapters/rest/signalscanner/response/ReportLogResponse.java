@@ -7,11 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ReportLogEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 
 import java.io.Serializable;
-import java.time.Instant;
-
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -20,10 +19,10 @@ import java.time.Instant;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportLogResponse implements Serializable {
-    Instant dateTime;
+    LocalDateTime dateTime;
     String message;
 
-    public static ReportLogResponse from(ReportLogEntity reportLogEntity) {
-        return new ReportLogResponse(reportLogEntity.getTime(), reportLogEntity.getMessage());
+    public static ReportLogResponse from(ScannerLogEntity scannerLogEntity) {
+        return new ReportLogResponse(scannerLogEntity.getDateTime(), scannerLogEntity.getMessage());
     }
 }

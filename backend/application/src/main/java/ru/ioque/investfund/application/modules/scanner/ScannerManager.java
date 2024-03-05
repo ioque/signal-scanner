@@ -5,13 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ReportRepository;
+import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.scanner.financial.entity.Report;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.util.List;
@@ -26,14 +25,14 @@ import java.util.function.Supplier;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScannerManager {
     ScannerRepository scannerRepository;
-    ReportRepository reportRepository;
+    ScannerLogRepository scannerLogRepository;
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     LoggerFacade loggerFacade;
 
     public void scanning(List<InstrumentStatistic> statistics) {
         loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
-        reportRepository.save(runScanners(statistics));
+        runScanners(statistics);
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
@@ -60,32 +59,38 @@ public class ScannerManager {
                 command.getDescription(),
                 command.getIds(),
                 scannerBot.getConfig(),
-                scannerBot.getLastExecutionDateTime().orElse(null)
+                scannerBot.getLastExecutionDateTime().orElse(null),
+                scannerBot.getSignals()
             )
         );
         loggerFacade.logUpdateSignalScanner(command);
     }
 
-    private List<Report> runScanners(List<InstrumentStatistic> statistics) {
-        return scannerRepository
+    private void runScanners(List<InstrumentStatistic> statistics) {
+        scannerRepository
             .getAll()
             .stream()
             .filter(row -> row.isTimeForExecution(dateTimeProvider.nowDateTime()))
-            .map(scanner -> runScanner(statistics, scanner))
-            .toList();
+            .forEach(scanner -> runScanner(statistics, scanner));
     }
 
     private Supplier<ApplicationException> scannerNotFound(UpdateScannerCommand command) {
         return () -> new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
     }
 
-    private Report runScanner(List<InstrumentStatistic> statistics, SignalScannerBot scanner) {
+    private void runScanner(List<InstrumentStatistic> statistics, SignalScannerBot scanner) {
         loggerFacade.logRunWorkScanner(scanner);
-        Report report = scanner.scanning(statistics
-            .stream()
-            .filter(row -> scanner.getObjectIds().contains(row.getInstrumentId()))
-            .toList(), dateTimeProvider.nowDateTime());
-        loggerFacade.logFinishWorkScanner(scanner, report);
-        return report;
+        scannerLogRepository
+            .saveAll(
+                scanner.getId(),
+                scanner.scanning(
+                    statistics
+                        .stream()
+                        .filter(row -> scanner.getObjectIds().contains(row.getInstrumentId()))
+                        .toList(), dateTimeProvider.nowDateTime()
+                )
+            );
+        scannerRepository.save(scanner);
+        loggerFacade.logFinishWorkScanner(scanner);
     }
 }

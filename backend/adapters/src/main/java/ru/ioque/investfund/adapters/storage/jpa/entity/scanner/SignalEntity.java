@@ -1,7 +1,6 @@
 package ru.ioque.investfund.adapters.storage.jpa.entity.scanner;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,10 +33,9 @@ public class SignalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @ToString.Exclude
-    @JoinColumn(name="report_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    ReportEntity report;
+    @ManyToOne
+    @JoinColumn(name="scanner_id", nullable=false)
+    SignalScannerEntity scanner;
     UUID instrumentId;
     boolean isBuy;
     LocalDateTime dateTime;
@@ -47,6 +45,14 @@ public class SignalEntity {
             .dateTime(dateTime)
             .instrumentId(instrumentId)
             .isBuy(isBuy)
+            .build();
+    }
+
+    public static SignalEntity from(Signal signal) {
+        return SignalEntity.builder()
+            .dateTime(signal.getDateTime())
+            .instrumentId(signal.getInstrumentId())
+            .isBuy(signal.isBuy())
             .build();
     }
 }

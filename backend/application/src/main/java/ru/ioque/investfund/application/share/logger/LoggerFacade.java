@@ -6,7 +6,6 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.Report;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 import ru.ioque.investfund.domain.schedule.ScheduleUnit;
 
@@ -149,14 +148,14 @@ public class LoggerFacade {
         );
     }
 
-    public void logFinishWorkScanner(SignalScannerBot scanner, Report report) {
+    public void logFinishWorkScanner(SignalScannerBot scanner) {
         log(
             new InfoLog(
                 String.format(
-                    "Завершил работу сканер сигналов c идентификатором %s, алгоритм сканера - %s. Результаты работы: %s",
+                    "Завершил работу сканер сигналов c идентификатором %s, алгоритм сканера - %s. Текущие сигналы: %s",
                     scanner.getId(),
                     scanner.getConfig().factorySearchAlgorithm().getName(),
-                    report
+                    scanner.getSignals()
                 )
             )
         );

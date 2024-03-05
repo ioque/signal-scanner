@@ -117,7 +117,7 @@ public class ScheduleManagerTest extends BaseTest {
             .orElseThrow();
         assertEquals(7, instrument.getIntradayValues().size());
         assertEquals(7, instrument.getDailyValues().size());
-        assertEquals(0, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test

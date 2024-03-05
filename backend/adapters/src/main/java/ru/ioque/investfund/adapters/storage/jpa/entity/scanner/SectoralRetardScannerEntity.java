@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,10 +32,12 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
         UUID id,
         String description,
         List<UUID> objectIds,
+        LocalDateTime lastWorkDateTime,
+        List<SignalEntity> signals,
         Double historyScale,
         Double intradayScale
     ) {
-        super(id, description, objectIds);
+        super(id, description, objectIds, lastWorkDateTime, signals);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }
@@ -45,6 +48,8 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
             .id(signalScannerBot.getId())
             .description(signalScannerBot.getDescription())
             .objectIds(signalScannerBot.getObjectIds())
+            .lastWorkDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
+            .signals(signalScannerBot.getSignals().stream().map(SignalEntity::from).toList())
             .historyScale(config.getHistoryScale())
             .intradayScale(config.getIntradayScale())
             .build();
@@ -56,7 +61,9 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             getObjectIds(),
-            new SectoralRetardSignalConfig(historyScale, intradayScale)
+            new SectoralRetardSignalConfig(historyScale, intradayScale),
+            getLastWorkDateTime(),
+            getSignals().stream().map(SignalEntity::toDomain).toList()
         );
     }
 }

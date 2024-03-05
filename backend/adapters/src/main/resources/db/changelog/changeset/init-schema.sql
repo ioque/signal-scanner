@@ -1,3 +1,42 @@
+create table if not exists archived_daily_value
+(
+    capitalization      double precision,
+    close_price         double precision not null,
+    max_price           double precision not null,
+    min_price           double precision not null,
+    num_trades          double precision,
+    open_position_value double precision,
+    open_price          double precision not null,
+    trade_date          date             not null,
+    value               double precision not null,
+    volume              double precision,
+    wa_price            double precision,
+    id                  bigserial
+        primary key,
+    daily_value_type    varchar(255)     not null,
+    ticker              varchar(255)     not null
+);
+
+alter table archived_daily_value
+    owner to postgres;
+
+create table if not exists archived_intraday_value
+(
+    is_buy              boolean,
+    price               double precision not null,
+    qnt                 integer,
+    value               double precision,
+    date_time           timestamp(6)     not null,
+    id                  bigserial
+        primary key,
+    number              bigint           not null,
+    intraday_value_type varchar(255)     not null,
+    ticker              varchar(255)     not null
+);
+
+alter table archived_intraday_value
+    owner to postgres;
+
 create table if not exists daily_value
 (
     capitalization      double precision,
@@ -22,8 +61,6 @@ alter table daily_value
 
 create table if not exists exchange
 (
-    start_time  time(6),
-    stop_time   time(6),
     id          uuid not null
         primary key,
     description varchar(255),
@@ -55,6 +92,7 @@ create table if not exists instrument
     lot_size        integer,
     lot_volume      integer,
     low_limit       double precision,
+    updatable       boolean,
     id              uuid         not null
         primary key,
     instrument_type varchar(255) not null,
@@ -64,11 +102,11 @@ create table if not exists instrument
     name            varchar(255) not null,
     reg_number      varchar(255),
     short_name      varchar(255) not null,
-    ticker          varchar(255) not null,
-    updatable boolean
+    ticker          varchar(255) not null
 );
 
-alter table instrument owner to postgres;
+alter table instrument
+    owner to postgres;
 
 create table if not exists intraday_value
 (
@@ -87,29 +125,16 @@ create table if not exists intraday_value
 alter table intraday_value
     owner to postgres;
 
-create table if not exists report
+create table if not exists scanner_log
 (
+    date_time  timestamp(6),
     id         bigserial
         primary key,
-    time       timestamp(6),
-    scanner_id uuid
+    scanner_id uuid,
+    message    varchar(255)
 );
 
-alter table report
-    owner to postgres;
-
-create table if not exists report_log
-(
-    id        bigserial
-        primary key,
-    report_id bigint
-        constraint fkm8xu1ksrkbh0bq6bm5i51iq5g
-            references report,
-    time      timestamp(6) with time zone,
-    message   varchar(255)
-);
-
-alter table report_log
+alter table scanner_log
     owner to postgres;
 
 create table if not exists schedule_unit
@@ -129,29 +154,16 @@ create table if not exists schedule_unit
 alter table schedule_unit
     owner to postgres;
 
-create table if not exists signal
-(
-    is_buy        boolean not null,
-    id            bigserial
-        primary key,
-    report_id     bigint
-        constraint fkoivbnnu5f0u4qk9nmy9wtgdyl
-            references report,
-    instrument_id uuid
-);
-
-alter table signal
-    owner to postgres;
-
 create table if not exists signal_scanner
 (
     futures_overnight_scale double precision,
     history_period          integer,
     history_scale           double precision,
     intraday_scale          double precision,
+    scale_coefficient       double precision,
     spread_param            double precision,
-    start_scale_coefficient double precision,
     stock_overnight_scale   double precision,
+    last_work_date_time     timestamp(6),
     id                      uuid         not null
         primary key,
     signal_scanner_type     varchar(255) not null,
@@ -163,6 +175,21 @@ create table if not exists signal_scanner
 alter table signal_scanner
     owner to postgres;
 
+create table if not exists signal
+(
+    is_buy        boolean not null,
+    date_time     timestamp(6),
+    id            bigserial
+        primary key,
+    instrument_id uuid,
+    scanner_id    uuid    not null
+        constraint fk8d7bbd3drg5o11f0nu4x8rp3w
+            references signal_scanner
+);
+
+alter table signal
+    owner to postgres;
+
 create table if not exists signal_scanner_entity_object_ids
 (
     object_ids               uuid,
@@ -172,46 +199,6 @@ create table if not exists signal_scanner_entity_object_ids
 );
 
 alter table signal_scanner_entity_object_ids
-    owner to postgres;
-
-
-create table if not exists archived_intraday_value
-(
-    is_buy              boolean,
-    price               double precision not null,
-    qnt                 integer,
-    value               double precision,
-    date_time           timestamp(6)     not null,
-    id                  bigserial
-        primary key,
-    number              bigint           not null,
-    intraday_value_type varchar(255)     not null,
-    ticker              varchar(255)     not null
-);
-
-alter table archived_intraday_value
-    owner to postgres;
-
-create table if not exists archived_daily_value
-(
-    capitalization      double precision,
-    close_price         double precision not null,
-    max_price           double precision not null,
-    min_price           double precision not null,
-    num_trades          double precision,
-    open_position_value double precision,
-    open_price          double precision not null,
-    trade_date          date             not null,
-    value               double precision not null,
-    volume              double precision,
-    wa_price            double precision,
-    id                  bigserial
-        primary key,
-    daily_value_type    varchar(255)     not null,
-    ticker              varchar(255)     not null
-);
-
-alter table archived_daily_value
     owner to postgres;
 
 create or replace procedure archiving_daily_values() language plpgsql

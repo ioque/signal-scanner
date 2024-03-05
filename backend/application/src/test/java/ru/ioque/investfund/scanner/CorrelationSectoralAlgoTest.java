@@ -148,7 +148,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
         assertEquals(2, getTatn().getDailyValues().size());
         assertEquals(3, getTatn().getIntradayValues().size());
-        assertEquals(1, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
         assertEquals(2, getTatn().getDailyValues().size());
         assertEquals(3, getTatn().getIntradayValues().size());
-        assertEquals(0, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -200,7 +200,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
         scheduleManager().executeSchedule();
 
-        assertEquals(1, signalPublisher().reports.size());
+        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -226,7 +226,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
         scheduleManager().executeSchedule();
 
-        assertEquals(2, signalPublisher().reports.size());
+        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     private void initPositiveDealResults() {

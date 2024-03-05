@@ -10,7 +10,6 @@ import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +78,7 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
                 )
                 .concat(statistic.isRiseOvernight(stockOvernightScale) ? "Инструмент рос в предыдущие два дня."
                     : "Инструмент не рос в предыдущие два дня."),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -94,7 +93,7 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
                     futuresTicker
                 )
                 .concat(futuresIsRiseToday ? "Фьючерс рос в предыдущий день." : "Фьючерс не рос в предыдущий день."),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -105,7 +104,7 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
                 getName(),
                 signals.size()
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 }

@@ -1,7 +1,6 @@
 drop table if exists archived_daily_value;
 drop table if exists archived_intraday_value;
-drop table if exists report;
-drop table if exists report_log;
+drop table if exists scanner_log;
 drop table if exists signal;
 drop table if exists signal_scanner_entity_object_ids;
 drop table if exists signal_scanner;

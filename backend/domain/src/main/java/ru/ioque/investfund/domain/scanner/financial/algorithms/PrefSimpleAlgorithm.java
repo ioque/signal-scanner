@@ -11,7 +11,6 @@ import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
                     getName(),
                     spreadParam
                 ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -97,7 +96,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
                 historyDelta,
                 multiplier
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -108,7 +107,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
                 getName(),
                 signals.size()
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 }

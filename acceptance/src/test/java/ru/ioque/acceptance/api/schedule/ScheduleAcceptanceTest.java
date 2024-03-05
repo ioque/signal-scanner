@@ -43,8 +43,8 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         initDateTime(now);
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         integrateInstruments(
-                instruments().sber().build(),
-                instruments().sberp().build()
+            instruments().sber().build(),
+            instruments().sberp().build()
         );
         enableUpdateInstrumentBy(getInstrumentIds());
         prepareTradingData(startDate, now);
@@ -63,15 +63,19 @@ public class ScheduleAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         long currentMills = System.currentTimeMillis();
-        while (getInstrumentById(getInstrumentIds().get(0)).getIntradayValues().isEmpty()) {
+        while (getInstrumentsWithTradingData().stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size() < 2) {
             if (System.currentTimeMillis() - currentMills > 80_000) {
                 throw new RuntimeException();
             }
         }
 
-        List<Instrument> instruments = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+        List<Instrument> instruments = getInstrumentsWithTradingData();
         assertEquals(2, instruments.stream().filter(row -> !row.getDailyValues().isEmpty()).toList().size());
         assertEquals(2, instruments.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+    }
+
+    protected List<Instrument> getInstrumentsWithTradingData() {
+        return getInstrumentIds().stream().map(this::getInstrumentById).toList();
     }
 
     @Test

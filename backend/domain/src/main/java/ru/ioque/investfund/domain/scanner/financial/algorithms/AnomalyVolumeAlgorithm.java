@@ -10,7 +10,6 @@ import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +90,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
                 waHistoryValue,
                 multiplier
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -106,7 +105,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
                     indexTicker
                 )
                 .concat(indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день."),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 
@@ -117,7 +116,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
                 getName(),
                 signals.size()
             ),
-            Instant.now()
+            LocalDateTime.now()
         );
     }
 }

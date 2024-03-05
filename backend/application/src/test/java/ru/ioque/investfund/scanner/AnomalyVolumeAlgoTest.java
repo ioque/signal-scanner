@@ -162,7 +162,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
         scheduleManager().executeSchedule();
-        assertEquals(2, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -189,8 +189,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         scheduleManager().executeSchedule();
 
         assertEquals(4, loggerProvider().log.size());
-        assertEquals(1, signalPublisher().reports.size());
-        assertEquals(2, signalPublisher().reports.get(0).getSignals().size());
+        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -217,9 +216,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         scheduleManager().executeSchedule();
 
         assertEquals(6, loggerProvider().log.size());
-        assertEquals(2, signalPublisher().reports.size());
-        assertEquals(2, signalPublisher().reports.get(0).getSignals().size());
-        assertEquals(2, signalPublisher().reports.get(1).getSignals().size());
+        assertEquals(4, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
     private void initTgknAndTgkbAndImoexHistoryTradingData() {
