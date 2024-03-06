@@ -1,19 +1,21 @@
 package ru.ioque.investfund.application.modules.scanner;
 
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +26,8 @@ import java.util.function.Supplier;
  * ПОТЕНЦИАЛЬНО ОТДЕЛЬНЫЙ СЕРВИС "СИГНАЛЫ", работа которого регулируется сервисом "РАСПИСАНИЕ"
  */
 @Component
-@RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ScannerManager {
+public class ScannerManager implements SystemModule {
     ScannerRepository scannerRepository;
     ScannerLogRepository scannerLogRepository;
     StatisticRepository statisticRepository;
@@ -34,7 +35,26 @@ public class ScannerManager {
     DateTimeProvider dateTimeProvider;
     LoggerFacade loggerFacade;
 
-    public void scanning() {
+    public ScannerManager(
+        ScannerRepository scannerRepository,
+        ScannerLogRepository scannerLogRepository,
+        StatisticRepository statisticRepository,
+        UUIDProvider uuidProvider,
+        DateTimeProvider dateTimeProvider,
+        LoggerFacade loggerFacade,
+        EventBus eventBus
+    ) {
+        this.scannerRepository = scannerRepository;
+        this.scannerLogRepository = scannerLogRepository;
+        this.statisticRepository = statisticRepository;
+        this.uuidProvider = uuidProvider;
+        this.dateTimeProvider = dateTimeProvider;
+        this.loggerFacade = loggerFacade;
+        eventBus.subscribe(StatisticCalculatedEvent.class, this);
+    }
+
+    @Override
+    public void execute() {
         loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
         runScanners();
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());

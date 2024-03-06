@@ -208,7 +208,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         exchangeManager().integrateTradingData();
         statisticManager().calcStatistic();
-        dataScannerManager().scanning();
+        dataScannerManager().execute();
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 

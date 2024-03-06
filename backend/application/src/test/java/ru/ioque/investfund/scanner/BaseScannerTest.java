@@ -31,7 +31,5 @@ public class BaseScannerTest extends BaseTest {
 
     protected void runWorkPipline() {
         exchangeManager().integrateTradingData();
-        statisticManager().calcStatistic();
-        dataScannerManager().scanning();
     }
 }

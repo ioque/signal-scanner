@@ -75,7 +75,8 @@ public class FakeDIContainer {
             statisticRepository,
             uuidProvider,
             dateTimeProvider,
-            loggerFacade
+            loggerFacade,
+            eventBus
         );
         scheduleTaskExecutor = new ScheduleTaskExecutor(
             dateTimeProvider,
@@ -89,7 +90,7 @@ public class FakeDIContainer {
             uuidProvider,
             loggerFacade
         );
-        statisticManager = new StatisticManager(statisticRepository, exchangeRepository);
+        statisticManager = new StatisticManager(statisticRepository, exchangeRepository, eventBus, uuidProvider, dateTimeProvider);
     }
 
     private FakeExchangeProvider getFakeExchangeProvider() {

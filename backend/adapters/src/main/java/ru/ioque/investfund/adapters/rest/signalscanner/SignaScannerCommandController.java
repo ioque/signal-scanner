@@ -52,6 +52,6 @@ public class SignaScannerCommandController {
 
     @PostMapping("/api/v1/signal-scanner/run")
     public void runSignalScanners() {
-        scannerManager.scanning(exchangeManager.getStatistics());
+        scannerManager.execute();
     }
 }

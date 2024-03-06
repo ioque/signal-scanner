@@ -42,7 +42,7 @@ public class ScheduleTaskExecutor {
     }
 
     private void signalScannerSchedule(ScheduleUnit scheduleUnit) {
-        scannerManager.scanning();
+        scannerManager.execute();
     }
 
     private void executeAggregatorScheduleUnit(ScheduleUnit scheduleUnit) {
