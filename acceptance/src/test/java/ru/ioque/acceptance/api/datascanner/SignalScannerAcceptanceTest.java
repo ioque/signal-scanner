@@ -140,12 +140,11 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase5() {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
-        datasetManager().initInstruments(
-            List.of(
-                instruments().imoex().build(),
-                instruments().tgkn().build()
-            )
+        integrateInstruments(
+            instruments().imoex().build(),
+            instruments().tgkn().build()
         );
+        enableUpdateInstrumentBy(getInstrumentIds());
         datasetManager().initDailyResultValue(
             Stream.concat(
                     generator()
@@ -224,7 +223,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 )
                 .toList()
         );
-        fullIntegrate();
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
                 .scaleCoefficient(1.5)
@@ -234,7 +232,8 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .ids(getInstrumentIds())
                 .build()
         );
-        runScanning();
+
+        integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -246,12 +245,11 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase6() {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
-        datasetManager().initInstruments(
-            List.of(
-                instruments().sber().build(),
-                instruments().sberp().build()
-            )
+        integrateInstruments(
+            instruments().sber().build(),
+            instruments().sberp().build()
         );
+        enableUpdateInstrumentBy(getInstrumentIds());
         datasetManager().initDailyResultValue(
             Stream.concat(
                     generator()
@@ -321,7 +319,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 )
                 .toList()
         );
-        fullIntegrate();
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .spreadParam(1D)
@@ -330,7 +327,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .build()
         );
 
-        runScanning();
+        integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -341,14 +338,13 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase7() {
         LocalDateTime now = getDateTimeNow();
-        datasetManager().initInstruments(
-            List.of(
-                instruments().sibn().build(),
-                instruments().lkoh().build(),
-                instruments().tatn().build(),
-                instruments().rosn().build()
-            )
+        integrateInstruments(
+            instruments().sibn().build(),
+            instruments().lkoh().build(),
+            instruments().tatn().build(),
+            instruments().rosn().build()
         );
+        enableUpdateInstrumentBy(getInstrumentIds());
         List<DailyResultValue> dailyResultValues = new ArrayList<>();
         dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
             .builder()
@@ -445,7 +441,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .valuePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
             .build()));
         datasetManager().initIntradayValue(intradayValues);
-        fullIntegrate();
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .ids(getInstrumentIds())
@@ -455,7 +450,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .build()
         );
 
-        runScanning();
+        integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -466,12 +461,11 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase8() {
         LocalDateTime now = getDateTimeNow();
-        datasetManager().initInstruments(
-            List.of(
-                instruments().sibn().build(),
-                instruments().brf4().build()
-            )
+        integrateInstruments(
+            instruments().sibn().build(),
+            instruments().brf4().build()
         );
+        enableUpdateInstrumentBy(getInstrumentIds());
         List<DailyResultValue> dailyResultValues = new ArrayList<>();
         dailyResultValues.addAll(generator().generateStockHistory(HistoryGeneratorConfig
             .builder()
@@ -520,7 +514,6 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .build()));
         datasetManager().initIntradayValue(intradayValues);
-        fullIntegrate();
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .ids(getInstrumentIds())
@@ -531,7 +524,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .build()
         );
 
-        runScanning();
+        integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
