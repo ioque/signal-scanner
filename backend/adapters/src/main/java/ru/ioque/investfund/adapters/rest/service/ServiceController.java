@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ioque.investfund.adapters.other.InMemoryEventBus;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
@@ -16,7 +17,6 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepos
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
@@ -32,10 +32,10 @@ public class ServiceController {
     DailyValueEntityRepository dailyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
     ScannerLogEntityRepository scannerLogEntityRepository;
-    ScheduleUnitEntityRepository scheduleUnitEntityRepository;
     SignalScannerEntityRepository signalScannerEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
+    InMemoryEventBus eventBus;
     ExchangeManager exchangeManager;
     DateTimeProvider dateTimeProvider;
 
@@ -52,9 +52,9 @@ public class ServiceController {
         exchangeEntityRepository.deleteAll();
         scannerLogEntityRepository.deleteAll();
         signalScannerEntityRepository.deleteAll();
-        scheduleUnitEntityRepository.deleteAll();
         archivedIntradayValueEntityRepository.deleteAll();
         archivedDailyValueEntityRepository.deleteAll();
+        eventBus.clear();
         exchangeManager.clearCache();
         dateTimeProvider.initToday(null);
     }

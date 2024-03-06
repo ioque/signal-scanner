@@ -11,14 +11,11 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.ScheduleRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.exchange.ExchangeCache;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.application.modules.schedule.ScheduleManager;
-import ru.ioque.investfund.application.modules.schedule.ScheduleTaskExecutor;
 import ru.ioque.investfund.application.modules.statistic.StatisticManager;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
@@ -33,13 +30,10 @@ public class FakeDIContainer {
     UUIDProvider uuidProvider;
     ScannerLogRepository scannerLogRepository;
     ConfigureProvider configureProvider;
-    ScheduleRepository scheduleRepository;
     ScannerRepository scannerRepository;
     ExchangeRepository exchangeRepository;
     LoggerFacade loggerFacade;
     ScannerManager scannerManager;
-    ScheduleTaskExecutor scheduleTaskExecutor;
-    ScheduleManager scheduleManager;
     ExchangeManager exchangeManager;
     EventBus eventBus;
     StatisticRepository statisticRepository;
@@ -49,7 +43,6 @@ public class FakeDIContainer {
         statisticRepository = new FakeStatisticRepository();
         eventBus = new FakeEventBus();
         dateTimeProvider = new FakeDateTimeProvider();
-        scheduleRepository = new FakeScheduleRepository();
         exchangeDataFixture = new ExchangeDataFixture();
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
@@ -75,18 +68,6 @@ public class FakeDIContainer {
             statisticRepository,
             uuidProvider,
             dateTimeProvider,
-            loggerFacade
-        );
-        scheduleTaskExecutor = new ScheduleTaskExecutor(
-            dateTimeProvider,
-            exchangeManager,
-            scannerManager
-        );
-        scheduleManager = new ScheduleManager(
-            scheduleTaskExecutor,
-            scheduleRepository,
-            dateTimeProvider,
-            uuidProvider,
             loggerFacade
         );
         statisticManager = new StatisticManager(statisticRepository, exchangeRepository, eventBus, uuidProvider, dateTimeProvider);

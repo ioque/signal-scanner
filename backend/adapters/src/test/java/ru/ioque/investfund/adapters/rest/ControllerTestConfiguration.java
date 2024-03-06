@@ -13,27 +13,19 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepos
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.adapters.ScheduleRepository;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.application.modules.schedule.ScheduleManager;
 
 import static org.mockito.Mockito.mock;
 
 @Order(1)
 @TestConfiguration
 public class ControllerTestConfiguration {
-    @Bean
-    @Primary
-    public ScheduleManager mockScheduleManager() {
-        return mock(ScheduleManager.class);
-    }
 
     @Bean
     @Primary
@@ -61,12 +53,6 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public ScheduleUnitEntityRepository mockScheduleUnitRepository() {
-        return mock(ScheduleUnitEntityRepository.class);
-    }
-
-    @Bean
-    @Primary
     public IntradayValueEntityRepository mockDealDataRepository() {
         return mock(IntradayValueEntityRepository.class);
     }
@@ -81,12 +67,6 @@ public class ControllerTestConfiguration {
     @Primary
     public InstrumentEntityRepository mockInstrumentEntityRepository() {
         return mock(InstrumentEntityRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public ScheduleRepository mockScheduleRepo() {
-        return mock(ScheduleRepository.class);
     }
 
     @Bean

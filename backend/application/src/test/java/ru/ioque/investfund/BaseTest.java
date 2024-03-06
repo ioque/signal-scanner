@@ -3,7 +3,6 @@ package ru.ioque.investfund;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.application.modules.schedule.ScheduleManager;
 import ru.ioque.investfund.application.modules.statistic.StatisticManager;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
@@ -65,10 +64,6 @@ public class BaseTest {
 
     protected final FakeScannerLogRepository scannerLogRepository() {
         return (FakeScannerLogRepository) fakeDIContainer.getScannerLogRepository();
-    }
-
-    protected final ScheduleManager scheduleManager() {
-        return fakeDIContainer.getScheduleManager();
     }
 
     protected final FakeLoggerProvider loggerProvider() {

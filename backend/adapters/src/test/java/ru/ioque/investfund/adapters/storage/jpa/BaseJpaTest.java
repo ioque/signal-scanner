@@ -16,12 +16,9 @@ import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
-import ru.ioque.investfund.domain.schedule.ScheduleUnit;
-import ru.ioque.investfund.domain.schedule.SystemModule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @SpringBootTest
 @Transactional
@@ -93,15 +90,5 @@ public class BaseJpaTest {
             .value(1.0)
             .numTrades(1D)
             .build();
-    }
-
-    protected ScheduleUnit.ScheduleUnitBuilder buildScheduleUnit() {
-        return ScheduleUnit
-            .builder()
-            .id(uuidProvider.generate())
-            .priority(1)
-            .systemModule(SystemModule.EXCHANGE)
-            .startTime(LocalTime.parse("00:00"))
-            .stopTime(LocalTime.parse("23:59"));
     }
 }

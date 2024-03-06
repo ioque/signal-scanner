@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.AddSignalScannerRequest;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.UpdateSignalScannerRequest;
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
@@ -24,7 +23,6 @@ import java.util.UUID;
 @Tag(name="SignaScannerCommandController", description="Контроллер команд к модулю \"SIGNAL-SCANNER\"")
 public class SignaScannerCommandController {
     ScannerManager scannerManager;
-    ExchangeManager exchangeManager;
 
     @PostMapping("/api/v1/signal-scanner")
     public void addNewSignalScanner(@RequestBody AddSignalScannerRequest request) {
