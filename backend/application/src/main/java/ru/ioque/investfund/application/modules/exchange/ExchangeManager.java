@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.ConfigureProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -13,6 +14,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class ExchangeManager {
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
     ExchangeCache exchangeCache;
+    EventBus eventBus;
 
     public void clearCache() {
         exchangeCache.clear();
@@ -49,6 +52,7 @@ public class ExchangeManager {
         repository.save(exchange);
     }
 
+    //Публикует данные в топик "Инструменты"
     public void integrateWithDataSource() {
         final Exchange exchange =
             repository.getBy(dateTimeProvider.nowDate()).orElseGet(this::newExchange);
@@ -58,6 +62,8 @@ public class ExchangeManager {
         loggerFacade.logFinishSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
     }
 
+    //Публикует данные в два топика - внутридневные данные и исторические данные.
+    //Пока просто событие для частичного ухода от шедулера
     public void integrateTradingData() {
         final Exchange exchange = exchangeCache.get().orElseGet(this::getAndCacheInit);
         exchange.getUpdatableInstruments().forEach(instrument -> {
@@ -73,6 +79,7 @@ public class ExchangeManager {
             loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
         });
         repository.save(exchange);
+        eventBus.publish(new TradingDataUpdatedEvent(uuidProvider.generate(), dateTimeProvider.nowDateTime()));
     }
 
     private Exchange getAndCacheInit() {

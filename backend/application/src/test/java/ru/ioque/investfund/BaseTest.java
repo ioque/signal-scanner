@@ -21,6 +21,7 @@ import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
+import ru.ioque.investfund.fakes.FakeEventBus;
 import ru.ioque.investfund.fakes.FakeExchangeRepository;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerLogRepository;
@@ -74,6 +75,10 @@ public class BaseTest {
 
     protected final ExchangeManager exchangeManager() {
         return fakeDIContainer.getExchangeManager();
+    }
+
+    protected final FakeEventBus eventBus() {
+        return (FakeEventBus) fakeDIContainer.getEventBus();
     }
 
     protected final FakeScannerRepository fakeDataScannerStorage() {

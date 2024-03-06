@@ -1,6 +1,5 @@
 package ru.ioque.investfund.exchange;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
@@ -8,6 +7,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
+import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -405,20 +405,17 @@ public class ExchangeManagerTest extends BaseTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("""
-        T19. После успешной синхронизации создается событие "Синхронизация завершена".
+        T19. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
     void testCase19() {
-
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("""
-        T20. После успешной интеграции торговых данных создается событие "Интеграция торговых данных завершена".
-        """)
-    void testCase20() {
-
+        initTodayDateTime("2023-12-08T12:00:00");
+        integrateInstruments(afks());
+        initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
+        initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
+        exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
+        exchangeManager().integrateTradingData();
+        assertEquals(1, eventBus().getEvents().size());
+        assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
     }
 }

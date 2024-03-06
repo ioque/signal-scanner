@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.adapters.ConfigureProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
@@ -38,8 +39,10 @@ public class FakeDIContainer {
     ScheduleTaskExecutor scheduleTaskExecutor;
     ScheduleManager scheduleManager;
     ExchangeManager exchangeManager;
+    EventBus eventBus;
 
     public FakeDIContainer() {
+        eventBus = new FakeEventBus();
         dateTimeProvider = new FakeDateTimeProvider();
         scheduleRepository = new FakeScheduleRepository();
         exchangeDataFixture = new ExchangeDataFixture();
@@ -58,7 +61,8 @@ public class FakeDIContainer {
             exchangeRepository,
             uuidProvider,
             loggerFacade,
-            new ExchangeCache()
+            new ExchangeCache(),
+            eventBus
         );
         scannerManager = new ScannerManager(
             scannerRepository,
