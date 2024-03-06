@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.testingsystem.dailyvalue.ArchivedDailyValueEntity;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
 
 import java.io.Serializable;
 import java.time.LocalDate;

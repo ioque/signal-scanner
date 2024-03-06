@@ -7,10 +7,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.Domain;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.exchange.value.statistic.TimeSeriesValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -108,14 +107,6 @@ public abstract class Instrument extends Domain {
             .sum();
     }
 
-    private Double getHistoryMedianValue() {
-        var sortedValues = dailyValues.stream().sorted().toList();
-        var n = sortedValues.size();
-        if (n % 2 != 0)
-            return sortedValues.get(n / 2).getValue();
-        return (sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0;
-    }
-
     public Optional<Double> getLastDealPrice() {
         return lastIntradayValue().map(IntradayValue::getPrice);
     }
@@ -156,25 +147,6 @@ public abstract class Instrument extends Domain {
     }
 
     public abstract List<TimeSeriesValue<Double, ChronoLocalDate>> getWaPriceSeries();
-
-    public InstrumentStatistic calcStatistic() {
-        return InstrumentStatistic
-            .builder()
-            .instrumentId(getId())
-            .ticker(ticker)
-            .todayLastPrice(getLastDealPrice().orElse(0.0))
-            .todayOpenPrice(getFirstDealPrice())
-            .todayValue(getTodayValue())
-            .buyToSellValuesRatio(getBuyToSellValueRatio())
-            .historyMedianValue(getHistoryMedianValue())
-            .closePriceSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate())).toList())
-            .openPriceSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate())).toList())
-            .openPriceSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate())).toList())
-            .valueSeries(getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate())).toList())
-            .waPriceSeries(getWaPriceSeries())
-            .todayPriceSeries(getIntradayValues().stream().map(intradayValue -> new TimeSeriesValue<>(intradayValue.getPrice(), intradayValue.getDateTime().toLocalTime())).toList())
-            .build();
-    }
 
     public abstract Double getBuyToSellValueRatio();
 }

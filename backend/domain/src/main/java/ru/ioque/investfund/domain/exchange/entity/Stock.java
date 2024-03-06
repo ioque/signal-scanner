@@ -6,11 +6,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.statistic.TimeSeriesValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.Deal;
+import ru.ioque.investfund.domain.exchange.value.DealResult;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;

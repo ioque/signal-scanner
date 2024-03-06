@@ -17,6 +17,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ScheduleUnitEntityR
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.ScheduleRepository;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
@@ -134,5 +135,11 @@ public class ControllerTestConfiguration {
     @Primary
     public DateTimeProvider mockDateTimeProvider() {
         return mock(DateTimeProvider.class);
+    }
+
+    @Bean
+    @Primary
+    public EventBus mockEventBus() {
+        return mock(EventBus.class);
     }
 }

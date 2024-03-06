@@ -11,8 +11,8 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.List;
 import java.util.UUID;

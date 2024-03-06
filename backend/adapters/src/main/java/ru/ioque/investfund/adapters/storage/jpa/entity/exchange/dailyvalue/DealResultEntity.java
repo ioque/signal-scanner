@@ -10,8 +10,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.DealResult;
 
 import java.time.LocalDate;
 

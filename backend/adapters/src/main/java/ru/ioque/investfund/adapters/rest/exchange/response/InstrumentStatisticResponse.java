@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.exchange.value.statistic.TimeSeriesValue;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
 
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;

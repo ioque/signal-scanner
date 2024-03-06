@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.Domain;
 import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

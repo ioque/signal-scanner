@@ -14,10 +14,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IndexDelta;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.exchange.value.Deal;
+import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
+import ru.ioque.investfund.domain.exchange.value.IndexDelta;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;

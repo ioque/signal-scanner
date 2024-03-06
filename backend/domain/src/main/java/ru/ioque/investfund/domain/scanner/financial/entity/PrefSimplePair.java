@@ -2,7 +2,7 @@ package ru.ioque.investfund.domain.scanner.financial.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;

@@ -3,7 +3,7 @@ package ru.ioque.investfund.domain.scanner.financial.algorithms;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;

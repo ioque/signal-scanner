@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.tradingData.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDateTime;
 

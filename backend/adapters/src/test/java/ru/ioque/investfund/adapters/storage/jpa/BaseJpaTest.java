@@ -13,9 +13,9 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IntradayValue;
+import ru.ioque.investfund.domain.exchange.value.Deal;
+import ru.ioque.investfund.domain.exchange.value.DealResult;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 import ru.ioque.investfund.domain.schedule.ScheduleUnit;
 import ru.ioque.investfund.domain.schedule.SystemModule;
 

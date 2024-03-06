@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.value.tradingData;
+package ru.ioque.investfund.domain.exchange.value;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,17 +13,16 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IndexDelta extends IntradayValue {
-    Double value;
+public class FuturesDeal extends IntradayValue {
+    Integer qnt;
 
     @Builder
-    public IndexDelta(Long number, LocalDateTime dateTime, String ticker, Double price, Double value) {
+    public FuturesDeal(Long number, LocalDateTime dateTime, String ticker, Double price, Integer qnt) {
         super(number, dateTime, ticker, price);
-        this.value = value;
+        this.qnt = qnt;
     }
-
     @Override
     public double getValue() {
-        return value;
+        return qnt * getPrice();
     }
 }

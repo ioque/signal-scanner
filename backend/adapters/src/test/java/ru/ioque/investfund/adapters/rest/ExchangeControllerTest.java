@@ -16,12 +16,12 @@ import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.tradingData.Deal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DealResult;
-import ru.ioque.investfund.domain.exchange.value.tradingData.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.tradingData.FuturesDealResult;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IndexDelta;
-import ru.ioque.investfund.domain.exchange.value.tradingData.IndexDeltaResult;
+import ru.ioque.investfund.domain.exchange.value.Deal;
+import ru.ioque.investfund.domain.exchange.value.DealResult;
+import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
+import ru.ioque.investfund.domain.exchange.value.FuturesDealResult;
+import ru.ioque.investfund.domain.exchange.value.IndexDelta;
+import ru.ioque.investfund.domain.exchange.value.IndexDeltaResult;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

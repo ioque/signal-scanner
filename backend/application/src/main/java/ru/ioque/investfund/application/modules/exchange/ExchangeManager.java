@@ -13,9 +13,9 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.StatisticCalculator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -109,12 +109,13 @@ public class ExchangeManager {
     }
 
     public List<InstrumentStatistic> getStatistics() {
+        StatisticCalculator statisticCalculator = new StatisticCalculator();
         return exchangeCache.get()
             .orElseGet(this::getExchangeFromRepo)
             .getInstruments()
             .stream()
             .filter(row -> !row.getDailyValues().isEmpty() && !row.getIntradayValues().isEmpty())
-            .map(Instrument::calcStatistic)
+            .map(statisticCalculator::calcStatistic)
             .toList();
     }
 }

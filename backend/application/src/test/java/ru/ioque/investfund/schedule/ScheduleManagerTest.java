@@ -7,7 +7,7 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.schedule.ScheduleCommand;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.tradingData.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.DailyValue;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.schedule.SystemModule;
 

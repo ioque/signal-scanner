@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.exchange.value.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.util.List;

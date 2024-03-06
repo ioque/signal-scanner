@@ -14,6 +14,7 @@ import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.domain.statistic.StatisticCalculator;
 
 import java.util.List;
 import java.util.UUID;
@@ -62,11 +63,11 @@ public class ExchangeQueryController {
 
     @GetMapping("/api/v1/instruments/{id}/statistic")
     public InstrumentStatisticResponse getInstrumentStatistic(@PathVariable UUID id) {
+        StatisticCalculator calculator = new StatisticCalculator();
         return InstrumentStatisticResponse
             .fromDomain(
-                instrumentQueryRepository
-                    .getWithTradingDataBy(id, dateTimeProvider.nowDate())
-                    .calcStatistic()
+                calculator.calcStatistic(instrumentQueryRepository
+                    .getWithTradingDataBy(id, dateTimeProvider.nowDate()))
             );
     }
 }
