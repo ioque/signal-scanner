@@ -9,7 +9,6 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
-import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
 import ru.ioque.investfund.domain.statistic.StatisticCalculator;
 
@@ -34,7 +33,6 @@ public class StatisticManager implements SystemModule {
         this.eventBus = eventBus;
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
-        this.eventBus.subscribe(TradingDataUpdatedEvent.class, this);
     }
 
     @Override

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
@@ -15,7 +14,6 @@ import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,8 +39,7 @@ public class ScannerManager implements SystemModule {
         StatisticRepository statisticRepository,
         UUIDProvider uuidProvider,
         DateTimeProvider dateTimeProvider,
-        LoggerFacade loggerFacade,
-        EventBus eventBus
+        LoggerFacade loggerFacade
     ) {
         this.scannerRepository = scannerRepository;
         this.scannerLogRepository = scannerLogRepository;
@@ -50,7 +47,6 @@ public class ScannerManager implements SystemModule {
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.loggerFacade = loggerFacade;
-        eventBus.subscribe(StatisticCalculatedEvent.class, this);
     }
 
     @Override

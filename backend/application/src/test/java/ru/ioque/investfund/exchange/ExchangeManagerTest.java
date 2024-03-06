@@ -145,7 +145,7 @@ public class ExchangeManagerTest extends BaseTest {
         assertEquals(1, getInstruments().size());
         assertEquals(3, instrument.getIntradayValues().size());
         assertEquals(4, instrument.getDailyValues().size());
-        assertEquals(4, loggerProvider().log.size());
+        assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()
                 .logContainsMessageParts(
@@ -179,7 +179,7 @@ public class ExchangeManagerTest extends BaseTest {
             131,
             getDailyTradingResultsBy("AFKS").size()
         );
-        assertEquals(4, loggerProvider().log.size());
+        assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()
                 .logContainsMessageParts(
@@ -212,7 +212,7 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().integrateTradingData();
 
         assertEquals(3, getIntradayValue("AFKS").size());
-        assertEquals(4, loggerProvider().log.size());
+        assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()
                 .logContainsMessageParts(
@@ -245,7 +245,7 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().integrateTradingData();
 
         assertEquals(3, getIntradayValue("AFKS").size());
-        assertEquals(4, loggerProvider().log.size());
+        assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()
                 .logContainsMessageParts(

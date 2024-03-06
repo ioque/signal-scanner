@@ -1,4 +1,4 @@
-package ru.ioque.investfund.exchange;
+package ru.ioque.investfund.statistic;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("EXCHANGE MANAGER - STATISTIC CALCULATION")
-public class StatisticCalculatorTest extends BaseTest {
+public class StatisticManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         exchangeDataFixture().initInstruments(List.of(afks(), imoex(), usdRub(), brf4()));

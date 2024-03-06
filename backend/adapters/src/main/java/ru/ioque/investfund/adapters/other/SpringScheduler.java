@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.modules.schedule.ScheduleManager;
+import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SpringScheduler {
-    ScheduleManager scheduleManager;
+    ExchangeManager exchangeManager;
     @Async
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
-    public void scheduleManagerRunTasks() {
-        scheduleManager.executeSchedule();
+    public void integrateTradingData() {
+        exchangeManager.integrateTradingData();
     }
 }

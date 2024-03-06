@@ -66,20 +66,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberPSecurityAndHistoryTradingData();
         initPositiveDeals();
-
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        scheduleManager().executeSchedule();
-
-        var instruments = getInstruments();
-        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
-        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
-
-        assertEquals(7, sber.getDailyValues().size());
-        assertEquals(7, sberp.getDailyValues().size());
-        assertEquals(1, sber.getIntradayValues().size());
-        assertEquals(1, sberp.getIntradayValues().size());
-
         addScanner(
             "Анализ пар преф-обычка.",
             new PrefSimpleSignalConfig(1.0),
@@ -87,7 +75,16 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
                 .map(Instrument::getId)
                 .toList()
         );
+
         runWorkPipline();
+
+        var instruments = getInstruments();
+        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
+        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
+        assertEquals(7, sber.getDailyValues().size());
+        assertEquals(7, sberp.getDailyValues().size());
+        assertEquals(1, sber.getIntradayValues().size());
+        assertEquals(1, sberp.getIntradayValues().size());
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -101,26 +98,23 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberPSecurityAndHistoryTradingData();
         initNegativeDeals();
-
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        scheduleManager().executeSchedule();
-
-        var instruments = getInstruments();
-        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
-        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
-
-        assertEquals(7, sber.getDailyValues().size());
-        assertEquals(7, sberp.getDailyValues().size());
-        assertEquals(1, sber.getIntradayValues().size());
-        assertEquals(1, sberp.getIntradayValues().size());
-
         addScanner(
             "Анализ пар преф-обычка.",
             new PrefSimpleSignalConfig(1.0),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
+
         runWorkPipline();
+
+        var instruments = getInstruments();
+        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
+        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
+        assertEquals(7, sber.getDailyValues().size());
+        assertEquals(7, sberp.getDailyValues().size());
+        assertEquals(1, sber.getIntradayValues().size());
+        assertEquals(1, sberp.getIntradayValues().size());
         assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 

@@ -75,8 +75,7 @@ public class FakeDIContainer {
             statisticRepository,
             uuidProvider,
             dateTimeProvider,
-            loggerFacade,
-            eventBus
+            loggerFacade
         );
         scheduleTaskExecutor = new ScheduleTaskExecutor(
             dateTimeProvider,
