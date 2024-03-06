@@ -11,7 +11,6 @@ import ru.ioque.investfund.domain.DomainException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -30,10 +29,7 @@ public class InstrumentStatistic {
     Double todayLastPrice;
     Double todayOpenPrice;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
-    List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
-    List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
-    List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
     Double buyToSellValuesRatio;
 
     public boolean isRiseToday() {

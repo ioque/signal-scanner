@@ -18,11 +18,6 @@ public class InMemoryEventBus implements EventBus {
     List<DomainEvent> events = new CopyOnWriteArrayList<>();
     Map<SystemModule, List<Class<? extends DomainEvent>>> subscribers = new ConcurrentHashMap<>();
 
-    public void clear() {
-        events.clear();
-        subscribers.clear();
-    }
-
     @Override
     public void publish(DomainEvent event) {
         if (events.stream().filter(row -> row.getId().equals(event.getId())).findFirst().isEmpty()) {

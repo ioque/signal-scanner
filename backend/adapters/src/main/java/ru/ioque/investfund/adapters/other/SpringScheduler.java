@@ -18,6 +18,6 @@ public class SpringScheduler {
     @Async
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void integrateTradingData() {
-        exchangeManager.integrateTradingData();
+        exchangeManager.execute();
     }
 }

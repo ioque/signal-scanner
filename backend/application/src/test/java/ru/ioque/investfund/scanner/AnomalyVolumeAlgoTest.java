@@ -206,7 +206,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         statisticManager().calcStatistic();
         dataScannerManager().execute();
         loggerProvider().clearLogs();

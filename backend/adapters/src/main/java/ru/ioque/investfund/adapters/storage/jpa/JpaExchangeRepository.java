@@ -31,6 +31,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
     InstrumentEntityRepository instrumentEntityRepository;
     DailyValueEntityRepository dailyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
+    ExchangeCache exchangeCache;
 
     @Override
     @Transactional(readOnly = true)
@@ -53,7 +54,8 @@ public class JpaExchangeRepository implements ExchangeRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<Exchange> getBy(LocalDate today) {
-        return exchangeRepository
+        if (exchangeCache.get().isPresent()) return exchangeCache.get();
+        Optional<Exchange> exchange = exchangeRepository
             .findAll()
             .stream()
             .findFirst()
@@ -77,6 +79,8 @@ public class JpaExchangeRepository implements ExchangeRepository {
                         )
                         .toList())
             );
+        exchange.ifPresent(exchangeCache::put);
+        return exchange;
     }
 
     @Override
@@ -106,6 +110,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
                     .toList());
             }))
             .forEach(CompletableFuture::join);
+        exchangeCache.put(exchange);
     }
 
     private Optional<LocalDate> getLastDate(String ticker) {

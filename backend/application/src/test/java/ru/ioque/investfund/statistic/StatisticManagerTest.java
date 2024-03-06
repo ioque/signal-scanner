@@ -1,11 +1,9 @@
 package ru.ioque.investfund.statistic;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
@@ -53,7 +51,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -63,10 +61,7 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
         assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getOpenPriceSeries().size());
         assertEquals(4, statistic.getWaPriceSeries().size());
-        assertEquals(4, statistic.getValueSeries().size());
-        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -95,7 +90,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -105,10 +100,7 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
         assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getOpenPriceSeries().size());
         assertEquals(0, statistic.getWaPriceSeries().size());
-        assertEquals(4, statistic.getValueSeries().size());
-        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -137,7 +129,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -147,10 +139,7 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
         assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getOpenPriceSeries().size());
         assertEquals(4, statistic.getWaPriceSeries().size());
-        assertEquals(4, statistic.getValueSeries().size());
-        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -179,7 +168,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -189,10 +178,7 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
         assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getOpenPriceSeries().size());
         assertEquals(0, statistic.getWaPriceSeries().size());
-        assertEquals(4, statistic.getValueSeries().size());
-        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -203,7 +189,7 @@ public class StatisticManagerTest extends BaseTest {
         Результат: нет статистических данных.
         """)
     void testCase5() {
-        assertEquals(0, exchangeManager().getStatistics().size());
+        assertEquals(0, statisticRepository().getInstrumentStatistics().size());
     }
 
     @Test
@@ -223,8 +209,8 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
-        assertEquals(0, exchangeManager().getStatistics().size());
+        exchangeManager().execute();
+        assertEquals(0, statisticRepository().getInstrumentStatistics().size());
     }
 
     @Test
@@ -245,8 +231,8 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
-        assertEquals(0, exchangeManager().getStatistics().size());
+        exchangeManager().execute();
+        assertEquals(0, statisticRepository().getInstrumentStatistics().size());
     }
 
     @Test
@@ -273,7 +259,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -309,7 +295,7 @@ public class StatisticManagerTest extends BaseTest {
             )
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         statisticManager().calcStatistic();
 
@@ -320,29 +306,5 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(19D, statistic.getTodayLastPrice());
         var error = assertThrows(DomainException.class, () -> statistic.isRiseForPrevDay(0.01));
         assertEquals("Нет данных по итогам торгов за 2024-01-15.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName(
-        """
-        T10. Биржа не зарегистрирована. Запрос статистики.
-        Результат: ошибка, "Биржа не зарегистрирована".
-        """
-    )
-    void testCase10() {
-        exchangeRepository().clear();
-
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().getStatistics());
-        assertEquals("Биржа не зарегистрирована.", error.getMessage());
-    }
-
-
-    @Test
-    @Disabled
-    @DisplayName("""
-        T11. Успешный расчет статистических данных создает событие "Статистика обновлена"
-        """)
-    void testCase11() {
-
     }
 }

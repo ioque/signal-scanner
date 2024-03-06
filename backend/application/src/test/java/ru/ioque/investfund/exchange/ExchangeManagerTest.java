@@ -140,7 +140,7 @@ public class ExchangeManagerTest extends BaseTest {
         );
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         final var instrument = getInstruments().get(0);
         assertEquals(1, getInstruments().size());
         assertEquals(3, instrument.getIntradayValues().size());
@@ -173,7 +173,7 @@ public class ExchangeManagerTest extends BaseTest {
         ));
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(
             131,
@@ -209,7 +209,7 @@ public class ExchangeManagerTest extends BaseTest {
         );
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(3, getIntradayValue("AFKS").size());
         assertEquals(2, loggerProvider().log.size());
@@ -242,7 +242,7 @@ public class ExchangeManagerTest extends BaseTest {
         );
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(3, getIntradayValue("AFKS").size());
         assertEquals(2, loggerProvider().log.size());
@@ -270,7 +270,7 @@ public class ExchangeManagerTest extends BaseTest {
             buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
@@ -281,7 +281,7 @@ public class ExchangeManagerTest extends BaseTest {
             buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(5, getIntradayValue("AFKS").size());
         assertTrue(
@@ -305,12 +305,12 @@ public class ExchangeManagerTest extends BaseTest {
         integrateInstruments(afks());
         initTradingResults(generateTradingResultsBy("AFKS", nowMinus3Month(), nowMinus1Days()));
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
         initTradingResults(generateTradingResultsBy("AFKS", nowMinus3Month(), nowMinus1Days()));
 
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(66, getDailyTradingResultsBy("AFKS").size());
         assertTrue(
@@ -333,7 +333,7 @@ public class ExchangeManagerTest extends BaseTest {
         integrateInstruments(afks());
         initDealDatas(buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy("AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(0, getDailyTradingResultsBy("AFKS").size());
         assertEquals(0, getIntradayValue("AFKS").size());
@@ -352,7 +352,7 @@ public class ExchangeManagerTest extends BaseTest {
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         clearLogs();
 
         exchangeManager().disableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
@@ -365,7 +365,7 @@ public class ExchangeManagerTest extends BaseTest {
             buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
 
         assertEquals(1, getDailyTradingResultsBy("AFKS").size());
         assertEquals(1, getIntradayValue("AFKS").size());
@@ -414,7 +414,7 @@ public class ExchangeManagerTest extends BaseTest {
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().integrateTradingData();
+        exchangeManager().execute();
         assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
     }
 }

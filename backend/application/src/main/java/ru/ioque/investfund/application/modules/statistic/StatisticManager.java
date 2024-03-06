@@ -43,7 +43,8 @@ public class StatisticManager implements SystemModule {
     public void calcStatistic() {
         statisticRepository.saveAll(
             exchangeRepository
-                .get()
+                .getBy(dateTimeProvider.nowDate())
+                .orElseThrow()
                 .getInstruments()
                 .stream()
                 .filter(row -> !row.getIntradayValues().isEmpty() && !row.getDailyValues().isEmpty())

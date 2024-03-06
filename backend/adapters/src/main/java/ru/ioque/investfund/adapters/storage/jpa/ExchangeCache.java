@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.exchange;
+package ru.ioque.investfund.adapters.storage.jpa;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;

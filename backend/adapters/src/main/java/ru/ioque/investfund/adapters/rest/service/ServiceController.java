@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.other.InMemoryEventBus;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
+import ru.ioque.investfund.adapters.storage.jpa.ExchangeCache;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
@@ -35,6 +36,7 @@ public class ServiceController {
     SignalScannerEntityRepository signalScannerEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
+    ExchangeCache exchangeCache;
     InMemoryEventBus eventBus;
     ExchangeManager exchangeManager;
     DateTimeProvider dateTimeProvider;
@@ -54,8 +56,7 @@ public class ServiceController {
         signalScannerEntityRepository.deleteAll();
         archivedIntradayValueEntityRepository.deleteAll();
         archivedDailyValueEntityRepository.deleteAll();
-        eventBus.clear();
-        exchangeManager.clearCache();
+        exchangeCache.clear();
         dateTimeProvider.initToday(null);
     }
 }

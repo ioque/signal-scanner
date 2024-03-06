@@ -29,7 +29,7 @@ public class ExchangeCommandController {
 
     @PostMapping("/api/v1/daily-integrate")
     public void integrateTradingData() {
-        exchangeManager.integrateTradingData();
+        exchangeManager.execute();
     }
 
     @PatchMapping("/api/v1/enable-update")

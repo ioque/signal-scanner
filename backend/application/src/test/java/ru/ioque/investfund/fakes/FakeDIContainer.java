@@ -13,7 +13,6 @@ import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.exchange.ExchangeCache;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.modules.statistic.StatisticManager;
@@ -59,7 +58,6 @@ public class FakeDIContainer {
             exchangeRepository,
             uuidProvider,
             loggerFacade,
-            new ExchangeCache(),
             eventBus
         );
         scannerManager = new ScannerManager(

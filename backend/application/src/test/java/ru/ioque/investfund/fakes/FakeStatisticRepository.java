@@ -1,5 +1,6 @@
 package ru.ioque.investfund.fakes;
 
+import lombok.Getter;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FakeStatisticRepository implements StatisticRepository {
+    @Getter
     Map<UUID, InstrumentStatistic> instrumentStatistics = new ConcurrentHashMap<>();
     @Override
     public void saveAll(List<InstrumentStatistic> statistics) {
