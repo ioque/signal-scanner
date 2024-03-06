@@ -28,4 +28,10 @@ public class BaseScannerTest extends BaseTest {
         );
         loggerProvider().clearLogs();
     }
+
+    protected void runWorkPipline() {
+        exchangeManager().integrateTradingData();
+        statisticManager().calcStatistic();
+        dataScannerManager().scanning();
+    }
 }

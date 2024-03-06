@@ -7,13 +7,16 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -26,13 +29,14 @@ import java.util.function.Supplier;
 public class ScannerManager {
     ScannerRepository scannerRepository;
     ScannerLogRepository scannerLogRepository;
+    StatisticRepository statisticRepository;
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     LoggerFacade loggerFacade;
 
-    public void scanning(List<InstrumentStatistic> statistics) {
+    public void scanning() {
         loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
-        runScanners(statistics);
+        runScanners();
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
@@ -66,31 +70,38 @@ public class ScannerManager {
         loggerFacade.logUpdateSignalScanner(command);
     }
 
-    private void runScanners(List<InstrumentStatistic> statistics) {
+    private void runScanners() {
         scannerRepository
             .getAll()
             .stream()
             .filter(row -> row.isTimeForExecution(dateTimeProvider.nowDateTime()))
-            .forEach(scanner -> runScanner(statistics, scanner));
+            .forEach(this::runScanner);
     }
 
     private Supplier<ApplicationException> scannerNotFound(UpdateScannerCommand command) {
         return () -> new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
     }
 
-    private void runScanner(List<InstrumentStatistic> statistics, SignalScannerBot scanner) {
+    private void runScanner(SignalScannerBot scanner) {
         loggerFacade.logRunWorkScanner(scanner);
         scannerLogRepository
             .saveAll(
                 scanner.getId(),
                 scanner.scanning(
-                    statistics
-                        .stream()
-                        .filter(row -> scanner.getObjectIds().contains(row.getInstrumentId()))
-                        .toList(), dateTimeProvider.nowDateTime()
+                    getStatistics(scanner),
+                    dateTimeProvider.nowDateTime()
                 )
             );
         scannerRepository.save(scanner);
         loggerFacade.logFinishWorkScanner(scanner);
+    }
+
+    private List<InstrumentStatistic> getStatistics(SignalScannerBot scanner) {
+        List<InstrumentStatistic> statistics = scanner.getObjectIds().stream().map(statisticRepository::getBy).filter(
+            Objects::nonNull).toList();
+        if (statistics.isEmpty()) {
+            throw new DomainException("Нет статистических данных для выбранных инструментов.");
+        }
+        return scanner.getObjectIds().stream().map(statisticRepository::getBy).toList();
     }
 }

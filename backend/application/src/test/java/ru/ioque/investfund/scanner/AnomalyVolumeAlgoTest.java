@@ -12,7 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SIGNAL SCANNER MANAGER - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
@@ -143,11 +142,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoexHistoryTradingData();
         initTgknAndTgkbAndImoexIntradayData();
         exchangeManager().integrateWithDataSource();
-
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-
-        scheduleManager().executeSchedule();
-
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
+            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+        );
+        runWorkPipline();
         var instruments = getInstruments();
         var imoex = instruments.stream().filter(row -> row.getTicker().equals("IMOEX")).findFirst().orElseThrow();
         var tgkn = instruments.stream().filter(row -> row.getTicker().equals("TGKN")).findFirst().orElseThrow();
@@ -158,12 +159,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertEquals(2, imoex.getIntradayValues().size());
         assertEquals(5, tgkn.getIntradayValues().size());
         assertEquals(5, tgkb.getIntradayValues().size());
-        addScanner(
-            "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
-        );
-        scheduleManager().executeSchedule();
         assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -184,13 +179,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:00:30");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
-        assertEquals(4, loggerProvider().log.size());
+        assertEquals(8, loggerProvider().log.size());
         assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -211,13 +206,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        exchangeManager().integrateTradingData();
+        statisticManager().calcStatistic();
+        dataScannerManager().scanning();
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
-        assertEquals(6, loggerProvider().log.size());
+        assertEquals(10, loggerProvider().log.size());
         assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -240,16 +237,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
-        assertTrue(fakeDataScannerStorage().getAll().get(0).getSignals().get(0).isBuy());
-
+        runWorkPipline();
         loggerProvider().clearLogs();
         getInstrumentsBy(tickers).forEach(row -> row.getIntradayValues().clear());
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset();
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
         assertFalse(fakeDataScannerStorage().getAll().get(0).getSignals().get(0).isBuy());

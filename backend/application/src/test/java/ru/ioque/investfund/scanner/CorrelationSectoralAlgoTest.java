@@ -144,7 +144,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         assertEquals(2, getTatn().getDailyValues().size());
         assertEquals(3, getTatn().getIntradayValues().size());
@@ -170,7 +170,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         assertEquals(2, getTatn().getDailyValues().size());
         assertEquals(3, getTatn().getIntradayValues().size());
@@ -195,10 +195,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
         loggerProvider().clearLogs();
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         initTodayDateTime("2023-12-22T18:00:00");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
@@ -221,10 +221,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
         loggerProvider().clearLogs();
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         initTodayDateTime("2023-12-23T13:00:00");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }

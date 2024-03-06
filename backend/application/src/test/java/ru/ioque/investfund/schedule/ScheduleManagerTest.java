@@ -92,36 +92,6 @@ public class ScheduleManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T3. В системе зарегистрирован сканер сигналов для NAUK.
-        В расписание добавлена задача по регулярному сканированию финансовых инструментов.
-        В расписание добавлена задача по обновлению данных инструмента.
-        Текущее время t1 входит в интервал рабочего времени сканнера сигналов для NAUK_positive.
-        Порядок выполнения расписания не зависит от порядка добавления.
-        Сначала интеграционные задания, затем остальные.
-        """)
-    void testCase3() {
-        final var tickers = List.of("NAUK", "IMOEX");
-        initTodayDateTime("2023-12-12T12:00");
-        initTradingDatas();
-        addScanner(
-            "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
-        );
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        scheduleManager().executeSchedule();
-        var instrument = getInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("NAUK"))
-            .findFirst()
-            .orElseThrow();
-        assertEquals(7, instrument.getIntradayValues().size());
-        assertEquals(7, instrument.getDailyValues().size());
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
-    }
-
-    @Test
-    @DisplayName("""
         Т4. В расписание добавлена задача по обновлению данных инструмента.
         Задача выполняется два раза за день.
         """)

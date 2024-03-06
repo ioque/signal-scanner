@@ -72,6 +72,7 @@ public class FakeDIContainer {
         scannerManager = new ScannerManager(
             scannerRepository,
             scannerLogRepository,
+            statisticRepository,
             uuidProvider,
             dateTimeProvider,
             loggerFacade

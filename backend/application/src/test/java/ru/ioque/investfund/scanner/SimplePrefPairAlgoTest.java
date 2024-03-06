@@ -87,7 +87,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
                 .map(Instrument::getId)
                 .toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -120,7 +120,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             new PrefSimpleSignalConfig(1.0),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -140,10 +140,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             new PrefSimpleSignalConfig(1.0),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -163,10 +163,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             new PrefSimpleSignalConfig(1.0),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
         assertEquals(6, scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId()).size());
     }

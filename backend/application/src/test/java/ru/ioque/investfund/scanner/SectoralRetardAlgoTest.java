@@ -114,7 +114,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         var instruments = getInstruments();
         var rosn = instruments.stream().filter(row -> row.getTicker().equals("ROSN")).findFirst().orElseThrow();
@@ -151,7 +151,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
 
         var instruments = getInstruments();
         var rosn = instruments.stream().filter(row -> row.getTicker().equals("ROSN")).findFirst().orElseThrow();
@@ -186,11 +186,11 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             new SectoralRetardSignalConfig(0.015, 0.015),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-22T13:30:00");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
@@ -210,11 +210,11 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             new SectoralRetardSignalConfig(0.015, 0.015),
             getInstrumentsBy(tickers).map(Instrument::getId).toList()
         );
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-22T14:00:00");
 
-        scheduleManager().executeSchedule();
+        runWorkPipline();
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
