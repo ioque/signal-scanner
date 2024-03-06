@@ -4,9 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -35,12 +35,12 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
-        boolean futuresIsRiseOvernight = getFuturesStatistic(statistics).isRiseOvernight(futuresOvernightScale);
+        boolean futuresIsRiseOvernight = getFuturesStatistic(finInstruments).isRiseOvernight(futuresOvernightScale);
         logs.add(runWorkMessage(futuresIsRiseOvernight));
-        for (var statistic : analyzeInstruments(statistics)) {
+        for (var statistic : analyzeInstruments(finInstruments)) {
             logs.add(parametersMessage(statistic));
             if (futuresIsRiseOvernight && statistic.isRiseOvernight(stockOvernightScale)) {
                 signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), true));
@@ -53,28 +53,28 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
             .build();
     }
 
-    private InstrumentStatistic getFuturesStatistic(List<InstrumentStatistic> statistics) {
-        return statistics
+    private FinInstrument getFuturesStatistic(List<FinInstrument> finInstruments) {
+        return finInstruments
             .stream()
             .filter(row -> futuresTicker.equals(row.getTicker()))
             .findFirst()
             .orElseThrow(() -> new DomainException("Не добавлен фьючерс на основной товар сектора."));
     }
 
-    private List<InstrumentStatistic> analyzeInstruments(List<InstrumentStatistic> statistics) {
-        return statistics.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
+    private List<FinInstrument> analyzeInstruments(List<FinInstrument> finInstruments) {
+        return finInstruments.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
     }
 
     private ScannerLog parametersMessage(
-        InstrumentStatistic statistic
+        FinInstrument finInstrument
     ) {
         return new ScannerLog(
             String
                 .format(
                     "Инструмент %s. ",
-                    statistic.getTicker()
+                    finInstrument.getTicker()
                 )
-                .concat(statistic.isRiseOvernight(stockOvernightScale) ? "Инструмент рос в предыдущие два дня."
+                .concat(finInstrument.isRiseOvernight(stockOvernightScale) ? "Инструмент рос в предыдущие два дня."
                     : "Инструмент не рос в предыдущие два дня."),
             LocalDateTime.now()
         );

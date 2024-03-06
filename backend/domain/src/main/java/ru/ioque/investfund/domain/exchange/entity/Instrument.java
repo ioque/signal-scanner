@@ -9,11 +9,9 @@ import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.Domain;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
-import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -145,8 +143,4 @@ public abstract class Instrument extends Domain {
                 .orElse("<_>")
         );
     }
-
-    public abstract List<TimeSeriesValue<Double, ChronoLocalDate>> getWaPriceSeries();
-
-    public abstract Double getBuyToSellValueRatio();
 }

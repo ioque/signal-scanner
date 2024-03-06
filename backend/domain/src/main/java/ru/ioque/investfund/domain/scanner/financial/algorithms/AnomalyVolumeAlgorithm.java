@@ -4,9 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -41,22 +41,22 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, final List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, final List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
-        final boolean indexIsRiseToday = getMarketIndex(statistics).isRiseToday();
+        final boolean indexIsRiseToday = getMarketIndex(finInstruments).isRiseToday();
         logs.add(runWorkMessage(indexIsRiseToday));
-        for (final InstrumentStatistic statistic : getAnalyzeStatistics(statistics)) {
-            final double medianHistoryValue = statistic.getHistoryMedianValue();
-            final double value = statistic.getTodayValue();
+        for (final FinInstrument finInstrument : getAnalyzeStatistics(finInstruments)) {
+            final double medianHistoryValue = finInstrument.getHistoryMedianValue();
+            final double value = finInstrument.getTodayValue();
             final double multiplier = value / medianHistoryValue;
-            logs.add(parametersMessage(statistic, value, medianHistoryValue, multiplier));
-            if (multiplier > scaleCoefficient && indexIsRiseToday && statistic.isRiseToday() && statistic.getBuyToSellValuesRatio() > 0.5) {
-                signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), true));
+            logs.add(parametersMessage(finInstrument, value, medianHistoryValue, multiplier));
+            if (multiplier > scaleCoefficient && indexIsRiseToday && finInstrument.isRiseToday() && finInstrument.getBuyToSellValuesRatio() > 0.5) {
+                signals.add(new Signal(dateTimeNow, finInstrument.getInstrumentId(), true));
             }
 
-            if (multiplier > scaleCoefficient && !indexIsRiseToday && !statistic.isRiseToday() && statistic.getBuyToSellValuesRatio() < 0.5) {
-                signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), false));
+            if (multiplier > scaleCoefficient && !indexIsRiseToday && !finInstrument.isRiseToday() && finInstrument.getBuyToSellValuesRatio() < 0.5) {
+                signals.add(new Signal(dateTimeNow, finInstrument.getInstrumentId(), false));
             }
         }
         logs.add(finishWorkMessage(signals));
@@ -66,12 +66,12 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
             .build();
     }
 
-    private List<InstrumentStatistic> getAnalyzeStatistics(List<InstrumentStatistic> statistics) {
-        return statistics.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
+    private List<FinInstrument> getAnalyzeStatistics(List<FinInstrument> finInstruments) {
+        return finInstruments.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
     }
 
-    private InstrumentStatistic getMarketIndex(final List<InstrumentStatistic> statistics) {
-        return statistics
+    private FinInstrument getMarketIndex(final List<FinInstrument> finInstruments) {
+        return finInstruments
             .stream()
             .filter(row -> row.getTicker().equals(indexTicker))
             .findFirst()
@@ -79,7 +79,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
     }
 
     private ScannerLog parametersMessage(
-        InstrumentStatistic statistic,
+        FinInstrument finInstrument,
         double value,
         double waHistoryValue,
         double multiplier
@@ -87,7 +87,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
         return new ScannerLog(
             String.format(
                 "Инструмент %s, текущий объем торгов внутри дня: %s, средневзвешенный исторический объем: %s, отношение текущего объема к историческому: %s.",
-                statistic.getTicker(),
+                finInstrument.getTicker(),
                 value,
                 waHistoryValue,
                 multiplier

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.domain.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
@@ -12,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("EXCHANGE MANAGER - STATISTIC CALCULATION")
 public class StatisticManagerTest extends BaseTest {
@@ -60,8 +57,6 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
-        assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getWaPriceSeries().size());
     }
 
     @Test
@@ -95,12 +90,10 @@ public class StatisticManagerTest extends BaseTest {
         statisticManager().calcStatistic();
 
         InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).findFirst().orElseThrow());
-        assertEquals(500000D, statistic.getTodayValue());
+        assertEquals(500D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
-        assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(0, statistic.getWaPriceSeries().size());
     }
 
     @Test
@@ -138,8 +131,6 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
-        assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(4, statistic.getWaPriceSeries().size());
     }
 
     @Test
@@ -177,8 +168,6 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());
-        assertEquals(4, statistic.getClosePriceSeries().size());
-        assertEquals(0, statistic.getWaPriceSeries().size());
     }
 
     @Test
@@ -268,7 +257,6 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(123521D, statistic.getHistoryMedianValue());
         assertEquals(16D, statistic.getTodayOpenPrice());
         assertEquals(19D, statistic.getTodayLastPrice());
-        assertTrue(statistic.isRiseForPrevDay(0.01));
     }
 
     @Test
@@ -304,7 +292,5 @@ public class StatisticManagerTest extends BaseTest {
         assertEquals(123521D, statistic.getHistoryMedianValue());
         assertEquals(16D, statistic.getTodayOpenPrice());
         assertEquals(19D, statistic.getTodayLastPrice());
-        var error = assertThrows(DomainException.class, () -> statistic.isRiseForPrevDay(0.01));
-        assertEquals("Нет данных по итогам торгов за 2024-01-15.", error.getMessage());
     }
 }

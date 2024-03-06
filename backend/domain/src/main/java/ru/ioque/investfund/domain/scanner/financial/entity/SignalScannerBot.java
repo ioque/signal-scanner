@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.Domain;
 import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,12 +51,12 @@ public class SignalScannerBot extends Domain {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<ScannerLog> scanning(List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
-        if (statistics.isEmpty()) {
+    public List<ScannerLog> scanning(List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
+        if (finInstruments.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
         lastExecutionDateTime = dateTimeNow;
-        ScanningResult scanningResult = config.factorySearchAlgorithm().run(getId(), statistics, dateTimeNow);
+        ScanningResult scanningResult = config.factorySearchAlgorithm().run(getId(), finInstruments, dateTimeNow);
         processSignals(scanningResult);
         return scanningResult.getLogs();
     }

@@ -6,11 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,17 +47,7 @@ public class Futures extends Instrument {
     }
 
     @Override
-    public List<TimeSeriesValue<Double, ChronoLocalDate>> getWaPriceSeries() {
-        return List.of();
-    }
-
-    @Override
     public Double getTodayValue() {
         return super.getTodayValue() * lotVolume;
-    }
-
-    @Override
-    public Double getBuyToSellValueRatio() {
-        return 1D;
     }
 }

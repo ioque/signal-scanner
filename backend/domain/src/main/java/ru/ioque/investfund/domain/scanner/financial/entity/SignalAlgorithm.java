@@ -2,7 +2,6 @@ package ru.ioque.investfund.domain.scanner.financial.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,5 +14,5 @@ public abstract class SignalAlgorithm {
     public SignalAlgorithm(String name) {
         this.name = name;
     }
-    public abstract ScanningResult run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow);
+    public abstract ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow);
 }

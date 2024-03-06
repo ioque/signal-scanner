@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.statistic;
+package ru.ioque.investfund.domain.scanner.financial.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

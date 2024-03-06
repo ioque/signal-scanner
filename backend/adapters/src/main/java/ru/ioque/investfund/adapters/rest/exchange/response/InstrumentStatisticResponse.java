@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.statistic.TimeSeriesValue;
+import ru.ioque.investfund.domain.scanner.financial.entity.TimeSeriesValue;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;

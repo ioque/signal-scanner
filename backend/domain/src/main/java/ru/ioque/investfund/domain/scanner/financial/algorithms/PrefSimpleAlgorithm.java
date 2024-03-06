@@ -4,10 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
 import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
 
@@ -28,11 +28,11 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<InstrumentStatistic> statistics, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
-        findAllPrefAndSimplePairs(statistics).forEach(pair -> {
+        findAllPrefAndSimplePairs(finInstruments).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
@@ -48,23 +48,23 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
             .build();
     }
 
-    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<InstrumentStatistic> dataModels) {
-        return dataModels
+    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<FinInstrument> finInstruments) {
+        return finInstruments
             .stream()
-            .filter(InstrumentStatistic::isPref)
-            .map(pref -> new PrefSimplePair(pref, findSimplePair(dataModels, pref)))
+            .filter(FinInstrument::isPref)
+            .map(pref -> new PrefSimplePair(pref, findSimplePair(finInstruments, pref)))
             .toList();
     }
 
-    private InstrumentStatistic findSimplePair(
-        List<InstrumentStatistic> dataModels,
-        InstrumentStatistic statistic
+    private FinInstrument findSimplePair(
+        List<FinInstrument> finInstruments,
+        FinInstrument finInstrument
     ) {
-        return dataModels
+        return finInstruments
             .stream()
-            .filter(statistic::isSimplePair)
+            .filter(finInstrument::isSimplePair)
             .findFirst()
-            .orElseThrow(() -> new DomainException("Для привилегированной акции " + statistic.getTicker() + " не найдена обычная акция."));
+            .orElseThrow(() -> new DomainException("Для привилегированной акции " + finInstrument.getTicker() + " не найдена обычная акция."));
     }
 
     private ScannerLog runWorkMessage() {
