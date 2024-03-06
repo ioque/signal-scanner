@@ -55,18 +55,18 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(50D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(10D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayLastPrice());
-        assertEquals(4, instrumentStatistics.get(0).getClosePriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getOpenPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getWaPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getValueSeries().size());
-        assertEquals(5, instrumentStatistics.get(0).getTodayPriceSeries().size());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(50D, statistic.getTodayValue());
+        assertEquals(10D, statistic.getHistoryMedianValue());
+        assertEquals(10D, statistic.getTodayOpenPrice());
+        assertEquals(10D, statistic.getTodayLastPrice());
+        assertEquals(4, statistic.getClosePriceSeries().size());
+        assertEquals(4, statistic.getOpenPriceSeries().size());
+        assertEquals(4, statistic.getWaPriceSeries().size());
+        assertEquals(4, statistic.getValueSeries().size());
+        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -97,18 +97,18 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(500000D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(10D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayLastPrice());
-        assertEquals(4, instrumentStatistics.get(0).getClosePriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getOpenPriceSeries().size());
-        assertEquals(0, instrumentStatistics.get(0).getWaPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getValueSeries().size());
-        assertEquals(5, instrumentStatistics.get(0).getTodayPriceSeries().size());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(500000D, statistic.getTodayValue());
+        assertEquals(10D, statistic.getHistoryMedianValue());
+        assertEquals(10D, statistic.getTodayOpenPrice());
+        assertEquals(10D, statistic.getTodayLastPrice());
+        assertEquals(4, statistic.getClosePriceSeries().size());
+        assertEquals(4, statistic.getOpenPriceSeries().size());
+        assertEquals(0, statistic.getWaPriceSeries().size());
+        assertEquals(4, statistic.getValueSeries().size());
+        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -139,18 +139,18 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(50D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(10D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayLastPrice());
-        assertEquals(4, instrumentStatistics.get(0).getClosePriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getOpenPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getWaPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getValueSeries().size());
-        assertEquals(5, instrumentStatistics.get(0).getTodayPriceSeries().size());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(50D, statistic.getTodayValue());
+        assertEquals(10D, statistic.getHistoryMedianValue());
+        assertEquals(10D, statistic.getTodayOpenPrice());
+        assertEquals(10D, statistic.getTodayLastPrice());
+        assertEquals(4, statistic.getClosePriceSeries().size());
+        assertEquals(4, statistic.getOpenPriceSeries().size());
+        assertEquals(4, statistic.getWaPriceSeries().size());
+        assertEquals(4, statistic.getValueSeries().size());
+        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -181,18 +181,18 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(50D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(10D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(10D, instrumentStatistics.get(0).getTodayLastPrice());
-        assertEquals(4, instrumentStatistics.get(0).getClosePriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getOpenPriceSeries().size());
-        assertEquals(0, instrumentStatistics.get(0).getWaPriceSeries().size());
-        assertEquals(4, instrumentStatistics.get(0).getValueSeries().size());
-        assertEquals(5, instrumentStatistics.get(0).getTodayPriceSeries().size());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(50D, statistic.getTodayValue());
+        assertEquals(10D, statistic.getHistoryMedianValue());
+        assertEquals(10D, statistic.getTodayOpenPrice());
+        assertEquals(10D, statistic.getTodayLastPrice());
+        assertEquals(4, statistic.getClosePriceSeries().size());
+        assertEquals(4, statistic.getOpenPriceSeries().size());
+        assertEquals(0, statistic.getWaPriceSeries().size());
+        assertEquals(4, statistic.getValueSeries().size());
+        assertEquals(5, statistic.getTodayPriceSeries().size());
     }
 
     @Test
@@ -275,14 +275,14 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(271000D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(123521D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(16D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(19D, instrumentStatistics.get(0).getTodayLastPrice());
-        assertTrue(instrumentStatistics.get(0).isRiseForPrevDay(0.01));
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(271000D, statistic.getTodayValue());
+        assertEquals(123521D, statistic.getHistoryMedianValue());
+        assertEquals(16D, statistic.getTodayOpenPrice());
+        assertEquals(19D, statistic.getTodayLastPrice());
+        assertTrue(statistic.isRiseForPrevDay(0.01));
     }
 
     @Test
@@ -311,14 +311,14 @@ public class StatisticCalculatorTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().integrateTradingData();
 
-        List<InstrumentStatistic> instrumentStatistics = exchangeManager().getStatistics();
+        statisticManager().calcStatistic();
 
-        assertEquals(1, instrumentStatistics.size());
-        assertEquals(271000D, instrumentStatistics.get(0).getTodayValue());
-        assertEquals(123521D, instrumentStatistics.get(0).getHistoryMedianValue());
-        assertEquals(16D, instrumentStatistics.get(0).getTodayOpenPrice());
-        assertEquals(19D, instrumentStatistics.get(0).getTodayLastPrice());
-        var error = assertThrows(DomainException.class, () -> instrumentStatistics.get(0).isRiseForPrevDay(0.01));
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        assertEquals(271000D, statistic.getTodayValue());
+        assertEquals(123521D, statistic.getHistoryMedianValue());
+        assertEquals(16D, statistic.getTodayOpenPrice());
+        assertEquals(19D, statistic.getTodayLastPrice());
+        var error = assertThrows(DomainException.class, () -> statistic.isRiseForPrevDay(0.01));
         assertEquals("Нет данных по итогам торгов за 2024-01-15.", error.getMessage());
     }
 
