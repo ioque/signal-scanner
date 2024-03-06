@@ -113,8 +113,12 @@ public class ScannerManager implements SystemModule {
     }
 
     private List<InstrumentStatistic> getStatistics(SignalScannerBot scanner) {
-        List<InstrumentStatistic> statistics = scanner.getObjectIds().stream().map(statisticRepository::getBy).filter(
-            Objects::nonNull).toList();
+        List<InstrumentStatistic> statistics = scanner
+            .getObjectIds()
+            .stream()
+            .map(statisticRepository::getBy)
+            .filter(Objects::nonNull)
+            .toList();
         if (statistics.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }

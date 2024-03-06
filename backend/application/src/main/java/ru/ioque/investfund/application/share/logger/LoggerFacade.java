@@ -7,9 +7,7 @@ import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
-import ru.ioque.investfund.domain.schedule.ScheduleUnit;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,10 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LoggerFacade {
     LoggerProvider loggerProvider;
-
-    public void logNotActualScheduleUnit(LocalDateTime scheduleDateTime) {
-        log(new InfoLog(String.format("Нет актуальных задач. Текущее время: %s", scheduleDateTime)));
-    }
 
     public void logSaveNewDataScanner(UUID id) {
         log(
@@ -31,26 +25,6 @@ public class LoggerFacade {
                 )
             )
         );
-    }
-
-    public void logRunExecuteSchedule(LocalDateTime executeDateTime) {
-        log(new InfoLog(
-            String.format(
-                "Начато выполнение актуальных задач расписания. Текущее время - %s, текущая дата - %s.",
-                executeDateTime.toLocalTime(),
-                executeDateTime.toLocalDate()
-            )
-        ));
-    }
-
-    public void logFinishExecuteSchedule(LocalDateTime start, LocalDateTime stop) {
-        log(new InfoLog(String.format(
-            "Завершено выполнение актуальных задач расписания. Время начала выполнения задач - %s. Текущее время - %s, текущая дата - %s. Время выполнения < %s мс.",
-            start.toLocalTime(),
-            stop.toLocalTime(),
-            stop.toLocalDate(),
-            Duration.between(start, stop).toMillis() > 100 ? Duration.between(start, stop).toMillis() : "1"
-        )));
     }
 
     public void logRunCreateSignalScanner(AddScannerCommand command) {
@@ -67,17 +41,6 @@ public class LoggerFacade {
 
     public void log(ApplicationLog infoLog) {
         loggerProvider.addToLog(infoLog);
-    }
-
-    public void logAddNewScheduleUnit(ScheduleUnit scheduleUnit) {
-        log(
-            new InfoLog(
-                String.format(
-                    "Расписание модуля %s сохранено.",
-                    scheduleUnit.getSystemModule()
-                )
-            )
-        );
     }
 
     public void logRunUpdateMarketData(Instrument instrument, LocalDateTime dateTime) {
