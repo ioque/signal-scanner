@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 
 import java.util.List;
 import java.util.UUID;

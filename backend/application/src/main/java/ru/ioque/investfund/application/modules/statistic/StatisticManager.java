@@ -9,8 +9,8 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
-import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
-import ru.ioque.investfund.domain.statistic.StatisticCalculator;
+import ru.ioque.investfund.domain.statistic.event.StatisticCalculatedEvent;
+import ru.ioque.investfund.domain.statistic.calculator.StatisticCalculator;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)

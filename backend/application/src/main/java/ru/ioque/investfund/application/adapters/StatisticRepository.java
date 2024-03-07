@@ -1,6 +1,6 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.List;
 import java.util.Optional;

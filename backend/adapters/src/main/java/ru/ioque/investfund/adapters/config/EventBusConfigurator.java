@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.modules.statistic.StatisticManager;
-import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
+import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.statistic.event.StatisticCalculatedEvent;
 
 @Component
 public class EventBusConfigurator {

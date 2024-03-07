@@ -7,7 +7,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

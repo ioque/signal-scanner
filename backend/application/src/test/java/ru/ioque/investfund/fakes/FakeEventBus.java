@@ -3,7 +3,7 @@ package ru.ioque.investfund.fakes;
 import lombok.Getter;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.modules.SystemModule;
-import ru.ioque.investfund.domain.DomainEvent;
+import ru.ioque.investfund.domain.core.DomainEvent;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.algorithms.CorrelationSectoralSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 
 import java.util.List;
 import java.util.UUID;

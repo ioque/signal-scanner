@@ -1,6 +1,6 @@
-package ru.ioque.investfund.domain.exchange.entity;
+package ru.ioque.investfund.domain.exchange.event;
 
-import ru.ioque.investfund.domain.DomainEvent;
+import ru.ioque.investfund.domain.core.DomainEvent;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.storage.jpa.entity.AbstractEntity;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.UUID;
 

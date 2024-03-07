@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 
 import java.util.Objects;
 

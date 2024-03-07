@@ -1,6 +1,6 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 
 import java.util.List;
 import java.util.Optional;

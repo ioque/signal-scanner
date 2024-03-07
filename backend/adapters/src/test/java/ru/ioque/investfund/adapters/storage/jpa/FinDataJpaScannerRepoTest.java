@@ -7,9 +7,9 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
-import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.algorithms.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

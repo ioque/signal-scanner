@@ -2,9 +2,9 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.DomainException;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.financial.algorithms.PrefSimpleSignalConfig;
+import ru.ioque.investfund.domain.scanner.algorithms.PrefSimpleSignalConfig;
 
 import java.util.List;
 

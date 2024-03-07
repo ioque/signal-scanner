@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.Domain;
+import ru.ioque.investfund.domain.core.Domain;
 
 import java.util.HashMap;
 import java.util.List;

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import ru.ioque.investfund.domain.Domain;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 

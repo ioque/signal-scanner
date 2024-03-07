@@ -1,14 +1,14 @@
-package ru.ioque.investfund.domain.scanner.financial.algorithms;
+package ru.ioque.investfund.domain.scanner.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.DomainException;
-import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScannerLog;
-import ru.ioque.investfund.domain.scanner.financial.entity.ScanningResult;
-import ru.ioque.investfund.domain.scanner.financial.entity.Signal;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.ScanningResult;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

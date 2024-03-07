@@ -6,7 +6,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

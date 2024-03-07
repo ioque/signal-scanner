@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.storage.jpa.entity.statistic.InstrumentStatisticEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentStatisticEntityRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.List;
 import java.util.Optional;

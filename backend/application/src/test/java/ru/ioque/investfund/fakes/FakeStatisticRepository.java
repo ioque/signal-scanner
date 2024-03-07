@@ -2,7 +2,7 @@ package ru.ioque.investfund.fakes;
 
 import lombok.Getter;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.List;
 import java.util.Map;

@@ -1,11 +1,11 @@
-package ru.ioque.investfund.domain.scanner.financial.entity;
+package ru.ioque.investfund.domain.scanner.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.DomainException;
+import ru.ioque.investfund.domain.core.DomainException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

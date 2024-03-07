@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.financial.entity;
+package ru.ioque.investfund.domain.scanner.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import ru.ioque.investfund.domain.Domain;
-import ru.ioque.investfund.domain.DomainException;
+import ru.ioque.investfund.domain.core.Domain;
+import ru.ioque.investfund.domain.core.DomainException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.statistic;
+package ru.ioque.investfund.domain.statistic.value;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

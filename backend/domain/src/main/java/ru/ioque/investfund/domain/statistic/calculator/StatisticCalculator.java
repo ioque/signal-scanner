@@ -1,9 +1,10 @@
-package ru.ioque.investfund.domain.statistic;
+package ru.ioque.investfund.domain.statistic.calculator;
 
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
 import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.Set;
 

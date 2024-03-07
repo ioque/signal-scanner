@@ -2,8 +2,8 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.domain.exchange.entity.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.statistic.StatisticCalculatedEvent;
+import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.statistic.event.StatisticCalculatedEvent;
 
 public class BaseScannerTest extends BaseTest {
     @BeforeEach

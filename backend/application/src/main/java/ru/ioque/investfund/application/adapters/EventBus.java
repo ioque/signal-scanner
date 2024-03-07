@@ -1,7 +1,7 @@
 package ru.ioque.investfund.application.adapters;
 
 import ru.ioque.investfund.application.modules.SystemModule;
-import ru.ioque.investfund.domain.DomainEvent;
+import ru.ioque.investfund.domain.core.DomainEvent;
 
 public interface EventBus {
     void publish(DomainEvent event);

@@ -17,8 +17,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.AbstractEntity;
-import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

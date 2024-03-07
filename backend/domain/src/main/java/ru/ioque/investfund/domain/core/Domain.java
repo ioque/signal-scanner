@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain;
+package ru.ioque.investfund.domain.core;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

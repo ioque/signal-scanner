@@ -5,10 +5,10 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.DealResult;
-import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
-import ru.ioque.investfund.domain.scanner.financial.entity.TimeSeriesValue;
-import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.TimeSeriesValue;
+import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.HashMap;
 import java.util.List;
