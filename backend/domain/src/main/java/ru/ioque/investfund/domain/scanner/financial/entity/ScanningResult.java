@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScanningResult {
+    LocalDateTime dateTime;
     List<ScannerLog> logs;
     List<Signal> signals;
 }

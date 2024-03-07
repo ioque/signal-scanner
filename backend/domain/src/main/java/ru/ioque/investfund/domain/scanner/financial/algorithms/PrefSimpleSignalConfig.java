@@ -10,15 +10,18 @@ import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-public class PrefSimpleSignalConfig implements SignalConfig {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class PrefSimpleSignalConfig extends SignalConfig {
     private final Double spreadParam;
 
-    public PrefSimpleSignalConfig(Double spreadParam) {
+    @Builder
+    public PrefSimpleSignalConfig(List<UUID> objectIds, Double spreadParam) {
+        super(objectIds);
         this.spreadParam = spreadParam;
         validate();
     }

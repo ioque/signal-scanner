@@ -9,9 +9,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -19,16 +17,13 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AddScannerCommand {
     String description;
-    List<UUID> ids;
     SignalConfig signalConfig;
 
     @Builder
     public AddScannerCommand(
         String description,
-        List<UUID> ids,
         SignalConfig signalConfig
     ) {
-        this.ids = ids;
         this.description = description;
         this.signalConfig = signalConfig;
         validateInputData();
@@ -38,7 +33,7 @@ public class AddScannerCommand {
         if (Objects.isNull(signalConfig)) {
             throw new ApplicationException("Не передана конфигурация алгоритма.");
         }
-        if (ids == null || ids.isEmpty()) {
+        if (signalConfig.getObjectIds() == null || signalConfig.getObjectIds().isEmpty()) {
             throw new ApplicationException("Список анализируемых инструментов не может быть пуст.");
         }
         if (description == null || description.isEmpty()) {

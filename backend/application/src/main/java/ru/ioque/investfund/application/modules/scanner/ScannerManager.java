@@ -4,13 +4,13 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
+import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.util.UUID;
@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 public class ScannerManager implements SystemModule {
     ScannerRepository scannerRepository;
     ScannerLogRepository scannerLogRepository;
-    FinInstrumentRepository finInstrumentRepository;
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     LoggerFacade loggerFacade;
@@ -32,14 +31,12 @@ public class ScannerManager implements SystemModule {
     public ScannerManager(
         ScannerRepository scannerRepository,
         ScannerLogRepository scannerLogRepository,
-        FinInstrumentRepository finInstrumentRepository,
         UUIDProvider uuidProvider,
         DateTimeProvider dateTimeProvider,
         LoggerFacade loggerFacade
     ) {
         this.scannerRepository = scannerRepository;
         this.scannerLogRepository = scannerLogRepository;
-        this.finInstrumentRepository = finInstrumentRepository;
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.loggerFacade = loggerFacade;
@@ -58,7 +55,6 @@ public class ScannerManager implements SystemModule {
         scannerRepository.save(SignalScannerBot.builder()
             .id(id)
             .description(command.getDescription())
-            .objectIds(command.getIds())
             .config(command.getSignalConfig())
             .build());
         loggerFacade.logSaveNewDataScanner(id);
@@ -69,14 +65,16 @@ public class ScannerManager implements SystemModule {
             scannerRepository
                 .getBy(command.getId())
                 .orElseThrow(scannerNotFound(command));
+        final SignalConfig config = scannerBot.getConfig();
+        config.updateObjectIds(command.getIds());
         scannerRepository.save(
             new SignalScannerBot(
                 scannerBot.getId(),
                 command.getDescription(),
-                command.getIds(),
-                scannerBot.getConfig(),
+                config,
                 scannerBot.getLastExecutionDateTime().orElse(null),
-                scannerBot.getSignals()
+                scannerBot.getSignals(),
+                scannerBot.getFinInstruments()
             )
         );
         loggerFacade.logUpdateSignalScanner(command);
@@ -96,14 +94,7 @@ public class ScannerManager implements SystemModule {
 
     private void runScanner(SignalScannerBot scanner) {
         loggerFacade.logRunWorkScanner(scanner);
-        scannerLogRepository
-            .saveAll(
-                scanner.getId(),
-                scanner.scanning(
-                    finInstrumentRepository.getAllByInstrumentIdIn(scanner.getObjectIds()),
-                    dateTimeProvider.nowDateTime()
-                )
-            );
+        scannerLogRepository.saveAll(scanner.getId(), scanner.scanning(dateTimeProvider.nowDateTime()));
         scannerRepository.save(scanner);
         loggerFacade.logFinishWorkScanner(scanner);
     }

@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.CorrelationSectoralSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
@@ -60,14 +61,14 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
     }
 
     @Override
-    public SignalScannerBot toDomain() {
+    public SignalScannerBot toDomain(List<FinInstrument> instruments) {
         return new SignalScannerBot(
             getId(),
             getDescription(),
-            getObjectIds(),
-            new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker),
+            new CorrelationSectoralSignalConfig(getObjectIds(), futuresOvernightScale, stockOvernightScale, futuresTicker),
             getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList()
+            getSignals().stream().map(SignalEntity::toDomain).toList(),
+            instruments
         );
     }
 }

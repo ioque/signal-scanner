@@ -6,6 +6,7 @@ import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +19,7 @@ public class FakeStatisticRepository implements StatisticRepository {
     }
 
     @Override
-    public InstrumentStatistic getBy(UUID instrumentId) {
-        return instrumentStatistics.get(instrumentId);
+    public Optional<InstrumentStatistic> getBy(UUID instrumentId) {
+        return Optional.ofNullable(instrumentStatistics.get(instrumentId));
     }
 }

@@ -101,13 +101,11 @@ public class BaseTest {
 
     protected void addScanner(
         String description,
-        SignalConfig config,
-        List<UUID> ids
+        SignalConfig config
     ) {
         dataScannerManager()
             .addNewScanner(
                 AddScannerCommand.builder()
-                    .ids(ids)
                     .signalConfig(config)
                     .description(description)
                     .build()
@@ -172,12 +170,12 @@ public class BaseTest {
         return getInstrumentBy(ticker).getDailyValues().stream().toList();
     }
 
-    protected void intradayIntegrate() {
-        exchangeManager().execute();
-    }
-
     protected void clearLogs() {
         loggerProvider().clearLogs();
+    }
+
+    protected List<UUID> getInstrumentIds() {
+        return getInstruments().stream().map(Instrument::getId).toList();
     }
 
     protected Deal buildBuyDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {

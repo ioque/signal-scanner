@@ -34,8 +34,7 @@ public class ScannerManagerTest extends BaseTest {
     void testCase1() {
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         assertFalse(
             signalProducerRepo()
@@ -64,8 +63,7 @@ public class ScannerManagerTest extends BaseTest {
             ApplicationException.class,
             () -> addScanner(
                 "Аномальные объемы, третий эшелон.",
-                new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-                null
+                new AnomalyVolumeSignalConfig(null, 1.5, 180, "IMOEX")
             )
         );
         assertTrue(error.getMessage().contains("Список анализируемых инструментов не может быть пуст."));
@@ -81,8 +79,7 @@ public class ScannerManagerTest extends BaseTest {
             ApplicationException.class,
             () -> addScanner(
                 "Аномальные объемы, третий эшелон.",
-                new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-                List.of()
+                new AnomalyVolumeSignalConfig(List.of(), 1.5, 180, "IMOEX")
             )
         );
         assertTrue(error.getMessage().contains("Список анализируемых инструментов не может быть пуст."));
@@ -96,8 +93,7 @@ public class ScannerManagerTest extends BaseTest {
     void testCase4() {
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         assertEquals(
             "Аномальные объемы",
@@ -122,7 +118,7 @@ public class ScannerManagerTest extends BaseTest {
             .toList();
         var error = assertThrows(
             ApplicationException.class,
-            () -> addScanner("Аномальные объемы, третий эшелон.", null, ids)
+            () -> addScanner("Аномальные объемы, третий эшелон.", null)
         );
         assertEquals("Не передана конфигурация алгоритма.", error.getMessage());
     }
@@ -135,8 +131,16 @@ public class ScannerManagerTest extends BaseTest {
     void testCase6() {
         addScanner(
             "Старое описание",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().filter(row -> row.getClass().equals(Stock.class)).map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(
+                getInstruments()
+                    .stream()
+                    .filter(row -> row.getClass().equals(Stock.class))
+                    .map(Instrument::getId)
+                    .toList(),
+                1.5,
+                180,
+                "IMOEX"
+            )
         );
         int qnt = fakeDataScannerStorage().getAll().get(0).getObjectIds().size();
 
@@ -161,8 +165,7 @@ public class ScannerManagerTest extends BaseTest {
     void testCase7() {
         addScanner(
             "Старое описание",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
 
         dataScannerManager()
@@ -207,8 +210,7 @@ public class ScannerManagerTest extends BaseTest {
     void testCase9() {
         addScanner(
             "Старое описание",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         var error = assertThrows(
             ApplicationException.class,
@@ -232,8 +234,7 @@ public class ScannerManagerTest extends BaseTest {
     void testCase10() {
         addScanner(
             "Старое описание",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         var error = assertThrows(
             ApplicationException.class,

@@ -52,7 +52,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(50D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
@@ -89,7 +89,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(500D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
@@ -126,7 +126,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("USD000UTSTOM")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(50D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
@@ -163,7 +163,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("IMOEX")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(50D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
@@ -252,7 +252,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(271000D, statistic.getTodayValue());
         assertEquals(123521D, statistic.getHistoryMedianValue());
         assertEquals(16D, statistic.getTodayOpenPrice());
@@ -287,7 +287,7 @@ public class StatisticManagerTest extends BaseTest {
 
         statisticManager().calcStatistic();
 
-        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow());
+        InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
         assertEquals(271000D, statistic.getTodayValue());
         assertEquals(123521D, statistic.getHistoryMedianValue());
         assertEquals(16D, statistic.getTodayOpenPrice());

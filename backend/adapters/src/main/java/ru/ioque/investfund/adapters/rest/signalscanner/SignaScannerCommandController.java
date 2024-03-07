@@ -29,7 +29,6 @@ public class SignaScannerCommandController {
         scannerManager
             .addNewScanner(
                 AddScannerCommand.builder()
-                    .ids(request.getIds())
                     .description(request.getDescription())
                     .signalConfig(request.buildConfig())
                     .build()

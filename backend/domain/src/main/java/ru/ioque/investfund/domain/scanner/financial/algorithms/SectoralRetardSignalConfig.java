@@ -10,16 +10,19 @@ import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-public class SectoralRetardSignalConfig implements SignalConfig {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class SectoralRetardSignalConfig extends SignalConfig {
     private final Double historyScale;
     private final Double intradayScale;
 
-    public SectoralRetardSignalConfig(Double historyScale, Double intradayScale) {
+    @Builder
+    public SectoralRetardSignalConfig(List<UUID> objectIds, Double historyScale, Double intradayScale) {
+        super(objectIds);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
         validate();

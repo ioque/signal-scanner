@@ -22,46 +22,42 @@ import java.util.UUID;
 public class SignalScannerBot extends Domain {
     @Getter
     String description;
-    //Грузить сюда сразу статистики, потому как этот лист нахер не нужен, данные агрегат работает со статистиками
-    List<UUID> objectIds;
     @Getter
     SignalConfig config;
     @NonFinal
     LocalDateTime lastExecutionDateTime;
     List<Signal> signals;
+    List<FinInstrument> finInstruments;
 
     @Builder
     public SignalScannerBot(
         UUID id,
         String description,
-        List<UUID> objectIds,
         SignalConfig config,
         LocalDateTime lastExecutionDateTime,
-        List<Signal> signals
+        List<Signal> signals,
+        List<FinInstrument> finInstruments
     ) {
         super(id);
         this.config = config;
-        this.objectIds = objectIds;
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
+        this.finInstruments = finInstruments != null ? new ArrayList<>(finInstruments) : new ArrayList<>();
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<ScannerLog> scanning(List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
+    public List<ScannerLog> scanning(LocalDateTime dateTimeNow) {
         if (finInstruments.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
-        lastExecutionDateTime = dateTimeNow;
-        ScanningResult scanningResult = config.factorySearchAlgorithm().run(getId(), finInstruments, dateTimeNow);
-        processSignals(scanningResult);
-        return scanningResult.getLogs();
+        return processResult(config.factorySearchAlgorithm().run(getId(), finInstruments, dateTimeNow));
     }
 
-    private void processSignals(ScanningResult scanningResult) {
+    private List<ScannerLog> processResult(ScanningResult scanningResult) {
         List<Signal> oldSignals = List.copyOf(this.signals);
         List<Signal> newSignals = List.copyOf(scanningResult.getSignals());
         List<Signal> finalSignalList = new ArrayList<>(newSignals);
@@ -74,6 +70,8 @@ public class SignalScannerBot extends Domain {
         });
         signals.clear();
         signals.addAll(finalSignalList);
+        lastExecutionDateTime = scanningResult.getDateTime();
+        return scanningResult.getLogs();
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
@@ -81,8 +79,12 @@ public class SignalScannerBot extends Domain {
         return config.isTimeForExecution(lastExecutionDateTime, nowDateTime);
     }
 
+    public List<FinInstrument> getFinInstruments() {
+        return List.copyOf(finInstruments);
+    }
+
     public List<UUID> getObjectIds() {
-        return List.copyOf(objectIds);
+        return List.copyOf(config.getObjectIds());
     }
 
     public List<Signal> getSignals() {

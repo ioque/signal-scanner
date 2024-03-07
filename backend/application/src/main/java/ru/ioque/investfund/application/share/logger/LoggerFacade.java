@@ -33,7 +33,7 @@ public class LoggerFacade {
                 String
                     .format(
                         "Начато создание сканера сигналов, идентификаторы инструментов %s.",
-                        command.getIds()
+                        command.getSignalConfig().getObjectIds()
                     )
             )
         );

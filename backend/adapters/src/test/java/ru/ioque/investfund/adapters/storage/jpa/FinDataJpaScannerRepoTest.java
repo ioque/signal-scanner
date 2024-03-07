@@ -8,6 +8,7 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDate;
@@ -52,10 +53,27 @@ public class FinDataJpaScannerRepoTest extends BaseJpaTest {
         final SignalScannerBot dataScanner = new SignalScannerBot(
             id,
             "Описание",
-            finInstruments.stream().map(Instrument::getId).toList(),
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
+            new AnomalyVolumeSignalConfig(finInstruments.stream().map(Instrument::getId).toList(), 1.5, 180, "IMOEX"),
             LocalDateTime.now(),
-            new ArrayList<>()
+            new ArrayList<>(),
+            new ArrayList<>(
+                List.of(
+                    FinInstrument.builder()
+                        .instrumentId(instrumentId)
+                        .ticker("AFKS")
+                        .historyMedianValue(0.0)
+                        .todayLastPrice(0.0)
+                        .todayOpenPrice(0.0)
+                        .todayValue(0.0)
+                        .buyToSellValuesRatio(0.0)
+                        .waPriceSeries(List.of())
+                        .closePriceSeries(List.of())
+                        .openPriceSeries(List.of())
+                        .valueSeries(List.of())
+                        .todayPriceSeries(List.of())
+                        .build()
+                )
+            )
         );
         dataJpaScannerRepo.save(dataScanner);
         assertEquals(dataScanner, dataJpaScannerRepo.getAll().get(0));

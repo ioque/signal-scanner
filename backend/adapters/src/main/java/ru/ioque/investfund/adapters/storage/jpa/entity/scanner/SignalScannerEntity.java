@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.AbstractEntity;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
@@ -55,5 +56,5 @@ public abstract class SignalScannerEntity extends AbstractEntity {
         this.signals = new ArrayList<>(signals.stream().peek(row -> row.setScanner(this)).toList());
     }
 
-    public abstract SignalScannerBot toDomain();
+    public abstract SignalScannerBot toDomain(List<FinInstrument> instruments);
 }

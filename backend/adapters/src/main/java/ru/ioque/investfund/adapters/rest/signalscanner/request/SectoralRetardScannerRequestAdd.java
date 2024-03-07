@@ -36,6 +36,6 @@ public class SectoralRetardScannerRequestAdd extends AddSignalScannerRequest {
 
     @Override
     public SignalConfig buildConfig() {
-        return new SectoralRetardSignalConfig(historyScale, intradayScale);
+        return new SectoralRetardSignalConfig(getIds(), historyScale, intradayScale);
     }
 }

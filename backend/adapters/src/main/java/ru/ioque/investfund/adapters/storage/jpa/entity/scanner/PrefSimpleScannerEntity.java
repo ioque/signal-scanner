@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.PrefSimpleSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
@@ -52,14 +53,14 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
     }
 
     @Override
-    public SignalScannerBot toDomain() {
+    public SignalScannerBot toDomain(List<FinInstrument> instruments) {
         return new SignalScannerBot(
             getId(),
             getDescription(),
-            getObjectIds(),
-            new PrefSimpleSignalConfig(spreadParam),
+            new PrefSimpleSignalConfig(getObjectIds(), spreadParam),
             getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList()
+            getSignals().stream().map(SignalEntity::toDomain).toList(),
+            instruments
         );
     }
 }

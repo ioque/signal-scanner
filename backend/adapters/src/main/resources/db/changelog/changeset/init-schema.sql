@@ -137,6 +137,21 @@ create table if not exists scanner_log
 alter table scanner_log
     owner to postgres;
 
+
+create table if not exists instrument_statistic
+(
+    id                       uuid             not null primary key,
+    instrument_id            uuid             not null,
+    today_value              double precision not null,
+    history_median_value     double precision not null,
+    today_last_price         double precision not null,
+    today_open_price         double precision not null,
+    buy_to_sell_values_ratio double precision not null
+);
+
+alter table instrument_statistic
+    owner to postgres;
+
 create table if not exists schedule_unit
 (
     priority                 integer      not null,
@@ -201,9 +216,12 @@ create table if not exists signal_scanner_entity_object_ids
 alter table signal_scanner_entity_object_ids
     owner to postgres;
 
-create or replace procedure archiving_daily_values() language plpgsql
-as $$
-declare lastDate date;
+create or replace procedure archiving_daily_values()
+    language plpgsql
+as
+$$
+declare
+    lastDate date;
 begin
     select into lastDate from archived_daily_value order by trade_date desc limit 1;
     if lastDate is not null then
@@ -212,17 +230,24 @@ begin
         insert into archived_daily_value (select * from daily_value);
     end if;
     commit;
-end;$$;
+end;
+$$;
 
-create or replace procedure archiving_intraday_values() language plpgsql
-as $$
-declare lastDateTime timestamp;
+create or replace procedure archiving_intraday_values()
+    language plpgsql
+as
+$$
+declare
+    lastDateTime timestamp;
 begin
     select into lastDateTime from archived_intraday_value order by date_time desc limit 1;
     if lastDateTime is not null then
-        insert into archived_intraday_value (select * from intraday_value where intraday_value.date_time > lastDateTime);
+        insert into archived_intraday_value (select *
+                                             from intraday_value
+                                             where intraday_value.date_time > lastDateTime);
     else
         insert into archived_intraday_value (select * from intraday_value);
     end if;
     commit;
-end;$$;
+end;
+$$;

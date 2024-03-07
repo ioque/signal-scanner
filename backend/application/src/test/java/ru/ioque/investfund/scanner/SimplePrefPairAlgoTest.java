@@ -21,8 +21,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     void testCase1() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(null),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentIds(), null)
         ));
         assertEquals("Не передан параметр spreadParam.", error.getMessage());
     }
@@ -35,8 +34,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     void testCase2() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(0D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentIds(), 0D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -49,8 +47,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     void testCase3() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(-1D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentIds(), -1D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -70,10 +67,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(1.0),
-            getInstrumentsBy(tickers)
-                .map(Instrument::getId)
-                .toList()
+            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
         );
 
         runWorkPipline();
@@ -102,8 +96,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(1.0),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
         );
 
         runWorkPipline();
@@ -131,8 +124,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(1.0),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
         );
         runWorkPipline();
         clearLogs();
@@ -154,8 +146,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(1.0),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
         );
         runWorkPipline();
         clearLogs();

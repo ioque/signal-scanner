@@ -5,10 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.statistic.InstrumentStatistic;
-import ru.ioque.investfund.domain.scanner.financial.entity.TimeSeriesValue;
-
-import java.time.chrono.ChronoLocalDate;
-import java.util.List;
 
 @Getter
 @Builder
@@ -19,8 +15,6 @@ public class InstrumentStatisticResponse {
     Double medianHistoryValue;
     Double todayLastPrice;
     Double todayOpenPrice;
-    List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
-    List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
 
     public static InstrumentStatisticResponse fromDomain(InstrumentStatistic instrumentStatistic) {
         return InstrumentStatisticResponse.builder()
@@ -28,8 +22,6 @@ public class InstrumentStatisticResponse {
             .medianHistoryValue(instrumentStatistic.getHistoryMedianValue())
             .todayLastPrice(instrumentStatistic.getTodayLastPrice())
             .todayOpenPrice(instrumentStatistic.getTodayOpenPrice())
-            .closePriceSeries(instrumentStatistic.getClosePriceSeries())
-            .waPriceSeries(instrumentStatistic.getWaPriceSeries())
             .build();
     }
 }

@@ -39,6 +39,6 @@ public class CorrelationSectoralScannerRequestAdd extends AddSignalScannerReques
 
     @Override
     public SignalConfig buildConfig() {
-        return new CorrelationSectoralSignalConfig(futuresOvernightScale, stockOvernightScale, futuresTicker);
+        return new CorrelationSectoralSignalConfig(getIds(), futuresOvernightScale, stockOvernightScale, futuresTicker);
     }
 }

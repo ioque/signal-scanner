@@ -42,6 +42,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
         logs.add(finishWorkMessage(signals));
         return ScanningResult
             .builder()
+            .dateTime(dateTimeNow)
             .signals(signals)
             .logs(logs)
             .build();

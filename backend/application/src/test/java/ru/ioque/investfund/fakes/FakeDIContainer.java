@@ -8,7 +8,6 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
@@ -37,7 +36,6 @@ public class FakeDIContainer {
     ExchangeManager exchangeManager;
     EventBus eventBus;
     StatisticRepository statisticRepository;
-    FinInstrumentRepository finInstrumentRepository;
     StatisticManager statisticManager;
 
     public FakeDIContainer() {
@@ -52,8 +50,7 @@ public class FakeDIContainer {
         configureProvider = new FakeConfigureProvider();
         loggerFacade = new LoggerFacade(loggerProvider);
         exchangeRepository = new FakeExchangeRepository();
-        scannerRepository = new FakeScannerRepository(exchangeRepository);
-        finInstrumentRepository = new FakeFinInstrumentRepository(exchangeRepository, statisticRepository);
+        scannerRepository = new FakeScannerRepository(exchangeRepository, statisticRepository);
         exchangeManager = new ExchangeManager(
             dateTimeProvider,
             configureProvider,
@@ -66,7 +63,6 @@ public class FakeDIContainer {
         scannerManager = new ScannerManager(
             scannerRepository,
             scannerLogRepository,
-            finInstrumentRepository,
             uuidProvider,
             dateTimeProvider,
             loggerFacade

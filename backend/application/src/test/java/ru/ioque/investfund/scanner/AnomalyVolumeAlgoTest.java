@@ -23,8 +23,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase1() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(null, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), null, 180, "IMOEX")
         ));
         assertEquals("Не передан параметр scaleCoefficient.", error.getMessage());
     }
@@ -37,8 +36,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase2() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, null, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, null, "IMOEX")
         ));
         assertEquals("Не передан параметр historyPeriod.", error.getMessage());
     }
@@ -51,8 +49,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase3() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, null),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, null)
         ));
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
     }
@@ -65,8 +62,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase4() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, ""),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "")
         ));
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
     }
@@ -79,8 +75,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase5() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(0D, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 0D, 180, "IMOEX")
         ));
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
     }
@@ -93,8 +88,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase6() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(-1D, 180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), -1D, 180, "IMOEX")
         ));
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
     }
@@ -107,8 +101,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase7() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 0, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 0, "IMOEX")
         ));
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
     }
@@ -121,8 +114,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase8() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, -180, "IMOEX"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, -180, "IMOEX")
         ));
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
     }
@@ -145,8 +137,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         var instruments = getInstruments();
@@ -176,8 +167,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         loggerProvider().clearLogs();
@@ -203,8 +193,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         exchangeManager().execute();
         statisticManager().calcStatistic();
@@ -234,8 +223,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(1.5, 180, "IMOEX"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         loggerProvider().clearLogs();

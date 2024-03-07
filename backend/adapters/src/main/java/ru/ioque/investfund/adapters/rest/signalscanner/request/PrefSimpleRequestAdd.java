@@ -30,6 +30,6 @@ public class PrefSimpleRequestAdd extends AddSignalScannerRequest {
 
     @Override
     public SignalConfig buildConfig() {
-        return new PrefSimpleSignalConfig(spreadParam);
+        return new PrefSimpleSignalConfig(getIds(), spreadParam);
     }
 }

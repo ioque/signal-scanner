@@ -21,8 +21,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase1() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(null, 1D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),null, 1D)
         ));
         assertEquals("Не передан параметр historyScale.", error.getMessage());
     }
@@ -35,8 +34,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase2() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(0D, 1D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),0D, 1D)
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -49,8 +47,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase3() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(-1D, 1D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),-1D, 1D)
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -63,8 +60,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase4() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(1D, null),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),1D, null)
         ));
         assertEquals("Не передан параметр intradayScale.", error.getMessage());
     }
@@ -77,8 +73,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase5() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(1D, 0D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),1D, 0D)
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -91,8 +86,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase6() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(1D, -1D),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentIds(),1D, -1D)
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -110,8 +104,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initDealsTatnFallOtherRise();
         addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(0.015, 0.015),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(),0.015, 0.015)
         );
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         runWorkPipline();
@@ -147,8 +140,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(0.015, 0.015),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
         );
 
         runWorkPipline();
@@ -183,8 +175,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(0.015, 0.015),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
         );
         runWorkPipline();
         clearLogs();
@@ -207,8 +198,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(0.015, 0.015),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
         );
         runWorkPipline();
         clearLogs();

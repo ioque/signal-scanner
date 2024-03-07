@@ -10,19 +10,22 @@ import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-public class AnomalyVolumeSignalConfig implements SignalConfig {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class AnomalyVolumeSignalConfig extends SignalConfig {
     private final Double scaleCoefficient;
     //Период расчета в исторических данных = 180 дней
     //если данных при запросе нет, надо как-то доинтегрировать? или рассчитывать с тем что есть?
     private final Integer historyPeriod;
     private final String indexTicker;
 
-    public AnomalyVolumeSignalConfig(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
+    @Builder
+    public AnomalyVolumeSignalConfig(List<UUID> objectIds, Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
+        super(objectIds);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;

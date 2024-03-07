@@ -39,6 +39,6 @@ public class AnomalyVolumeScannerRequestAdd extends AddSignalScannerRequest {
 
     @Override
     public SignalConfig buildConfig() {
-        return new AnomalyVolumeSignalConfig(scaleCoefficient, historyPeriod, indexTicker);
+        return new AnomalyVolumeSignalConfig(getIds(), scaleCoefficient, historyPeriod, indexTicker);
     }
 }

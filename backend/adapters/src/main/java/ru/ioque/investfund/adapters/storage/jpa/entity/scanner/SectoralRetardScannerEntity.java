@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.financial.algorithms.SectoralRetardSignalConfig;
+import ru.ioque.investfund.domain.scanner.financial.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.financial.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
@@ -56,14 +57,14 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
     }
 
     @Override
-    public SignalScannerBot toDomain() {
+    public SignalScannerBot toDomain(List<FinInstrument> instruments) {
         return new SignalScannerBot(
             getId(),
             getDescription(),
-            getObjectIds(),
-            new SectoralRetardSignalConfig(historyScale, intradayScale),
+            new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale),
             getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList()
+            getSignals().stream().map(SignalEntity::toDomain).toList(),
+            instruments
         );
     }
 }

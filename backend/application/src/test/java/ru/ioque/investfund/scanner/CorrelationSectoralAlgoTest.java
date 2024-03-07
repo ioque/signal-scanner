@@ -21,8 +21,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase1() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(null, 1D, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), null, 1D, "BRF4")
         ));
         assertEquals("Не передан параметр futuresOvernightScale.", error.getMessage());
     }
@@ -35,8 +34,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase2() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(1.5, null, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 1.5, null, "BRF4")
         ));
         assertEquals("Не передан параметр stockOvernightScale.", error.getMessage());
     }
@@ -49,8 +47,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase3() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(1.5, 1D, null),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 1.5, 1D, null)
         ));
         assertEquals("Не передан параметр futuresTicker.", error.getMessage());
     }
@@ -63,8 +60,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase4() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(1.5, 1D, ""),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 1.5, 1D, "")
         ));
         assertEquals("Не передан параметр futuresTicker.", error.getMessage());
     }
@@ -77,8 +73,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase5() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(0D, 1D, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 0D, 1D, "BRF4")
         ));
         assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
     }
@@ -91,8 +86,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase6() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(-1D, 1D, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), -1D, 1D, "BRF4")
         ));
         assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
     }
@@ -105,8 +99,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase7() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(1.5, 0D, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 1.5, 0D, "BRF4")
         ));
         assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
     }
@@ -119,8 +112,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     void testCase8() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(1.5, -1D, "BRF4"),
-            getInstruments().stream().map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 1.5, -1D, "BRF4")
         ));
         assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
     }
@@ -140,8 +132,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 0.02, 0.005, "BRF4")
         );
 
         runWorkPipline();
@@ -166,8 +157,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 0.02, 0.005, "BRF4")
         );
 
         runWorkPipline();
@@ -191,8 +181,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 0.02, 0.005, "BRF4")
         );
         loggerProvider().clearLogs();
         runWorkPipline();
@@ -217,8 +206,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Корреляция сектора с фьючерсом.",
-            new CorrelationSectoralSignalConfig(0.02, 0.005, "BRF4"),
-            getInstrumentsBy(tickers).map(Instrument::getId).toList()
+            new CorrelationSectoralSignalConfig(getInstrumentIds(), 0.02, 0.005, "BRF4")
         );
         loggerProvider().clearLogs();
         runWorkPipline();

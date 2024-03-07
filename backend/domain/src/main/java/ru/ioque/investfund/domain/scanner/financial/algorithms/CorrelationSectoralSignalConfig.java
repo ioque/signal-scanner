@@ -10,21 +10,25 @@ import ru.ioque.investfund.domain.scanner.financial.entity.SignalConfig;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-public class CorrelationSectoralSignalConfig implements SignalConfig {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class CorrelationSectoralSignalConfig extends SignalConfig {
     private final Double futuresOvernightScale;
     private final Double stockOvernightScale;
     private final String futuresTicker;
 
+    @Builder
     public CorrelationSectoralSignalConfig(
+        List<UUID> objectIds,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
+        super(objectIds);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;

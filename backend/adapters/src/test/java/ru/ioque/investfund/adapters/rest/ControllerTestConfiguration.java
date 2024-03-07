@@ -11,6 +11,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayVal
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentStatisticEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
@@ -91,6 +92,12 @@ public class ControllerTestConfiguration {
     @Primary
     public ScannerLogEntityRepository mockScannerLogEntityRepository() {
         return mock(ScannerLogEntityRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public InstrumentStatisticEntityRepository mockInstrumentStatisticEntityRepository() {
+        return mock(InstrumentStatisticEntityRepository.class);
     }
 
     @Bean
