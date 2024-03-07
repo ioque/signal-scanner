@@ -27,6 +27,10 @@ public class Deal extends IntradayValue {
     }
 
     @Override
+    public Double getPrice() {
+        return super.getPrice() * (isBuy.equals(Boolean.TRUE) ? 1 : -1);
+    }
+    @Override
     public double getValue() {
         return value;
     }
