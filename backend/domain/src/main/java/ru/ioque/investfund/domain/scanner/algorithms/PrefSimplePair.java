@@ -1,7 +1,8 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.scanner.algorithms;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;

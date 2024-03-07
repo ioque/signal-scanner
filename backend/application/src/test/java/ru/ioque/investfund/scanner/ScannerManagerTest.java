@@ -109,13 +109,9 @@ public class ScannerManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T5. Регистрация нового сканера сигналов без алгоритма поиска и со списком из нескольких финансовых инструментов.
+        T5. Регистрация нового сканера сигналов без конфигурации.
         """)
     void testCase5() {
-        var ids = getInstruments()
-            .stream()
-            .map(Instrument::getId)
-            .toList();
         var error = assertThrows(
             ApplicationException.class,
             () -> addScanner("Аномальные объемы, третий эшелон.", null)

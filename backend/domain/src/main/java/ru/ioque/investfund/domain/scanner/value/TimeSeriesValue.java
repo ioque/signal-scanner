@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.scanner.value;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

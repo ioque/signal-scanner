@@ -29,7 +29,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
-import ru.ioque.investfund.domain.scanner.entity.TimeSeriesValue;
+import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
 import java.util.Map;

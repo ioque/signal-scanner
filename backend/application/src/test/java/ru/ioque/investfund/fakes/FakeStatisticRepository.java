@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class FakeStatisticRepository implements StatisticRepository {
-    @Getter
     Map<UUID, InstrumentStatistic> instrumentStatistics = new ConcurrentHashMap<>();
     @Override
     public void saveAll(List<InstrumentStatistic> statistics) {

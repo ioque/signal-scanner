@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 
 import java.time.Duration;

@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.ScanningResult;
-import ru.ioque.investfund.domain.scanner.entity.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class PrefSimpleAlgorithm extends SignalAlgorithm {
             final double multiplier = currentDelta / historyDelta;
             logs.add(parametersMessage(pair, currentDelta, historyDelta, multiplier));
             if (multiplier > spreadParam) {
-                signals.add(new Signal(dateTimeNow, pair.getPref().getInstrumentId(), true));
+                signals.add(new Signal(dateTimeNow, pair.getPref().getId(), true));
             }
         });
         logs.add(finishWorkMessage(signals));

@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.ScanningResult;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.Signal;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,10 +39,10 @@ public class CorrelationSectoralAlgorithm extends SignalAlgorithm {
         List<ScannerLog> logs = new ArrayList<>();
         boolean futuresIsRiseOvernight = getFuturesStatistic(finInstruments).isRiseOvernight(futuresOvernightScale);
         logs.add(runWorkMessage(futuresIsRiseOvernight));
-        for (var statistic : analyzeInstruments(finInstruments)) {
-            logs.add(parametersMessage(statistic));
-            if (futuresIsRiseOvernight && statistic.isRiseOvernight(stockOvernightScale)) {
-                signals.add(new Signal(dateTimeNow, statistic.getInstrumentId(), true));
+        for (var finInstrument : analyzeInstruments(finInstruments)) {
+            logs.add(parametersMessage(finInstrument));
+            if (futuresIsRiseOvernight && finInstrument.isRiseOvernight(stockOvernightScale)) {
+                signals.add(new Signal(dateTimeNow, finInstrument.getId(), true));
             }
         }
         logs.add(finishWorkMessage(signals));

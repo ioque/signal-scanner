@@ -1,11 +1,12 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,12 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public class FinInstrument {
-    UUID instrumentId;
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class FinInstrument extends Domain {
     String ticker;
     Double todayValue;
     Double historyMedianValue;
@@ -32,6 +30,35 @@ public class FinInstrument {
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
+
+    @Builder
+    public FinInstrument(
+        UUID instrumentId,
+        String ticker,
+        Double todayValue,
+        Double historyMedianValue,
+        Double todayLastPrice,
+        Double todayOpenPrice,
+        Double buyToSellValuesRatio,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries,
+        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries
+    ) {
+        super(instrumentId);
+        this.ticker = ticker;
+        this.todayValue = todayValue;
+        this.historyMedianValue = historyMedianValue;
+        this.todayLastPrice = todayLastPrice;
+        this.todayOpenPrice = todayOpenPrice;
+        this.buyToSellValuesRatio = buyToSellValuesRatio;
+        this.closePriceSeries = closePriceSeries;
+        this.openPriceSeries = openPriceSeries;
+        this.valueSeries = valueSeries;
+        this.waPriceSeries = waPriceSeries;
+        this.todayPriceSeries = todayPriceSeries;
+    }
 
     public boolean isRiseToday() {
         return todayLastPrice > getLastClosePrice() && todayLastPrice > todayOpenPrice;

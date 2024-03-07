@@ -1,6 +1,6 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
 import java.util.List;
 import java.util.UUID;

@@ -39,9 +39,7 @@ public class Exchange extends Domain {
         this.description = description;
         this.instruments = new HashMap<>();
         if (instruments != null) {
-            instruments.forEach(instrument -> {
-                this.instruments.put(instrument.getId(), instrument);
-            });
+            instruments.forEach(instrument -> this.instruments.put(instrument.getId(), instrument));
         }
     }
 

@@ -4,10 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
-import ru.ioque.investfund.domain.scanner.entity.ScanningResult;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class SectoralRetardAlgorithm extends SignalAlgorithm {
         List<FinInstrument> otherInstruments = getSectoralRetards(finInstruments, riseInstruments);
         logs.add(parametersMessage(riseInstruments, otherInstruments));
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / finInstruments.size() * 100) >= 70) {
-            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getInstrumentId(), true)));
+            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getId(), true)));
         }
         logs.add(finishWorkMessage(signals));
         return ScanningResult

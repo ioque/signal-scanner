@@ -7,7 +7,7 @@ import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
-import ru.ioque.investfund.domain.scanner.entity.TimeSeriesValue;
+import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.HashMap;

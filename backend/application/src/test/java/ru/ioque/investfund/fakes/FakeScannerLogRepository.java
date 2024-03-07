@@ -1,7 +1,7 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
 import java.util.ArrayList;
 import java.util.List;
