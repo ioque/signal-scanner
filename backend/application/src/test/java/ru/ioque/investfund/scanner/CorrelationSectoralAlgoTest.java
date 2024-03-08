@@ -246,8 +246,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initNegativeDeals() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildFuturesDealBy(1L, "BRF4", "10:00:00", 73D, 1),
-                buildFuturesDealBy(2L, "BRF4", "12:00:00", 72D, 1),
+                buildFuturesDealBy(1L, "BRF4", "10:00:00", 73D, 73000D, 1),
+                buildFuturesDealBy(2L, "BRF4", "12:00:00", 72D, 73000D, 1),
                 buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
                 buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
                 buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
@@ -258,8 +258,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initPositiveDeals() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildFuturesDealBy(1L, "BRF4", "10:00:00", 78D, 1),
-                buildFuturesDealBy(2L, "BRF4", "12:00:00", 96D, 1),
+                buildFuturesDealBy(1L, "BRF4", "10:00:00", 78D, 78000D, 1),
+                buildFuturesDealBy(2L, "BRF4", "12:00:00", 96D, 96000D, 1),
                 buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
                 buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
                 buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)

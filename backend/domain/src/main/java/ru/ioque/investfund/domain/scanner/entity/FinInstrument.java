@@ -20,7 +20,6 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class FinInstrument extends Domain {
     String ticker;
-    Double todayValue;
     Double historyMedianValue;
     Double todayLastPrice;
     Double todayOpenPrice;
@@ -30,6 +29,7 @@ public class FinInstrument extends Domain {
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
+    List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
 
     @Builder
     public FinInstrument(
@@ -44,11 +44,11 @@ public class FinInstrument extends Domain {
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries,
-        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries
+        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
+        List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
     ) {
         super(instrumentId);
         this.ticker = ticker;
-        this.todayValue = todayValue;
         this.historyMedianValue = historyMedianValue;
         this.todayLastPrice = todayLastPrice;
         this.todayOpenPrice = todayOpenPrice;
@@ -58,22 +58,27 @@ public class FinInstrument extends Domain {
         this.valueSeries = valueSeries;
         this.waPriceSeries = waPriceSeries;
         this.todayPriceSeries = todayPriceSeries;
+        this.todayValueSeries = todayValueSeries;
+    }
+
+    public Double getTodayValue() {
+        return todayValueSeries.stream().mapToDouble(row -> Math.abs(row.getValue())).sum();
     }
 
     public boolean isRiseToday() {
-        return todayLastPrice > getLastClosePrice() && todayLastPrice > todayOpenPrice;
+        return Math.abs(todayLastPrice) > Math.abs(getLastClosePrice()) && Math.abs(todayLastPrice) > Math.abs(todayOpenPrice);
     }
 
     public boolean isRiseOvernight(double scale) {
-        return ((todayLastPrice / getLastClosePrice()) - 1) > scale;
+        return (Math.abs(todayLastPrice / getLastClosePrice()) - 1) > scale;
     }
 
     public boolean isRiseForPrevDay(double scale) {
-        return ((getLastClosePrice() / getPrevLastClosePrice()) - 1)  > scale;
+        return (Math.abs(getLastClosePrice() / getPrevLastClosePrice()) - 1)  > scale;
     }
 
     public boolean isRiseForToday(double scale) {
-        return ((todayLastPrice / todayOpenPrice) - 1) > scale;
+        return (Math.abs(todayLastPrice / todayOpenPrice) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {

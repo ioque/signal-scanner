@@ -17,12 +17,8 @@ public class FuturesDeal extends IntradayValue {
     Integer qnt;
 
     @Builder
-    public FuturesDeal(Long number, LocalDateTime dateTime, String ticker, Double price, Integer qnt) {
-        super(number, dateTime, ticker, price);
+    public FuturesDeal(Long number, LocalDateTime dateTime, String ticker, Double price, Double value, Integer qnt) {
+        super(number, dateTime, ticker, price, value);
         this.qnt = qnt;
-    }
-    @Override
-    public double getValue() {
-        return qnt * getPrice();
     }
 }

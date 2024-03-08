@@ -69,11 +69,11 @@ public class StatisticManagerTest extends BaseTest {
     void testCase2() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildFuturesDealBy(1L,"BRF4", "10:00:00", 10D, 10),
-                buildFuturesDealBy(1L,"BRF4", "11:00:00", 10D, 10),
-                buildFuturesDealBy(1L,"BRF4", "12:00:00", 10D, 10),
-                buildFuturesDealBy(1L,"BRF4", "13:00:00", 10D, 10),
-                buildFuturesDealBy(1L,"BRF4", "14:00:00", 10D, 10)
+                buildFuturesDealBy(1L,"BRF4", "10:00:00", 10D,100000D,10),
+                buildFuturesDealBy(1L,"BRF4", "11:00:00", 10D,100000D,10),
+                buildFuturesDealBy(1L,"BRF4", "12:00:00", 10D,100000D,10),
+                buildFuturesDealBy(1L,"BRF4", "13:00:00", 10D,100000D,10),
+                buildFuturesDealBy(1L,"BRF4", "14:00:00", 10D,100000D,10)
             )
         );
         exchangeDataFixture().initTradingResults(
@@ -90,7 +90,7 @@ public class StatisticManagerTest extends BaseTest {
         statisticManager().calcStatistic();
 
         InstrumentStatistic statistic = statisticRepository().getBy(getInstrumentsBy(List.of("BRF4")).map(Instrument::getId).findFirst().orElseThrow()).orElseThrow();
-        assertEquals(500D, statistic.getTodayValue());
+        assertEquals(500000D, statistic.getTodayValue());
         assertEquals(10D, statistic.getHistoryMedianValue());
         assertEquals(10D, statistic.getTodayOpenPrice());
         assertEquals(10D, statistic.getTodayLastPrice());

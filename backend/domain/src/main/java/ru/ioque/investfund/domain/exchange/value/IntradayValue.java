@@ -19,17 +19,20 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
     LocalDateTime dateTime;
     String ticker;
     Double price;
+    Double value;
 
     public IntradayValue(
         Long number,
         LocalDateTime dateTime,
         String ticker,
-        Double price
+        Double price,
+        Double value
     ) {
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;
+        this.value = value;
     }
 
     public boolean isAfter(IntradayValue intradayValue) {
@@ -40,6 +43,4 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
     public int compareTo(IntradayValue intradayValue) {
         return Objects.compare(getDateTime(), intradayValue.getDateTime(), LocalDateTime::compareTo);
     }
-
-    public abstract double getValue();
 }

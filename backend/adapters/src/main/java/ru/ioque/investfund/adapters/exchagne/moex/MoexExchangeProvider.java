@@ -16,6 +16,7 @@ import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDate;
@@ -45,7 +46,21 @@ public class MoexExchangeProvider implements ExchangeProvider {
     @Override
     @SneakyThrows
     public List<IntradayValue> fetchIntradayValuesBy(Instrument instrument) {
-        return moexClient.fetchIntradayValues(instrument);
+        List<IntradayValue> intradayValues = moexClient.fetchIntradayValues(instrument);
+        if (instrument.getClass().equals(Futures.class)) {
+            intradayValues = intradayValues
+                .stream()
+                .map(row -> (IntradayValue) FuturesDeal.builder()
+                    .dateTime(row.getDateTime())
+                    .ticker(row.getTicker())
+                    .qnt(((FuturesDeal) row).getQnt())
+                    .price(row.getPrice())
+                    .number(row.getNumber())
+                    .value(row.getPrice() * ((FuturesDeal) row).getQnt() * ((Futures) instrument).getLotVolume())
+                    .build())
+                .toList();
+        }
+        return intradayValues;
     }
 
     @Override

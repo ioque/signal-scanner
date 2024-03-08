@@ -70,6 +70,16 @@ public class FakeScannerRepository implements ScannerRepository {
                     .map(DealResult.class::cast)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate())).toList()
                 )
+                .todayValueSeries(
+                    instrument
+                        .getIntradayValues()
+                        .stream()
+                        .map(intradayValue -> new TimeSeriesValue<>(
+                            intradayValue.getValue(),
+                            intradayValue.getDateTime().toLocalTime()
+                        ))
+                        .toList()
+                )
                 .closePriceSeries(instrument.getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate())).toList())
                 .openPriceSeries(instrument.getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate())).toList())
                 .valueSeries(instrument.getDailyValues().stream().map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate())).toList())

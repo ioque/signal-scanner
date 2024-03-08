@@ -123,6 +123,16 @@ public class JpaScannerRepo implements ScannerRepository {
                         .stream()
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                         .toList())
+                    .todayValueSeries(
+                        instrument
+                            .getIntradayValues()
+                            .stream()
+                            .map(intradayValue -> new TimeSeriesValue<>(
+                                intradayValue.getValue(),
+                                intradayValue.getDateTime().toLocalTime()
+                            ))
+                            .toList()
+                    )
                     .todayPriceSeries(instrument
                         .getIntradayValues()
                         .stream()

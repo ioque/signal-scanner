@@ -71,6 +71,7 @@ public class FinDataJpaScannerRepoTest extends BaseJpaTest {
                         .openPriceSeries(List.of())
                         .valueSeries(List.of())
                         .todayPriceSeries(List.of())
+                        .todayValueSeries(List.of())
                         .build()
                 )
             )

@@ -202,13 +202,14 @@ public class BaseTest {
             .build();
     }
 
-    protected FuturesDeal buildFuturesDealBy(Long number, String ticker, String localTime, Double price, Integer qnt) {
+    protected FuturesDeal buildFuturesDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
         return FuturesDeal.builder()
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .price(price)
             .number(number)
             .qnt(qnt)
+            .value(value)
             .build();
     }
 

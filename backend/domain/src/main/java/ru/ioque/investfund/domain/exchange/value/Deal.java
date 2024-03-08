@@ -16,22 +16,16 @@ import java.time.LocalDateTime;
 public class Deal extends IntradayValue {
     Boolean isBuy;
     Integer qnt;
-    Double value;
 
     @Builder
     public Deal(Long number, LocalDateTime dateTime, String ticker, Double price, Boolean isBuy, Integer qnt, Double value) {
-        super(number, dateTime, ticker, price);
+        super(number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
-        this.value = value;
     }
 
     @Override
     public Double getPrice() {
         return super.getPrice() * (isBuy.equals(Boolean.TRUE) ? 1 : -1);
-    }
-    @Override
-    public double getValue() {
-        return value;
     }
 }

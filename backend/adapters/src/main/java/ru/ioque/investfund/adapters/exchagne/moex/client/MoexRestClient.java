@@ -31,9 +31,10 @@ public class MoexRestClient {
     @SneakyThrows
     public List<InstrumentDto> fetchInstruments(Class<? extends Instrument> type) {
         return new InstrumentMoexParser()
-            .parse(objectMapper
-                .readTree(fetch(queryBuilder.getSecurityListQuery(type)))
-                .get("securities"),
+            .parse(
+                objectMapper
+                    .readTree(fetch(queryBuilder.getSecurityListQuery(type)))
+                    .get("securities"),
                 type
             );
     }
@@ -49,7 +50,10 @@ public class MoexRestClient {
         LocalDate from,
         LocalDate to
     ) {
-        return new DailyTradingResultMoexParser().parse(fetchDailyTradingResultBatches(instrument, from, to), instrument.getClass());
+        return new DailyTradingResultMoexParser().parse(
+            fetchDailyTradingResultBatches(instrument, from, to),
+            instrument.getClass()
+        );
     }
 
     //сделать валидацию входящих параметров. Доступные размеры стран и тд
