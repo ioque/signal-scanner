@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.scanner.value.Signal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -46,10 +47,11 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
         final boolean indexIsRiseToday = getMarketIndex(finInstruments).isRiseToday();
         logs.add(runWorkMessage(indexIsRiseToday));
         for (final FinInstrument finInstrument : getAnalyzeStatistics(finInstruments)) {
-            final double medianHistoryValue = finInstrument.getHistoryMedianValue();
-            final double value = finInstrument.getTodayValue();
-            final double multiplier = value / medianHistoryValue;
-            logs.add(parametersMessage(finInstrument, value, medianHistoryValue, multiplier));
+            final Optional<Double> medianHistoryValue = finInstrument.getHistoryMedianValue();
+            final Optional<Double> value = finInstrument.getTodayValue();
+            if (medianHistoryValue.isEmpty() || value.isEmpty()) continue;
+            final double multiplier = value.get() / medianHistoryValue.get();
+            logs.add(parametersMessage(finInstrument, value.get(), medianHistoryValue.get(), multiplier));
             if (multiplier > scaleCoefficient && indexIsRiseToday && finInstrument.isRiseToday()) {
                 signals.add(new Signal(dateTimeNow, finInstrument.getId(), true));
             }

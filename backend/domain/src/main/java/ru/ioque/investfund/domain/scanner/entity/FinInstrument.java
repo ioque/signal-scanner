@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -49,12 +50,14 @@ public class FinInstrument extends Domain {
         this.todayValueSeries = todayValueSeries;
     }
 
-    public Double getHistoryMedianValue() {
+    public Optional<Double> getHistoryMedianValue() {
+        if (todayValueSeries.size() == 1) return Optional.of(todayValueSeries.get(0).getValue());
+        if (todayValueSeries.isEmpty()) return Optional.empty();
         var sortedValues = todayValueSeries.stream().sorted().toList();
         var n = sortedValues.size();
         if (n % 2 != 0)
-            return sortedValues.get(n / 2).getValue();
-        return (sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0;
+            return Optional.of(sortedValues.get(n / 2).getValue());
+        return Optional.of((sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0);
     }
 
     public Double getTodayOpenPrice() {
@@ -65,24 +68,25 @@ public class FinInstrument extends Domain {
         return todayPriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue).orElseThrow();
     }
 
-    public Double getTodayValue() {
-        return todayValueSeries.stream().mapToDouble(row -> Math.abs(row.getValue())).sum();
+    public Optional<Double> getTodayValue() {
+        if (todayValueSeries.isEmpty()) return Optional.empty();
+        return Optional.of(todayValueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sum());
     }
 
     public boolean isRiseToday() {
-        return Math.abs(getTodayLastPrice()) > Math.abs(getPrevClosePrice()) && Math.abs(getTodayLastPrice()) > Math.abs(getTodayOpenPrice());
+        return getTodayLastPrice() > getPrevClosePrice() && getTodayLastPrice() > getTodayOpenPrice();
     }
 
     public boolean isRiseOvernight(double scale) {
-        return (Math.abs(getTodayLastPrice() / getPrevClosePrice()) - 1) > scale;
+        return ((getTodayLastPrice() / getPrevClosePrice()) - 1) > scale;
     }
 
     public boolean isRiseForPrevDay(double scale) {
-        return (Math.abs(getPrevClosePrice() / getPrevPrevClosePrice()) - 1)  > scale;
+        return ((getPrevClosePrice() / getPrevPrevClosePrice()) - 1)  > scale;
     }
 
     public boolean isRiseForToday(double scale) {
-        return (Math.abs(getTodayLastPrice() / getTodayOpenPrice()) - 1) > scale;
+        return ((getTodayLastPrice() / getTodayOpenPrice()) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {

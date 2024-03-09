@@ -44,9 +44,7 @@ public class ScannerManager implements SystemModule {
 
     @Override
     public synchronized void execute() {
-        loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
         runScanners();
-        loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
     public synchronized void addNewScanner(AddScannerCommand command) {
@@ -81,11 +79,13 @@ public class ScannerManager implements SystemModule {
     }
 
     private void runScanners() {
+        loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
         scannerRepository
             .getAll()
             .stream()
             .filter(row -> row.isTimeForExecution(dateTimeProvider.nowDateTime()))
             .forEach(this::runScanner);
+        loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
     private Supplier<ApplicationException> scannerNotFound(UpdateScannerCommand command) {
