@@ -43,13 +43,13 @@ public class ScannerManager implements SystemModule {
     }
 
     @Override
-    public void execute() {
+    public synchronized void execute() {
         loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
         runScanners();
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
-    public void addNewScanner(AddScannerCommand command) {
+    public synchronized void addNewScanner(AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
         scannerRepository.save(SignalScannerBot.builder()
@@ -60,7 +60,7 @@ public class ScannerManager implements SystemModule {
         loggerFacade.logSaveNewDataScanner(id);
     }
 
-    public void updateScanner(UpdateScannerCommand command) {
+    public synchronized void updateScanner(UpdateScannerCommand command) {
         final SignalScannerBot scannerBot =
             scannerRepository
                 .getBy(command.getId())

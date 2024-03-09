@@ -91,7 +91,6 @@ public class JpaScannerRepo implements ScannerRepository {
                 return FinInstrument.builder()
                     .instrumentId(instrument.getId())
                     .ticker(instrument.getTicker())
-                    .buyToSellValueRatio(instrument.getBuyToSellValueRatio())
                     .waPriceSeries(instrument
                         .getDailyValues()
                         .stream()

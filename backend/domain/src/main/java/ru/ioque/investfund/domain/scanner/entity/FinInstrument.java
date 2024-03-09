@@ -20,7 +20,6 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class FinInstrument extends Domain {
     String ticker;
-    Double buyToSellValueRatio;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
@@ -33,7 +32,6 @@ public class FinInstrument extends Domain {
     public FinInstrument(
         UUID instrumentId,
         String ticker,
-        Double buyToSellValueRatio,
         List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
@@ -43,7 +41,6 @@ public class FinInstrument extends Domain {
     ) {
         super(instrumentId);
         this.ticker = ticker;
-        this.buyToSellValueRatio = buyToSellValueRatio;
         this.closePriceSeries = closePriceSeries;
         this.openPriceSeries = openPriceSeries;
         this.valueSeries = valueSeries;

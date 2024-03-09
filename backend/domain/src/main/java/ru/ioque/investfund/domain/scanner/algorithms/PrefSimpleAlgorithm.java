@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.Signal;

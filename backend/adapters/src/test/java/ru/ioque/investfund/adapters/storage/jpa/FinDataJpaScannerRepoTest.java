@@ -61,7 +61,6 @@ public class FinDataJpaScannerRepoTest extends BaseJpaTest {
                     FinInstrument.builder()
                         .instrumentId(instrumentId)
                         .ticker("AFKS")
-                        .buyToSellValueRatio(1.0)
                         .waPriceSeries(List.of())
                         .closePriceSeries(List.of())
                         .openPriceSeries(List.of())

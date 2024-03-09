@@ -54,7 +54,6 @@ public class FakeScannerRepository implements ScannerRepository {
             return FinInstrument.builder()
                 .instrumentId(instrument.getId())
                 .ticker(instrument.getTicker())
-                .buyToSellValueRatio(instrument.getBuyToSellValueRatio())
                 .waPriceSeries(instrument.getDailyValues()
                     .stream()
                     .filter(row -> row.getClass().equals(DealResult.class))

@@ -35,26 +35,26 @@ public class ExchangeManager implements SystemModule {
     EventBus eventBus;
 
     @Override
-    public void execute() {
+    public synchronized void execute() {
         if (repository.getBy(dateTimeProvider.nowDate()).isPresent()) {
             integrateTradingData();
         }
     }
 
-    public void enableUpdate(List<UUID> ids) {
+    public synchronized void enableUpdate(List<UUID> ids) {
         final Exchange exchange = getExchangeFromRepo();
         exchange.enableUpdate(ids);
         repository.save(exchange);
     }
 
-    public void disableUpdate(List<UUID> ids) {
+    public synchronized void disableUpdate(List<UUID> ids) {
         final Exchange exchange = getExchangeFromRepo();
         exchange.disableUpdate(ids);
         repository.save(exchange);
     }
 
     //Публикует данные в топик "Инструменты"
-    public void integrateWithDataSource() {
+    public synchronized void integrateWithDataSource() {
         final Exchange exchange =
             repository.getBy(dateTimeProvider.nowDate()).orElseGet(this::newExchange);
         loggerFacade.logRunSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
@@ -65,7 +65,7 @@ public class ExchangeManager implements SystemModule {
 
     //Публикует данные в два топика - внутридневные данные и исторические данные.
     //Пока просто событие для частичного ухода от шедулера
-    public void integrateTradingData() {
+    public synchronized void integrateTradingData() {
         final Exchange exchange = getExchangeFromRepo();
         exchange.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
