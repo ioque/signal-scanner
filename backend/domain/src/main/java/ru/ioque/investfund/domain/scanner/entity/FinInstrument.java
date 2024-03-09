@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.time.DayOfWeek;
@@ -60,12 +59,12 @@ public class FinInstrument extends Domain {
         return Optional.of((sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0);
     }
 
-    public Double getTodayOpenPrice() {
-        return todayPriceSeries.stream().min(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue).orElseThrow();
+    public Optional<Double> getTodayOpenPrice() {
+        return todayPriceSeries.stream().min(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue);
     }
 
-    public Double getTodayLastPrice() {
-        return todayPriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue).orElseThrow();
+    public Optional<Double> getTodayLastPrice() {
+        return todayPriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue);
     }
 
     public Optional<Double> getTodayValue() {
@@ -74,33 +73,45 @@ public class FinInstrument extends Domain {
     }
 
     public boolean isRiseToday() {
-        return getTodayLastPrice() > getPrevClosePrice() && getTodayLastPrice() > getTodayOpenPrice();
+        var todayLastPrice = getTodayLastPrice();
+        var todayOpenPrice = getTodayOpenPrice();
+        var prevClosePrice = getPrevClosePrice();
+        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty() || prevClosePrice.isEmpty()) return false;
+        return todayLastPrice.get() > prevClosePrice.get() && todayLastPrice.get() > todayOpenPrice.get();
     }
 
     public boolean isRiseOvernight(double scale) {
-        return ((getTodayLastPrice() / getPrevClosePrice()) - 1) > scale;
+        var todayLastPrice = getTodayLastPrice();
+        var prevClosePrice = getPrevClosePrice();
+        if (todayLastPrice.isEmpty() || prevClosePrice.isEmpty()) return false;
+        return ((todayLastPrice.get() / prevClosePrice.get()) - 1) > scale;
     }
 
     public boolean isRiseForPrevDay(double scale) {
-        return ((getPrevClosePrice() / getPrevPrevClosePrice()) - 1)  > scale;
+        var prevClosePrice = getPrevClosePrice();
+        var prevPrevClosePrice = getPrevPrevClosePrice();
+        if (prevPrevClosePrice.isEmpty() || prevClosePrice.isEmpty()) return false;
+        return ((prevClosePrice.get() / prevPrevClosePrice.get()) - 1)  > scale;
     }
 
     public boolean isRiseForToday(double scale) {
-        return ((getTodayLastPrice() / getTodayOpenPrice()) - 1) > scale;
+        var todayLastPrice = getTodayLastPrice();
+        var todayOpenPrice = getTodayOpenPrice();
+        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty()) return false;
+        return ((todayLastPrice.get() / todayOpenPrice.get()) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {
         return isRiseForPrevDay(historyScale) && isRiseForToday(intradayScale);
     }
 
-    public Double getPrevPrevClosePrice() {
+    public Optional<Double> getPrevPrevClosePrice() {
         final LocalDate lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getTime).map(LocalDate.class::cast).orElseThrow();
         final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate);
         return closePriceSeries.stream()
             .filter(row -> row.getTime().equals(prevLastTradingDate))
             .findFirst()
-            .map(TimeSeriesValue::getValue)
-            .orElseThrow(() -> new DomainException("Нет данных по итогам торгов за " + prevLastTradingDate + "."));
+            .map(TimeSeriesValue::getValue);
     }
 
     private static LocalDate getPrevTradingDate(LocalDate tradingDate) {
@@ -110,14 +121,13 @@ public class FinInstrument extends Domain {
         return day;
     }
 
-    public Double getPrevClosePrice() {
+    public Optional<Double> getPrevClosePrice() {
         return closePriceSeries
             .stream()
             .max(TimeSeriesValue::compareTo)
             .stream()
             .findFirst()
-            .map(TimeSeriesValue::getValue)
-            .orElse(0.);
+            .map(TimeSeriesValue::getValue);
     }
 
     public boolean isPref() {

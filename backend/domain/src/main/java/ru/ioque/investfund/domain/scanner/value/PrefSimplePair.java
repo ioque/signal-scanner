@@ -14,10 +14,15 @@ public class PrefSimplePair {
     FinInstrument simple;
 
     public Double getCurrentDelta() {
-        return simple.getTodayLastPrice() - pref.getTodayLastPrice();
+        var simplePrice = simple.getTodayLastPrice();
+        var prefPrice = pref.getTodayLastPrice();
+        if (simplePrice.isEmpty() || prefPrice.isEmpty()) return 0D;
+        return simplePrice.get() - prefPrice.get();
     }
 
     public Double getHistoryDelta() {
+        if (simple.getWaPriceSeries().isEmpty()) return 0D;
+        if (pref.getWaPriceSeries().isEmpty()) return 0D;
         final List<Double> historyDelta = simple
             .getWaPriceSeries()
             .stream()
