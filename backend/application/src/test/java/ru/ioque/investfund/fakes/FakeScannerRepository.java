@@ -8,7 +8,6 @@ import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
-import ru.ioque.investfund.domain.statistic.value.InstrumentStatistic;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,15 +54,10 @@ public class FakeScannerRepository implements ScannerRepository {
     private List<FinInstrument> getAllByInstrumentIdIn(List<UUID> instrumentIds) {
         return instrumentIds.stream().map(id -> {
             Instrument instrument = exchangeRepository.get().getInstruments().stream().filter(row -> row.getId().equals(id)).findFirst().orElseThrow();
-            Optional<InstrumentStatistic> statistic = statisticRepository.getBy(id);
             return FinInstrument.builder()
                 .instrumentId(instrument.getId())
                 .ticker(instrument.getTicker())
-                .historyMedianValue(statistic.map(InstrumentStatistic::getHistoryMedianValue).orElse(0.0))
-                .todayLastPrice(statistic.map(InstrumentStatistic::getTodayLastPrice).orElse(0.0))
-                .todayOpenPrice(statistic.map(InstrumentStatistic::getTodayOpenPrice).orElse(0.0))
-                .todayValue(statistic.map(InstrumentStatistic::getTodayValue).orElse(0.0))
-                .buyToSellValuesRatio(statistic.map(InstrumentStatistic::getBuyToSellValuesRatio).orElse(0.0))
+                .buyToSellValueRatio(instrument.getBuyToSellValueRatio())
                 .waPriceSeries(instrument.getDailyValues()
                     .stream()
                     .filter(row -> row.getClass().equals(DealResult.class))

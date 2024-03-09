@@ -20,10 +20,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class FinInstrument extends Domain {
     String ticker;
-    Double historyMedianValue;
-    Double todayLastPrice;
-    Double todayOpenPrice;
-    Double buyToSellValuesRatio;
+    Double buyToSellValueRatio;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
@@ -31,15 +28,12 @@ public class FinInstrument extends Domain {
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
 
+
     @Builder
     public FinInstrument(
         UUID instrumentId,
         String ticker,
-        Double todayValue,
-        Double historyMedianValue,
-        Double todayLastPrice,
-        Double todayOpenPrice,
-        Double buyToSellValuesRatio,
+        Double buyToSellValueRatio,
         List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
@@ -49,10 +43,7 @@ public class FinInstrument extends Domain {
     ) {
         super(instrumentId);
         this.ticker = ticker;
-        this.historyMedianValue = historyMedianValue;
-        this.todayLastPrice = todayLastPrice;
-        this.todayOpenPrice = todayOpenPrice;
-        this.buyToSellValuesRatio = buyToSellValuesRatio;
+        this.buyToSellValueRatio = buyToSellValueRatio;
         this.closePriceSeries = closePriceSeries;
         this.openPriceSeries = openPriceSeries;
         this.valueSeries = valueSeries;
@@ -61,31 +52,47 @@ public class FinInstrument extends Domain {
         this.todayValueSeries = todayValueSeries;
     }
 
+    public Double getHistoryMedianValue() {
+        var sortedValues = todayValueSeries.stream().sorted().toList();
+        var n = sortedValues.size();
+        if (n % 2 != 0)
+            return sortedValues.get(n / 2).getValue();
+        return (sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0;
+    }
+
+    public Double getTodayOpenPrice() {
+        return todayPriceSeries.stream().min(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue).orElseThrow();
+    }
+
+    public Double getTodayLastPrice() {
+        return todayPriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue).orElseThrow();
+    }
+
     public Double getTodayValue() {
         return todayValueSeries.stream().mapToDouble(row -> Math.abs(row.getValue())).sum();
     }
 
     public boolean isRiseToday() {
-        return Math.abs(todayLastPrice) > Math.abs(getLastClosePrice()) && Math.abs(todayLastPrice) > Math.abs(todayOpenPrice);
+        return Math.abs(getTodayLastPrice()) > Math.abs(getPrevClosePrice()) && Math.abs(getTodayLastPrice()) > Math.abs(getTodayOpenPrice());
     }
 
     public boolean isRiseOvernight(double scale) {
-        return (Math.abs(todayLastPrice / getLastClosePrice()) - 1) > scale;
+        return (Math.abs(getTodayLastPrice() / getPrevClosePrice()) - 1) > scale;
     }
 
     public boolean isRiseForPrevDay(double scale) {
-        return (Math.abs(getLastClosePrice() / getPrevLastClosePrice()) - 1)  > scale;
+        return (Math.abs(getPrevClosePrice() / getPrevPrevClosePrice()) - 1)  > scale;
     }
 
     public boolean isRiseForToday(double scale) {
-        return (Math.abs(todayLastPrice / todayOpenPrice) - 1) > scale;
+        return (Math.abs(getTodayLastPrice() / getTodayOpenPrice()) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {
         return isRiseForPrevDay(historyScale) && isRiseForToday(intradayScale);
     }
 
-    public Double getPrevLastClosePrice() {
+    public Double getPrevPrevClosePrice() {
         final LocalDate lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getTime).map(LocalDate.class::cast).orElseThrow();
         final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate);
         return closePriceSeries.stream()
@@ -102,7 +109,7 @@ public class FinInstrument extends Domain {
         return day;
     }
 
-    public Double getLastClosePrice() {
+    public Double getPrevClosePrice() {
         return closePriceSeries
             .stream()
             .max(TimeSeriesValue::compareTo)

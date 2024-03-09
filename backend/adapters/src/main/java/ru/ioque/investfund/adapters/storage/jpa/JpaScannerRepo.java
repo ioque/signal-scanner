@@ -12,7 +12,6 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSector
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.statistic.InstrumentStatisticEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentStatisticEntityRepository;
@@ -91,15 +90,10 @@ public class JpaScannerRepo implements ScannerRepository {
                         )
                     )
                     .orElseThrow();
-                Optional<InstrumentStatisticEntity> statistic = instrumentStatisticEntityRepository.findById(id);
                 return FinInstrument.builder()
                     .instrumentId(instrument.getId())
                     .ticker(instrument.getTicker())
-                    .historyMedianValue(statistic.map(InstrumentStatisticEntity::getHistoryMedianValue).orElse(0.0))
-                    .todayLastPrice(statistic.map(InstrumentStatisticEntity::getTodayLastPrice).orElse(0.0))
-                    .todayOpenPrice(statistic.map(InstrumentStatisticEntity::getTodayOpenPrice).orElse(0.0))
-                    .todayValue(statistic.map(InstrumentStatisticEntity::getTodayValue).orElse(0.0))
-                    .buyToSellValuesRatio(statistic.map(InstrumentStatisticEntity::getBuyToSellValuesRatio).orElse(0.0))
+                    .buyToSellValueRatio(instrument.getBuyToSellValueRatio())
                     .waPriceSeries(instrument
                         .getDailyValues()
                         .stream()

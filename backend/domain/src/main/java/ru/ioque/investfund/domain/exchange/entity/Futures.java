@@ -45,9 +45,4 @@ public class Futures extends Instrument {
         this.initialMargin = initialMargin;
         this.assetCode = assetCode;
     }
-
-    @Override
-    public Double getTodayValue() {
-        return super.getTodayValue() * lotVolume;
-    }
 }

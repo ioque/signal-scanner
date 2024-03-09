@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
-import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentStatisticResponse;
 import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.domain.statistic.calculator.StatisticCalculator;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,15 +57,5 @@ public class ExchangeQueryController {
             .stream()
             .map(InstrumentInListResponse::fromDomain)
             .toList();
-    }
-
-    @GetMapping("/api/v1/instruments/{id}/statistic")
-    public InstrumentStatisticResponse getInstrumentStatistic(@PathVariable UUID id) {
-        StatisticCalculator calculator = new StatisticCalculator();
-        return InstrumentStatisticResponse
-            .fromDomain(
-                calculator.calcStatistic(instrumentQueryRepository
-                    .getWithTradingDataBy(id, dateTimeProvider.nowDate()))
-            );
     }
 }

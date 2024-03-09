@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDate;
@@ -98,19 +99,31 @@ public abstract class Instrument extends Domain {
         return lastIntradayValue().map(IntradayValue::getNumber);
     }
 
-    public Double getTodayValue() {
-        return intradayValues
-            .stream()
-            .mapToDouble(IntradayValue::getValue)
-            .sum();
-    }
-
     public Optional<Double> getLastDealPrice() {
         return lastIntradayValue().map(IntradayValue::getPrice);
     }
 
     public Double getFirstDealPrice() {
         return firstIntradayValue().map(IntradayValue::getPrice).orElse(0.0);
+    }
+
+    public Double getBuyToSellValueRatio() {
+        double buyValue = getIntradayValues()
+            .stream()
+            .filter(row -> row.getClass().equals(Deal.class))
+            .map(Deal.class::cast)
+            .filter(row -> row.getIsBuy().equals(Boolean.TRUE))
+            .mapToDouble(Deal::getValue)
+            .sum();
+        double sellValue = getIntradayValues()
+            .stream()
+            .filter(row -> row.getClass().equals(Deal.class))
+            .map(Deal.class::cast)
+            .filter(row -> row.getIsBuy().equals(Boolean.FALSE))
+            .mapToDouble(Deal::getValue)
+            .sum();
+        if (buyValue == 0 || sellValue == 0) return 1D;
+        return buyValue / sellValue;
     }
 
     public String printMarketStat() {

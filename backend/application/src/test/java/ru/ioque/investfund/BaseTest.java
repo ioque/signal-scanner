@@ -3,7 +3,6 @@ package ru.ioque.investfund;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.application.modules.statistic.StatisticManager;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
@@ -76,10 +75,6 @@ public class BaseTest {
 
     protected final FakeEventBus eventBus() {
         return (FakeEventBus) fakeDIContainer.getEventBus();
-    }
-
-    protected final StatisticManager statisticManager() {
-        return fakeDIContainer.getStatisticManager();
     }
 
     protected final FakeStatisticRepository statisticRepository() {

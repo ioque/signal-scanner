@@ -8,7 +8,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
@@ -23,10 +22,5 @@ public class Deal extends IntradayValue {
         super(number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
-    }
-
-    @Override
-    public Double getPrice() {
-        return super.getPrice() * (Objects.equals(isBuy, Boolean.FALSE) ? -1 : 1);
     }
 }

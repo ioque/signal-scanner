@@ -137,7 +137,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         var instruments = getInstruments();
@@ -167,7 +167,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         loggerProvider().clearLogs();
@@ -193,10 +193,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         exchangeManager().execute();
-        statisticManager().calcStatistic();
         dataScannerManager().execute();
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
@@ -223,7 +222,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
             "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
         loggerProvider().clearLogs();
@@ -239,9 +238,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknBuySignalDataset() {
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D,1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D,1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D,100D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
             buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
@@ -249,19 +248,19 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
             buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
-            buildBuyDealBy(1L,"TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L,"TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L,"TGKN", "11:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(4L,"TGKN", "11:01:00", 100D, 46912035D, 1),
-            buildBuyDealBy(5L,"TGKN", "11:45:00", 102D, 46912035D, 1)
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 46912035D, 1),
+            buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 46912035D, 1)
         );
     }
 
     private void initTgknSellSignalDataset() {
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D,1000D),
-            buildDealResultBy("TGKN", "2023-12-23", 99.D, 99.1D, 97D,1000D),
-            buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D,97D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1000D),
             buildDeltaResultBy("IMOEX", "2023-12-22", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-23", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-24", 100.D, 100.D, 1D)
@@ -269,22 +268,22 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
             buildDeltaBy(2L, "IMOEX", "12:00:00", 97D, 200D),
-            buildBuyDealBy(1L,"TGKN", "10:00:00", 98D, 46912035D, 1),
-            buildSellDealBy(2L,"TGKN", "10:03:00", 97D, 46912035D, 1),
-            buildSellDealBy(3L,"TGKN", "11:00:00", 98D, 46912035D, 1),
-            buildSellDealBy(4L,"TGKN", "11:01:00", 97D, 46912035D, 1),
-            buildSellDealBy(5L,"TGKN", "11:45:00", 96D, 46912035D, 1)
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 98D, 46912035D, 1),
+            buildSellDealBy(2L, "TGKN", "10:03:00", 97D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 98D, 46912035D, 1),
+            buildSellDealBy(4L, "TGKN", "11:01:00", 97D, 46912035D, 1),
+            buildSellDealBy(5L, "TGKN", "11:45:00", 96D, 46912035D, 1)
         );
     }
 
     private void initTgknAndTgkbAndImoexHistoryTradingData() {
         initTradingResults(
-            buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D,  1D, 1000D),
-            buildDealResultBy("TGKB", "2023-12-20", 99.D, 99.D, 1D,1000D),
-            buildDealResultBy("TGKB", "2023-12-21", 10.D, 10.D,1D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D,1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D,1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D,1D, 1000D),
+            buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy("TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy("TGKB", "2023-12-21", 10.D, 10.D, 1D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1000D),
             buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
             buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
@@ -297,17 +296,17 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
                 buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
                 //TGKB
-                buildBuyDealBy(1L, "TGKB", "10:00:00", 100D,136926D, 1),
-                buildBuyDealBy(2L, "TGKB", "10:16:00", 100D,8736926D, 1),
-                buildBuyDealBy(3L, "TGKB", "11:00:00", 100D,8736926D, 1),
+                buildBuyDealBy(1L, "TGKB", "10:00:00", 100D, 136926D, 1),
+                buildBuyDealBy(2L, "TGKB", "10:16:00", 100D, 8736926D, 1),
+                buildBuyDealBy(3L, "TGKB", "11:00:00", 100D, 8736926D, 1),
                 buildBuyDealBy(4L, "TGKB", "11:10:00", 100D, 8736926D, 1),
                 buildBuyDealBy(5L, "TGKB", "11:50:00", 102D, 873160926D, 1),
                 //TGKN
-                buildBuyDealBy(1L,"TGKN", "10:00:00", 100D, 46912035D, 1),
-                buildBuyDealBy(2L,"TGKN", "10:03:00", 100D, 46912035D, 1),
-                buildBuyDealBy(3L,"TGKN", "11:00:00", 100D, 46912035D, 1),
-                buildBuyDealBy(4L,"TGKN", "11:01:00", 100D, 46912035D, 1),
-                buildBuyDealBy(5L,"TGKN", "11:45:00", 102D, 46912035D, 1)
+                buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+                buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+                buildBuyDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1),
+                buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 46912035D, 1),
+                buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 46912035D, 1)
             )
         );
     }
