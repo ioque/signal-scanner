@@ -63,11 +63,19 @@ public class SignalScannerBot extends Domain {
     private List<ScannerLog> processResult(ScanningResult scanningResult) {
         List<Signal> oldSignals = List.copyOf(this.signals);
         List<Signal> newSignals = List.copyOf(scanningResult.getSignals());
-        List<Signal> finalSignalList = new ArrayList<>(newSignals);
+        List<Signal> finalSignalList = new ArrayList<>(newSignals.stream().filter(Signal::isBuy).toList());
+        newSignals
+            .stream()
+            .filter(newSignal -> !newSignal.isBuy())
+            .forEach(newSignal -> {
+                    if (oldSignals.stream().anyMatch(oldSignal -> newSignal.sameByInstrumentId(oldSignal)
+                        && oldSignal.isBuy())) {
+                        finalSignalList.add(newSignal);
+                    }
+                }
+            );
         oldSignals.forEach(oldSignal -> {
-            boolean alreadyExists = newSignals.stream().anyMatch(row -> row.sameByInstrumentId(oldSignal) && row.sameByIsBuy(oldSignal));
-            boolean isSellAfterBuy = newSignals.stream().anyMatch(row -> row.sameByInstrumentId(oldSignal) && oldSignal.isBuy() && !row.isBuy());
-            if (!alreadyExists && !isSellAfterBuy) {
+            if (newSignals.stream().noneMatch(newSignal -> newSignal.sameByInstrumentId(oldSignal))) {
                 finalSignalList.add(oldSignal);
             }
         });

@@ -50,9 +50,9 @@ public class FinInstrument extends Domain {
     }
 
     public Optional<Double> getHistoryMedianValue() {
-        if (todayValueSeries.size() == 1) return Optional.of(todayValueSeries.get(0).getValue());
-        if (todayValueSeries.isEmpty()) return Optional.empty();
-        var sortedValues = todayValueSeries.stream().sorted().toList();
+        if (valueSeries.size() == 1) return Optional.of(todayValueSeries.get(0).getValue());
+        if (valueSeries.isEmpty()) return Optional.empty();
+        var sortedValues = valueSeries.stream().sorted().toList();
         var n = sortedValues.size();
         if (n % 2 != 0)
             return Optional.of(sortedValues.get(n / 2).getValue());

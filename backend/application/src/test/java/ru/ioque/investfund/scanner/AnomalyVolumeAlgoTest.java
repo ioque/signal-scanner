@@ -236,6 +236,271 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertFalse(fakeDataScannerStorage().getAll().get(0).getSignals().get(0).isBuy());
     }
 
+    @Test
+    @DisplayName("""
+        T13. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы, внутри дня сделок по бумаге не было.
+        Исторические и дневные данные по индексу проинтегрированы.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase13() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T14. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные не проинтегрированы, внутри дня сделок по бумаге не было.
+        Исторические и дневные данные по индексу проинтегрированы.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase14() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T15. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы, внутри дня была совершена одна сделка.
+        Исторические и дневные данные по индексу проинтегрированы.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase15() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 469D, 1)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T16. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные не проинтегрированы, внутридневные данные проинтегрированы.
+        Исторические данные по индексу есть, внутридневных данных по индексу нет.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase16() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+        );
+        initDealDatas(
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T17. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы, внутридневные данные проинтегрированы.
+        Исторических данных по индексу нет, внутридневные данные по индексу есть.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase17() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T18. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы, внутридневные данные не проинтегрированы.
+        Исторических данных по индексу нет, внутридневные данные по индексу есть.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase18() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T19. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, объем превышает объем за предыдущий день.
+        Исторические и дневные данные по индексу проинтегрированы.
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase19() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T20. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        Исторические данные проинтегрированы, внутридневные данные проинтегрированы, объем превышает исторический.
+        Исторические данные по индексу проинтегрированы за один день, дневные данные по индексу проинтегрированы
+        Запускается сканер. Ошибок нет, сигналов нет.
+        """)
+    void testCase20() {
+        final var tickers = List.of("TGKN", "IMOEX");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initTgknAndTgkbAndImoex();
+        initTradingResults(
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+        );
+        initDealDatas(
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Аномальные объемы, третий эшелон.",
+            new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
+        );
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
     private void initTgknBuySignalDataset() {
         initTradingResults(
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
