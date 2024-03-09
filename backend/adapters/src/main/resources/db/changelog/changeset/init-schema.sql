@@ -138,20 +138,6 @@ alter table scanner_log
     owner to postgres;
 
 
-create table if not exists instrument_statistic
-(
-    id                       uuid             not null primary key,
-    instrument_id            uuid             not null,
-    today_value              double precision not null,
-    history_median_value     double precision not null,
-    today_last_price         double precision not null,
-    today_open_price         double precision not null,
-    buy_to_sell_values_ratio double precision not null
-);
-
-alter table instrument_statistic
-    owner to postgres;
-
 create table if not exists schedule_unit
 (
     priority                 integer      not null,

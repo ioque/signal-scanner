@@ -22,7 +22,6 @@ import ru.ioque.acceptance.domain.dataemulator.stock.StockTrade;
 import ru.ioque.acceptance.domain.exchange.Exchange;
 import ru.ioque.acceptance.domain.exchange.Instrument;
 import ru.ioque.acceptance.domain.exchange.InstrumentInList;
-import ru.ioque.acceptance.domain.exchange.InstrumentStatistic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -365,20 +364,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T13. Получение статистики инструмента.
-        """)
-    void testCase13() {
-        initInstrumentsWithTradingData();
-        fullIntegrate();
-
-        InstrumentStatistic instrumentStatistic = getInstrumentStatisticBy("SBER");
-
-        assertEquals(37, Math.round(instrumentStatistic.getTodayValue()));
-    }
-
-    @Test
-    @DisplayName("""
-        T14. Очистка внутридневных данных.
+        T13. Очистка внутридневных данных.
         """)
     void testCase14() {
         initInstrumentsWithTradingData();
@@ -393,7 +379,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T15. Перенос торговых данных в архив.
+        T14. Перенос торговых данных в архив.
         """)
     void testCase15() {
         initInstrumentsWithTradingData();
