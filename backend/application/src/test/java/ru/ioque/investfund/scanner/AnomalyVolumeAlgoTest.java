@@ -6,12 +6,15 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.algorithms.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SIGNAL SCANNER MANAGER - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
@@ -140,17 +143,50 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
-        var instruments = getInstruments();
-        var imoex = instruments.stream().filter(row -> row.getTicker().equals("IMOEX")).findFirst().orElseThrow();
-        var tgkn = instruments.stream().filter(row -> row.getTicker().equals("TGKN")).findFirst().orElseThrow();
-        var tgkb = instruments.stream().filter(row -> row.getTicker().equals("TGKB")).findFirst().orElseThrow();
-        assertEquals(3, imoex.getDailyValues().size());
-        assertEquals(3, tgkn.getDailyValues().size());
-        assertEquals(3, tgkb.getDailyValues().size());
-        assertEquals(2, imoex.getIntradayValues().size());
-        assertEquals(5, tgkn.getIntradayValues().size());
-        assertEquals(5, tgkb.getIntradayValues().size());
-        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        List<Signal> signals = fakeDataScannerStorage().getAll().get(0).getSignals();
+        FinInstrument tgkn = fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("TGKN"))
+            .findFirst()
+            .orElseThrow();
+        FinInstrument tgkb = fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("TGKB"))
+            .findFirst()
+            .orElseThrow();
+        FinInstrument imoex = fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("IMOEX"))
+            .findFirst()
+            .orElseThrow();
+        assertEquals(2, signals.size());
+        assertEquals(2, signals.stream().filter(Signal::isBuy).count());
+        assertEquals(100.0, tgkn.getTodayOpenPrice().orElseThrow());
+        assertEquals(102.0, tgkn.getTodayLastPrice().orElseThrow());
+        assertEquals(13000.0, tgkn.getTodayValue().orElseThrow());
+        assertEquals(1000.0, tgkn.getHistoryMedianValue().orElseThrow());
+        assertTrue(tgkn.isRiseToday());
+
+        assertEquals(100.0, tgkb.getTodayOpenPrice().orElseThrow());
+        assertEquals(102.0, tgkb.getTodayLastPrice().orElseThrow());
+        assertEquals(15000.0, tgkb.getTodayValue().orElseThrow());
+        assertEquals(1000.0, tgkb.getHistoryMedianValue().orElseThrow());
+        assertTrue(tgkb.isRiseToday());
+
+        assertEquals(2800D, imoex.getTodayOpenPrice().orElseThrow());
+        assertEquals(3100D, imoex.getTodayLastPrice().orElseThrow());
+        assertEquals(2200000D, imoex.getTodayValue().orElseThrow());
+        assertEquals(1500000D, imoex.getHistoryMedianValue().orElseThrow());
+        assertTrue(imoex.isRiseToday());
     }
 
     @Test
@@ -506,18 +542,18 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 46912035D, 1),
-            buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 46912035D, 1)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 100D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 3200D, 200D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 5000D, 1)
         );
     }
 
@@ -526,18 +562,18 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D, 1000D),
             buildDealResultBy("TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
             buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-22", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-23", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-24", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 97D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 98D, 46912035D, 1),
-            buildSellDealBy(2L, "TGKN", "10:03:00", 97D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 98D, 46912035D, 1),
-            buildSellDealBy(4L, "TGKN", "11:01:00", 97D, 46912035D, 1),
-            buildSellDealBy(5L, "TGKN", "11:45:00", 96D, 46912035D, 1)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(2L, "TGKN", "10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(4L, "TGKN", "11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(5L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
     }
 
@@ -549,29 +585,29 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 1000D),
             buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 2800D, 2900D, 1_000_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2800D, 2900D, 1_500_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 2900D, 3000D, 2_000_000D)
         );
     }
 
     private void initTgknAndTgkbAndImoexIntradayData() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-                buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+                buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
+                buildDeltaBy(2L, "IMOEX", "12:00:00", 3100D, 1_200_000D),
                 //TGKB
-                buildBuyDealBy(1L, "TGKB", "10:00:00", 100D, 136926D, 1),
-                buildBuyDealBy(2L, "TGKB", "10:16:00", 100D, 8736926D, 1),
-                buildBuyDealBy(3L, "TGKB", "11:00:00", 100D, 8736926D, 1),
-                buildBuyDealBy(4L, "TGKB", "11:10:00", 100D, 8736926D, 1),
-                buildBuyDealBy(5L, "TGKB", "11:50:00", 102D, 873160926D, 1),
+                buildBuyDealBy(1L, "TGKB", "10:00:00", 100D, 6000D, 1),
+                buildBuyDealBy(2L, "TGKB", "10:16:00", 100D, 1000D, 1),
+                buildBuyDealBy(3L, "TGKB", "11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(4L, "TGKB", "11:10:00", 100D, 1000D, 1),
+                buildBuyDealBy(5L, "TGKB", "11:50:00", 102D, 6000D, 1),
                 //TGKN
-                buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-                buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-                buildBuyDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1),
-                buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 46912035D, 1),
-                buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 46912035D, 1)
+                buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 5000D, 1),
+                buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+                buildBuyDealBy(3L, "TGKN", "11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 1000D, 1),
+                buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 5000D, 1)
             )
         );
     }
