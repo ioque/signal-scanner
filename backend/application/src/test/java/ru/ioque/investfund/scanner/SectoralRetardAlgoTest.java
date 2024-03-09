@@ -208,6 +208,50 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
     }
 
+    @Test
+    @DisplayName("""
+        T11. Сканер создан для двух инструментов. TATN отстающий, ROSN растущий.
+        Сигнала нет, ошибки нет.
+        """)
+    void testCase11() {
+        final var tickers = List.of("ROSN", "TATN");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initOilCompanyData();
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Секторальный отстающий, нефтянка.",
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
+        );
+
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T12. Сканер создан для трех инструментов. LKOH растущий, ROSN растущий, SIBN растущий.
+        Сигнала нет, ошибки нет.
+        """)
+    void testCase12() {
+        final var tickers = List.of("ROSN", "TATN", "SIBN");
+        initTodayDateTime("2023-12-22T13:00:00");
+        initOilCompanyData();
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        addScanner(
+            "Секторальный отстающий, нефтянка.",
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
+        );
+
+        runWorkPipline();
+
+        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+    }
+
     private void initOilCompanyData() {
         exchangeDataFixture()
             .initInstruments(
