@@ -11,7 +11,6 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
@@ -34,10 +33,8 @@ public class FakeDIContainer {
     ScannerManager scannerManager;
     ExchangeManager exchangeManager;
     EventBus eventBus;
-    StatisticRepository statisticRepository;
 
     public FakeDIContainer() {
-        statisticRepository = new FakeStatisticRepository();
         eventBus = new FakeEventBus();
         dateTimeProvider = new FakeDateTimeProvider();
         exchangeDataFixture = new ExchangeDataFixture();
@@ -48,7 +45,7 @@ public class FakeDIContainer {
         configureProvider = new FakeConfigureProvider();
         loggerFacade = new LoggerFacade(loggerProvider);
         exchangeRepository = new FakeExchangeRepository();
-        scannerRepository = new FakeScannerRepository(exchangeRepository, statisticRepository);
+        scannerRepository = new FakeScannerRepository(exchangeRepository);
         exchangeManager = new ExchangeManager(
             dateTimeProvider,
             configureProvider,

@@ -14,7 +14,6 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardSca
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentStatisticEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -44,7 +43,6 @@ public class JpaScannerRepo implements ScannerRepository {
     InstrumentEntityRepository instrumentEntityRepository;
     DailyValueEntityRepository dailyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
-    InstrumentStatisticEntityRepository instrumentStatisticEntityRepository;
     DateTimeProvider dateTimeProvider;
 
     @Override

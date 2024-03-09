@@ -2,7 +2,6 @@ package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.StatisticRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
@@ -18,11 +17,9 @@ import java.util.UUID;
 public class FakeScannerRepository implements ScannerRepository {
     Map<UUID, SignalScannerBot> financialDataScannerMap = new HashMap<>();
     ExchangeRepository exchangeRepository;
-    StatisticRepository statisticRepository;
 
-    public FakeScannerRepository(ExchangeRepository exchangeRepository, StatisticRepository statisticRepository) {
+    public FakeScannerRepository(ExchangeRepository exchangeRepository) {
         this.exchangeRepository = exchangeRepository;
-        this.statisticRepository = statisticRepository;
     }
 
     @Override

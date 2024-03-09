@@ -25,7 +25,6 @@ import ru.ioque.investfund.fakes.FakeExchangeRepository;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
-import ru.ioque.investfund.fakes.FakeStatisticRepository;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
 import java.time.DayOfWeek;
@@ -75,10 +74,6 @@ public class BaseTest {
 
     protected final FakeEventBus eventBus() {
         return (FakeEventBus) fakeDIContainer.getEventBus();
-    }
-
-    protected final FakeStatisticRepository statisticRepository() {
-        return (FakeStatisticRepository) fakeDIContainer.getStatisticRepository();
     }
 
     protected final FakeScannerRepository fakeDataScannerStorage() {
