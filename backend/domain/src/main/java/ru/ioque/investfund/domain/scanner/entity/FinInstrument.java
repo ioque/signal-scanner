@@ -50,7 +50,7 @@ public class FinInstrument extends Domain {
     }
 
     public Optional<Double> getHistoryMedianValue() {
-        if (valueSeries.size() == 1) return Optional.of(todayValueSeries.get(0).getValue());
+        if (valueSeries.size() == 1) return Optional.of(valueSeries.get(0).getValue());
         if (valueSeries.isEmpty()) return Optional.empty();
         var sortedValues = valueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sorted().toArray();
         var n = sortedValues.length;
@@ -72,12 +72,12 @@ public class FinInstrument extends Domain {
         return Optional.of(todayValueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sum());
     }
 
-    public boolean isRiseToday() {
+    public Optional<Boolean> isRiseToday() {
         var todayLastPrice = getTodayLastPrice();
         var todayOpenPrice = getTodayOpenPrice();
         var prevClosePrice = getPrevClosePrice();
-        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty() || prevClosePrice.isEmpty()) return false;
-        return todayLastPrice.get() > prevClosePrice.get() && todayLastPrice.get() > todayOpenPrice.get();
+        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty() || prevClosePrice.isEmpty()) return Optional.empty();
+        return Optional.of(todayLastPrice.get() > prevClosePrice.get() && todayLastPrice.get() > todayOpenPrice.get());
     }
 
     public boolean isRiseOvernight(double scale) {
@@ -106,8 +106,9 @@ public class FinInstrument extends Domain {
     }
 
     public Optional<Double> getPrevPrevClosePrice() {
-        final LocalDate lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getTime).map(LocalDate.class::cast).orElseThrow();
-        final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate);
+        final Optional<LocalDate> lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getTime).map(LocalDate.class::cast);
+        if (lastTradingDate.isEmpty()) return Optional.empty();
+        final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate.get());
         return closePriceSeries.stream()
             .filter(row -> row.getTime().equals(prevLastTradingDate))
             .findFirst()

@@ -12,9 +12,7 @@ import ru.ioque.investfund.domain.scanner.value.Signal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SIGNAL SCANNER MANAGER - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
@@ -143,50 +141,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
         runWorkPipline();
-        List<Signal> signals = fakeDataScannerStorage().getAll().get(0).getSignals();
-        FinInstrument tgkn = fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("TGKN"))
-            .findFirst()
-            .orElseThrow();
-        FinInstrument tgkb = fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("TGKB"))
-            .findFirst()
-            .orElseThrow();
-        FinInstrument imoex = fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("IMOEX"))
-            .findFirst()
-            .orElseThrow();
-        assertEquals(2, signals.size());
-        assertEquals(2, signals.stream().filter(Signal::isBuy).count());
-        assertEquals(100.0, tgkn.getTodayOpenPrice().orElseThrow());
-        assertEquals(102.0, tgkn.getTodayLastPrice().orElseThrow());
-        assertEquals(13000.0, tgkn.getTodayValue().orElseThrow());
-        assertEquals(1150.0, tgkn.getHistoryMedianValue().orElseThrow());
-        assertTrue(tgkn.isRiseToday());
-
-        assertEquals(100.0, tgkb.getTodayOpenPrice().orElseThrow());
-        assertEquals(102.0, tgkb.getTodayLastPrice().orElseThrow());
-        assertEquals(15000.0, tgkb.getTodayValue().orElseThrow());
-        assertEquals(1500.0, tgkb.getHistoryMedianValue().orElseThrow());
-        assertTrue(tgkb.isRiseToday());
-
-        assertEquals(2800D, imoex.getTodayOpenPrice().orElseThrow());
-        assertEquals(3100D, imoex.getTodayLastPrice().orElseThrow());
-        assertEquals(2_200_000D, imoex.getTodayValue().orElseThrow());
-        assertEquals(1_500_000D, imoex.getHistoryMedianValue().orElseThrow());
-        assertTrue(imoex.isRiseToday());
+        assertSignals(getSignals(), 2, 2, 0);
+        assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
+        assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
+        assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
     }
 
     @Test
@@ -212,7 +170,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         runWorkPipline();
 
         assertEquals(8, loggerProvider().log.size());
-        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 2, 2, 0);
+        assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
+        assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
+        assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
     }
 
     @Test
@@ -239,7 +200,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         runWorkPipline();
 
         assertEquals(10, loggerProvider().log.size());
-        assertEquals(2, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 2, 2, 0);
+        assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
+        assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
+        assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
     }
 
     @Test
@@ -268,8 +232,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipline();
 
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
-        assertFalse(fakeDataScannerStorage().getAll().get(0).getSignals().get(0).isBuy());
+        assertSignals(getSignals(), 1, 0, 1);
+        assertFinInstrument(getTgkn(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
+        assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
 
     @Test
@@ -287,13 +252,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 3000.0, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 2900.0, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -301,9 +266,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), null, null, null, 1000.0, 100.0, 99.0, null);
+        assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
 
     @Test
@@ -318,13 +286,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 3000.0, 3000.0, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -332,9 +300,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), null, null, null, null, null, null, null);
+        assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
 
     @Test
@@ -352,13 +323,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
             buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 469D, 1)
         );
         exchangeManager().integrateWithDataSource();
@@ -367,9 +338,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.5, 180, "IMOEX")
         );
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
+        assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
 
     @Test
@@ -384,14 +358,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D)
+            buildDeltaResultBy("IMOEX", "2023-12-10", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -401,7 +375,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, null, null, null);
+        assertFinInstrument(getImoex(), null, null, null, 1_500_000.0, 3000.0, 2900.0, null);
     }
 
     @Test
@@ -421,11 +397,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -435,7 +411,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
+        assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
 
     @Test
@@ -455,8 +433,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -466,7 +444,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertEquals(0, getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), null, null, null, 1000D, 100.D, 99.D, null);
+        assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
 
     @Test
@@ -474,24 +455,24 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T19. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, объем превышает объем за предыдущий день.
         Исторические и дневные данные по индексу проинтегрированы.
-        Запускается сканер. Ошибок нет, сигналов нет.
+        Запускается сканер. Ошибок нет, сигнал есть.
         """)
     void testCase19() {
         final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 99.D, 1D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-10", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-20", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -501,7 +482,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 1, 1, 0);
+        assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, null, true);
+        assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, 1_000_000D, 2800D, 2800D, true);
     }
 
     @Test
@@ -516,15 +499,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 100.D, 1D),
+            buildDeltaResultBy("IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 98D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 101D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 46912035D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 46912035D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 46912035D, 1)
+            buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
+            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
@@ -534,14 +517,78 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
+        assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
+    }
+
+    private void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
+        assertEquals(allSize, signals.size());
+        assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());
+        assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
+    }
+
+    public void assertFinInstrument(
+        FinInstrument finInstrument,
+        Double openPrice,
+        Double lastPrice,
+        Double todayValue,
+        Double historyMedianValue,
+        Double prevClosePrice,
+        Double prevPrevClosePrice,
+        Boolean isRiseToday
+    ) {
+        assertEquals(openPrice, finInstrument.getTodayOpenPrice().orElse(null));
+        assertEquals(lastPrice, finInstrument.getTodayLastPrice().orElse(null));
+        assertEquals(todayValue, finInstrument.getTodayValue().orElse(null));
+        assertEquals(historyMedianValue, finInstrument.getHistoryMedianValue().orElse(null));
+        assertEquals(prevClosePrice, finInstrument.getPrevClosePrice().orElse(null));
+        assertEquals(prevPrevClosePrice, finInstrument.getPrevPrevClosePrice().orElse(null));
+        assertEquals(isRiseToday, finInstrument.isRiseToday().orElse(null));
+    }
+
+    private List<Signal> getSignals() {
+        return fakeDataScannerStorage().getAll().get(0).getSignals();
+    }
+
+    private FinInstrument getImoex() {
+        return fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("IMOEX"))
+            .findFirst()
+            .orElseThrow();
+    }
+
+    private FinInstrument getTgkb() {
+        return fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("TGKB"))
+            .findFirst()
+            .orElseThrow();
+    }
+
+    private FinInstrument getTgkn() {
+        return fakeDataScannerStorage()
+            .getAll()
+            .get(0)
+            .getFinInstruments()
+            .stream()
+            .filter(row -> row.getTicker().equals("TGKN"))
+            .findFirst()
+            .orElseThrow();
     }
 
     private void initTgknBuySignalDataset() {
         initTradingResults(
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1400D),
             buildDeltaResultBy("IMOEX", "2023-12-10", 2900D, 2900D, 1_000_000D),
             buildDeltaResultBy("IMOEX", "2023-12-20", 2900D, 2900D, 1_500_000D),
             buildDeltaResultBy("IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
@@ -559,9 +606,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknSellSignalDataset() {
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
             buildDealResultBy("TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1000D),
+            buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
             buildDeltaResultBy("IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
             buildDeltaResultBy("IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
             buildDeltaResultBy("IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
@@ -581,7 +628,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTradingResults(
             buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D, 1D, 2000D),
             buildDealResultBy("TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy("TGKB", "2023-12-21", 10.D, 10.D, 1D, 1500D),
+            buildDealResultBy("TGKB", "2023-12-21", 100.D, 100.D, 1D, 1500D),
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 3000D),
             buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1150D),
             buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1100D),

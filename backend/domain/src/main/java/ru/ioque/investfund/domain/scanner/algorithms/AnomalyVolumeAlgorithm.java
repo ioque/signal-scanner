@@ -44,18 +44,18 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
     public ScanningResult run(UUID scannerId, final List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
-        final boolean indexIsRiseToday = getMarketIndex(finInstruments).isRiseToday();
-        logs.add(runWorkMessage(indexIsRiseToday));
+        final Optional<Boolean> indexIsRiseToday = getMarketIndex(finInstruments).isRiseToday();
+        logs.add(runWorkMessage(indexIsRiseToday.orElse(null)));
         for (final FinInstrument finInstrument : getAnalyzeStatistics(finInstruments)) {
             final Optional<Double> medianHistoryValue = finInstrument.getHistoryMedianValue();
             final Optional<Double> value = finInstrument.getTodayValue();
-            if (medianHistoryValue.isEmpty() || value.isEmpty()) continue;
+            if (medianHistoryValue.isEmpty() || value.isEmpty() || indexIsRiseToday.isEmpty() || finInstrument.isRiseToday().isEmpty()) continue;
             final double multiplier = value.get() / medianHistoryValue.get();
             logs.add(parametersMessage(finInstrument, value.get(), medianHistoryValue.get(), multiplier));
-            if (multiplier > scaleCoefficient && indexIsRiseToday && finInstrument.isRiseToday()) {
+            if (multiplier > scaleCoefficient && indexIsRiseToday.get() && finInstrument.isRiseToday().get()) {
                 signals.add(new Signal(dateTimeNow, finInstrument.getId(), true));
             }
-            if (multiplier > scaleCoefficient && !finInstrument.isRiseToday()) {
+            if (multiplier > scaleCoefficient && !finInstrument.isRiseToday().get()) {
                 signals.add(new Signal(dateTimeNow, finInstrument.getId(), false));
             }
         }
@@ -97,7 +97,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
         );
     }
 
-    private ScannerLog runWorkMessage(boolean indexIsRiseToday) {
+    private ScannerLog runWorkMessage(Boolean indexIsRiseToday) {
         return new ScannerLog(
             String
                 .format(
@@ -107,7 +107,7 @@ public class AnomalyVolumeAlgorithm extends SignalAlgorithm {
                     historyPeriod,
                     indexTicker
                 )
-                .concat(indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день."),
+                .concat(indexIsRiseToday == null ? "Данных по индексу нет." : (indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день.")),
             LocalDateTime.now()
         );
     }
