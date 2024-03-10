@@ -173,19 +173,19 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertEquals(100.0, tgkn.getTodayOpenPrice().orElseThrow());
         assertEquals(102.0, tgkn.getTodayLastPrice().orElseThrow());
         assertEquals(13000.0, tgkn.getTodayValue().orElseThrow());
-        assertEquals(1000.0, tgkn.getHistoryMedianValue().orElseThrow());
+        assertEquals(1150.0, tgkn.getHistoryMedianValue().orElseThrow());
         assertTrue(tgkn.isRiseToday());
 
         assertEquals(100.0, tgkb.getTodayOpenPrice().orElseThrow());
         assertEquals(102.0, tgkb.getTodayLastPrice().orElseThrow());
         assertEquals(15000.0, tgkb.getTodayValue().orElseThrow());
-        assertEquals(1000.0, tgkb.getHistoryMedianValue().orElseThrow());
+        assertEquals(1500.0, tgkb.getHistoryMedianValue().orElseThrow());
         assertTrue(tgkb.isRiseToday());
 
         assertEquals(2800D, imoex.getTodayOpenPrice().orElseThrow());
         assertEquals(3100D, imoex.getTodayLastPrice().orElseThrow());
-        assertEquals(2200000D, imoex.getTodayValue().orElseThrow());
-        assertEquals(1500000D, imoex.getHistoryMedianValue().orElseThrow());
+        assertEquals(2_200_000D, imoex.getTodayValue().orElseThrow());
+        assertEquals(1_500_000D, imoex.getHistoryMedianValue().orElseThrow());
         assertTrue(imoex.isRiseToday());
     }
 
@@ -579,12 +579,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknAndTgkbAndImoexHistoryTradingData() {
         initTradingResults(
-            buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D, 1D, 2000D),
             buildDealResultBy("TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy("TGKB", "2023-12-21", 10.D, 10.D, 1D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1000D),
+            buildDealResultBy("TGKB", "2023-12-21", 10.D, 10.D, 1D, 1500D),
+            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 3000D),
+            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1150D),
+            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1100D),
             buildDeltaResultBy("IMOEX", "2023-12-10", 2800D, 2900D, 1_000_000D),
             buildDeltaResultBy("IMOEX", "2023-12-20", 2800D, 2900D, 1_500_000D),
             buildDeltaResultBy("IMOEX", "2023-12-21", 2900D, 3000D, 2_000_000D)

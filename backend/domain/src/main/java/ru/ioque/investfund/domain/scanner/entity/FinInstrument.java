@@ -52,11 +52,11 @@ public class FinInstrument extends Domain {
     public Optional<Double> getHistoryMedianValue() {
         if (valueSeries.size() == 1) return Optional.of(todayValueSeries.get(0).getValue());
         if (valueSeries.isEmpty()) return Optional.empty();
-        var sortedValues = valueSeries.stream().sorted().toList();
-        var n = sortedValues.size();
+        var sortedValues = valueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sorted().toArray();
+        var n = sortedValues.length;
         if (n % 2 != 0)
-            return Optional.of(sortedValues.get(n / 2).getValue());
-        return Optional.of((sortedValues.get((n - 1) / 2).getValue() + sortedValues.get(n / 2).getValue()) / 2.0);
+            return Optional.of(sortedValues[(n / 2)]);
+        return Optional.of((sortedValues[(n - 1) / 2] + sortedValues[(n / 2)]) / 2.0);
     }
 
     public Optional<Double> getTodayOpenPrice() {
