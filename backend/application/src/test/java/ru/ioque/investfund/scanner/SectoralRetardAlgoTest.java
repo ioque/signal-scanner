@@ -9,10 +9,14 @@ import ru.ioque.investfund.domain.scanner.algorithms.SectoralRetardSignalConfig;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SIGNAL SCANNER MANAGER - SECTORAL RETARD ALGORITHM")
 public class SectoralRetardAlgoTest extends BaseScannerTest {
+    private final Double historyScale = 0.015;
+    private final Double intradayScale = 0.015;
     @Test
     @DisplayName("""
         T1. В конфигурацию SectoralRetardSignalConfig не передан параметр historyScale.
@@ -21,7 +25,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase1() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),null, 1D)
+            new SectoralRetardSignalConfig(getInstrumentIds(),null, intradayScale)
         ));
         assertEquals("Не передан параметр historyScale.", error.getMessage());
     }
@@ -34,7 +38,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase2() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),0D, 1D)
+            new SectoralRetardSignalConfig(getInstrumentIds(),0D, intradayScale)
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -47,7 +51,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase3() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),-1D, 1D)
+            new SectoralRetardSignalConfig(getInstrumentIds(),-1D, intradayScale)
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -60,7 +64,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase4() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),1D, null)
+            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, null)
         ));
         assertEquals("Не передан параметр intradayScale.", error.getMessage());
     }
@@ -73,7 +77,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase5() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),1D, 0D)
+            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, 0D)
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -86,7 +90,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase6() {
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),1D, -1D)
+            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, -1D)
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -102,28 +106,16 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData();
         initTradingResultsForTestCase1();
         initDealsTatnFallOtherRise();
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(),0.015, 0.015)
-        );
+        initScanner(tickers);
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+
         runWorkPipline();
 
-        var instruments = getInstruments();
-        var rosn = instruments.stream().filter(row -> row.getTicker().equals("ROSN")).findFirst().orElseThrow();
-        var lkoh = instruments.stream().filter(row -> row.getTicker().equals("LKOH")).findFirst().orElseThrow();
-        var sibn = instruments.stream().filter(row -> row.getTicker().equals("SIBN")).findFirst().orElseThrow();
-        var tatn = instruments.stream().filter(row -> row.getTicker().equals("TATN")).findFirst().orElseThrow();
-
-        assertEquals(2, rosn.getDailyValues().size());
-        assertEquals(2, lkoh.getDailyValues().size());
-        assertEquals(2, sibn.getDailyValues().size());
-        assertEquals(2, tatn.getDailyValues().size());
-        assertEquals(2, rosn.getIntradayValues().size());
-        assertEquals(2, lkoh.getIntradayValues().size());
-        assertEquals(2, sibn.getIntradayValues().size());
-        assertEquals(3, tatn.getIntradayValues().size());
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertFalse(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -138,28 +130,15 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
-        );
+        initScanner(tickers);
 
         runWorkPipline();
 
-        var instruments = getInstruments();
-        var rosn = instruments.stream().filter(row -> row.getTicker().equals("ROSN")).findFirst().orElseThrow();
-        var lkoh = instruments.stream().filter(row -> row.getTicker().equals("LKOH")).findFirst().orElseThrow();
-        var sibn = instruments.stream().filter(row -> row.getTicker().equals("SIBN")).findFirst().orElseThrow();
-        var tatn = instruments.stream().filter(row -> row.getTicker().equals("TATN")).findFirst().orElseThrow();
-
-        assertEquals(2, rosn.getDailyValues().size());
-        assertEquals(2, lkoh.getDailyValues().size());
-        assertEquals(2, sibn.getDailyValues().size());
-        assertEquals(2, tatn.getDailyValues().size());
-        assertEquals(2, rosn.getIntradayValues().size());
-        assertEquals(2, lkoh.getIntradayValues().size());
-        assertEquals(2, sibn.getIntradayValues().size());
-        assertEquals(3, tatn.getIntradayValues().size());
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 1, 1, 0);
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -173,16 +152,18 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
-        );
+        initScanner(tickers);
         runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-22T13:30:00");
 
         runWorkPipline();
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+
+        assertSignals(getSignals(), 1, 1, 0);
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -196,16 +177,18 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
-        );
+        initScanner(tickers);
         runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-22T14:00:00");
 
         runWorkPipline();
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+
+        assertSignals(getSignals(), 1, 1, 0);
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -220,19 +203,18 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
-        );
+        initScanner(tickers);
 
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
     @DisplayName("""
-        T12. Сканер создан для трех инструментов. LKOH растущий, ROSN растущий, SIBN растущий.
+        T12. Сканер создан для трех инструментов. TATN падающий, ROSN растущий, SIBN растущий.
         Сигнала нет, ошибки нет.
         """)
     void testCase12() {
@@ -242,14 +224,21 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 0.015, 0.015)
-        );
+        initScanner(tickers);
 
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+    }
+
+    private void initScanner(List<String> tickers) {
+        addScanner(
+            "Секторальный отстающий, нефтянка.",
+            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), historyScale, intradayScale)
+        );
     }
 
     private void initOilCompanyData() {
