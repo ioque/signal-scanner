@@ -21,6 +21,8 @@ public class BaseScannerTest extends BaseTest {
     protected static final String ROSN = "ROSN";
     protected static final String LKOH = "LKOH";
     protected static final String SIBN = "SIBN";
+    protected static final String SBER = "SBER";
+    protected static final String SBERP = "SBERP";
     @BeforeEach
     void beforeEach() {
         eventBus().subscribe(TradingDataUpdatedEvent.class, dataScannerManager());
@@ -74,6 +76,15 @@ public class BaseScannerTest extends BaseTest {
     protected FinInstrument getSibn() {
         return getFinInstrumentByTicker(SIBN);
     }
+
+    protected FinInstrument getSber() {
+        return getFinInstrumentByTicker(SBER);
+    }
+
+    protected FinInstrument getSberp() {
+        return getFinInstrumentByTicker(SBERP);
+    }
+
     protected FinInstrument getFinInstrumentByTicker(String ticker) {
         return fakeDataScannerStorage()
             .getAll()

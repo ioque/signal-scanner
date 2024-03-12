@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.algorithms.PrefSimpleSignalConfig;
+import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
+import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SIGNAL SCANNER MANAGER - SIMPLE-PREF PAIR ALGORITHM")
 public class SimplePrefPairAlgoTest extends BaseScannerTest {
+    private static final Double SPREAD_PARAM = 1.0;
     @Test
     @DisplayName("""
         T1. В конфигурацию PrefSimpleSignalConfig не передан параметр spreadParam.
@@ -63,23 +66,23 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         initSberSberPSecurityAndHistoryTradingData();
         initPositiveDeals();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
 
         runWorkPipline();
 
-        var instruments = getInstruments();
-        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
-        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
-        assertEquals(7, sber.getDailyValues().size());
-        assertEquals(7, sberp.getDailyValues().size());
-        assertEquals(1, sber.getIntradayValues().size());
-        assertEquals(1, sberp.getIntradayValues().size());
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 1, 1, 0);
+        assertEquals(1D, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
+    }
+
+    private PrefSimplePair getPrefSimplePair() {
+        return new PrefSimplePair(getSberp(), getSber());
+    }
+
+    private void initExchange(List<String> tickers) {
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
     }
 
     @Test
@@ -93,23 +96,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         initSberSberPSecurityAndHistoryTradingData();
         initNegativeDeals();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
 
         runWorkPipline();
 
-        var instruments = getInstruments();
-        var sber = instruments.stream().filter(row -> row.getTicker().equals("SBER")).findFirst().orElseThrow();
-        var sberp = instruments.stream().filter(row -> row.getTicker().equals("SBERP")).findFirst().orElseThrow();
-        assertEquals(7, sber.getDailyValues().size());
-        assertEquals(7, sberp.getDailyValues().size());
-        assertEquals(1, sber.getIntradayValues().size());
-        assertEquals(1, sberp.getIntradayValues().size());
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -121,18 +115,23 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initSberSberPSecurityAndHistoryTradingData();
-        initNegativeDeals();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initPositiveDeals();
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
+
         runWorkPipline();
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+
+        assertEquals(3, getLogs().size());
+        assertSignals(getSignals(), 1, 1, 0);
+        assertEquals(1D, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
+    }
+
+    private List<ScannerLog> getLogs() {
+        return scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId());
     }
 
     @Test
@@ -145,18 +144,17 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         initSberSberPSecurityAndHistoryTradingData();
         initNegativeDeals();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
         clearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
         runWorkPipline();
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
-        assertEquals(6, scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId()).size());
+
+        assertEquals(6, getLogs().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -179,15 +177,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -210,15 +207,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -240,15 +236,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
+
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -270,15 +265,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -299,15 +292,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -328,15 +319,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -354,15 +343,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -379,15 +366,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -405,15 +390,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -430,15 +413,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
     @Test
@@ -452,15 +433,20 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), 1.0)
-        );
+        initExchange(tickers);
+        initScanner(tickers);
         runWorkPipline();
 
-        assertEquals(0, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertSignals(getSignals(), 0, 0, 0);
+        assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
+        assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
+    }
+
+    private void initScanner(List<String> tickers) {
+        addScanner(
+            "Анализ пар преф-обычка.",
+            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), SPREAD_PARAM)
+        );
     }
 
     private void initSberSberp() {
