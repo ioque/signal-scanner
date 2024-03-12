@@ -547,43 +547,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertEquals(isRiseToday, finInstrument.isRiseToday().orElse(null));
     }
 
-    private List<Signal> getSignals() {
-        return fakeDataScannerStorage().getAll().get(0).getSignals();
-    }
-
-    private FinInstrument getImoex() {
-        return fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("IMOEX"))
-            .findFirst()
-            .orElseThrow();
-    }
-
-    private FinInstrument getTgkb() {
-        return fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("TGKB"))
-            .findFirst()
-            .orElseThrow();
-    }
-
-    private FinInstrument getTgkn() {
-        return fakeDataScannerStorage()
-            .getAll()
-            .get(0)
-            .getFinInstruments()
-            .stream()
-            .filter(row -> row.getTicker().equals("TGKN"))
-            .findFirst()
-            .orElseThrow();
-    }
-
     private void initTgknBuySignalDataset() {
         initTradingResults(
             buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
