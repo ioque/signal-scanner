@@ -10,11 +10,24 @@ import ru.ioque.investfund.domain.scanner.value.Signal;
 import java.util.Collection;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class BaseScannerTest extends BaseTest {
+    protected static final String BRF4 = "BRF4";
+    protected static final String TATN = "TATN";
+    protected static final String TGKN = "TGKN";
+    protected static final String TGKB = "TGKB";
+    protected static final String IMOEX = "IMOEX";
     @BeforeEach
     void beforeEach() {
         eventBus().subscribe(TradingDataUpdatedEvent.class, dataScannerManager());
         loggerProvider().clearLogs();
+    }
+
+    protected void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
+        assertEquals(allSize, signals.size());
+        assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());
+        assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
     }
 
     protected void runWorkPipline() {
@@ -31,15 +44,23 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected FinInstrument getImoex() {
-        return getFinInstrumentByTicker("IMOEX");
+        return getFinInstrumentByTicker(IMOEX);
     }
 
     protected FinInstrument getTgkb() {
-        return getFinInstrumentByTicker("TGKB");
+        return getFinInstrumentByTicker(TGKB);
     }
 
     protected FinInstrument getTgkn() {
-        return getFinInstrumentByTicker("TGKN");
+        return getFinInstrumentByTicker(TGKN);
+    }
+
+    protected FinInstrument getTatn() {
+        return getFinInstrumentByTicker(TATN);
+    }
+
+    protected FinInstrument getBrf4() {
+        return getFinInstrumentByTicker(BRF4);
     }
 
     protected FinInstrument getFinInstrumentByTicker(String ticker) {

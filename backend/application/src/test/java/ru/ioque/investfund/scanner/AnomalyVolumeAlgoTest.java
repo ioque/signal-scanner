@@ -7,7 +7,6 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.algorithms.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.util.List;
 
@@ -520,12 +519,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
         assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
-    }
-
-    private void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
-        assertEquals(allSize, signals.size());
-        assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());
-        assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
     }
 
     public void assertFinInstrument(
