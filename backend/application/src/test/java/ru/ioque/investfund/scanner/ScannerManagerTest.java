@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.scanner.algorithms.AnomalyVolumeSignalConfig;
@@ -60,13 +61,13 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase2() {
         var error = assertThrows(
-            ApplicationException.class,
+            DomainException.class,
             () -> addScanner(
                 "Аномальные объемы, третий эшелон.",
                 new AnomalyVolumeSignalConfig(null, 1.5, 180, "IMOEX")
             )
         );
-        assertTrue(error.getMessage().contains("Список анализируемых инструментов не может быть пуст."));
+        assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
         assertEquals(0, signalProducerRepo().getAll().size());
     }
 
@@ -76,13 +77,13 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase3() {
         var error = assertThrows(
-            ApplicationException.class,
+            DomainException.class,
             () -> addScanner(
                 "Аномальные объемы, третий эшелон.",
                 new AnomalyVolumeSignalConfig(List.of(), 1.5, 180, "IMOEX")
             )
         );
-        assertTrue(error.getMessage().contains("Список анализируемых инструментов не может быть пуст."));
+        assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
         assertEquals(0, signalProducerRepo().getAll().size());
     }
 
@@ -113,7 +114,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase5() {
         var error = assertThrows(
-            ApplicationException.class,
+            DomainException.class,
             () -> addScanner("Аномальные объемы, третий эшелон.", null)
         );
         assertEquals("Не передана конфигурация алгоритма.", error.getMessage());
@@ -209,7 +210,7 @@ public class ScannerManagerTest extends BaseTest {
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         var error = assertThrows(
-            ApplicationException.class,
+            DomainException.class,
             () -> dataScannerManager()
                 .updateScanner(
                     new UpdateScannerCommand(
@@ -219,7 +220,7 @@ public class ScannerManagerTest extends BaseTest {
                     )
                 )
         );
-        assertEquals("Описание сканера не может быть пустым.", error.getMessage());
+        assertEquals("Не передано описание.", error.getMessage());
     }
 
     @Test
@@ -233,7 +234,7 @@ public class ScannerManagerTest extends BaseTest {
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
         );
         var error = assertThrows(
-            ApplicationException.class,
+            DomainException.class,
             () -> dataScannerManager()
                 .updateScanner(
                     new UpdateScannerCommand(
@@ -243,6 +244,6 @@ public class ScannerManagerTest extends BaseTest {
                     )
                 )
         );
-        assertEquals("Список анализируемых инструментов не может быть пуст.", error.getMessage());
+        assertEquals("Не передан список анализируемых инструментов.", error.getMessage());
     }
 }

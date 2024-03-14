@@ -23,6 +23,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр historyScale."
         """)
     void testCase1() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(),null, intradayScale)
@@ -36,6 +37,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
         """)
     void testCase2() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(),0D, intradayScale)
@@ -49,6 +51,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
         """)
     void testCase3() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(),-1D, intradayScale)
@@ -62,6 +65,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр intradayScale."
         """)
     void testCase4() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, null)
@@ -75,6 +79,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
         """)
     void testCase5() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, 0D)
@@ -88,6 +93,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
         """)
     void testCase6() {
+        initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Секторальный отстающий, нефтянка.",
             new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, -1D)

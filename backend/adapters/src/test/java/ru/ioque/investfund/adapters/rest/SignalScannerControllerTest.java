@@ -51,7 +51,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @DisplayName("""
         T1. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner.
         """)
-    public void testCase11() {
+    public void testCase1() {
         var signalProducers = getSignalScanners();
 
         Mockito
@@ -80,7 +80,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @DisplayName("""
         T2. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner/{id}.
         """)
-    public void testCase22() {
+    public void testCase2() {
         final SignalScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
         final List<InstrumentEntity> instruments = getInstruments();
         final List<ScannerLogEntity> logs = getLogs();
@@ -94,10 +94,10 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             )
             .thenReturn(instruments);
         Mockito
-            .when(scannerLogEntityRepository.findAllByScannerId(scanner.getId()))
+            .when(scannerLogEntityRepository.findAllByScannerId(SIGNAL_PRODUCER_ID))
             .thenReturn(logs);
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/signal-scanner/" + scanner.getId()))
+            .perform(MockMvcRequestBuilders.get("/api/v1/signal-scanner/" + SIGNAL_PRODUCER_ID))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -111,7 +111,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту POST /api/v1/signal-scannerr.
+        T3. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner.
         """)
     public void testCase33() {
         mvc
@@ -127,6 +127,17 @@ public class SignalScannerControllerTest extends BaseControllerTest {
                         .build()))
                     .accept(MediaType.APPLICATION_JSON)
             )
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    @DisplayName("""
+        T4. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner/run.
+        """)
+    public void testCase4() {
+        mvc
+            .perform(MockMvcRequestBuilders.post("/api/v1/signal-scanner/run"))
             .andExpect(status().isOk());
     }
 

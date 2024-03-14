@@ -3,6 +3,7 @@ package ru.ioque.investfund.domain.scanner.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.algorithms.SignalAlgorithm;
 
 import java.time.LocalDateTime;
@@ -19,11 +20,17 @@ public abstract class SignalConfig {
     public abstract boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime);
 
     public SignalConfig(List<UUID> objectIds) {
-        this.objectIds = objectIds == null ? new ArrayList<>() : new ArrayList<>(objectIds);
+        if (objectIds == null || objectIds.isEmpty()) {
+            throw new DomainException("Не передан список анализируемых инструментов.");
+        }
+        this.objectIds = new ArrayList<>(objectIds);
     }
 
     public void updateObjectIds(List<UUID> ids) {
         this.objectIds.clear();
         this.objectIds.addAll(ids);
+        if (this.objectIds.isEmpty()) {
+            throw new DomainException("Не передан список анализируемых инструментов.");
+        }
     }
 }

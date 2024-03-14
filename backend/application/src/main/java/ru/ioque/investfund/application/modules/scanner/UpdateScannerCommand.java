@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.share.exception.ApplicationException;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,18 +28,5 @@ public class UpdateScannerCommand {
         this.id = id;
         this.ids = ids;
         this.description = description;
-        validateInputData();
-    }
-
-    private void validateInputData() {
-        if (id == null) {
-            throw new ApplicationException("Не передан идентификатор сканера сигналов.");
-        }
-        if (ids == null || ids.isEmpty()) {
-            throw new ApplicationException("Список анализируемых инструментов не может быть пуст.");
-        }
-        if (description == null || description.isEmpty()) {
-            throw new ApplicationException("Описание сканера не может быть пустым.");
-        }
     }
 }

@@ -165,17 +165,17 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("""
         T9. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
-        секторальный отстающий, не передан параметр historyScale.
+        секторальный отстающий, не передан параметр historyScale и передано пустое описание.
         """)
     public void testCase9() {
         assertValidationErrors(
             AddSectoralRetardScanner
                 .builder()
-                .description("desc")
+                .description("")
                 .ids(List.of(TATN_ID, BANE_ID, ROSN_ID, LKOH_ID))
                 .intradayScale(0.015)
                 .build(),
-            List.of("The historyScale is required.")
+            List.of("The historyScale is required.", "The description is required.")
         );
     }
 

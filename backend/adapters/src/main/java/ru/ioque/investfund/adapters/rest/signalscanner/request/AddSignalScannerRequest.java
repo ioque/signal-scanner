@@ -3,6 +3,7 @@ package ru.ioque.investfund.adapters.rest.signalscanner.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = AddAnomalyVolumeScanner.class, name = "AnomalyVolumeScannerRequest") }
 )
 public abstract class AddSignalScannerRequest implements Serializable {
-    @NotNull(message = "The description is required.")
+    @NotBlank(message = "The description is required.")
     String description;
     @NotNull(message = "The ids is required.")
     List<UUID> ids;

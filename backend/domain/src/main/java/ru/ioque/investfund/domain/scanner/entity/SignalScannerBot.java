@@ -42,6 +42,15 @@ public class SignalScannerBot extends Domain {
         List<FinInstrument> finInstruments
     ) {
         super(id);
+
+        if (config == null) {
+            throw new DomainException("Не передана конфигурация алгоритма.");
+        }
+
+        if (description == null || description.isBlank()) {
+            throw new DomainException("Не передано описание.");
+        }
+
         this.config = config;
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;

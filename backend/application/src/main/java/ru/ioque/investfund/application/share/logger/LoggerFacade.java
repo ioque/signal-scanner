@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -33,7 +34,7 @@ public class LoggerFacade {
                 String
                     .format(
                         "Начато создание сканера сигналов, идентификаторы инструментов %s.",
-                        command.getSignalConfig().getObjectIds()
+                        Objects.isNull(command.getSignalConfig()) ? "не переданы" : command.getSignalConfig().getObjectIds()
                     )
             )
         );

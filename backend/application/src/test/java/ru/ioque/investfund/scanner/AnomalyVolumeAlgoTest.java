@@ -21,6 +21,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр scaleCoefficient."
         """)
     void testCase1() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), null, 180, "IMOEX")
@@ -34,6 +36,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр historyPeriod."
         """)
     void testCase2() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, null, "IMOEX")
@@ -47,6 +51,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
         """)
     void testCase3() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, null)
@@ -60,6 +66,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
         """)
     void testCase4() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "")
@@ -73,6 +81,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
         """)
     void testCase5() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 0D, 180, "IMOEX")
@@ -86,6 +96,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
         """)
     void testCase6() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), -1D, 180, "IMOEX")
@@ -99,6 +111,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
         """)
     void testCase7() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 0, "IMOEX")
@@ -112,6 +126,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
         """)
     void testCase8() {
+        initTgknAndTgkbAndImoex();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Аномальные объемы, третий эшелон.",
             new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, -180, "IMOEX")

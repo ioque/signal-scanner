@@ -22,6 +22,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр spreadParam."
         """)
     void testCase1() {
+        initSberSberp();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
             new PrefSimpleSignalConfig(getInstrumentIds(), null)
@@ -35,6 +37,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
         """)
     void testCase2() {
+        initSberSberp();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
             new PrefSimpleSignalConfig(getInstrumentIds(), 0D)
@@ -48,6 +52,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
         """)
     void testCase3() {
+        initSberSberp();
+        exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
             "Анализ пар преф-обычка.",
             new PrefSimpleSignalConfig(getInstrumentIds(), -1D)
