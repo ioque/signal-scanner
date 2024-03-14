@@ -56,7 +56,15 @@ public class ExchangeProviderTest {
         T1. Получение инструментов.
         """)
     void testCase1() {
-        testFetchInstruments(892);
+        prepareData();
+
+        final List<Instrument> instruments = exchangeProvider.fetchInstruments();
+
+        assertEquals(892, instruments.size());
+        assertEquals(249, instruments.stream().filter(row -> row.getClass().equals(Stock.class)).count());
+        assertEquals(382, instruments.stream().filter(row -> row.getClass().equals(Futures.class)).count());
+        assertEquals(192, instruments.stream().filter(row -> row.getClass().equals(CurrencyPair.class)).count());
+        assertEquals(69, instruments.stream().filter(row -> row.getClass().equals(Index.class)).count());
     }
 
     @Test
@@ -123,7 +131,7 @@ public class ExchangeProviderTest {
         testFetchDailyTrading(imoex(), 100);
     }
 
-    private void testFetchInstruments(int expectedSize) {
+    private void prepareData() {
         Mockito
             .when(moexRestClient.fetchInstruments(Stock.class))
             .thenReturn(getInstrumentsBy(Stock.class));
@@ -136,26 +144,32 @@ public class ExchangeProviderTest {
         Mockito
             .when(moexRestClient.fetchInstruments(CurrencyPair.class))
             .thenReturn(getInstrumentsBy(CurrencyPair.class));
-        var instruments = exchangeProvider.fetchInstruments();
-        assertEquals(expectedSize, instruments.size());
     }
 
     private void testFetchIntradayValue(Instrument instrument, int expectedSize) {
-        Mockito
-            .when(moexRestClient.fetchIntradayValues(instrument))
-            .thenReturn(getIntradayValues(instrument));
-        var intradayValues = exchangeProvider.fetchIntradayValuesBy(instrument);
+        prepareIntradayValues(instrument);
+        final List<IntradayValue> intradayValues = exchangeProvider.fetchIntradayValuesBy(instrument);
         assertEquals(expectedSize, intradayValues.size());
     }
 
+    private void prepareIntradayValues(Instrument instrument) {
+        Mockito
+            .when(moexRestClient.fetchIntradayValues(instrument))
+            .thenReturn(getIntradayValues(instrument));
+    }
+
     private void testFetchDailyTrading(Instrument instrument, int expectedSize) {
-        final LocalDate from = LocalDate.parse("2022-10-05");
-        final LocalDate till = LocalDate.parse("2023-04-04");
+        prepareDailyTradingValues(instrument, LocalDate.parse("2022-10-05"), LocalDate.parse("2023-04-04"));
+
+        final List<DailyValue> tradingResults = exchangeProvider.fetchDailyTradingResultsBy(instrument);
+
+        assertEquals(expectedSize, tradingResults.size());
+    }
+
+    private void prepareDailyTradingValues(Instrument instrument, LocalDate from, LocalDate till) {
         Mockito
             .when(moexRestClient.fetchDailyTradingResults(instrument, from, till))
             .thenReturn(getTradingResultsBy(instrument));
-        final var tradingResults = exchangeProvider.fetchDailyTradingResultsBy(instrument);
-        assertEquals(expectedSize, tradingResults.size());
     }
 
     private Instrument usdRub() {
