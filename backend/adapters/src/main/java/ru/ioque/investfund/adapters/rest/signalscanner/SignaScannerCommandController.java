@@ -1,6 +1,7 @@
 package ru.ioque.investfund.adapters.rest.signalscanner;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +26,7 @@ public class SignaScannerCommandController {
     ScannerManager scannerManager;
 
     @PostMapping("/api/v1/signal-scanner")
-    public void addNewSignalScanner(@RequestBody AddSignalScannerRequest request) {
+    public void addNewSignalScanner(@Valid @RequestBody AddSignalScannerRequest request) {
         scannerManager
             .addNewScanner(
                 AddScannerCommand.builder()

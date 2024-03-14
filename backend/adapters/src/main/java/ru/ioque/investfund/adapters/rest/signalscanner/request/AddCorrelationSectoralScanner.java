@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.signalscanner.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,13 +19,16 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CorrelationSectoralScannerRequestAdd extends AddSignalScannerRequest {
+public class AddCorrelationSectoralScanner extends AddSignalScannerRequest {
+    @NotNull(message = "The futuresOvernightScale is required.")
     Double futuresOvernightScale;
+    @NotNull(message = "The stockOvernightScale is required.")
     Double stockOvernightScale;
+    @NotNull(message = "The futuresTicker is required.")
     String futuresTicker;
 
     @Builder
-    public CorrelationSectoralScannerRequestAdd(
+    public AddCorrelationSectoralScanner(
         String description,
         List<UUID> ids,
         Double futuresOvernightScale,

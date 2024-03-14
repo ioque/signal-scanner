@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.rest.signalscanner.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.algorithms.SectoralRetardSignalConfig;
+import ru.ioque.investfund.domain.scanner.algorithms.PrefSimpleSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 
 import java.util.List;
@@ -18,24 +19,19 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SectoralRetardScannerRequestAdd extends AddSignalScannerRequest {
-    Double historyScale;
-    Double intradayScale;
+public class AddPrefSimpleScanner extends AddSignalScannerRequest {
+    @NotNull(message = "The spreadParam is required.")
+    Double spreadParam;
 
     @Builder
-    public SectoralRetardScannerRequestAdd(
-        String description,
-        List<UUID> ids,
-        Double historyScale,
-        Double intradayScale
-    ) {
+    public AddPrefSimpleScanner(String description, List<UUID> ids, Double spreadParam) {
         super(description, ids);
-        this.historyScale = historyScale;
-        this.intradayScale = intradayScale;
+        this.spreadParam = spreadParam;
     }
+
 
     @Override
     public SignalConfig buildConfig() {
-        return new SectoralRetardSignalConfig(getIds(), historyScale, intradayScale);
+        return new PrefSimpleSignalConfig(getIds(), spreadParam);
     }
 }

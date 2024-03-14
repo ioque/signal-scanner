@@ -72,7 +72,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту POST /api/v1/enable-update.
+        T3. Выполнение запроса по эндпоинту PATCH /api/v1/enable-update.
         """)
     public void testCase3() {
         List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
@@ -88,7 +88,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T4. Выполнение запроса по эндпоинту POST /api/v1/disable-update.
+        T4. Выполнение запроса по эндпоинту PATCH /api/v1/disable-update.
         """)
     public void testCase4() {
         List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
@@ -104,7 +104,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T5. Выполнение запроса по эндпоинту POST /api/v1/disable-update.
+        T5. Выполнение запроса по эндпоинту GET /api/v1/exchange.
         """)
     public void testCase5() {
         final Exchange exchange = Exchange.builder()

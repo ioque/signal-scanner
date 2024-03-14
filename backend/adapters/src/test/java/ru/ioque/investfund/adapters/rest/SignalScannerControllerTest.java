@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleRequestAdd;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.AddPrefSimpleScanner;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.IndexEntity;
@@ -31,7 +31,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("SIGNAL SCANNER REST INTERFACE")
+@DisplayName("SIGNAL SCANNER REST CONTROLLER")
 public class SignalScannerControllerTest extends BaseControllerTest {
     @Autowired
     ScannerManager scannerManager;
@@ -45,14 +45,13 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     private static final UUID SIGNAL_PRODUCER_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
     private static final UUID IMOEX_ID = UUID.randomUUID();
-    private static final LocalDateTime NOW = LocalDateTime.now();
 
     @Test
     @SneakyThrows
     @DisplayName("""
         T1. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner.
         """)
-    public void testCase1() {
+    public void testCase11() {
         var signalProducers = getSignalScanners();
 
         Mockito
@@ -81,7 +80,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @DisplayName("""
         T2. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner/{id}.
         """)
-    public void testCase2() {
+    public void testCase22() {
         final SignalScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
         final List<InstrumentEntity> instruments = getInstruments();
         final List<ScannerLogEntity> logs = getLogs();
@@ -114,13 +113,13 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @DisplayName("""
         T3. Выполнение запроса по эндпоинту POST /api/v1/signal-scannerr.
         """)
-    public void testCase3() {
+    public void testCase33() {
         mvc
             .perform(
                 MockMvcRequestBuilders
                     .post("/api/v1/signal-scanner")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(PrefSimpleRequestAdd
+                    .content(toJson(AddPrefSimpleScanner
                         .builder()
                         .description("Описание")
                         .ids(List.of(UUID.randomUUID()))
