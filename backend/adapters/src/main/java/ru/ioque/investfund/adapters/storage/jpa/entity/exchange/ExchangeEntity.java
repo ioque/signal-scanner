@@ -57,7 +57,6 @@ public class ExchangeEntity extends AbstractEntity {
             .name(name)
             .url(url)
             .description(description)
-            .updatable(updatable)
             .build();
     }
 
@@ -67,7 +66,6 @@ public class ExchangeEntity extends AbstractEntity {
             .name(name)
             .url(url)
             .description(description)
-            .updatable(updatable)
             .instruments(instruments)
             .build();
     }

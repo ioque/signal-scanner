@@ -11,7 +11,6 @@ import ru.ioque.investfund.domain.core.Domain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 //урлы для обновления данных, клиенты к биржам выносятся как отдельные сервисы-адаптеры для получения данных.
@@ -33,7 +32,6 @@ public class Exchange extends Domain {
         String name,
         String url,
         String description,
-        Set<UUID> updatable,
         List<Instrument> instruments
     ) {
         super(id);

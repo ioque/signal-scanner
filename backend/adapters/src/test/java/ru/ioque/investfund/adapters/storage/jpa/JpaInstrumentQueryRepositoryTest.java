@@ -9,7 +9,6 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,7 +56,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build()
@@ -79,7 +77,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildIndexWith().id(id2).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
@@ -109,7 +106,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
@@ -141,7 +137,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
                 buildIndexWith().id(id2).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
@@ -168,7 +163,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2, id3),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
@@ -199,7 +193,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2, id3),
             List.of(
                 buildStockWith().id(id1).ticker("SBER").name("AFKS").shortName("AFKS").build(),
                 buildStockWith().id(id2).ticker("SBERP").name("SBER").shortName("Сбербанк-п").build(),
@@ -229,7 +222,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
@@ -267,7 +259,6 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(id1, id2),
             List.of(
                 buildStockWith().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
                 buildStockWith().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),

@@ -9,7 +9,6 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +32,6 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(),
             List.of()
         );
         exchangeRepository.save(exchange);
@@ -51,7 +49,6 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(instrument.getId()),
             List.of(
                 instrument
             )
@@ -76,7 +73,6 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             "test",
-            Set.of(instrument.getId()),
             List.of(
                 instrument
             )

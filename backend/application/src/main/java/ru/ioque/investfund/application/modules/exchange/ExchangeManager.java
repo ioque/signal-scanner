@@ -17,7 +17,6 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -98,7 +97,6 @@ public class ExchangeManager implements SystemModule {
             .name(configureProvider.exchangeName())
             .url(configureProvider.exchangeServerUrl())
             .description(configureProvider.exchangeDescription())
-            .updatable(new HashSet<>())
             .instruments(new ArrayList<>())
             .build();
     }

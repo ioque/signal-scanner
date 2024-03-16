@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest;
+package ru.ioque.investfund.adapters.rest.exchange;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
@@ -32,7 +33,6 @@ import ru.ioque.investfund.domain.exchange.value.IndexDeltaResult;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -113,7 +113,6 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .url("http://exchange.ru")
             .description("desc")
             .instruments(List.of())
-            .updatable(Set.of())
             .build();
         Mockito
             .when(exchangeRepository.get())
