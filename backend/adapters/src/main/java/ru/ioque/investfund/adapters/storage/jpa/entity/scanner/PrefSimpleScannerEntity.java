@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleSignalConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,38 +31,44 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
     @Builder
     public PrefSimpleScannerEntity(
         UUID id,
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> objectIds,
         LocalDateTime lastWorkDateTime,
         List<SignalEntity> signals,
         Double spreadParam
     ) {
-        super(id, description, objectIds, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, objectIds, lastWorkDateTime, signals);
         this.spreadParam = spreadParam;
     }
 
     public static SignalScannerEntity from(SignalScanner signalScanner) {
-        PrefSimpleSignalConfig config = (PrefSimpleSignalConfig) signalScanner.getConfig();
+        PrefSimpleAlgorithm algorithm = (PrefSimpleAlgorithm) signalScanner.getAlgorithm();
         return PrefSimpleScannerEntity.builder()
             .id(signalScanner.getId())
+            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
             .objectIds(signalScanner.getObjectIds())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
-            .spreadParam(config.getSpreadParam())
+            .spreadParam(algorithm.getSpreadParam())
             .build();
     }
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return new SignalScanner(
-            getId(),
-            getDescription(),
-            new PrefSimpleSignalConfig(getObjectIds(), spreadParam),
-            new PrefSimpleSignalConfig(getObjectIds(), spreadParam).factorySearchAlgorithm(),
-            getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList(),
-            instruments
-        );
+        return PrefSimpleSignalConfig
+            .builder()
+            .workPeriodInMinutes(getWorkPeriodInMinutes())
+            .description(getDescription())
+            .objectIds(getObjectIds())
+            .spreadParam(spreadParam)
+            .build()
+            .factoryScanner(
+                getId(),
+                getLastWorkDateTime(),
+                instruments,
+                getSignals().stream().map(SignalEntity::toDomain).toList()
+            );
     }
 }

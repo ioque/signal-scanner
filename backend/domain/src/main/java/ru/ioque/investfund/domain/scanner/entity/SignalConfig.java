@@ -24,6 +24,10 @@ public abstract class SignalConfig {
         List<FinInstrument> finInstruments,
         List<Signal> signals);
 
+    public SignalScanner factoryScanner(UUID id, List<FinInstrument> finInstruments) {
+        return factoryScanner(id, null, finInstruments, new ArrayList<>());
+    }
+
     public SignalConfig(Integer workPeriodInMinutes, String description, List<UUID> objectIds) {
         if (workPeriodInMinutes == null) {
             throw new DomainException("Не передан период работы сканера.");

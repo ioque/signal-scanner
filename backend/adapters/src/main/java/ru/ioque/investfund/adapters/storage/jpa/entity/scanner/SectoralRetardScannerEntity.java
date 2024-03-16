@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,7 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
     @Builder
     public SectoralRetardScannerEntity(
         UUID id,
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> objectIds,
         LocalDateTime lastWorkDateTime,
@@ -38,15 +40,16 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
         Double historyScale,
         Double intradayScale
     ) {
-        super(id, description, objectIds, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, objectIds, lastWorkDateTime, signals);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }
 
     public static SignalScannerEntity from(SignalScanner signalScanner) {
-        SectoralRetardSignalConfig config = (SectoralRetardSignalConfig) signalScanner.getConfig();
+        SectoralRetardAlgorithm config = (SectoralRetardAlgorithm) signalScanner.getAlgorithm();
         return SectoralRetardScannerEntity.builder()
             .id(signalScanner.getId())
+            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
             .objectIds(signalScanner.getObjectIds())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
@@ -58,14 +61,19 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return new SignalScanner(
-            getId(),
-            getDescription(),
-            new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale),
-            new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale).factorySearchAlgorithm(),
-            getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList(),
-            instruments
-        );
+        return SectoralRetardSignalConfig
+            .builder()
+            .workPeriodInMinutes(getWorkPeriodInMinutes())
+            .description(getDescription())
+            .objectIds(getObjectIds())
+            .historyScale(historyScale)
+            .intradayScale(intradayScale)
+            .build()
+            .factoryScanner(
+                getId(),
+                getLastWorkDateTime(),
+                instruments,
+                getSignals().stream().map(SignalEntity::toDomain).toList()
+            );
     }
 }

@@ -19,19 +19,19 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddPrefSimpleScanner extends AddSignalScannerRequest {
+public class PrefSimpleScannerConfig extends ScannerConfigRequest {
     @NotNull(message = "The spreadParam is required.")
     Double spreadParam;
 
     @Builder
-    public AddPrefSimpleScanner(String description, List<UUID> ids, Double spreadParam) {
-        super(description, ids);
+    public PrefSimpleScannerConfig(Integer workPeriodInMinutes, String description, List<UUID> ids, Double spreadParam) {
+        super(workPeriodInMinutes, description, ids);
         this.spreadParam = spreadParam;
     }
 
 
     @Override
     public SignalConfig buildConfig() {
-        return new PrefSimpleSignalConfig(getIds(), spreadParam);
+        return new PrefSimpleSignalConfig(getWorkPeriodInMinutes(), getDescription(), getIds(), spreadParam);
     }
 }

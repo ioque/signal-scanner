@@ -8,8 +8,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -27,7 +27,7 @@ public class FakeDIContainer {
     LoggerProvider loggerProvider;
     UUIDProvider uuidProvider;
     ScannerLogRepository scannerLogRepository;
-    ScannerConfigRepository scannerConfigRepository;
+    FinInstrumentRepository finInstrumentRepository;
     ConfigureProvider configureProvider;
     ScannerRepository scannerRepository;
     ExchangeRepository exchangeRepository;
@@ -47,8 +47,8 @@ public class FakeDIContainer {
         configureProvider = new FakeConfigureProvider();
         loggerFacade = new LoggerFacade(loggerProvider);
         exchangeRepository = new FakeExchangeRepository();
-        scannerRepository = new FakeScannerRepository(exchangeRepository);
-        scannerConfigRepository = new FakeScannerConfigRepository((FakeScannerRepository) scannerRepository);
+        finInstrumentRepository = new FakeFinInstrumentRepository(exchangeRepository);
+        scannerRepository = new FakeScannerRepository(finInstrumentRepository);
         exchangeManager = new ExchangeManager(
             dateTimeProvider,
             configureProvider,
@@ -59,7 +59,7 @@ public class FakeDIContainer {
             eventBus
         );
         scannerManager = new ScannerManager(
-            scannerConfigRepository,
+            finInstrumentRepository,
             scannerRepository,
             scannerLogRepository,
             uuidProvider,

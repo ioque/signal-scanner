@@ -93,7 +93,7 @@ public class BaseTest {
         SignalConfig config
     ) {
         dataScannerManager()
-            .saveConfiguration(
+            .addNewScanner(
                 AddScannerCommand.builder()
                     .signalConfig(config)
                     .build()

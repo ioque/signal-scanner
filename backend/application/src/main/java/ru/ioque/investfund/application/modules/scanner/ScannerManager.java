@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
+import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScannerManager implements SystemModule {
-    ScannerConfigRepository scannerConfigRepository;
+    FinInstrumentRepository finInstrumentRepository;
     ScannerRepository scannerRepository;
     ScannerLogRepository scannerLogRepository;
     UUIDProvider uuidProvider;
@@ -29,14 +29,14 @@ public class ScannerManager implements SystemModule {
     LoggerFacade loggerFacade;
 
     public ScannerManager(
-        ScannerConfigRepository scannerConfigRepository,
+        FinInstrumentRepository finInstrumentRepository,
         ScannerRepository scannerRepository,
         ScannerLogRepository scannerLogRepository,
         UUIDProvider uuidProvider,
         DateTimeProvider dateTimeProvider,
         LoggerFacade loggerFacade
     ) {
-        this.scannerConfigRepository = scannerConfigRepository;
+        this.finInstrumentRepository = finInstrumentRepository;
         this.scannerRepository = scannerRepository;
         this.scannerLogRepository = scannerLogRepository;
         this.uuidProvider = uuidProvider;
@@ -55,18 +55,32 @@ public class ScannerManager implements SystemModule {
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
-    public synchronized void saveConfiguration(AddScannerCommand command) {
+    public synchronized void addNewScanner(AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
-        scannerConfigRepository.save(id, command.getSignalConfig());
+        scannerRepository.save(
+            command
+                .getSignalConfig()
+                .factoryScanner(
+                    id,
+                    finInstrumentRepository.getByIdIn(command.getSignalConfig().getObjectIds())
+                )
+        );
         loggerFacade.logSaveNewDataScanner(id);
     }
 
-    public synchronized void updateConfiguration(UpdateScannerCommand command) {
-        if (scannerConfigRepository.getBy(command.getId()).isEmpty()) {
+    public synchronized void updateScanner(UpdateScannerCommand command) {
+        if (scannerRepository.getBy(command.getId()).isEmpty()) {
             throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
         }
-        scannerConfigRepository.save(command.getId(), command.getSignalConfig());
+        scannerRepository.save(
+            command
+                .getSignalConfig()
+                .factoryScanner(
+                    command.getId(),
+                    finInstrumentRepository.getByIdIn(command.getSignalConfig().getObjectIds())
+                )
+        );
         loggerFacade.logUpdateSignalScanner(command);
     }
 

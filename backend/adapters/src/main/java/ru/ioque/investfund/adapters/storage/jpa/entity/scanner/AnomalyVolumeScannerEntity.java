@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -32,6 +33,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
     @Builder
     public AnomalyVolumeScannerEntity(
         UUID id,
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> objectIds,
         LocalDateTime lastWorkDateTime,
@@ -40,36 +42,43 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(id, description, objectIds, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, objectIds, lastWorkDateTime, signals);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
     }
 
     public static SignalScannerEntity from(SignalScanner signalScanner) {
-        AnomalyVolumeSignalConfig config = (AnomalyVolumeSignalConfig) signalScanner.getConfig();
+        AnomalyVolumeAlgorithm algorithm = (AnomalyVolumeAlgorithm) signalScanner.getAlgorithm();
         return AnomalyVolumeScannerEntity.builder()
             .id(signalScanner.getId())
+            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
             .objectIds(signalScanner.getObjectIds())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
-            .scaleCoefficient(config.getScaleCoefficient())
-            .historyPeriod(config.getHistoryPeriod())
-            .indexTicker(config.getIndexTicker())
+            .scaleCoefficient(algorithm.getScaleCoefficient())
+            .historyPeriod(algorithm.getHistoryPeriod())
+            .indexTicker(algorithm.getIndexTicker())
             .build();
     }
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return new SignalScanner(
-            getId(),
-            getDescription(),
-            new AnomalyVolumeSignalConfig(getObjectIds(), scaleCoefficient, historyPeriod, indexTicker),
-            new AnomalyVolumeSignalConfig(getObjectIds(), scaleCoefficient, historyPeriod, indexTicker).factorySearchAlgorithm(),
-            getLastWorkDateTime(),
-            getSignals().stream().map(SignalEntity::toDomain).toList(),
-            instruments
-        );
+        return AnomalyVolumeSignalConfig
+            .builder()
+            .workPeriodInMinutes(getWorkPeriodInMinutes())
+            .description(getDescription())
+            .objectIds(getObjectIds())
+            .scaleCoefficient(scaleCoefficient)
+            .historyPeriod(historyPeriod)
+            .indexTicker(indexTicker)
+            .build()
+            .factoryScanner(
+                getId(),
+                getLastWorkDateTime(),
+                instruments,
+                getSignals().stream().map(SignalEntity::toDomain).toList()
+            );
     }
 }

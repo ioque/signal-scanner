@@ -35,6 +35,7 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "SIGNAL_SCANNER_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
 public abstract class SignalScannerEntity extends AbstractEntity {
+    Integer workPeriodInMinutes;
     String description;
     @ElementCollection(fetch = FetchType.EAGER)
     List<UUID> objectIds;
@@ -44,12 +45,14 @@ public abstract class SignalScannerEntity extends AbstractEntity {
 
     public SignalScannerEntity(
         UUID id,
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> objectIds,
         LocalDateTime lastWorkDateTime,
         List<SignalEntity> signals
     ) {
         super(id);
+        this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.objectIds = objectIds;
         this.lastWorkDateTime = lastWorkDateTime;

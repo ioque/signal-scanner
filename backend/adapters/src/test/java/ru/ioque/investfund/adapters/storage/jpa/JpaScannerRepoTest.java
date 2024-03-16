@@ -4,10 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeAlgorithm;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("JPA_SIGNAL_SCANNER_REPO")
 public class JpaScannerRepoTest extends BaseJpaTest {
     ExchangeRepository exchangeRepository;
+    FinInstrumentRepository finInstrumentRepository;
     JpaScannerRepo dataJpaScannerRepo;
 
     private static final UUID SCANNER_ID = UUID.randomUUID();
@@ -26,9 +28,11 @@ public class JpaScannerRepoTest extends BaseJpaTest {
 
     public JpaScannerRepoTest(
         @Autowired JpaScannerRepo dataJpaScannerRepo,
+        @Autowired FinInstrumentRepository finInstrumentRepository,
         @Autowired ExchangeRepository exchangeRepository
     ) {
         this.dataJpaScannerRepo = dataJpaScannerRepo;
+        this.finInstrumentRepository = finInstrumentRepository;
         this.exchangeRepository = exchangeRepository;
     }
 
@@ -43,18 +47,32 @@ public class JpaScannerRepoTest extends BaseJpaTest {
         dataJpaScannerRepo.save(SignalScanner
             .builder()
             .id(SCANNER_ID)
+            .workPeriodInMinutes(1)
             .description("description")
-            .config(new AnomalyVolumeSignalConfig(List.of(AFKS_ID), 1.5, 180, "IMOEX"))
+            .algorithm(new AnomalyVolumeAlgorithm(1.5, 180, "IMOEX"))
+            .finInstruments(finInstrumentRepository.getByIdIn(List.of(AFKS_ID)))
             .build());
 
         assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).isPresent());
         assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).get().getSignals().isEmpty());
         assertEquals(1, dataJpaScannerRepo.getBy(SCANNER_ID).get().getFinInstruments().size());
         assertEquals("AFKS", dataJpaScannerRepo.getBy(SCANNER_ID).get().getFinInstruments().get(0).getTicker());
-        assertEquals(AnomalyVolumeSignalConfig.class, dataJpaScannerRepo.getBy(SCANNER_ID).get().getConfig().getClass());
-        assertEquals(180, ((AnomalyVolumeSignalConfig) dataJpaScannerRepo.getBy(SCANNER_ID).get().getConfig()).getHistoryPeriod());
-        assertEquals("IMOEX", ((AnomalyVolumeSignalConfig) dataJpaScannerRepo.getBy(SCANNER_ID).get().getConfig()).getIndexTicker());
-        assertEquals(1.5, ((AnomalyVolumeSignalConfig) dataJpaScannerRepo.getBy(SCANNER_ID).get().getConfig()).getScaleCoefficient());
+        assertEquals(
+            AnomalyVolumeAlgorithm.class,
+            dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm().getClass()
+        );
+        assertEquals(
+            180,
+            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getHistoryPeriod()
+        );
+        assertEquals(
+            "IMOEX",
+            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getIndexTicker()
+        );
+        assertEquals(
+            1.5,
+            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getScaleCoefficient()
+        );
     }
 
     private void prepareExchange() {

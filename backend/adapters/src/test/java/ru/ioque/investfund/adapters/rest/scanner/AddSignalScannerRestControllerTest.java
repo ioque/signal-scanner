@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddAnomalyVolumeScanner;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddCorrelationSectoralScanner;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddPrefSimpleScanner;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddSectoralRetardScanner;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddSignalScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.AnomalyVolumeScannerConfig;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.CorrelationSectoralScannerConfig;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleScannerConfig;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.SectoralRetardScannerConfig;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerConfigRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -37,8 +37,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase1() {
         assertIsOk(
-            AddAnomalyVolumeScanner.builder()
+            AnomalyVolumeScannerConfig.builder()
                 .description("desc")
+                .workPeriodInMinutes(1)
                 .ids(List.of(TGKN_ID, IMOEX_ID))
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
@@ -54,8 +55,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase2() {
         assertValidationErrors(
-            AddAnomalyVolumeScanner
+            AnomalyVolumeScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(TGKN_ID, IMOEX_ID))
                 .historyPeriod(180)
@@ -72,8 +74,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase3() {
         assertValidationErrors(
-            AddAnomalyVolumeScanner
+            AnomalyVolumeScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(TGKN_ID, IMOEX_ID))
                 .historyPeriod(180)
@@ -89,8 +92,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase4() {
         assertValidationErrors(
-            AddAnomalyVolumeScanner
+            AnomalyVolumeScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(TGKN_ID, IMOEX_ID))
                 .scaleCoefficient(1.5)
@@ -107,7 +111,8 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase5() {
         assertIsOk(
-            AddPrefSimpleScanner.builder()
+            PrefSimpleScannerConfig.builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(BANE_ID, BANEP_ID))
                 .spreadParam(1.0)
@@ -122,8 +127,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase6() {
         assertValidationErrors(
-            AddPrefSimpleScanner
+            PrefSimpleScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, BANEP_ID))
                 .build(),
             List.of("The spreadParam is required.", "The description is required.")
@@ -137,8 +143,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase7() {
         assertIsOk(
-            AddSectoralRetardScanner
+            SectoralRetardScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(TATN_ID, BANE_ID, ROSN_ID, LKOH_ID))
                 .historyScale(0.015)
@@ -154,8 +161,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase8() {
         assertValidationErrors(
-            AddSectoralRetardScanner
+            SectoralRetardScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("desc")
                 .historyScale(0.015)
                 .build(),
@@ -170,8 +178,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase9() {
         assertValidationErrors(
-            AddSectoralRetardScanner
+            SectoralRetardScannerConfig
                 .builder()
+                .workPeriodInMinutes(1)
                 .description("")
                 .ids(List.of(TATN_ID, BANE_ID, ROSN_ID, LKOH_ID))
                 .intradayScale(0.015)
@@ -187,8 +196,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase10() {
         assertIsOk(
-            AddCorrelationSectoralScanner.builder()
+            CorrelationSectoralScannerConfig.builder()
                 .description("desc")
+                .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
@@ -204,8 +214,9 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase11() {
         assertValidationErrors(
-            AddCorrelationSectoralScanner.builder()
+            CorrelationSectoralScannerConfig.builder()
                 .description("desc")
+                .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
                 .build(),
             List.of(
@@ -217,7 +228,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     }
 
     @SneakyThrows
-    private void assertValidationErrors(AddSignalScannerRequest request, List<String> errors) {
+    private void assertValidationErrors(ScannerConfigRequest request, List<String> errors) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/v1/signal-scanner")
@@ -235,7 +246,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     }
 
     @SneakyThrows
-    private void assertIsOk(AddSignalScannerRequest request) {
+    private void assertIsOk(ScannerConfigRequest request) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/v1/signal-scanner")

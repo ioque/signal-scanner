@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddCorrelationSectoralScanner extends AddSignalScannerRequest {
+public class CorrelationSectoralScannerConfig extends ScannerConfigRequest {
     @NotNull(message = "The futuresOvernightScale is required.")
     Double futuresOvernightScale;
     @NotNull(message = "The stockOvernightScale is required.")
@@ -28,14 +28,15 @@ public class AddCorrelationSectoralScanner extends AddSignalScannerRequest {
     String futuresTicker;
 
     @Builder
-    public AddCorrelationSectoralScanner(
+    public CorrelationSectoralScannerConfig(
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(description, ids);
+        super(workPeriodInMinutes, description, ids);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
@@ -43,6 +44,6 @@ public class AddCorrelationSectoralScanner extends AddSignalScannerRequest {
 
     @Override
     public SignalConfig buildConfig() {
-        return new CorrelationSectoralSignalConfig(getIds(), futuresOvernightScale, stockOvernightScale, futuresTicker);
+        return new CorrelationSectoralSignalConfig(getWorkPeriodInMinutes(), getDescription(), getIds(), futuresOvernightScale, stockOvernightScale, futuresTicker);
     }
 }

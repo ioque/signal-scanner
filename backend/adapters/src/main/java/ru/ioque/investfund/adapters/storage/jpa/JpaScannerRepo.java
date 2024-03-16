@@ -5,29 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSectoralScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
-import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.correlationsectoral.CorrelationSectoralSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
+import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.correlationsectoral.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardAlgorithm;
 
 import java.util.List;
 import java.util.Map;
@@ -40,17 +31,14 @@ import java.util.function.Function;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JpaScannerRepo implements ScannerRepository {
     SignalScannerEntityRepository signalScannerEntityRepository;
-    InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueEntityRepository dailyValueEntityRepository;
-    IntradayValueEntityRepository intradayValueEntityRepository;
-    DateTimeProvider dateTimeProvider;
+    FinInstrumentRepository finInstrumentRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
-            .map(row -> row.toDomain(getFinInstrumentsByIds(row.getObjectIds())));
+            .map(row -> row.toDomain(finInstrumentRepository.getByIdIn(row.getObjectIds())));
     }
 
     @Override
@@ -65,86 +53,18 @@ public class JpaScannerRepo implements ScannerRepository {
         return signalScannerEntityRepository
             .findAll()
             .stream()
-            .map(row -> row.toDomain(getFinInstrumentsByIds(row.getObjectIds())))
-            .toList();
-    }
-
-    private List<FinInstrument> getFinInstrumentsByIds(List<UUID> objectIds) {
-        return objectIds.stream().map(id -> {
-                Instrument instrument = instrumentEntityRepository
-                    .findById(id)
-                    .map(entity ->
-                        entity.toDomain(
-                            dailyValueEntityRepository
-                                .findAllBy(entity.getTicker(), dateTimeProvider.nowDate().minusMonths(6))
-                                .stream()
-                                .map(DailyValueEntity::toDomain)
-                                .toList(),
-                            intradayValueEntityRepository
-                                .findAllBy(entity.getTicker(), dateTimeProvider.nowDate().atStartOfDay())
-                                .stream()
-                                .map(IntradayValueEntity::toDomain)
-                                .toList()
-                        )
-                    )
-                    .orElseThrow();
-                return FinInstrument.builder()
-                    .instrumentId(instrument.getId())
-                    .ticker(instrument.getTicker())
-                    .waPriceSeries(instrument
-                        .getDailyValues()
-                        .stream()
-                        .filter(row -> row.getClass().equals(DealResult.class))
-                        .map(DealResult.class::cast)
-                        .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
-                        .toList()
-                    )
-                    .closePriceSeries(instrument
-                        .getDailyValues()
-                        .stream()
-                        .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
-                        .toList())
-                    .openPriceSeries(instrument
-                        .getDailyValues()
-                        .stream()
-                        .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
-                        .toList())
-                    .valueSeries(instrument
-                        .getDailyValues()
-                        .stream()
-                        .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
-                        .toList())
-                    .todayValueSeries(
-                        instrument
-                            .getIntradayValues()
-                            .stream()
-                            .map(intradayValue -> new TimeSeriesValue<>(
-                                intradayValue.getValue(),
-                                intradayValue.getDateTime().toLocalTime()
-                            ))
-                            .toList()
-                    )
-                    .todayPriceSeries(instrument
-                        .getIntradayValues()
-                        .stream()
-                        .map(intradayValue -> new TimeSeriesValue<>(
-                            intradayValue.getPrice(),
-                            intradayValue.getDateTime().toLocalTime()
-                        ))
-                        .toList())
-                    .build();
-            })
+            .map(row -> row.toDomain(finInstrumentRepository.getByIdIn(row.getObjectIds())))
             .toList();
     }
 
     private SignalScannerEntity toEntity(SignalScanner dataScanner) {
-        return mappers.get(dataScanner.getConfig().getClass()).apply(dataScanner);
+        return mappers.get(dataScanner.getAlgorithm().getClass()).apply(dataScanner);
     }
 
-    Map<Class<? extends SignalConfig>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
-        AnomalyVolumeSignalConfig.class, AnomalyVolumeScannerEntity::from,
-        SectoralRetardSignalConfig.class, SectoralRetardScannerEntity::from,
-        CorrelationSectoralSignalConfig.class, CorrelationSectoralScannerEntity::from,
-        PrefSimpleSignalConfig.class, PrefSimpleScannerEntity::from
+    Map<Class<? extends SignalAlgorithm>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
+        AnomalyVolumeAlgorithm.class, AnomalyVolumeScannerEntity::from,
+        SectoralRetardAlgorithm.class, SectoralRetardScannerEntity::from,
+        CorrelationSectoralAlgorithm.class, CorrelationSectoralScannerEntity::from,
+        PrefSimpleAlgorithm.class, PrefSimpleScannerEntity::from
     );
 }

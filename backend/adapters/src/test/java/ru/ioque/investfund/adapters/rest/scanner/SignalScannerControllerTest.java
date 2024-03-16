@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AddPrefSimpleScanner;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleScannerConfig;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.signalscanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.IndexEntity;
@@ -120,8 +120,9 @@ public class SignalScannerControllerTest extends BaseControllerTest {
                 MockMvcRequestBuilders
                     .post("/api/v1/signal-scanner")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(toJson(AddPrefSimpleScanner
+                    .content(toJson(PrefSimpleScannerConfig
                         .builder()
+                        .workPeriodInMinutes(1)
                         .description("Описание")
                         .ids(List.of(UUID.randomUUID()))
                         .spreadParam(1.0)
@@ -186,6 +187,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     private List<SignalScannerEntity> getSignalScanners() {
         var scanner = new AnomalyVolumeScannerEntity(
             SIGNAL_PRODUCER_ID,
+            1,
             "Описание",
             List.of(AFKS_ID, IMOEX_ID),
             LocalDateTime.now(),

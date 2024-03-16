@@ -149,7 +149,7 @@ public class ScannerManagerTest extends BaseTest {
         int qnt = fakeDataScannerStorage().getAll().get(0).getObjectIds().size();
 
         dataScannerManager()
-            .updateConfiguration(
+            .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     new AnomalyVolumeSignalConfig(
@@ -185,7 +185,7 @@ public class ScannerManagerTest extends BaseTest {
         );
 
         dataScannerManager()
-            .updateConfiguration(
+            .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     new AnomalyVolumeSignalConfig(
@@ -213,7 +213,7 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             ApplicationException.class,
             () -> dataScannerManager()
-                .updateConfiguration(
+                .updateScanner(
                     new UpdateScannerCommand(
                         id,
                         new AnomalyVolumeSignalConfig(
@@ -249,7 +249,7 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> dataScannerManager()
-                .updateConfiguration(
+                .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         new AnomalyVolumeSignalConfig(
@@ -285,7 +285,7 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> dataScannerManager()
-                .updateConfiguration(
+                .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         new AnomalyVolumeSignalConfig(
