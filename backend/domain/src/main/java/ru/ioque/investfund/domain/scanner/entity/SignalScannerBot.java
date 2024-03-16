@@ -27,6 +27,7 @@ public class SignalScannerBot extends Domain {
     String description;
     @Getter
     SignalConfig config;
+    SignalAlgorithm algorithm;
     @NonFinal
     LocalDateTime lastExecutionDateTime;
     List<Signal> signals;
@@ -52,6 +53,7 @@ public class SignalScannerBot extends Domain {
         }
 
         this.config = config;
+        this.algorithm = config.factorySearchAlgorithm();
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
@@ -66,7 +68,7 @@ public class SignalScannerBot extends Domain {
         if (finInstruments.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
-        return processResult(config.factorySearchAlgorithm().run(getId(), finInstruments, dateTimeNow));
+        return processResult(algorithm.run(getId(), finInstruments, dateTimeNow));
     }
 
     private List<ScannerLog> processResult(ScanningResult scanningResult) {
