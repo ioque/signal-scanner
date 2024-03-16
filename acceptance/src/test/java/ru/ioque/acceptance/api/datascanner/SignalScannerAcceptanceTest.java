@@ -51,6 +51,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .scaleCoefficient(1.5)
                 .description("desc")
                 .historyPeriod(180)
@@ -74,6 +75,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         addSignalScanner(
             PrefSimpleRequest.builder()
+                .workPeriodInMinutes(1)
                 .ids(getInstrumentIds())
                 .description("desc")
                 .spreadParam(1.0)
@@ -97,6 +99,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .ids(getInstrumentIds())
                 .description("desc")
                 .historyScale(0.015)
@@ -122,6 +125,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .ids(getInstrumentIds())
                 .description("desc")
                 .futuresTicker("BRF4")
@@ -225,6 +229,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .scaleCoefficient(1.5)
                 .description("desc")
                 .historyPeriod(180)
@@ -321,6 +326,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         addSignalScanner(
             PrefSimpleRequest.builder()
+                .workPeriodInMinutes(1)
                 .spreadParam(1D)
                 .description("desc")
                 .ids(getInstrumentIds())
@@ -443,6 +449,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         datasetManager().initIntradayValue(intradayValues);
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .ids(getInstrumentIds())
                 .description("desc")
                 .historyScale(0.015)
@@ -516,6 +523,7 @@ public class SignalScannerAcceptanceTest extends BaseApiAcceptanceTest {
         datasetManager().initIntradayValue(intradayValues);
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
+                .workPeriodInMinutes(1)
                 .ids(getInstrumentIds())
                 .description("desc")
                 .futuresTicker("BRF4")

@@ -22,12 +22,13 @@ public class SectoralRetardScannerRequest extends AddSignalScannerRequest {
 
     @Builder
     public SectoralRetardScannerRequest(
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
         Double historyScale,
         Double intradayScale
     ) {
-        super(description, ids);
+        super(workPeriodInMinutes, description, ids);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

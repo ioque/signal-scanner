@@ -137,24 +137,6 @@ create table if not exists scanner_log
 alter table scanner_log
     owner to postgres;
 
-
-create table if not exists schedule_unit
-(
-    priority                 integer      not null,
-    start_time               time(6)      not null,
-    stop_time                time(6)      not null,
-    last_execution_date_time timestamp(6),
-    id                       uuid         not null
-        primary key,
-    system_module            varchar(255) not null
-        constraint schedule_unit_system_module_check
-            check ((system_module)::text = ANY
-                   ((ARRAY ['EXCHANGE'::character varying, 'SIGNAL_SCANNER'::character varying])::text[]))
-);
-
-alter table schedule_unit
-    owner to postgres;
-
 create table if not exists signal_scanner
 (
     futures_overnight_scale double precision,
@@ -164,6 +146,7 @@ create table if not exists signal_scanner
     scale_coefficient       double precision,
     spread_param            double precision,
     stock_overnight_scale   double precision,
+    work_period_in_minutes  int,
     last_work_date_time     timestamp(6),
     id                      uuid         not null
         primary key,

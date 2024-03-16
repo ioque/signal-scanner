@@ -20,8 +20,12 @@ public class PrefSimpleRequest extends AddSignalScannerRequest {
     Double spreadParam;
 
     @Builder
-    public PrefSimpleRequest(String description, List<UUID> ids, Double spreadParam) {
-        super(description, ids);
+    public PrefSimpleRequest(
+        Integer workPeriodInMinutes,
+        String description,
+        List<UUID> ids,
+        Double spreadParam) {
+        super(workPeriodInMinutes, description, ids);
         this.spreadParam = spreadParam;
     }
 }

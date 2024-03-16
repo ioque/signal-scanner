@@ -9,4 +9,3 @@ drop table if exists daily_value;
 drop table if exists instrument;
 drop table if exists exchange_updatable;
 drop table if exists exchange;
-drop table if exists schedule_unit;

@@ -31,6 +31,7 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = AnomalyVolumeScannerRequest.class, name = "AnomalyVolumeScannerRequest") }
 )
 public abstract class AddSignalScannerRequest implements Serializable {
+    Integer workPeriodInMinutes;
     String description;
     List<UUID> ids;
 }

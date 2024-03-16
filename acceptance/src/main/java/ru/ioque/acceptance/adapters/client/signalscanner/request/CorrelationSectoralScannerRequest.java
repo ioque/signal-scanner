@@ -23,13 +23,14 @@ public class CorrelationSectoralScannerRequest extends AddSignalScannerRequest {
 
     @Builder
     public CorrelationSectoralScannerRequest(
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(description, ids);
+        super(workPeriodInMinutes, description, ids);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;

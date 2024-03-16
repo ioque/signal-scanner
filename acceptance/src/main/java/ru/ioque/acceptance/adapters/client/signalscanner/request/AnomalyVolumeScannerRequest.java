@@ -23,13 +23,14 @@ public class AnomalyVolumeScannerRequest extends AddSignalScannerRequest {
 
     @Builder
     public AnomalyVolumeScannerRequest(
+        Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(description, ids);
+        super(workPeriodInMinutes, description, ids);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
