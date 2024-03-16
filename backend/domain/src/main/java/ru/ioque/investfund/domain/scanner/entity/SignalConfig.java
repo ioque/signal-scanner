@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.algorithms.SignalAlgorithm;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
