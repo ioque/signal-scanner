@@ -5,11 +5,9 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class FakeScannerRepository implements ScannerRepository {
-    Map<UUID, SignalConfig> configMap = new HashMap<>();
-    Map<UUID, SignalScanner> financialDataScannerMap = new HashMap<>();
+    public Map<UUID, SignalScanner> scannerMap = new HashMap<>();
     ExchangeRepository exchangeRepository;
 
     public FakeScannerRepository(ExchangeRepository exchangeRepository) {
@@ -26,34 +23,8 @@ public class FakeScannerRepository implements ScannerRepository {
     }
 
     @Override
-    public void saveConfig(UUID scannerId, SignalConfig config) {
-        configMap.put(scannerId, config);
-        if (financialDataScannerMap.containsKey(scannerId)) {
-            financialDataScannerMap.put(
-                scannerId,
-                config.factoryScanner(
-                    scannerId,
-                    financialDataScannerMap.get(scannerId).getLastExecutionDateTime().orElse(null),
-                    getAllByInstrumentIdIn(config.getObjectIds()),
-                    financialDataScannerMap.get(scannerId).getSignals()
-                )
-            );
-        } else {
-            financialDataScannerMap.put(
-                scannerId,
-                config.factoryScanner(
-                    scannerId,
-                    null,
-                    getAllByInstrumentIdIn(config.getObjectIds()),
-                    new ArrayList<>()
-                )
-            );
-        }
-    }
-
-    @Override
     public Optional<SignalScanner> getBy(UUID id) {
-        return Optional.ofNullable(financialDataScannerMap.get(id)).map(this::map);
+        return Optional.ofNullable(scannerMap.get(id)).map(this::map);
     }
 
     private SignalScanner map(SignalScanner signalScanner) {
@@ -70,15 +41,15 @@ public class FakeScannerRepository implements ScannerRepository {
 
     @Override
     public void save(SignalScanner dataScanner) {
-        this.financialDataScannerMap.put(dataScanner.getId(), dataScanner);
+        this.scannerMap.put(dataScanner.getId(), dataScanner);
     }
 
     @Override
     public List<SignalScanner> getAll() {
-        return financialDataScannerMap.values().stream().map(this::map).toList();
+        return scannerMap.values().stream().map(this::map).toList();
     }
 
-    private List<FinInstrument> getAllByInstrumentIdIn(List<UUID> instrumentIds) {
+    List<FinInstrument> getAllByInstrumentIdIn(List<UUID> instrumentIds) {
         return instrumentIds.stream().map(id -> {
             Instrument instrument = exchangeRepository.get().getInstruments().stream().filter(row -> row
                 .getId()
