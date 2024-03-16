@@ -70,6 +70,7 @@ public class ScannerManager implements SystemModule {
                 scannerBot.getId(),
                 command.getDescription(),
                 config,
+                config.factorySearchAlgorithm(),
                 scannerBot.getLastExecutionDateTime().orElse(null),
                 scannerBot.getSignals(),
                 scannerBot.getFinInstruments()

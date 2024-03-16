@@ -66,6 +66,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             new AnomalyVolumeSignalConfig(getObjectIds(), scaleCoefficient, historyPeriod, indexTicker),
+            new AnomalyVolumeSignalConfig(getObjectIds(), scaleCoefficient, historyPeriod, indexTicker).factorySearchAlgorithm(),
             getLastWorkDateTime(),
             getSignals().stream().map(SignalEntity::toDomain).toList(),
             instruments

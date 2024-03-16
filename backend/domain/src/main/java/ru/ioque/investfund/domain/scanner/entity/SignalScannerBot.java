@@ -38,6 +38,7 @@ public class SignalScannerBot extends Domain {
         UUID id,
         String description,
         SignalConfig config,
+        SignalAlgorithm algorithm,
         LocalDateTime lastExecutionDateTime,
         List<Signal> signals,
         List<FinInstrument> finInstruments
@@ -53,7 +54,7 @@ public class SignalScannerBot extends Domain {
         }
 
         this.config = config;
-        this.algorithm = config.factorySearchAlgorithm();
+        this.algorithm = algorithm;
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();

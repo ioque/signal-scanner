@@ -66,6 +66,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             new CorrelationSectoralSignalConfig(getObjectIds(), futuresOvernightScale, stockOvernightScale, futuresTicker),
+            new CorrelationSectoralSignalConfig(getObjectIds(), futuresOvernightScale, stockOvernightScale, futuresTicker).factorySearchAlgorithm(),
             getLastWorkDateTime(),
             getSignals().stream().map(SignalEntity::toDomain).toList(),
             instruments

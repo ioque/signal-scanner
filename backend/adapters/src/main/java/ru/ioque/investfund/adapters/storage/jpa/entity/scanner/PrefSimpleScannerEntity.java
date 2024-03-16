@@ -58,6 +58,7 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             new PrefSimpleSignalConfig(getObjectIds(), spreadParam),
+            new PrefSimpleSignalConfig(getObjectIds(), spreadParam).factorySearchAlgorithm(),
             getLastWorkDateTime(),
             getSignals().stream().map(SignalEntity::toDomain).toList(),
             instruments

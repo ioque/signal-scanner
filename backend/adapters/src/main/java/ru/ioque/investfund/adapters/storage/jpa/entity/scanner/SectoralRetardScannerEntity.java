@@ -62,6 +62,7 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
             getId(),
             getDescription(),
             new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale),
+            new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale).factorySearchAlgorithm(),
             getLastWorkDateTime(),
             getSignals().stream().map(SignalEntity::toDomain).toList(),
             instruments

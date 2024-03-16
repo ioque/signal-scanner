@@ -31,6 +31,7 @@ public class FakeScannerRepository implements ScannerRepository {
         return SignalScannerBot.builder()
             .id(signalScannerBot.getId())
             .config(signalScannerBot.getConfig())
+            .algorithm(signalScannerBot.getConfig().factorySearchAlgorithm())
             .description(signalScannerBot.getDescription())
             .signals(signalScannerBot.getSignals())
             .lastExecutionDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
