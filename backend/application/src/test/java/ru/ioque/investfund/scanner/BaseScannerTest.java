@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class BaseScannerTest extends BaseTest {
         return fakeDataScannerStorage()
             .getAll()
             .stream()
-            .map(SignalScannerBot::getSignals)
+            .map(SignalScanner::getSignals)
             .flatMap(Collection::stream)
             .toList();
     }
@@ -89,7 +89,7 @@ public class BaseScannerTest extends BaseTest {
         return fakeDataScannerStorage()
             .getAll()
             .stream()
-            .map(SignalScannerBot::getFinInstruments)
+            .map(SignalScanner::getFinInstruments)
             .flatMap(Collection::stream)
             .filter(row -> row.getTicker().equals(ticker))
             .findFirst()

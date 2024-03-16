@@ -1,13 +1,15 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ScannerRepository {
-    Optional<SignalScannerBot> getBy(UUID id);
-    void save(SignalScannerBot dataScanner);
-    List<SignalScannerBot> getAll();
+    Optional<SignalScanner> getBy(UUID id);
+    void saveConfig(UUID id, SignalConfig config);
+    void save(SignalScanner scanner);
+    List<SignalScanner> getAll();
 }

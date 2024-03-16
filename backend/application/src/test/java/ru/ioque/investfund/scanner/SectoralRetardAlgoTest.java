@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SectoralRetardAlgoTest extends BaseScannerTest {
     private final Double historyScale = 0.015;
     private final Double intradayScale = 0.015;
+
     @Test
     @DisplayName("""
         T1. В конфигурацию SectoralRetardSignalConfig не передан параметр historyScale.
@@ -25,8 +26,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase1() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),null, intradayScale)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.",
+                getInstrumentIds(),
+                null,
+                intradayScale
+            )
         ));
         assertEquals("Не передан параметр historyScale.", error.getMessage());
     }
@@ -39,8 +45,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase2() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),0D, intradayScale)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.",
+                getInstrumentIds(),
+                0D,
+                intradayScale
+            )
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -53,8 +64,11 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase3() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(),-1D, intradayScale)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.",
+                getInstrumentIds(), -1D, intradayScale
+            )
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
     }
@@ -67,8 +81,11 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase4() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, null)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.",
+                getInstrumentIds(), historyScale, null
+            )
         ));
         assertEquals("Не передан параметр intradayScale.", error.getMessage());
     }
@@ -81,8 +98,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase5() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, 0D)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.", getInstrumentIds(), historyScale, 0D
+            )
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -95,8 +114,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase6() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentIds(), historyScale, -1D)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.", getInstrumentIds(), historyScale, -1D
+            )
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
     }
@@ -242,8 +263,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     private void initScanner(List<String> tickers) {
         addScanner(
-            "Секторальный отстающий, нефтянка.",
-            new SectoralRetardSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), historyScale, intradayScale)
+            new SectoralRetardSignalConfig(
+                1,
+                "Секторальный отстающий, нефтянка.",
+                getInstrumentsBy(tickers).map(Instrument::getId).toList(),
+                historyScale,
+                intradayScale
+            )
         );
     }
 
@@ -266,17 +292,17 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     private void initDealsTatnFallOtherRise() {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildFuturesDealBy(1L, "BRF4",  "10:00:00",78D, 78000D,1),
-                buildFuturesDealBy(1L, "BRF4", "12:00:00", 96D, 96000D,1),
-                buildBuyDealBy(1L, "ROSN", "10:00:00", 250.1D,136926D, 1),
-                buildBuyDealBy(2L, "ROSN", "12:00:00", 255.1D,136926D, 1),
-                buildBuyDealBy(1L, "LKOH", "10:00:00", 248.1D,136926D, 1),
-                buildBuyDealBy(2L, "LKOH", "12:00:00", 255.1D,136926D, 1),
-                buildBuyDealBy(1L, "SIBN", "10:00:00", 248.1D,136926D, 1),
-                buildBuyDealBy(2L, "SIBN", "12:00:00", 255.1D,136926D, 1),
-                buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D,136926D, 1),
-                buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D,136926D, 1),
-                buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D,136926D, 1)
+                buildFuturesDealBy(1L, "BRF4", "10:00:00", 78D, 78000D, 1),
+                buildFuturesDealBy(1L, "BRF4", "12:00:00", 96D, 96000D, 1),
+                buildBuyDealBy(1L, "ROSN", "10:00:00", 250.1D, 136926D, 1),
+                buildBuyDealBy(2L, "ROSN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(1L, "LKOH", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(2L, "LKOH", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(1L, "SIBN", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(2L, "SIBN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
+                buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
+                buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
@@ -288,17 +314,17 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                 buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
                 buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 80D, 10D, 1),
                 //ROSN
-                buildDealResultBy("ROSN", "2023-12-20",  250D,250D,1D, 1D),
-                buildDealResultBy("ROSN", "2023-12-21",  250D,255D,1D, 1D),
+                buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("ROSN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //LKOH
-                buildDealResultBy("LKOH", "2023-12-20",  250D,250D, 1D,1D),
-                buildDealResultBy("LKOH", "2023-12-21",  250D,255D,1D, 1D),
+                buildDealResultBy("LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("LKOH", "2023-12-21", 250D, 255D, 1D, 1D),
                 //SIBN
-                buildDealResultBy("SIBN", "2023-12-20",  250D,250D, 1D,1D),
-                buildDealResultBy("SIBN", "2023-12-21",  250D,255D,1D, 1D),
+                buildDealResultBy("SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("SIBN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //TATN
-                buildDealResultBy("TATN", "2023-12-20",  250D,252D, 1D,1D),
-                buildDealResultBy("TATN", "2023-12-21",  250D,253D,1D, 1D)
+                buildDealResultBy("TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy("TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
@@ -310,17 +336,17 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                 buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
                 buildFuturesDealResultBy("BRF4", "2023-12-21", 74D, 74D, 10D, 1),
                 //ROSN
-                buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D,1D),
-                buildDealResultBy("ROSN", "2023-12-21", 250D, 251D, 1D,1D),
+                buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("ROSN", "2023-12-21", 250D, 251D, 1D, 1D),
                 //LKOH
-                buildDealResultBy("LKOH", "2023-12-20",  250D,250D, 1D,1D),
-                buildDealResultBy("LKOH", "2023-12-21", 250D, 250D, 1D,1D),
+                buildDealResultBy("LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("LKOH", "2023-12-21", 250D, 250D, 1D, 1D),
                 //SIBN
-                buildDealResultBy("SIBN", "2023-12-20", 250D, 250D, 1D,1D),
-                buildDealResultBy("SIBN", "2023-12-21", 250D, 249D, 1D,1D),
+                buildDealResultBy("SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy("SIBN", "2023-12-21", 250D, 249D, 1D, 1D),
                 //TATN
-                buildDealResultBy("TATN", "2023-12-20", 250D, 252D, 1D,1D),
-                buildDealResultBy("TATN", "2023-12-21", 250D, 253D, 1D,1D)
+                buildDealResultBy("TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy("TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }

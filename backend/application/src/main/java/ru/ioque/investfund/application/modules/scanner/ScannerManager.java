@@ -10,8 +10,7 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -47,35 +46,18 @@ public class ScannerManager implements SystemModule {
         runScanners();
     }
 
-    public synchronized void addNewScanner(AddScannerCommand command) {
+    public synchronized void saveConfiguration(AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
-        scannerRepository.save(SignalScannerBot.builder()
-            .id(id)
-            .description(command.getDescription())
-            .config(command.getSignalConfig())
-            .build());
+        scannerRepository.saveConfig(id, command.getSignalConfig());
         loggerFacade.logSaveNewDataScanner(id);
     }
 
-    public synchronized void updateScanner(UpdateScannerCommand command) {
-        final SignalScannerBot scannerBot =
-            scannerRepository
-                .getBy(command.getId())
-                .orElseThrow(scannerNotFound(command));
-        final SignalConfig config = scannerBot.getConfig();
-        config.updateObjectIds(command.getIds());
-        scannerRepository.save(
-            new SignalScannerBot(
-                scannerBot.getId(),
-                command.getDescription(),
-                config,
-                config.factorySearchAlgorithm(),
-                scannerBot.getLastExecutionDateTime().orElse(null),
-                scannerBot.getSignals(),
-                scannerBot.getFinInstruments()
-            )
-        );
+    public synchronized void updateConfiguration(UpdateScannerCommand command) {
+        if (scannerRepository.getBy(command.getId()).isEmpty()) {
+            throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
+        }
+        scannerRepository.saveConfig(command.getId(), command.getSignalConfig());
         loggerFacade.logUpdateSignalScanner(command);
     }
 
@@ -93,7 +75,7 @@ public class ScannerManager implements SystemModule {
         return () -> new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
     }
 
-    private void runScanner(SignalScannerBot scanner) {
+    private void runScanner(SignalScanner scanner) {
         loggerFacade.logRunWorkScanner(scanner);
         scannerLogRepository.saveAll(scanner.getId(), scanner.scanning(dateTimeProvider.nowDateTime()));
         scannerRepository.save(scanner);

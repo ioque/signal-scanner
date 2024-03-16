@@ -7,7 +7,7 @@ import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public class JpaScannerRepoTest extends BaseJpaTest {
     void test1() {
         prepareExchange();
 
-        dataJpaScannerRepo.save(SignalScannerBot
+        dataJpaScannerRepo.save(SignalScanner
             .builder()
             .id(SCANNER_ID)
             .description("description")

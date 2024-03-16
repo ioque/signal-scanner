@@ -26,7 +26,7 @@ import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleSignal
 import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class JpaScannerRepo implements ScannerRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<SignalScannerBot> getBy(UUID id) {
+    public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
             .map(row -> row.toDomain(getFinInstrumentsByIds(row.getObjectIds())));
@@ -55,13 +55,13 @@ public class JpaScannerRepo implements ScannerRepository {
 
     @Override
     @Transactional
-    public void save(SignalScannerBot dataScanner) {
+    public void save(SignalScanner dataScanner) {
         signalScannerEntityRepository.save(toEntity(dataScanner));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<SignalScannerBot> getAll() {
+    public List<SignalScanner> getAll() {
         return signalScannerEntityRepository
             .findAll()
             .stream()
@@ -137,11 +137,11 @@ public class JpaScannerRepo implements ScannerRepository {
             .toList();
     }
 
-    private SignalScannerEntity toEntity(SignalScannerBot dataScanner) {
+    private SignalScannerEntity toEntity(SignalScanner dataScanner) {
         return mappers.get(dataScanner.getConfig().getClass()).apply(dataScanner);
     }
 
-    Map<Class<? extends SignalConfig>, Function<SignalScannerBot, SignalScannerEntity>> mappers = Map.of(
+    Map<Class<? extends SignalConfig>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
         AnomalyVolumeSignalConfig.class, AnomalyVolumeScannerEntity::from,
         SectoralRetardSignalConfig.class, SectoralRetardScannerEntity::from,
         CorrelationSectoralSignalConfig.class, CorrelationSectoralScannerEntity::from,

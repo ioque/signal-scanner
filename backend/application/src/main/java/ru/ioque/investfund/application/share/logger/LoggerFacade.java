@@ -6,7 +6,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -100,25 +100,25 @@ public class LoggerFacade {
         )));
     }
 
-    public void logRunWorkScanner(SignalScannerBot scanner) {
+    public void logRunWorkScanner(SignalScanner scanner) {
         log(
             new InfoLog(
                 String.format(
                     "Начал работу сканер сигналов c идентификатором %s, алгоритм сканера - %s.",
                     scanner.getId(),
-                    scanner.getConfig().factorySearchAlgorithm().getName()
+                    scanner.getAlgorithm().getName()
                 )
             )
         );
     }
 
-    public void logFinishWorkScanner(SignalScannerBot scanner) {
+    public void logFinishWorkScanner(SignalScanner scanner) {
         log(
             new InfoLog(
                 String.format(
                     "Завершил работу сканер сигналов c идентификатором %s, алгоритм сканера - %s. Текущие сигналы: %s",
                     scanner.getId(),
-                    scanner.getConfig().factorySearchAlgorithm().getName(),
+                    scanner.getAlgorithm().getName(),
                     scanner.getSignals()
                 )
             )

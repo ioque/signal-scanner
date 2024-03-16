@@ -28,7 +28,7 @@ public class SignaScannerCommandController {
     @PostMapping("/api/v1/signal-scanner")
     public void addNewSignalScanner(@Valid @RequestBody AddSignalScannerRequest request) {
         scannerManager
-            .addNewScanner(
+            .saveConfiguration(
                 AddScannerCommand.builder()
                     .description(request.getDescription())
                     .signalConfig(request.buildConfig())
@@ -39,7 +39,7 @@ public class SignaScannerCommandController {
     @PatchMapping("/api/v1/signal-scanner/{id}")
     public void updateSignalScannerInfo(@PathVariable("id") UUID id, @Valid @RequestBody UpdateSignalScannerRequest request) {
         scannerManager
-            .updateScanner(
+            .updateConfiguration(
                 UpdateScannerCommand.builder()
                     .id(id)
                     .ids(request.getIds())

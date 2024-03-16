@@ -90,14 +90,12 @@ public class BaseTest {
 
 
     protected void addScanner(
-        String description,
         SignalConfig config
     ) {
         dataScannerManager()
-            .addNewScanner(
+            .saveConfiguration(
                 AddScannerCommand.builder()
                     .signalConfig(config)
-                    .description(description)
                     .build()
             );
     }

@@ -13,20 +13,20 @@ import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class SignalScannerBot extends Domain {
-    @Getter
+public class SignalScanner extends Domain {
+    Integer workPeriodInMinutes;
     String description;
-    @Getter
-    SignalConfig config;
     SignalAlgorithm algorithm;
     @NonFinal
     LocalDateTime lastExecutionDateTime;
@@ -34,26 +34,30 @@ public class SignalScannerBot extends Domain {
     List<FinInstrument> finInstruments;
 
     @Builder
-    public SignalScannerBot(
+    public SignalScanner(
         UUID id,
+        Integer workPeriodInMinutes,
         String description,
-        SignalConfig config,
         SignalAlgorithm algorithm,
         LocalDateTime lastExecutionDateTime,
-        List<Signal> signals,
-        List<FinInstrument> finInstruments
+        List<FinInstrument> finInstruments,
+        List<Signal> signals
     ) {
         super(id);
 
-        if (config == null) {
-            throw new DomainException("Не передана конфигурация алгоритма.");
+        if (workPeriodInMinutes == null) {
+            throw new DomainException("Не передан период работы сканера.");
+        }
+
+        if (algorithm == null) {
+            throw new DomainException("Не передан алгоритм сканера.");
         }
 
         if (description == null || description.isBlank()) {
             throw new DomainException("Не передано описание.");
         }
 
-        this.config = config;
+        this.workPeriodInMinutes = workPeriodInMinutes;
         this.algorithm = algorithm;
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
@@ -99,7 +103,11 @@ public class SignalScannerBot extends Domain {
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
         if (getLastExecutionDateTime().isEmpty()) return true;
-        return config.isTimeForExecution(lastExecutionDateTime, nowDateTime);
+        return isTimeForExecution(getLastExecutionDateTime().get(), nowDateTime);
+    }
+
+    private boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
+        return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
     public List<FinInstrument> getFinInstruments() {
@@ -107,7 +115,7 @@ public class SignalScannerBot extends Domain {
     }
 
     public List<UUID> getObjectIds() {
-        return List.copyOf(config.getObjectIds());
+        return List.copyOf(finInstruments.stream().map(FinInstrument::getId).toList());
     }
 
     public List<Signal> getSignals() {

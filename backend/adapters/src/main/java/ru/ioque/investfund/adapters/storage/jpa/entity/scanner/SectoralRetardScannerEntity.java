@@ -11,7 +11,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalScannerBot;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,22 +43,22 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
         this.intradayScale = intradayScale;
     }
 
-    public static SignalScannerEntity from(SignalScannerBot signalScannerBot) {
-        SectoralRetardSignalConfig config = (SectoralRetardSignalConfig) signalScannerBot.getConfig();
+    public static SignalScannerEntity from(SignalScanner signalScanner) {
+        SectoralRetardSignalConfig config = (SectoralRetardSignalConfig) signalScanner.getConfig();
         return SectoralRetardScannerEntity.builder()
-            .id(signalScannerBot.getId())
-            .description(signalScannerBot.getDescription())
-            .objectIds(signalScannerBot.getObjectIds())
-            .lastWorkDateTime(signalScannerBot.getLastExecutionDateTime().orElse(null))
-            .signals(signalScannerBot.getSignals().stream().map(SignalEntity::from).toList())
+            .id(signalScanner.getId())
+            .description(signalScanner.getDescription())
+            .objectIds(signalScanner.getObjectIds())
+            .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
+            .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
             .historyScale(config.getHistoryScale())
             .intradayScale(config.getIntradayScale())
             .build();
     }
 
     @Override
-    public SignalScannerBot toDomain(List<FinInstrument> instruments) {
-        return new SignalScannerBot(
+    public SignalScanner toDomain(List<FinInstrument> instruments) {
+        return new SignalScanner(
             getId(),
             getDescription(),
             new SectoralRetardSignalConfig(getObjectIds(), historyScale, intradayScale),

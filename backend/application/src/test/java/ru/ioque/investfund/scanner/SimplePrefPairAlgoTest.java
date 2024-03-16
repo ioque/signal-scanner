@@ -25,8 +25,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentIds(), null)
+            new PrefSimpleSignalConfig(1, "Анализ пар преф-обычка.", getInstrumentIds(), null)
         ));
         assertEquals("Не передан параметр spreadParam.", error.getMessage());
     }
@@ -40,8 +39,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentIds(), 0D)
+            new PrefSimpleSignalConfig(1, "Анализ пар преф-обычка.", getInstrumentIds(), 0D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -55,8 +53,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentIds(), -1D)
+            new PrefSimpleSignalConfig(1, "Анализ пар преф-обычка.", getInstrumentIds(), -1D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -450,8 +447,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initScanner(List<String> tickers) {
         addScanner(
-            "Анализ пар преф-обычка.",
-            new PrefSimpleSignalConfig(getInstrumentsBy(tickers).map(Instrument::getId).toList(), SPREAD_PARAM)
+            new PrefSimpleSignalConfig(1, "Анализ пар преф-обычка.", getInstrumentsBy(tickers).map(Instrument::getId).toList(), SPREAD_PARAM)
         );
     }
 

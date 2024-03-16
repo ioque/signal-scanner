@@ -5,10 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -20,8 +21,12 @@ public class PrefSimpleSignalConfig extends SignalConfig {
     private final Double spreadParam;
 
     @Builder
-    public PrefSimpleSignalConfig(List<UUID> objectIds, Double spreadParam) {
-        super(objectIds);
+    public PrefSimpleSignalConfig(
+        Integer workPeriodInMinutes,
+        String description,
+        List<UUID> objectIds,
+        Double spreadParam) {
+        super(workPeriodInMinutes, description, objectIds);
         this.spreadParam = spreadParam;
         validate();
     }
@@ -36,12 +41,20 @@ public class PrefSimpleSignalConfig extends SignalConfig {
     }
 
     @Override
-    public SignalAlgorithm factorySearchAlgorithm() {
-        return new PrefSimpleAlgorithm(spreadParam);
-    }
-
-    @Override
-    public boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
-        return Duration.between(lastExecution, nowDateTime).toMinutes() >= 1;
+    public SignalScanner factoryScanner(
+        UUID id,
+        LocalDateTime lastExecution,
+        List<FinInstrument> finInstruments,
+        List<Signal> signals
+    ) {
+        return new SignalScanner(
+            id,
+            getWorkPeriodInMinutes(),
+            getDescription(),
+            new PrefSimpleAlgorithm(spreadParam),
+            lastExecution,
+            finInstruments,
+            signals
+        );
     }
 }

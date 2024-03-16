@@ -13,15 +13,12 @@ import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
 @EqualsAndHashCode
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AddScannerCommand {
-    String description;
     SignalConfig signalConfig;
 
     @Builder
     public AddScannerCommand(
-        String description,
         SignalConfig signalConfig
     ) {
-        this.description = description;
         this.signalConfig = signalConfig;
     }
 }

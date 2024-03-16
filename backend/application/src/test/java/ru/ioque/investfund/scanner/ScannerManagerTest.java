@@ -34,8 +34,13 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase1() {
         addScanner(
-            "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(
+                1,
+                "Аномальные объемы, третий эшелон.",
+                getInstrumentIds(),
+                1.5,
+                180,
+                "IMOEX")
         );
         assertFalse(
             signalProducerRepo()
@@ -49,8 +54,7 @@ public class ScannerManagerTest extends BaseTest {
                 .stream()
                 .findFirst()
                 .orElseThrow()
-                .getConfig()
-                .factorySearchAlgorithm()
+                .getAlgorithm()
                 .getName()
         );
     }
@@ -63,8 +67,13 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                "Аномальные объемы, третий эшелон.",
-                new AnomalyVolumeSignalConfig(null, 1.5, 180, "IMOEX")
+                new AnomalyVolumeSignalConfig(
+                    1,
+                    "Аномальные объемы, третий эшелон.",
+                    null,
+                    1.5,
+                    180,
+                    "IMOEX")
             )
         );
         assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
@@ -79,8 +88,13 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                "Аномальные объемы, третий эшелон.",
-                new AnomalyVolumeSignalConfig(List.of(), 1.5, 180, "IMOEX")
+                new AnomalyVolumeSignalConfig(
+                    1,
+                    "Аномальные объемы, третий эшелон.",
+                    List.of(),
+                    1.5,
+                    180,
+                    "IMOEX")
             )
         );
         assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
@@ -93,8 +107,13 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase4() {
         addScanner(
-            "Аномальные объемы, третий эшелон.",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(
+                1,
+                "Аномальные объемы, третий эшелон.",
+                getInstrumentIds(),
+                1.5,
+                180,
+                "IMOEX")
         );
         assertEquals(
             "Аномальные объемы",
@@ -103,21 +122,8 @@ public class ScannerManagerTest extends BaseTest {
                 .stream()
                 .findFirst()
                 .orElseThrow()
-                .getConfig()
-                .factorySearchAlgorithm().getName()
+                .getAlgorithm().getName()
         );
-    }
-
-    @Test
-    @DisplayName("""
-        T5. Регистрация нового сканера сигналов без конфигурации.
-        """)
-    void testCase5() {
-        var error = assertThrows(
-            DomainException.class,
-            () -> addScanner("Аномальные объемы, третий эшелон.", null)
-        );
-        assertEquals("Не передана конфигурация алгоритма.", error.getMessage());
     }
 
     @Test
@@ -127,8 +133,9 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase6() {
         addScanner(
-            "Старое описание",
             new AnomalyVolumeSignalConfig(
+                1,
+                "Старое описание",
                 getInstruments()
                     .stream()
                     .filter(row -> row.getClass().equals(Stock.class))
@@ -142,11 +149,17 @@ public class ScannerManagerTest extends BaseTest {
         int qnt = fakeDataScannerStorage().getAll().get(0).getObjectIds().size();
 
         dataScannerManager()
-            .updateScanner(
+            .updateConfiguration(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    "Старое описание",
-                    getInstruments().stream().map(Instrument::getId).toList()
+                    new AnomalyVolumeSignalConfig(
+                        1,
+                        "Старое описание",
+                        getInstrumentIds(),
+                        1.5,
+                        180,
+                        "IMOEX"
+                    )
                 )
             );
 
@@ -161,16 +174,28 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase7() {
         addScanner(
-            "Старое описание",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(
+                1,
+                "Старое описание",
+                getInstrumentIds(),
+                1.5,
+                180,
+                "IMOEX"
+            )
         );
 
         dataScannerManager()
-            .updateScanner(
+            .updateConfiguration(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    "Новое описание",
-                    getInstruments().stream().map(Instrument::getId).toList()
+                    new AnomalyVolumeSignalConfig(
+                        1,
+                        "Новое описание",
+                        getInstrumentIds(),
+                        1.5,
+                        180,
+                        "IMOEX"
+                    )
                 )
             );
 
@@ -188,11 +213,17 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             ApplicationException.class,
             () -> dataScannerManager()
-                .updateScanner(
+                .updateConfiguration(
                     new UpdateScannerCommand(
                         id,
-                        "Новое описание",
-                        getInstruments().stream().map(Instrument::getId).toList()
+                        new AnomalyVolumeSignalConfig(
+                            1,
+                            "Новое описание",
+                            getInstrumentIds(),
+                            1.5,
+                            180,
+                            "IMOEX"
+                        )
                     )
                 )
         );
@@ -206,17 +237,29 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase9() {
         addScanner(
-            "Старое описание",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(
+                1,
+                "Старое описание",
+                getInstrumentIds(),
+                1.5,
+                180,
+                "IMOEX"
+            )
         );
         var error = assertThrows(
             DomainException.class,
             () -> dataScannerManager()
-                .updateScanner(
+                .updateConfiguration(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        "",
-                        getInstruments().stream().map(Instrument::getId).toList()
+                        new AnomalyVolumeSignalConfig(
+                            1,
+                            "",
+                            getInstrumentIds(),
+                            1.5,
+                            180,
+                            "IMOEX"
+                        )
                     )
                 )
         );
@@ -230,17 +273,29 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase10() {
         addScanner(
-            "Старое описание",
-            new AnomalyVolumeSignalConfig(getInstrumentIds(), 1.5, 180, "IMOEX")
+            new AnomalyVolumeSignalConfig(
+                1,
+                "Старое описание",
+                getInstrumentIds(),
+                1.5,
+                180,
+                "IMOEX"
+            )
         );
         var error = assertThrows(
             DomainException.class,
             () -> dataScannerManager()
-                .updateScanner(
+                .updateConfiguration(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        "Старое описание",
-                        List.of()
+                        new AnomalyVolumeSignalConfig(
+                            1,
+                            "Старое описание",
+                            List.of(),
+                            1.5,
+                            180,
+                            "IMOEX"
+                        )
                     )
                 )
         );

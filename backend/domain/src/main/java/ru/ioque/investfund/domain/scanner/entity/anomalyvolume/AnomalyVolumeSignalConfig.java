@@ -5,10 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -18,14 +19,19 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class AnomalyVolumeSignalConfig extends SignalConfig {
     private final Double scaleCoefficient;
-    //Период расчета в исторических данных = 180 дней
-    //если данных при запросе нет, надо как-то доинтегрировать? или рассчитывать с тем что есть?
     private final Integer historyPeriod;
     private final String indexTicker;
 
     @Builder
-    public AnomalyVolumeSignalConfig(List<UUID> objectIds, Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
-        super(objectIds);
+    public AnomalyVolumeSignalConfig(
+        Integer workPeriodInMinutes,
+        String description,
+        List<UUID> objectIds,
+        Double scaleCoefficient,
+        Integer historyPeriod,
+        String indexTicker
+    ) {
+        super(workPeriodInMinutes, description, objectIds);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
@@ -51,12 +57,20 @@ public class AnomalyVolumeSignalConfig extends SignalConfig {
     }
 
     @Override
-    public SignalAlgorithm factorySearchAlgorithm() {
-        return new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker);
-    }
-
-    @Override
-    public boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
-        return Duration.between(lastExecution, nowDateTime).toMinutes() >= 1;
+    public SignalScanner factoryScanner(
+        UUID id,
+        LocalDateTime lastExecution,
+        List<FinInstrument> finInstruments,
+        List<Signal> signals
+    ) {
+        return new SignalScanner(
+            id,
+            getWorkPeriodInMinutes(),
+            getDescription(),
+            new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker),
+            lastExecution,
+            finInstruments,
+            signals
+        );
     }
 }
