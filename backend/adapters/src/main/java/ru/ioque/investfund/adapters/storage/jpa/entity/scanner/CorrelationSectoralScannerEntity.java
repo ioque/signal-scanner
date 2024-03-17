@@ -11,8 +11,8 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.configurator.CorrelationSectoralScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfigurator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,7 +65,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return CorrelationSectoralScannerConfiguration
+        return CorrelationSectoralAlgorithmConfigurator
             .builder()
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())

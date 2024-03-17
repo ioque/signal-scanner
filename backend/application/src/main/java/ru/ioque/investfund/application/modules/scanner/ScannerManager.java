@@ -11,8 +11,6 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.scanner.entity.configurator.AbstractAlgorithmFactory;
-import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.Optional;
@@ -30,7 +28,6 @@ public class ScannerManager implements SystemModule {
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     LoggerFacade loggerFacade;
-    AbstractAlgorithmFactory algorithmFactory;
 
     public ScannerManager(
         FinInstrumentRepository finInstrumentRepository,
@@ -46,7 +43,6 @@ public class ScannerManager implements SystemModule {
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.loggerFacade = loggerFacade;
-        this.algorithmFactory = new AbstractAlgorithmFactory();
     }
 
     @Override
@@ -63,14 +59,13 @@ public class ScannerManager implements SystemModule {
     public synchronized void addNewScanner(AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
-        ScannerConfiguration configuration = command.getScannerConfiguration();
         scannerRepository.save(
             SignalScanner.builder()
                 .id(id)
-                .workPeriodInMinutes(configuration.getWorkPeriodInMinutes())
-                .description(configuration.getDescription())
-                .algorithm(algorithmFactory.factory(configuration))
-                .finInstruments(finInstrumentRepository.getByIdIn(configuration.getObjectIds()))
+                .workPeriodInMinutes(command.getWorkPeriodInMinutes())
+                .description(command.getDescription())
+                .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
+                .finInstruments(finInstrumentRepository.getByIdIn(command.getObjectIds()))
                 .build()
         );
         loggerFacade.logSaveNewDataScanner(id);
@@ -81,16 +76,15 @@ public class ScannerManager implements SystemModule {
         if (scanner.isEmpty()) {
             throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
         }
-        ScannerConfiguration configuration = command.getScannerConfiguration();
         scannerRepository.save(
             SignalScanner.builder()
                 .id(scanner.get().getId())
                 .signals(scanner.get().getSignals())
                 .lastExecutionDateTime(scanner.get().getLastExecutionDateTime().orElse(null))
-                .workPeriodInMinutes(configuration.getWorkPeriodInMinutes())
-                .description(configuration.getDescription())
-                .algorithm(algorithmFactory.factory(configuration))
-                .finInstruments(finInstrumentRepository.getByIdIn(configuration.getObjectIds()))
+                .workPeriodInMinutes(command.getWorkPeriodInMinutes())
+                .description(command.getDescription())
+                .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
+                .finInstruments(finInstrumentRepository.getByIdIn(command.getObjectIds()))
                 .build()
         );
         loggerFacade.logUpdateSignalScanner(command);

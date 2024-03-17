@@ -1,44 +1,39 @@
-package ru.ioque.investfund.domain.scanner.entity.configurator;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.PrefSimpleAlgorithm;
-
-import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class PrefSimpleScannerConfiguration extends ScannerConfiguration {
-    private final Double spreadParam;
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class PrefSimpleAlgorithmConfigurator extends AlgorithmConfigurator {
+    Double spreadParam;
 
     @Builder
-    public PrefSimpleScannerConfiguration(
-        Integer workPeriodInMinutes,
-        String description,
-        List<UUID> objectIds,
-        Double spreadParam) {
-        super(workPeriodInMinutes, description, objectIds);
+    public PrefSimpleAlgorithmConfigurator(Double spreadParam) {
         this.spreadParam = spreadParam;
         validate();
     }
 
     private void validate() {
-        if (spreadParam == null) {
+        if (this.spreadParam == null) {
             throw new DomainException("Не передан параметр spreadParam.");
         }
-        if (spreadParam <= 0) {
+        if (this.spreadParam <= 0) {
             throw new DomainException("Параметр spreadParam должен быть больше нуля.");
         }
     }
 
     @Override
-    protected ScannerAlgorithm factoryAlgorithm() {
+    public ScannerAlgorithm factoryAlgorithm() {
         return new PrefSimpleAlgorithm(spreadParam);
     }
 }

@@ -15,10 +15,10 @@ import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.SectoralRetardAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithm;
 
 import java.util.List;
 import java.util.Map;

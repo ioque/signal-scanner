@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.configurator.AnomalyVolumeScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
@@ -65,7 +65,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return AnomalyVolumeScannerConfiguration
+        return AnomalyVolumeAlgorithmConfigurator
             .builder()
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())

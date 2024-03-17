@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.configurator.PrefSimpleScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
@@ -25,7 +25,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new PrefSimpleScannerConfiguration(1, "Анализ пар преф-обычка.", getInstrumentIds(), null)
+            1,
+            "Анализ пар преф-обычка.",
+            getInstrumentIds(),
+            new PrefSimpleAlgorithmConfigurator(
+                null)
         ));
         assertEquals("Не передан параметр spreadParam.", error.getMessage());
     }
@@ -39,7 +43,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new PrefSimpleScannerConfiguration(1, "Анализ пар преф-обычка.", getInstrumentIds(), 0D)
+            1,
+            "Анализ пар преф-обычка.",
+            getInstrumentIds(),
+            new PrefSimpleAlgorithmConfigurator(
+                0D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -53,7 +61,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new PrefSimpleScannerConfiguration(1, "Анализ пар преф-обычка.", getInstrumentIds(), -1D)
+            1,
+            "Анализ пар преф-обычка.",
+            getInstrumentIds(),
+            new PrefSimpleAlgorithmConfigurator(
+                -1D)
         ));
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
@@ -447,7 +459,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initScanner(List<String> tickers) {
         addScanner(
-            new PrefSimpleScannerConfiguration(1, "Анализ пар преф-обычка.", getInstrumentsBy(tickers).map(Instrument::getId).toList(), SPREAD_PARAM)
+            1,
+            "Анализ пар преф-обычка.",
+            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
+            new PrefSimpleAlgorithmConfigurator(
+                SPREAD_PARAM)
         );
     }
 

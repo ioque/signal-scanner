@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.configurator.PrefSimpleScannerConfiguration;
-import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class PrefSimpleScannerConfig extends ScannerConfigRequest {
 
 
     @Override
-    public ScannerConfiguration buildConfig() {
-        return new PrefSimpleScannerConfiguration(getWorkPeriodInMinutes(), getDescription(), getIds(), spreadParam);
+    public AlgorithmConfigurator buildConfig() {
+        return new PrefSimpleAlgorithmConfigurator(getWorkPeriodInMinutes(), getDescription(), getIds(), spreadParam);
     }
 }

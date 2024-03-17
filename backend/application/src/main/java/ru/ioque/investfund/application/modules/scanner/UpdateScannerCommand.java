@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,14 +17,23 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UpdateScannerCommand {
     UUID id;
-    ScannerConfiguration scannerConfiguration;
+    Integer workPeriodInMinutes;
+    String description;
+    List<UUID> objectIds;
+    AlgorithmConfigurator algorithmConfigurator;
 
     @Builder
     public UpdateScannerCommand(
         UUID id,
-        ScannerConfiguration scannerConfiguration
+        Integer workPeriodInMinutes,
+        String description,
+        List<UUID> objectIds,
+        AlgorithmConfigurator algorithmConfigurator
     ) {
         this.id = id;
-        this.scannerConfiguration = scannerConfiguration;
+        this.workPeriodInMinutes = workPeriodInMinutes;
+        this.description = description;
+        this.objectIds = objectIds;
+        this.algorithmConfigurator = algorithmConfigurator;
     }
 }

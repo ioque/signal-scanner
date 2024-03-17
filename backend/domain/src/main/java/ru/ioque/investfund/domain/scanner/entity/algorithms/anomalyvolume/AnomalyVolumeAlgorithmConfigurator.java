@@ -1,34 +1,30 @@
-package ru.ioque.investfund.domain.scanner.entity.configurator;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
-
-import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class AnomalyVolumeScannerConfiguration extends ScannerConfiguration {
-    private final Double scaleCoefficient;
-    private final Integer historyPeriod;
-    private final String indexTicker;
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class AnomalyVolumeAlgorithmConfigurator extends AlgorithmConfigurator {
+    Double scaleCoefficient;
+    Integer historyPeriod;
+    String indexTicker;
 
     @Builder
-    public AnomalyVolumeScannerConfiguration(
-        Integer workPeriodInMinutes,
-        String description,
-        List<UUID> objectIds,
+    public AnomalyVolumeAlgorithmConfigurator(
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(workPeriodInMinutes, description, objectIds);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
@@ -54,7 +50,7 @@ public class AnomalyVolumeScannerConfiguration extends ScannerConfiguration {
     }
 
     @Override
-    protected ScannerAlgorithm factoryAlgorithm() {
+    public ScannerAlgorithm factoryAlgorithm() {
         return new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

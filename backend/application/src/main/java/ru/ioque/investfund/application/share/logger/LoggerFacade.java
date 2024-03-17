@@ -34,7 +34,7 @@ public class LoggerFacade {
                 String
                     .format(
                         "Начато создание сканера сигналов, идентификаторы инструментов %s.",
-                        Objects.isNull(command.getScannerConfiguration()) ? "не переданы" : command.getScannerConfiguration().getObjectIds()
+                        Objects.isNull(command.getAlgorithmConfigurator()) ? "не переданы" : command.getObjectIds()
                     )
             )
         );

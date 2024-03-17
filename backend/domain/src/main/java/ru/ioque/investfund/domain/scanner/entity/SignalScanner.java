@@ -45,7 +45,16 @@ public class SignalScanner extends Domain {
         List<Signal> signals
     ) {
         super(id);
+        this.workPeriodInMinutes = workPeriodInMinutes;
+        this.algorithm = algorithm;
+        this.description = description;
+        this.lastExecutionDateTime = lastExecutionDateTime;
+        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
+        this.finInstruments = finInstruments != null ? new ArrayList<>(finInstruments) : new ArrayList<>();
+        validate();
+    }
 
+    private void validate() {
         if (workPeriodInMinutes == null) {
             throw new DomainException("Не передан период работы сканера.");
         }
@@ -58,12 +67,9 @@ public class SignalScanner extends Domain {
             throw new DomainException("Не передано описание.");
         }
 
-        this.workPeriodInMinutes = workPeriodInMinutes;
-        this.algorithm = algorithm;
-        this.description = description;
-        this.lastExecutionDateTime = lastExecutionDateTime;
-        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
-        this.finInstruments = finInstruments != null ? new ArrayList<>(finInstruments) : new ArrayList<>();
+        if (finInstruments == null || finInstruments.isEmpty()) {
+            throw new DomainException("Не передан список анализируемых инструментов.");
+        }
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {

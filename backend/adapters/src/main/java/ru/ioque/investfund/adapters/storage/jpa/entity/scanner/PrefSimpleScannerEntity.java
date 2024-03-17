@@ -11,8 +11,8 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.configurator.PrefSimpleScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,7 +57,7 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return PrefSimpleScannerConfiguration
+        return PrefSimpleAlgorithmConfigurator
             .builder()
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())

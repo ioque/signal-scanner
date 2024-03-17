@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.scanner.entity.configurator.AnomalyVolumeScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,10 +34,10 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase1() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Аномальные объемы, третий эшелон.",
-                getInstrumentIds(),
+            1,
+            "Аномальные объемы, третий эшелон.",
+            getInstrumentIds(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX")
@@ -67,10 +67,10 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                new AnomalyVolumeScannerConfiguration(
-                    1,
-                    "Аномальные объемы, третий эшелон.",
-                    null,
+                1,
+                "Аномальные объемы, третий эшелон.",
+                null,
+                new AnomalyVolumeAlgorithmConfigurator(
                     1.5,
                     180,
                     "IMOEX")
@@ -88,10 +88,10 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                new AnomalyVolumeScannerConfiguration(
-                    1,
-                    "Аномальные объемы, третий эшелон.",
-                    List.of(),
+                1,
+                "Аномальные объемы, третий эшелон.",
+                List.of(),
+                new AnomalyVolumeAlgorithmConfigurator(
                     1.5,
                     180,
                     "IMOEX")
@@ -107,10 +107,10 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase4() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Аномальные объемы, третий эшелон.",
-                getInstrumentIds(),
+            1,
+            "Аномальные объемы, третий эшелон.",
+            getInstrumentIds(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX")
@@ -133,14 +133,14 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase6() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Старое описание",
-                getInstruments()
-                    .stream()
-                    .filter(row -> row.getClass().equals(Stock.class))
-                    .map(Instrument::getId)
-                    .toList(),
+            1,
+            "Старое описание",
+            getInstruments()
+                .stream()
+                .filter(row -> row.getClass().equals(Stock.class))
+                .map(Instrument::getId)
+                .toList(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX"
@@ -152,10 +152,10 @@ public class ScannerManagerTest extends BaseTest {
             .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    new AnomalyVolumeScannerConfiguration(
-                        1,
-                        "Старое описание",
-                        getInstrumentIds(),
+                    1,
+                    "Старое описание",
+                    getInstrumentIds(),
+                    new AnomalyVolumeAlgorithmConfigurator(
                         1.5,
                         180,
                         "IMOEX"
@@ -174,10 +174,10 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase7() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Старое описание",
-                getInstrumentIds(),
+            1,
+            "Старое описание",
+            getInstrumentIds(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX"
@@ -188,10 +188,10 @@ public class ScannerManagerTest extends BaseTest {
             .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    new AnomalyVolumeScannerConfiguration(
-                        1,
-                        "Новое описание",
-                        getInstrumentIds(),
+                    1,
+                    "Новое описание",
+                    getInstrumentIds(),
+                    new AnomalyVolumeAlgorithmConfigurator(
                         1.5,
                         180,
                         "IMOEX"
@@ -216,10 +216,10 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         id,
-                        new AnomalyVolumeScannerConfiguration(
-                            1,
-                            "Новое описание",
-                            getInstrumentIds(),
+                        1,
+                        "Новое описание",
+                        getInstrumentIds(),
+                        new AnomalyVolumeAlgorithmConfigurator(
                             1.5,
                             180,
                             "IMOEX"
@@ -237,10 +237,10 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase9() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Старое описание",
-                getInstrumentIds(),
+            1,
+            "Старое описание",
+            getInstrumentIds(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX"
@@ -252,10 +252,10 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        new AnomalyVolumeScannerConfiguration(
-                            1,
-                            "",
-                            getInstrumentIds(),
+                        1,
+                        "",
+                        getInstrumentIds(),
+                        new AnomalyVolumeAlgorithmConfigurator(
                             1.5,
                             180,
                             "IMOEX"
@@ -273,10 +273,10 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase10() {
         addScanner(
-            new AnomalyVolumeScannerConfiguration(
-                1,
-                "Старое описание",
-                getInstrumentIds(),
+            1,
+            "Старое описание",
+            getInstrumentIds(),
+            new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
                 "IMOEX"
@@ -288,10 +288,10 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        new AnomalyVolumeScannerConfiguration(
-                            1,
-                            "Старое описание",
-                            List.of(),
+                        1,
+                        "Старое описание",
+                        List.of(),
+                        new AnomalyVolumeAlgorithmConfigurator(
                             1.5,
                             180,
                             "IMOEX"

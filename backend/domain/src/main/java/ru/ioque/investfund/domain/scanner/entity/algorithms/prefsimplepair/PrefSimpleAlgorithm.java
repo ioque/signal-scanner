@@ -1,10 +1,11 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     private final Double spreadParam;
 
-    public PrefSimpleAlgorithm(Double spreadParam) {
+    PrefSimpleAlgorithm(Double spreadParam) {
         super("Дельта анализ цен пар преф-обычка");
         this.spreadParam = spreadParam;
     }

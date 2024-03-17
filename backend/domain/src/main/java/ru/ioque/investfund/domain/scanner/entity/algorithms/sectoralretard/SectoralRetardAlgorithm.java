@@ -1,9 +1,10 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
@@ -21,7 +22,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     private final Double historyScale;
     private final Double intradayScale;
 
-    public SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
+    SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
         super("Секторальный отстающий");
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;

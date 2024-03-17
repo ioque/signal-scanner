@@ -19,6 +19,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
 
     @Override
     public List<FinInstrument> getByIdIn(List<UUID> instrumentIds) {
+        if (instrumentIds == null || instrumentIds.isEmpty()) return List.of();
         return instrumentIds.stream().map(id -> {
             Instrument instrument = exchangeRepository.get().getInstruments().stream().filter(row -> row
                 .getId()

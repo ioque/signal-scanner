@@ -1,10 +1,11 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
@@ -22,7 +23,7 @@ public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
     private final Double stockOvernightScale;
     private final String futuresTicker;
 
-    public CorrelationSectoralAlgorithm(
+    CorrelationSectoralAlgorithm(
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker

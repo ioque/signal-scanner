@@ -1,10 +1,11 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms;
+package ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
@@ -33,7 +34,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     private final String indexTicker;
     private final Integer historyPeriod;
 
-    public AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
+    AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
         super("Аномальные объемы");
         this.scaleCoefficient = scaleCoefficient;
         this.indexTicker = indexTicker;

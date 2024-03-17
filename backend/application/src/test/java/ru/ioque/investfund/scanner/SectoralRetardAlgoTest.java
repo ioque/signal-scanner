@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.configurator.SectoralRetardScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase1() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.",
-                getInstrumentIds(),
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
                 null,
                 intradayScale
             )
@@ -45,10 +45,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase2() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.",
-                getInstrumentIds(),
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
                 0D,
                 intradayScale
             )
@@ -64,10 +64,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase3() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.",
-                getInstrumentIds(), -1D, intradayScale
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
+                -1D,
+                intradayScale
             )
         ));
         assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
@@ -81,10 +83,11 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase4() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.",
-                getInstrumentIds(), historyScale, null
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
+                historyScale, null
             )
         ));
         assertEquals("Не передан параметр intradayScale.", error.getMessage());
@@ -98,9 +101,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase5() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.", getInstrumentIds(), historyScale, 0D
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
+                historyScale,
+                0D
             )
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
@@ -114,9 +120,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     void testCase6() {
         initOilCompanyData();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.", getInstrumentIds(), historyScale, -1D
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentIds(),
+            new SectoralRetardAlgorithmConfigurator(
+                historyScale,
+                -1D
             )
         ));
         assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
@@ -263,10 +272,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     private void initScanner(List<String> tickers) {
         addScanner(
-            new SectoralRetardScannerConfiguration(
-                1,
-                "Секторальный отстающий, нефтянка.",
-                getInstrumentsBy(tickers).map(Instrument::getId).toList(),
+            1,
+            "Секторальный отстающий, нефтянка.",
+            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
+            new SectoralRetardAlgorithmConfigurator(
                 historyScale,
                 intradayScale
             )
