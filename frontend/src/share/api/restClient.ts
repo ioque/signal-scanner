@@ -1,4 +1,5 @@
-const baseUrl: string = "http://localhost:8080/api/v1";
+const apiHost = process.env.API_HOST || 'localhost';
+const baseUrl: string = "http://" + apiHost + ":8080/api/v1";
 
 export type QueryParam = {
     name: string;

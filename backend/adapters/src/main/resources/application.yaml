@@ -13,7 +13,7 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:54321/postgres?reWriteBatchedInserts=true
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/postgres?reWriteBatchedInserts=true
     username: postgres
     password:
 

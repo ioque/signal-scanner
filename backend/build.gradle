@@ -9,7 +9,6 @@ allprojects {
 
     group 'ru.ioque'
     sourceCompatibility = '17'
-    version = '0.1.0'
 
     repositories {
         mavenCentral()

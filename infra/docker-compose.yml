@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  signal-scanner-db:
+    container_name: signal-scanner-db
+    build:
+      context: containers/postgres
+    ports:
+      - "54321:5432"
+    volumes:
+      - signal-scanner-db:/var/lib/postgresql/data
+  backend:
+    container_name: backend
+    image: ioque/backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: "192.168.0.62"
+      DB_PORT: "54321"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://127.0.0.1:8080/actuator/health || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  frontend:
+    container_name: frontend
+    image: ioque/frontend
+    environment:
+      API_HOST: "192.168.0.62"
+    ports:
+      - "4200:4200"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://127.0.0.1:3000/ || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+volumes:
+  signal-scanner-db:
+    driver: local
