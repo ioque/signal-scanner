@@ -46,7 +46,7 @@ export default function InstrumentList() {
     return (
         <>
             {exchangeItem}
-            <Table striped bordered hover id="instrumentTable">
+            <Table striped bordered hover>
                 <thead>
                 <tr>
                     <th>#</th>

@@ -16,7 +16,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
     @DisplayName("""
         Тестирование взаимодействия с основными элементами страницы.
         """)
-    public void testCase1() {
+    public void verifyPage() {
         driver.get("http://localhost:3000/instruments");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(webDriver -> ((JavascriptExecutor) webDriver)
@@ -40,7 +40,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
 
     private void verifyInstrumentList() {
         var tableRows = driver
-            .findElement(By.id("instrumentTable"))
+            .findElement(By.className("table"))
             .findElements(By.xpath("./child::*"))
             .get(1)
             .findElements(By.xpath("./child::*"));
