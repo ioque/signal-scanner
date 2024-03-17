@@ -26,6 +26,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
         super("Секторальный отстающий");
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
+        new SectoralRetardAlgorithmValidator(this);
     }
 
     @Override

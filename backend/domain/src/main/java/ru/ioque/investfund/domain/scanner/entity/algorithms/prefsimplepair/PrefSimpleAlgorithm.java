@@ -25,6 +25,7 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     PrefSimpleAlgorithm(Double spreadParam) {
         super("Дельта анализ цен пар преф-обычка");
         this.spreadParam = spreadParam;
+        new PrefSimpleAlgorithmValidator(this);
     }
 
     @Override

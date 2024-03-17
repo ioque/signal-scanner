@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 
@@ -28,25 +27,6 @@ public class AnomalyVolumeAlgorithmConfigurator extends AlgorithmConfigurator {
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
-        validate();
-    }
-
-    private void validate() {
-        if (scaleCoefficient == null) {
-            throw new DomainException("Не передан параметр scaleCoefficient.");
-        }
-        if (historyPeriod == null) {
-            throw new DomainException("Не передан параметр historyPeriod.");
-        }
-        if (indexTicker == null || indexTicker.isEmpty()) {
-            throw new DomainException("Не передан параметр indexTicker.");
-        }
-        if (scaleCoefficient <= 0) {
-            throw new DomainException("Параметр scaleCoefficient должен быть больше нуля.");
-        }
-        if (historyPeriod <= 0) {
-            throw new DomainException("Параметр historyPeriod должен быть больше нуля.");
-        }
     }
 
     @Override

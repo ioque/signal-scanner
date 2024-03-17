@@ -39,6 +39,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         this.scaleCoefficient = scaleCoefficient;
         this.indexTicker = indexTicker;
         this.historyPeriod = historyPeriod;
+        new AnomalyVolumeAlgorithmValidator(this);
     }
 
     @Override

@@ -52,7 +52,6 @@ public class ExchangeManager implements SystemModule {
         repository.save(exchange);
     }
 
-    //Публикует данные в топик "Инструменты"
     public synchronized void integrateWithDataSource() {
         final Exchange exchange =
             repository.getBy(dateTimeProvider.nowDate()).orElseGet(this::newExchange);
@@ -62,8 +61,6 @@ public class ExchangeManager implements SystemModule {
         loggerFacade.logFinishSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
     }
 
-    //Публикует данные в два топика - внутридневные данные и исторические данные.
-    //Пока просто событие для частичного ухода от шедулера
     public synchronized void integrateTradingData() {
         final Exchange exchange = getExchangeFromRepo();
         exchange.getUpdatableInstruments().forEach(instrument -> {

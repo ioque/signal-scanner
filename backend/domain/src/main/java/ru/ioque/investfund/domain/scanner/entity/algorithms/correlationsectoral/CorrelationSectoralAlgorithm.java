@@ -32,6 +32,7 @@ public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
+        new CorrelationSectoralAlgorithmValidator(this);
     }
 
     @Override

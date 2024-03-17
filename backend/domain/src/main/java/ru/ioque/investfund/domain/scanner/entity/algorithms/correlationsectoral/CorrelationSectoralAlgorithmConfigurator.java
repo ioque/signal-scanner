@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 
@@ -28,25 +27,6 @@ public class CorrelationSectoralAlgorithmConfigurator extends AlgorithmConfigura
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
-        validate();
-    }
-
-    private void validate() {
-        if (this.futuresOvernightScale == null) {
-            throw new DomainException("Не передан параметр futuresOvernightScale.");
-        }
-        if (this.stockOvernightScale == null) {
-            throw new DomainException("Не передан параметр stockOvernightScale.");
-        }
-        if (this.futuresTicker == null || this.futuresTicker.isEmpty()) {
-            throw new DomainException("Не передан параметр futuresTicker.");
-        }
-        if (this.futuresOvernightScale <= 0) {
-            throw new DomainException("Параметр futuresOvernightScale должен быть больше нуля.");
-        }
-        if (this.stockOvernightScale <= 0) {
-            throw new DomainException("Параметр stockOvernightScale должен быть больше нуля.");
-        }
     }
 
     @Override
