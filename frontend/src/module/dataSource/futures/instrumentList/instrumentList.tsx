@@ -16,9 +16,9 @@ export default function InstrumentList() {
         fetchInstruments().then((data) => setInstruments(data));
     }, []);
 
-    const listItems = instruments.map((instrument, index) =>
-        <tr key={index} onClick={() => handleClick(instrument.id)}>
-            <td>{index}</td>
+    const listItems = instruments.map(instrument =>
+        <tr key={instrument.id} onClick={() => handleClick(instrument.id)}>
+            <td>{instrument.id}</td>
             <td>{instrument.ticker}</td>
             <td>{instrument.shortName}</td>
         </tr>
@@ -49,7 +49,7 @@ export default function InstrumentList() {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Тикер</th>
                     <th>Краткое наименование</th>
                 </tr>

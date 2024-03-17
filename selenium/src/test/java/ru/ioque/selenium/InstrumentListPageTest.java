@@ -3,11 +3,7 @@ package ru.ioque.selenium;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,12 +13,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
         Тестирование взаимодействия с основными элементами страницы.
         """)
     public void verifyPage() {
-        driver.get("http://localhost:3000/instruments");
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-            .until(webDriver -> ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState")
-                .equals("complete")
-            );
+        loadPageInstrumentList();
         verifyExchangeElement();
         verifyInstrumentList();
     }

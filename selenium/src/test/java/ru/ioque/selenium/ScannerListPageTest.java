@@ -3,8 +3,8 @@ package ru.ioque.selenium;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -17,12 +17,9 @@ public class ScannerListPageTest extends BaseFrontendTest {
         Тестирование взаимодействия с основными элементами страницы.
         """)
     public void verifyPage() {
-        driver.get("http://localhost:3000/scanners");
+        loadPageScannerList();
         new WebDriverWait(driver, Duration.ofSeconds(5))
-            .until(webDriver -> ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState")
-                .equals("complete")
-            );
+            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
         var tableRows = driver
             .findElement(By.className("table"))
             .findElements(By.xpath("./child::*"))

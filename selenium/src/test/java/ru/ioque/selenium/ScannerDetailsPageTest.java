@@ -117,13 +117,7 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
             .findElements(By.xpath("./child::*"));
     }
 
-    protected void loadPageScannerList() {
-        driver.get("http://localhost:3000/scanners");
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
-    }
-
-    protected void loadPageDetails(String id) {
+    private void loadPageDetails(String id) {
         driver.get("http://localhost:3000/scanners/" + id);
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("accordion-button")));

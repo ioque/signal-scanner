@@ -51,7 +51,7 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
         <>
             {instrumentItem}
             <h4>Итоги торгов</h4>
-            <Table striped bordered hover>
+            <Table striped bordered hover id="dailyValueTable">
                 <thead>
                 <tr>
                     <th>Дата</th>
@@ -65,7 +65,7 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
                 </tbody>
             </Table>
             <h4>Ход текущих торгов</h4>
-            <Table striped bordered hover>
+            <Table striped bordered hover id="intradayValueTable">
                 <thead>
                 <tr>
                     <th>Номер сделки</th>
