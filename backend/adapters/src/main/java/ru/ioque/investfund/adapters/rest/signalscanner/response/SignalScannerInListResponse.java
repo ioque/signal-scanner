@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 
 import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
@@ -23,11 +24,17 @@ import java.util.UUID;
 public class SignalScannerInListResponse implements Serializable {
     UUID id;
     String description;
+    Integer workPeriodInMinutes;
+    Integer signalCounts;
+    String lastExecutionDateTime;
 
     public static SignalScannerInListResponse from(SignalScannerEntity scanner) {
         return SignalScannerInListResponse.builder()
             .id(scanner.getId())
             .description(scanner.getDescription())
+            .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
+            .signalCounts(scanner.getSignals().size())
+            .lastExecutionDateTime(scanner.getLastExecutionDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .build();
     }
 }

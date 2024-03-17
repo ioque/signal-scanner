@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import {Container, Nav, Navbar} from "react-bootstrap";
 export default function Root() {
     useEffect(() => {
         document.title = "Система сигналов";
@@ -7,21 +8,22 @@ export default function Root() {
 
     return (
         <>
-            <div id="sidebar">
-                <h1>Система сигналов фондового рынка</h1>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href={`/instruments`}>Финансовые инструменты</a>
-                        </li>
-                        <li>
-                            <a href={`/scanners`}>Сканеры</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            <Navbar expand="lg" className="bg-body-tertiary">
+                <Container fluid="xxl">
+                    <Navbar.Brand href="#home">Система сигналов</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            <Nav.Link href={`/instruments`}>Финансовые инструменты</Nav.Link>
+                            <Nav.Link href={`/scanners`}>Сканеры</Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
             <div id="detail">
-                <Outlet />
+                <Container fluid="xxl">
+                    <Outlet />
+                </Container>
             </div>
         </>
     );

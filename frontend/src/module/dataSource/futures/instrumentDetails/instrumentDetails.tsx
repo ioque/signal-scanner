@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import './style.scss'
-import ErrorPage from "../../../../pages/ErrorPage";
 import {Instrument} from "../../entities/Exchange";
 import {fetchInstrumentDetails} from "../../api/dataSourceRestClient";
+import {Accordion, Spinner} from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 
 export type InstrumentDetailsParams = {
     id: string
@@ -15,41 +15,68 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
     }, [params.id]);
 
     if (!instrument) {
-        return <ErrorPage />
+        return <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>
     }
 
-    const history = instrument.dailyValues.map(dailyValue =>
-        <li
-            key={dailyValue.tradeDate.toString()}
-        >
-            <div className="instrument-item-list">
-                <p>{dailyValue.tradeDate.toString()}</p>
-                <p>{dailyValue.value}</p>
-                <p>{dailyValue.closePrice}</p>
-                <p>{dailyValue.openPrice}</p>
-            </div>
-        </li>
+    const instrumentItem =
+        <Accordion defaultActiveKey="1">
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>{instrument.shortName} ({instrument.ticker})</Accordion.Header>
+                <Accordion.Body>
+                    а пока пусто
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>;
+
+    const dailyValues = instrument.dailyValues.map((dailyValue, index) =>
+        <tr key={index}>
+            <td>{dailyValue.tradeDate}</td>
+            <td>{dailyValue.value}</td>
+            <td>{dailyValue.openPrice}</td>
+            <td>{dailyValue.closePrice}</td>
+        </tr>
     );
 
-    const intradayValues = instrument.intradayValues.map(intradayValue =>
-        <li
-            key={intradayValue.tradeNumber}
-        >
-            <div className="instrument-item-list">
-                <p>{intradayValue.dateTime.toString()}</p>
-                <p>{intradayValue.price}</p>
-            </div>
-        </li>
+    const intradayValues = instrument.intradayValues.map((intradayValue, index) =>
+        <tr key={index}>
+            <td>{intradayValue.tradeNumber}</td>
+            <td>{intradayValue.price}</td>
+            <td>{intradayValue.dateTime}</td>
+        </tr>
     );
 
-    return <>
-        <div className="instrument-item-list">
-            <p>{instrument.ticker}</p>
-            <p>{instrument.shortName}</p>
-            <p>История торгов:</p>
-            <ul>{history}</ul>
-            <p>Ход торгов:</p>
-            <ul>{intradayValues}</ul>
-        </div>
-    </>
+    return (
+        <>
+            {instrumentItem}
+            <h4>Итоги торгов</h4>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Объем</th>
+                    <th>Цена открытия</th>
+                    <th>Цена закрытия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {dailyValues}
+                </tbody>
+            </Table>
+            <h4>Ход текущих торгов</h4>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>Номер сделки</th>
+                    <th>Дата и время</th>
+                    <th>Цена</th>
+                </tr>
+                </thead>
+                <tbody>
+                {intradayValues}
+                </tbody>
+            </Table>
+        </>
+    );
 }

@@ -139,21 +139,21 @@ alter table scanner_log
 
 create table if not exists signal_scanner
 (
-    futures_overnight_scale double precision,
-    history_period          integer,
-    history_scale           double precision,
-    intraday_scale          double precision,
-    scale_coefficient       double precision,
-    spread_param            double precision,
-    stock_overnight_scale   double precision,
-    work_period_in_minutes  int,
-    last_work_date_time     timestamp(6),
-    id                      uuid         not null
+    futures_overnight_scale  double precision,
+    history_period           integer,
+    history_scale            double precision,
+    intraday_scale           double precision,
+    scale_coefficient        double precision,
+    spread_param             double precision,
+    stock_overnight_scale    double precision,
+    work_period_in_minutes   int,
+    last_execution_date_time timestamp(6),
+    id                       uuid         not null
         primary key,
-    signal_scanner_type     varchar(255) not null,
-    description             varchar(255),
-    futures_ticker          varchar(255),
-    index_ticker            varchar(255)
+    signal_scanner_type      varchar(255) not null,
+    description              varchar(255),
+    futures_ticker           varchar(255),
+    index_ticker             varchar(255)
 );
 
 alter table signal_scanner

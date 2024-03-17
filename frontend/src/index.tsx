@@ -6,9 +6,9 @@ import Root from "./pages/layout";
 import ErrorPage from "./pages/ErrorPage";
 import InstrumentsPage from "./pages/InstrumentsPage";
 import ScannersPage from "./pages/ScannersPage";
-import StatisticPage from "./pages/StatisticPage";
 import InstrumentDetailsPage from "./pages/InstrumentDetailsPage";
 import ScannerDetailsPage from "./pages/ScannerDetailsPage";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const router = createBrowserRouter([
     {
@@ -23,10 +23,6 @@ const router = createBrowserRouter([
             {
                 path: "instruments/:id",
                 element: <InstrumentDetailsPage />
-            },
-            {
-                path: "instruments/:id/statistic",
-                element: <StatisticPage />
             },
             {
                 path: "scanners",

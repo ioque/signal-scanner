@@ -79,7 +79,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
             .finInstruments(instruments)
-            .lastExecutionDateTime(getLastWorkDateTime())
+            .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
             .build();
     }

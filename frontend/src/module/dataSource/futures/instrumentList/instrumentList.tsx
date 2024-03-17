@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import './style.scss'
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {Exchange, InstrumentInList} from "../../entities/Exchange";
-import ErrorPage from "../../../../pages/ErrorPage";
 import {fetchExchange, fetchInstruments} from "../../api/dataSourceRestClient";
+import Table from 'react-bootstrap/Table';
+import {Accordion, Spinner} from "react-bootstrap";
 
 export default function InstrumentList() {
+    const navigate = useNavigate();
+    const handleClick = (id: string) => navigate(`${id}`);
     const [exchange, setExchange] = useState<Exchange>();
     const [instruments, setInstruments] = useState<Array<InstrumentInList>>([]);
 
@@ -14,37 +16,48 @@ export default function InstrumentList() {
         fetchInstruments().then((data) => setInstruments(data));
     }, []);
 
-    const listItems = instruments.map(instrument =>
-        <li
-            key={instrument.ticker}
-        >
-            <div className="instrument-item-list">
-                <Link to={`${instrument.id}`}>
-                    <p>{instrument.shortName}</p>
-                </Link>
-                <p>{instrument.ticker}</p>
-                <p>
-                    <Link to={`${instrument.id}/statistic`}>Статистика</Link>
-                </p>
-            </div>
-        </li>
+    const listItems = instruments.map((instrument, index) =>
+        <tr key={index} onClick={() => handleClick(instrument.id)}>
+            <td>{index}</td>
+            <td>{instrument.ticker}</td>
+            <td>{instrument.shortName}</td>
+        </tr>
     );
 
-    if (!exchange) {
-        return <ErrorPage />
+    if (!exchange || !instruments || instruments.length === 0) {
+        return <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>
     }
 
-    const exchangeItem = <div className="instrument-item-list">
-        <p>{exchange.id}</p>
-        <p>{exchange.name}</p>
-        <p>{exchange.url}</p>
-        <p>{exchange.description}</p>
-    </div>;
+    const exchangeItem =
+        <Accordion defaultActiveKey="1">
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>{exchange.name}</Accordion.Header>
+                <Accordion.Body>
+                    <h5>Адрес шлюза</h5>
+                    <p>{exchange.url}</p>
+                    <h5>Описание</h5>
+                    <p>{exchange.description}</p>
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>;
 
     return (
         <>
             {exchangeItem}
-            <ul>{listItems}</ul>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Тикер</th>
+                    <th>Краткое наименование</th>
+                </tr>
+                </thead>
+                <tbody>
+                {listItems}
+                </tbody>
+            </Table>
         </>
     );
 }

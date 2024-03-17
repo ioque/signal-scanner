@@ -11,7 +11,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.testingsystem.intradayval
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -20,13 +20,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntradayValueResponse implements Serializable {
-    LocalDateTime dateTime;
+    String dateTime;
     Double price;
     Long tradeNumber;
 
     public static IntradayValueResponse fromDomain(IntradayValue deal) {
         return IntradayValueResponse.builder()
-            .dateTime(deal.getDateTime())
+            .dateTime(deal.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(deal.getPrice())
             .tradeNumber(deal.getNumber())
             .build();
@@ -34,7 +34,7 @@ public class IntradayValueResponse implements Serializable {
 
     public static IntradayValueResponse fromEntity(ArchivedIntradayValueEntity intradayValueEntity) {
         return IntradayValueResponse.builder()
-            .dateTime(intradayValueEntity.getDateTime())
+            .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(intradayValueEntity.getPrice())
             .tradeNumber(intradayValueEntity.getNumber())
             .build();

@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
@@ -19,10 +19,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScannerLogResponse implements Serializable {
-    LocalDateTime dateTime;
+    String dateTime;
     String message;
 
     public static ScannerLogResponse from(ScannerLogEntity scannerLogEntity) {
-        return new ScannerLogResponse(scannerLogEntity.getDateTime(), scannerLogEntity.getMessage());
+        return new ScannerLogResponse(scannerLogEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), scannerLogEntity.getMessage());
     }
 }

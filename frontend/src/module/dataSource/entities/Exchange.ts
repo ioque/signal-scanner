@@ -20,7 +20,7 @@ export type InstrumentInList = {
 }
 
 export type DailyValue = {
-    tradeDate: Date;
+    tradeDate: string;
     ticker: string;
     value: number;
     openPrice: number;
@@ -29,6 +29,6 @@ export type DailyValue = {
 
 export type IntradayValue = {
     tradeNumber: number;
-    dateTime: Date;
+    dateTime: string;
     price: number;
 }

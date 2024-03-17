@@ -15,6 +15,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,8 @@ import java.util.UUID;
 public class SignalScannerResponse implements Serializable {
     UUID id;
     String description;
+    Integer workPeriodInMinutes;
+    LocalDateTime lastExecutionDateTime;
     SignalConfigResponse config;
     List<InstrumentInListResponse> instruments;
     List<ScannerLogResponse> logs;
@@ -41,7 +44,9 @@ public class SignalScannerResponse implements Serializable {
     ) {
         return SignalScannerResponse.builder()
             .id(scanner.getId())
+            .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
             .description(scanner.getDescription())
+            .lastExecutionDateTime(scanner.getLastExecutionDateTime())
             .config(SignalConfigResponse.from(scanner))
             .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
             .logs(logs.stream().map(ScannerLogResponse::from).toList())

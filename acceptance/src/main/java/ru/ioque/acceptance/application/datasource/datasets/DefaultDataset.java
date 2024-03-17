@@ -48,8 +48,9 @@ public class DefaultDataset {
 
     public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(List<InstrumentInList> instruments) {
         return AnomalyVolumeScannerRequest.builder()
+            .workPeriodInMinutes(1)
             .scaleCoefficient(1.5)
-            .description("desc")
+            .description("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")
             .historyPeriod(180)
             .indexTicker("IMOEX")
             .ids(instruments
@@ -62,24 +63,26 @@ public class DefaultDataset {
 
     public static AddSignalScannerRequest getPrefSimpleRequest(List<InstrumentInList> instruments) {
         return PrefSimpleRequest.builder()
+            .workPeriodInMinutes(1)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("SBER", "SBERP").contains(row.getTicker()))
                 .map(InstrumentInList::getId)
                 .toList())
-            .description("desc")
+            .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
             .spreadParam(1.0)
             .build();
     }
 
     public static AddSignalScannerRequest getSectoralRetardScannerRequest(List<InstrumentInList> instruments) {
         return SectoralRetardScannerRequest.builder()
+            .workPeriodInMinutes(60)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH").contains(row.getTicker()))
                 .map(InstrumentInList::getId)
                 .toList())
-            .description("desc")
+            .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
             .historyScale(0.015)
             .intradayScale(0.015)
             .build();
@@ -87,12 +90,13 @@ public class DefaultDataset {
 
     public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(List<InstrumentInList> instruments) {
         return CorrelationSectoralScannerRequest.builder()
+            .workPeriodInMinutes(24 * 60)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4").contains(row.getTicker()))
                 .map(InstrumentInList::getId)
                 .toList())
-            .description("desc")
+            .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
             .futuresTicker("BRF4")
             .futuresOvernightScale(0.015)
             .stockOvernightScale(0.015)

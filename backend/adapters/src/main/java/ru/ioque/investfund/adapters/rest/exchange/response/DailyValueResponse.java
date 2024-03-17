@@ -11,7 +11,7 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.testingsystem.dailyvalue.
 import ru.ioque.investfund.domain.exchange.value.DailyValue;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -20,14 +20,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DailyValueResponse implements Serializable {
-    LocalDate tradeDate;
+    String tradeDate;
     String ticker;
     Double value;
     Double openPrice;
     Double closePrice;
     public static DailyValueResponse fromDomain(DailyValue dailyValue) {
         return DailyValueResponse.builder()
-            .tradeDate(dailyValue.getTradeDate())
+            .tradeDate(dailyValue.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .ticker(dailyValue.getTicker())
             .value(dailyValue.getValue())
             .openPrice(dailyValue.getOpenPrice())
@@ -37,7 +37,7 @@ public class DailyValueResponse implements Serializable {
 
     public static DailyValueResponse fromEntity(ArchivedDailyValueEntity dailyValueEntity) {
         return DailyValueResponse.builder()
-            .tradeDate(dailyValueEntity.getTradeDate())
+            .tradeDate(dailyValueEntity.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .ticker(dailyValueEntity.getTicker())
             .value(dailyValueEntity.getValue())
             .openPrice(dailyValueEntity.getOpenPrice())
