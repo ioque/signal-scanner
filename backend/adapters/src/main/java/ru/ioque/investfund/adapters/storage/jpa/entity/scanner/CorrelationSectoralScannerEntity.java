@@ -65,20 +65,22 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return CorrelationSectoralAlgorithmConfigurator
-            .builder()
+        return SignalScanner.builder()
+            .id(getId())
+            .algorithm(
+                CorrelationSectoralAlgorithmConfigurator
+                    .builder()
+                    .futuresOvernightScale(futuresOvernightScale)
+                    .stockOvernightScale(stockOvernightScale)
+                    .futuresTicker(futuresTicker)
+                    .build()
+                    .factoryAlgorithm()
+            )
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .objectIds(getObjectIds())
-            .futuresOvernightScale(futuresOvernightScale)
-            .stockOvernightScale(stockOvernightScale)
-            .futuresTicker(futuresTicker)
-            .build()
-            .factoryScanner(
-                getId(),
-                getLastWorkDateTime(),
-                instruments,
-                getSignals().stream().map(SignalEntity::toDomain).toList()
-            );
+            .finInstruments(instruments)
+            .lastExecutionDateTime(getLastWorkDateTime())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .build();
     }
 }

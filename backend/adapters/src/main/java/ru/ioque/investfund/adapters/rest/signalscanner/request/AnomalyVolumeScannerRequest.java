@@ -20,7 +20,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnomalyVolumeScannerConfig extends ScannerConfigRequest {
+public class AnomalyVolumeScannerRequest extends ScannerRequest {
     @NotNull(message = "The scaleCoefficient is required.")
     Double scaleCoefficient;
     @NotNull(message = "The historyPeriod is required.")
@@ -29,7 +29,7 @@ public class AnomalyVolumeScannerConfig extends ScannerConfigRequest {
     String indexTicker;
 
     @Builder
-    public AnomalyVolumeScannerConfig(
+    public AnomalyVolumeScannerRequest(
         Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
@@ -45,6 +45,6 @@ public class AnomalyVolumeScannerConfig extends ScannerConfigRequest {
 
     @Override
     public AlgorithmConfigurator buildConfig() {
-        return new AnomalyVolumeAlgorithmConfigurator(getWorkPeriodInMinutes(), getDescription(), getIds(), scaleCoefficient, historyPeriod, indexTicker);
+        return new AnomalyVolumeAlgorithmConfigurator(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

@@ -65,20 +65,22 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return AnomalyVolumeAlgorithmConfigurator
-            .builder()
+        return SignalScanner.builder()
+            .id(getId())
+            .algorithm(
+                AnomalyVolumeAlgorithmConfigurator
+                    .builder()
+                    .scaleCoefficient(scaleCoefficient)
+                    .historyPeriod(historyPeriod)
+                    .indexTicker(indexTicker)
+                    .build()
+                    .factoryAlgorithm()
+            )
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .objectIds(getObjectIds())
-            .scaleCoefficient(scaleCoefficient)
-            .historyPeriod(historyPeriod)
-            .indexTicker(indexTicker)
-            .build()
-            .factoryScanner(
-                getId(),
-                getLastWorkDateTime(),
-                instruments,
-                getSignals().stream().map(SignalEntity::toDomain).toList()
-            );
+            .finInstruments(instruments)
+            .lastExecutionDateTime(getLastWorkDateTime())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .build();
     }
 }

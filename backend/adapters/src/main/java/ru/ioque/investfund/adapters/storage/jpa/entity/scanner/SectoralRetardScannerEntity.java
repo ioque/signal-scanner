@@ -61,19 +61,21 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return SectoralRetardAlgorithmConfigurator
-            .builder()
+        return SignalScanner.builder()
+            .id(getId())
+            .algorithm(
+                SectoralRetardAlgorithmConfigurator
+                    .builder()
+                    .historyScale(historyScale)
+                    .intradayScale(intradayScale)
+                    .build()
+                    .factoryAlgorithm()
+            )
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .objectIds(getObjectIds())
-            .historyScale(historyScale)
-            .intradayScale(intradayScale)
-            .build()
-            .factoryScanner(
-                getId(),
-                getLastWorkDateTime(),
-                instruments,
-                getSignals().stream().map(SignalEntity::toDomain).toList()
-            );
+            .finInstruments(instruments)
+            .lastExecutionDateTime(getLastWorkDateTime())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .build();
     }
 }

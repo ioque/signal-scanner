@@ -19,14 +19,14 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SectoralRetardScannerConfig extends ScannerConfigRequest {
+public class SectoralRetardScannerRequest extends ScannerRequest {
     @NotNull(message = "The historyScale is required.")
     Double historyScale;
     @NotNull(message = "The intradayScale is required.")
     Double intradayScale;
 
     @Builder
-    public SectoralRetardScannerConfig(
+    public SectoralRetardScannerRequest(
         Integer workPeriodInMinutes,
         String description,
         List<UUID> ids,
@@ -40,6 +40,6 @@ public class SectoralRetardScannerConfig extends ScannerConfigRequest {
 
     @Override
     public AlgorithmConfigurator buildConfig() {
-        return new SectoralRetardAlgorithmConfigurator(getWorkPeriodInMinutes(), getDescription(), getIds(), historyScale, intradayScale);
+        return new SectoralRetardAlgorithmConfigurator(historyScale, intradayScale);
     }
 }

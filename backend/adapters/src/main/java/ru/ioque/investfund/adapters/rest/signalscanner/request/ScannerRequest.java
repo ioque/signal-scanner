@@ -28,12 +28,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = PrefSimpleScannerConfig.class, name = "PrefSimpleRequest"),
-    @JsonSubTypes.Type(value = CorrelationSectoralScannerConfig.class, name = "CorrelationSectoralScannerRequest"),
-    @JsonSubTypes.Type(value = SectoralRetardScannerConfig.class, name = "SectoralRetardScannerRequest"),
-    @JsonSubTypes.Type(value = AnomalyVolumeScannerConfig.class, name = "AnomalyVolumeScannerRequest") }
+    @JsonSubTypes.Type(value = PrefSimpleScannerRequest.class, name = "PrefSimpleRequest"),
+    @JsonSubTypes.Type(value = CorrelationSectoralScannerRequest.class, name = "CorrelationSectoralScannerRequest"),
+    @JsonSubTypes.Type(value = SectoralRetardScannerRequest.class, name = "SectoralRetardScannerRequest"),
+    @JsonSubTypes.Type(value = AnomalyVolumeScannerRequest.class, name = "AnomalyVolumeScannerRequest") }
 )
-public abstract class ScannerConfigRequest implements Serializable {
+public abstract class ScannerRequest implements Serializable {
     @NotNull(message = "The workPeriodInMinutes is required.")
     Integer workPeriodInMinutes;
     @NotBlank(message = "The description is required.")

@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.AnomalyVolumeScannerConfig;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.CorrelationSectoralScannerConfig;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleScannerConfig;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.SectoralRetardScannerConfig;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerConfigRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.AnomalyVolumeScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.CorrelationSectoralScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.SectoralRetardScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase1() {
         assertIsOk(
-            AnomalyVolumeScannerConfig.builder()
+            AnomalyVolumeScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .ids(List.of(TGKN_ID, IMOEX_ID))
@@ -55,7 +55,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase2() {
         assertValidationErrors(
-            AnomalyVolumeScannerConfig
+            AnomalyVolumeScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
@@ -74,7 +74,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase3() {
         assertValidationErrors(
-            AnomalyVolumeScannerConfig
+            AnomalyVolumeScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
@@ -92,7 +92,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase4() {
         assertValidationErrors(
-            AnomalyVolumeScannerConfig
+            AnomalyVolumeScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
@@ -111,7 +111,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase5() {
         assertIsOk(
-            PrefSimpleScannerConfig.builder()
+            PrefSimpleScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .ids(List.of(BANE_ID, BANEP_ID))
@@ -127,7 +127,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase6() {
         assertValidationErrors(
-            PrefSimpleScannerConfig
+            PrefSimpleScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, BANEP_ID))
@@ -143,7 +143,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase7() {
         assertIsOk(
-            SectoralRetardScannerConfig
+            SectoralRetardScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
@@ -161,7 +161,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase8() {
         assertValidationErrors(
-            SectoralRetardScannerConfig
+            SectoralRetardScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
@@ -178,7 +178,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase9() {
         assertValidationErrors(
-            SectoralRetardScannerConfig
+            SectoralRetardScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("")
@@ -196,7 +196,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase10() {
         assertIsOk(
-            CorrelationSectoralScannerConfig.builder()
+            CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
@@ -214,7 +214,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
         """)
     public void testCase11() {
         assertValidationErrors(
-            CorrelationSectoralScannerConfig.builder()
+            CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
@@ -228,7 +228,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     }
 
     @SneakyThrows
-    private void assertValidationErrors(ScannerConfigRequest request, List<String> errors) {
+    private void assertValidationErrors(ScannerRequest request, List<String> errors) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/v1/signal-scanner")
@@ -246,7 +246,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     }
 
     @SneakyThrows
-    private void assertIsOk(ScannerConfigRequest request) {
+    private void assertIsOk(ScannerRequest request) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/v1/signal-scanner")

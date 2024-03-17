@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerConfigRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerRequest;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
@@ -25,22 +25,28 @@ public class SignaScannerCommandController {
     ScannerManager scannerManager;
 
     @PostMapping("/api/v1/signal-scanner")
-    public void addNewSignalScanner(@Valid @RequestBody ScannerConfigRequest request) {
+    public void addNewSignalScanner(@Valid @RequestBody ScannerRequest request) {
         scannerManager
             .addNewScanner(
                 AddScannerCommand.builder()
-                    .signalConfig(request.buildConfig())
+                    .objectIds(request.getIds())
+                    .description(request.getDescription())
+                    .workPeriodInMinutes(request.getWorkPeriodInMinutes())
+                    .algorithmConfigurator(request.buildConfig())
                     .build()
             );
     }
 
     @PatchMapping("/api/v1/signal-scanner/{id}")
-    public void updateSignalScannerInfo(@PathVariable("id") UUID id, @Valid @RequestBody ScannerConfigRequest request) {
+    public void updateSignalScannerInfo(@PathVariable("id") UUID id, @Valid @RequestBody ScannerRequest request) {
         scannerManager
             .updateScanner(
                 UpdateScannerCommand.builder()
                     .id(id)
-                    .signalConfig(request.buildConfig())
+                    .objectIds(request.getIds())
+                    .description(request.getDescription())
+                    .workPeriodInMinutes(request.getWorkPeriodInMinutes())
+                    .algorithmConfigurator(request.buildConfig())
                     .build()
             );
     }

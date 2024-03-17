@@ -57,18 +57,20 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
 
     @Override
     public SignalScanner toDomain(List<FinInstrument> instruments) {
-        return PrefSimpleAlgorithmConfigurator
-            .builder()
+        return SignalScanner.builder()
+            .id(getId())
+            .algorithm(
+                PrefSimpleAlgorithmConfigurator
+                    .builder()
+                    .spreadParam(spreadParam)
+                    .build()
+                    .factoryAlgorithm()
+            )
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .objectIds(getObjectIds())
-            .spreadParam(spreadParam)
-            .build()
-            .factoryScanner(
-                getId(),
-                getLastWorkDateTime(),
-                instruments,
-                getSignals().stream().map(SignalEntity::toDomain).toList()
-            );
+            .finInstruments(instruments)
+            .lastExecutionDateTime(getLastWorkDateTime())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .build();
     }
 }
