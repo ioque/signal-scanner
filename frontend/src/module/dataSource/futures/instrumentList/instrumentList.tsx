@@ -33,7 +33,7 @@ export default function InstrumentList() {
     const exchangeItem =
         <Accordion defaultActiveKey="1">
             <Accordion.Item eventKey="0">
-                <Accordion.Header>{exchange.name}</Accordion.Header>
+                <Accordion.Header id="exchangeHeader">{exchange.name}</Accordion.Header>
                 <Accordion.Body>
                     <h5>Адрес шлюза</h5>
                     <p>{exchange.url}</p>
@@ -46,7 +46,7 @@ export default function InstrumentList() {
     return (
         <>
             {exchangeItem}
-            <Table striped bordered hover>
+            <Table striped bordered hover id="instrumentTable">
                 <thead>
                 <tr>
                     <th>#</th>
