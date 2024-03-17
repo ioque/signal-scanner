@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.correlationsectoral.CorrelationSectoralSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.CorrelationSectoralScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +43,7 @@ public class CorrelationSectoralScannerConfig extends ScannerConfigRequest {
     }
 
     @Override
-    public SignalConfig buildConfig() {
-        return new CorrelationSectoralSignalConfig(getWorkPeriodInMinutes(), getDescription(), getIds(), futuresOvernightScale, stockOvernightScale, futuresTicker);
+    public ScannerConfiguration buildConfig() {
+        return new CorrelationSectoralScannerConfiguration(getWorkPeriodInMinutes(), getDescription(), getIds(), futuresOvernightScale, stockOvernightScale, futuresTicker);
     }
 }

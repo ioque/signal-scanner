@@ -1,7 +1,8 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.scanner.entity.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 
 import java.time.LocalDateTime;
@@ -10,9 +11,9 @@ import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode
-public abstract class SignalAlgorithm {
+public abstract class ScannerAlgorithm {
     protected String name;
-    public SignalAlgorithm(String name) {
+    public ScannerAlgorithm(String name) {
         this.name = name;
     }
     public abstract ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow);

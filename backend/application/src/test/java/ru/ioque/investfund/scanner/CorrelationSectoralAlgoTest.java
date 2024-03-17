@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.correlationsectoral.CorrelationSectoralSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.CorrelationSectoralScannerConfiguration;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -50,7 +50,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -71,7 +71,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -91,7 +91,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -111,7 +111,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -131,7 +131,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -151,7 +151,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -171,7 +171,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -204,7 +204,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     private void initScanner() {
         addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),
@@ -226,7 +226,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initNegativeDealResults();
         prepareInstruments();
         addScanner(
-            new CorrelationSectoralSignalConfig(
+            new CorrelationSectoralScannerConfiguration(
                 1,
                 "Корреляция сектора с фьючерсом.",
                 getInstrumentIds(),

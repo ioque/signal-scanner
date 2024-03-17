@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
@@ -27,7 +28,7 @@ import java.util.UUID;
 public class SignalScanner extends Domain {
     Integer workPeriodInMinutes;
     String description;
-    SignalAlgorithm algorithm;
+    ScannerAlgorithm algorithm;
     @NonFinal
     LocalDateTime lastExecutionDateTime;
     List<Signal> signals;
@@ -38,7 +39,7 @@ public class SignalScanner extends Domain {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        SignalAlgorithm algorithm,
+        ScannerAlgorithm algorithm,
         LocalDateTime lastExecutionDateTime,
         List<FinInstrument> finInstruments,
         List<Signal> signals

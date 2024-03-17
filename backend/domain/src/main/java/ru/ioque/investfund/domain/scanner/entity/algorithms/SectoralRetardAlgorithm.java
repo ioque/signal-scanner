@@ -1,9 +1,8 @@
-package ru.ioque.investfund.domain.scanner.entity.sectoralretard;
+package ru.ioque.investfund.domain.scanner.entity.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class SectoralRetardAlgorithm extends SignalAlgorithm {
+public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     public final String name = "Секторальный отстающий";
     private final Double historyScale;
     private final Double intradayScale;

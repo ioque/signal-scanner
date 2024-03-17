@@ -13,12 +13,12 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEnti
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.correlationsectoral.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.prefsimplepair.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.SectoralRetardAlgorithm;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class JpaScannerRepo implements ScannerRepository {
         return mappers.get(dataScanner.getAlgorithm().getClass()).apply(dataScanner);
     }
 
-    Map<Class<? extends SignalAlgorithm>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
+    Map<Class<? extends ScannerAlgorithm>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
         AnomalyVolumeAlgorithm.class, AnomalyVolumeScannerEntity::from,
         SectoralRetardAlgorithm.class, SectoralRetardScannerEntity::from,
         CorrelationSectoralAlgorithm.class, CorrelationSectoralScannerEntity::from,

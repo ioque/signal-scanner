@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.sectoralretard.SectoralRetardSignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.SectoralRetardScannerConfiguration;
+import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class SectoralRetardScannerConfig extends ScannerConfigRequest {
     }
 
     @Override
-    public SignalConfig buildConfig() {
-        return new SectoralRetardSignalConfig(getWorkPeriodInMinutes(), getDescription(), getIds(), historyScale, intradayScale);
+    public ScannerConfiguration buildConfig() {
+        return new SectoralRetardScannerConfiguration(getWorkPeriodInMinutes(), getDescription(), getIds(), historyScale, intradayScale);
     }
 }

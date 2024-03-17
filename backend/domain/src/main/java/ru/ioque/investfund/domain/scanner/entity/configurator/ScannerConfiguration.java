@@ -1,12 +1,11 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.scanner.entity.configurator;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.value.Signal;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,21 +13,13 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class SignalConfig {
+public abstract class ScannerConfiguration {
     private final Integer workPeriodInMinutes;
     private final String description;
     private final List<UUID> objectIds;
-    public abstract SignalScanner factoryScanner(
-        UUID id,
-        LocalDateTime lastExecution,
-        List<FinInstrument> finInstruments,
-        List<Signal> signals);
+    abstract ScannerAlgorithm factoryAlgorithm();
 
-    public SignalScanner factoryScanner(UUID id, List<FinInstrument> finInstruments) {
-        return factoryScanner(id, null, finInstruments, new ArrayList<>());
-    }
-
-    public SignalConfig(Integer workPeriodInMinutes, String description, List<UUID> objectIds) {
+    public ScannerConfiguration(Integer workPeriodInMinutes, String description, List<UUID> objectIds) {
         if (workPeriodInMinutes == null) {
             throw new DomainException("Не передан период работы сканера.");
         }

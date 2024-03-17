@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.AnomalyVolumeScannerConfiguration;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -45,7 +45,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -65,7 +65,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -85,7 +85,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -105,7 +105,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -125,7 +125,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -145,7 +145,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -165,7 +165,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
         var error = assertThrows(DomainException.class, () -> addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -193,7 +193,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -221,7 +221,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -255,7 +255,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -292,7 +292,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -339,7 +339,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -378,7 +378,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -421,7 +421,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -461,7 +461,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -502,7 +502,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -540,7 +540,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -583,7 +583,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),
@@ -623,7 +623,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().integrateWithDataSource();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentsBy(tickers).map(Instrument::getId).toList(),

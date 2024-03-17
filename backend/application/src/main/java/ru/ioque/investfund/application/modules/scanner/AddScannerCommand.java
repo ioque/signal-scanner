@@ -6,19 +6,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
 
 @Getter
 @ToString
 @EqualsAndHashCode
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AddScannerCommand {
-    SignalConfig signalConfig;
+    ScannerConfiguration scannerConfiguration;
 
     @Builder
     public AddScannerCommand(
-        SignalConfig signalConfig
+        ScannerConfiguration scannerConfiguration
     ) {
-        this.signalConfig = signalConfig;
+        this.scannerConfiguration = scannerConfiguration;
     }
 }

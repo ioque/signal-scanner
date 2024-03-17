@@ -1,10 +1,9 @@
-package ru.ioque.investfund.domain.scanner.entity.prefsimplepair;
+package ru.ioque.investfund.domain.scanner.entity.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.SignalAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class PrefSimpleAlgorithm extends SignalAlgorithm {
+public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     private final Double spreadParam;
 
     public PrefSimpleAlgorithm(Double spreadParam) {

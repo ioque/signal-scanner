@@ -1,29 +1,26 @@
-package ru.ioque.investfund.domain.scanner.entity.anomalyvolume;
+package ru.ioque.investfund.domain.scanner.entity.configurator;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.Signal;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class AnomalyVolumeSignalConfig extends SignalConfig {
+public class AnomalyVolumeScannerConfiguration extends ScannerConfiguration {
     private final Double scaleCoefficient;
     private final Integer historyPeriod;
     private final String indexTicker;
 
     @Builder
-    public AnomalyVolumeSignalConfig(
+    public AnomalyVolumeScannerConfiguration(
         Integer workPeriodInMinutes,
         String description,
         List<UUID> objectIds,
@@ -57,20 +54,7 @@ public class AnomalyVolumeSignalConfig extends SignalConfig {
     }
 
     @Override
-    public SignalScanner factoryScanner(
-        UUID id,
-        LocalDateTime lastExecution,
-        List<FinInstrument> finInstruments,
-        List<Signal> signals
-    ) {
-        return new SignalScanner(
-            id,
-            getWorkPeriodInMinutes(),
-            getDescription(),
-            new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker),
-            lastExecution,
-            finInstruments,
-            signals
-        );
+    protected ScannerAlgorithm factoryAlgorithm() {
+        return new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

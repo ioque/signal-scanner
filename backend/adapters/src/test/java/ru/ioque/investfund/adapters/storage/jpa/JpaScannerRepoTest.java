@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AnomalyVolumeAlgorithm;
 
 import java.util.List;
 import java.util.UUID;

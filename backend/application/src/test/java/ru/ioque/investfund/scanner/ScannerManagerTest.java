@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.scanner.entity.anomalyvolume.AnomalyVolumeSignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.AnomalyVolumeScannerConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +34,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase1() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -67,7 +67,7 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                new AnomalyVolumeSignalConfig(
+                new AnomalyVolumeScannerConfiguration(
                     1,
                     "Аномальные объемы, третий эшелон.",
                     null,
@@ -88,7 +88,7 @@ public class ScannerManagerTest extends BaseTest {
         var error = assertThrows(
             DomainException.class,
             () -> addScanner(
-                new AnomalyVolumeSignalConfig(
+                new AnomalyVolumeScannerConfiguration(
                     1,
                     "Аномальные объемы, третий эшелон.",
                     List.of(),
@@ -107,7 +107,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase4() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Аномальные объемы, третий эшелон.",
                 getInstrumentIds(),
@@ -133,7 +133,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase6() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Старое описание",
                 getInstruments()
@@ -152,7 +152,7 @@ public class ScannerManagerTest extends BaseTest {
             .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    new AnomalyVolumeSignalConfig(
+                    new AnomalyVolumeScannerConfiguration(
                         1,
                         "Старое описание",
                         getInstrumentIds(),
@@ -174,7 +174,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase7() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Старое описание",
                 getInstrumentIds(),
@@ -188,7 +188,7 @@ public class ScannerManagerTest extends BaseTest {
             .updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
-                    new AnomalyVolumeSignalConfig(
+                    new AnomalyVolumeScannerConfiguration(
                         1,
                         "Новое описание",
                         getInstrumentIds(),
@@ -216,7 +216,7 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         id,
-                        new AnomalyVolumeSignalConfig(
+                        new AnomalyVolumeScannerConfiguration(
                             1,
                             "Новое описание",
                             getInstrumentIds(),
@@ -237,7 +237,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase9() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Старое описание",
                 getInstrumentIds(),
@@ -252,7 +252,7 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        new AnomalyVolumeSignalConfig(
+                        new AnomalyVolumeScannerConfiguration(
                             1,
                             "",
                             getInstrumentIds(),
@@ -273,7 +273,7 @@ public class ScannerManagerTest extends BaseTest {
         """)
     void testCase10() {
         addScanner(
-            new AnomalyVolumeSignalConfig(
+            new AnomalyVolumeScannerConfiguration(
                 1,
                 "Старое описание",
                 getInstrumentIds(),
@@ -288,7 +288,7 @@ public class ScannerManagerTest extends BaseTest {
                 .updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
-                        new AnomalyVolumeSignalConfig(
+                        new AnomalyVolumeScannerConfiguration(
                             1,
                             "Старое описание",
                             List.of(),

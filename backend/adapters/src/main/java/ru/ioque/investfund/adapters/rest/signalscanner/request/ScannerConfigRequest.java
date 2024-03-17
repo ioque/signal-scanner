@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.SignalConfig;
+import ru.ioque.investfund.domain.scanner.entity.configurator.ScannerConfiguration;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,5 +40,5 @@ public abstract class ScannerConfigRequest implements Serializable {
     String description;
     @NotNull(message = "The ids is required.")
     List<UUID> ids;
-    public abstract SignalConfig buildConfig();
+    public abstract ScannerConfiguration buildConfig();
 }
