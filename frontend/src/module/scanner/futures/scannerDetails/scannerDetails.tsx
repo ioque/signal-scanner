@@ -90,7 +90,7 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
     return <>
         {scannerItem}
         <h4>Сигналы</h4>
-        <Table striped bordered hover>
+        <Table striped bordered hover id="signalTable">
             <thead>
             <tr>
                 <th>Тикер</th>
@@ -103,7 +103,7 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
             </tbody>
         </Table>
         <h4>Лог работы</h4>
-        <Table striped bordered hover>
+        <Table striped bordered hover id="logTable">
             <thead>
             <tr>
                 <th>Дата и время</th>
