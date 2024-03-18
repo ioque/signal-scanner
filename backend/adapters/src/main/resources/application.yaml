@@ -13,11 +13,11 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/postgres?reWriteBatchedInserts=true
+    url: jdbc:postgresql://localhost:54321/postgres?reWriteBatchedInserts=true
     username: postgres
     password:
 
 exchange:
   name: 'Московская Биржа'
   description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
-  url: https://iss.moex.com
+  url: http://localhost:8081

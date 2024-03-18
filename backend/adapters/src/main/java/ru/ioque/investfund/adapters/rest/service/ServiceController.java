@@ -22,10 +22,10 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntity
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 
-@Profile("test")
-@RestController
-@AllArgsConstructor
 @Hidden
+@RestController
+@Profile("test")
+@AllArgsConstructor
 @Tag(name = "Служебный контролер", description = "Работает в окружении test, позволяет очищать стейт приложения.")
 public class ServiceController {
     ExchangeEntityRepository exchangeEntityRepository;

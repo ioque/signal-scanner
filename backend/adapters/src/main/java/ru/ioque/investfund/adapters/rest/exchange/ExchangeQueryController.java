@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
@@ -27,7 +28,7 @@ public class ExchangeQueryController {
 
     @GetMapping("/api/v1/exchange")
     public ExchangeResponse getExchange() {
-        return ExchangeResponse.fromDomain(exchangeRepository.get());
+        return ExchangeResponse.fromDomain(exchangeRepository.get().orElseThrow(() -> new ResourceNotFoundException("Данные о бирже не найдены.")));
     }
 
     @GetMapping("/api/v1/instruments/{id}")
@@ -39,6 +40,7 @@ public class ExchangeQueryController {
                         id,
                         dateTimeProvider.nowDate()
                     )
+                    .orElseThrow(() -> new ResourceNotFoundException("Данные о финансовом инструменте не найдены."))
             );
     }
 

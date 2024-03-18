@@ -34,7 +34,10 @@ public class SignalScannerInListResponse implements Serializable {
             .description(scanner.getDescription())
             .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
             .signalCounts(scanner.getSignals().size())
-            .lastExecutionDateTime(scanner.getLastExecutionDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+            .lastExecutionDateTime(
+                scanner.getLastExecutionDateTime() == null
+                    ? ""
+                    : scanner.getLastExecutionDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .build();
     }
 }

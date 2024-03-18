@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: db/changelog/changeset/clear-schema.sql
-  - include:
-      file: db/changelog/changeset/init-schema.sql

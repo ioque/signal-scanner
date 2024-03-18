@@ -4,19 +4,18 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY . .
 
-ARG API_HOST
-ENV API_HOST $API_HOST
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL $REACT_APP_API_URL
 
 RUN npm run build
 
 
 FROM nginx:alpine
+
 WORKDIR /app
+
 COPY --from=builder ./app/build/ .
-COPY --from=builder ./app/nginx.conf /nginx.conf.template
+COPY --from=builder ./app/nginx.conf /etc/nginx/nginx.conf
 
-ARG API_HOST
-ENV API_HOST $API_HOST
-
-CMD ["/bin/sh" , "-c" , "envsubst '$HOST,$MODE' < /nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh" , "-c", "exec nginx -g 'daemon off;'"]
 EXPOSE 4200

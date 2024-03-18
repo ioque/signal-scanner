@@ -15,5 +15,3 @@ exchange:
   name: 'Московская Биржа'
   description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
   url: http://localhost:8081
-  startTime: '10:00:00'
-  stopTime: '19:00:00'

@@ -13,8 +13,8 @@ public class FakeExchangeRepository implements ExchangeRepository {
     Exchange exchange;
 
     @Override
-    public Exchange get() {
-        return exchange;
+    public Optional<Exchange> get() {
+        return Optional.ofNullable(exchange);
     }
 
     @Override

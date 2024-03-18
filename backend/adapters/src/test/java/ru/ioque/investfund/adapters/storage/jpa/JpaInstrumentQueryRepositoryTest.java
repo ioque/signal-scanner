@@ -46,8 +46,8 @@ public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
         saveExchangeWithStocks(id1, id2);
-        assertEquals("AFKS", instrumentQueryRepository.getById(id1).getTicker());
-        assertEquals("SBER", instrumentQueryRepository.getById(id2).getTicker());
+        assertEquals("AFKS", instrumentQueryRepository.getById(id1).orElseThrow().getTicker());
+        assertEquals("SBER", instrumentQueryRepository.getById(id2).orElseThrow().getTicker());
     }
 
     private void saveExchangeWithStocks(UUID id1, UUID id2) {

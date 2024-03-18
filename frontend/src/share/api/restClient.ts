@@ -1,5 +1,6 @@
-const apiHost = process.env.API_HOST || 'localhost';
-const baseUrl: string = "http://" + apiHost + ":8080/api/v1";
+const apiUrl: string = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+console.log(process.env.REACT_APP_API_URL)
+const baseUrl: string = apiUrl + "/api/v1";
 
 export type QueryParam = {
     name: string;

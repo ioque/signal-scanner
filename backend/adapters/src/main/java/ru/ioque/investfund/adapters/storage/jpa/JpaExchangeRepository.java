@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.exception.AdapterException;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
@@ -35,7 +34,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Exchange get() {
+    public Optional<Exchange> get() {
         return exchangeRepository
             .findAll()
             .stream()
@@ -47,8 +46,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
                         .map(InstrumentEntity::toDomain)
                         .toList())
             )
-            .findFirst()
-            .orElseThrow(() -> new AdapterException("Данные о бирже не найдены."));
+            .findFirst();
     }
 
     @Override

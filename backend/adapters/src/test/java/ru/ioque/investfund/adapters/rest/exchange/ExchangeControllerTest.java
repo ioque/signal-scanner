@@ -33,6 +33,7 @@ import ru.ioque.investfund.domain.exchange.value.IndexDeltaResult;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -116,7 +117,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .build();
         Mockito
             .when(exchangeRepository.get())
-            .thenReturn(exchange);
+            .thenReturn(Optional.of(exchange));
         mvc
             .perform(MockMvcRequestBuilders.get("/api/v1/exchange"))
             .andExpect(status().isOk())
@@ -190,7 +191,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .thenReturn(date);
         Mockito
             .when(instrumentQueryRepository.getWithTradingDataBy(stock.getId(), date))
-            .thenReturn(stock);
+            .thenReturn(Optional.of(stock));
 
         mvc
             .perform(MockMvcRequestBuilders.get("/api/v1/instruments/" + stock.getId()))

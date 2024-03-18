@@ -7,7 +7,7 @@ services:
     ports:
       - "54321:5432"
     volumes:
-      - signal-scanner-db:/var/lib/postgresql/data
+      - signal-scanner-db:/var/lib/pgpro/std-15/data
   backend:
     container_name: backend
     image: ioque/backend
@@ -16,8 +16,10 @@ services:
     environment:
       DB_HOST: "192.168.0.62"
       DB_PORT: "54321"
+      EXCHANGE_URL: "http://192.168.0.62:8081" # https://iss.moex.com
+      SPRING_PROFILES_ACTIVE: "test"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider  http://127.0.0.1:8080/actuator/health || exit 1
+      test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
       interval: 5s
       retries: 5
       start_period: 20s
@@ -25,12 +27,10 @@ services:
   frontend:
     container_name: frontend
     image: ioque/frontend
-    environment:
-      API_HOST: "192.168.0.62"
     ports:
       - "4200:4200"
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider  http://127.0.0.1:3000/ || exit 1
+      test: wget --no-verbose --tries=1 --spider  http://localhost:4200/ || exit 1
       interval: 5s
       retries: 5
       start_period: 20s

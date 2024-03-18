@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.exception.AdapterException;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
@@ -18,6 +17,7 @@ import ru.ioque.investfund.domain.exchange.entity.Instrument;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -63,14 +63,13 @@ public class JpaInstrumentQueryRepository {
             .toList();
     }
 
-    public Instrument getById(UUID id) {
+    public Optional<Instrument> getById(UUID id) {
         return instrumentEntityRepository
             .findById(id)
-            .map(InstrumentEntity::toDomain)
-            .orElseThrow(() -> new AdapterException("Инструмент с идентификатором " + id + " не найден."));
+            .map(InstrumentEntity::toDomain);
     }
 
-    public Instrument getWithTradingDataBy(UUID id, LocalDate today) {
+    public Optional<Instrument> getWithTradingDataBy(UUID id, LocalDate today) {
         return instrumentEntityRepository
             .findById(id)
             .map(instrumentEntity -> instrumentEntity.toDomain(
@@ -84,7 +83,6 @@ public class JpaInstrumentQueryRepository {
                     .stream()
                     .map(IntradayValueEntity::toDomain)
                     .toList()
-            ))
-            .orElseThrow(() -> new AdapterException("Инструмент с идентификатором " + id + " не найден."));
+            ));
     }
 }
