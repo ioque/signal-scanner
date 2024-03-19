@@ -9,6 +9,7 @@ pipeline {
         IMAGE_TAG = "v$BUILD_NUMBER"
         REACT_APP_API_URL = "http://192.168.0.62:8080"
         NEXUS_URL = "http://localhost:8001"
+        NEXUS_CREDENTIALS = credentials('nexus-cred')
     }
     stages {
         stage('Git Checkout') {
@@ -52,7 +53,7 @@ pipeline {
                 script {
                     sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ioque/frontend:${env.IMAGE_TAG}"
                     sh "cd backend && docker build . -t ioque/backend:${env.IMAGE_TAG}"
-                    sh "docker login 'nexus-cred' ${env.NEXUS_URL}"
+                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
                     sh "docker push ioque/frontend:${env.IMAGE_TAG}"
                     sh "docker push ioque/backend:${env.IMAGE_TAG}"
                     sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
