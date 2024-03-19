@@ -43,6 +43,7 @@ pipeline {
                     }
                 }
                 stage("Backend Build and Push") {
+                    agent any
                     steps {
                         script {
                             sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
@@ -54,6 +55,7 @@ pipeline {
                     }
                 }
                 stage("Frontend Build and Push") {
+                    agent any
                     steps {
                         script {
                             sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
@@ -71,10 +73,14 @@ pipeline {
             agent any
             stages {
                 stage("API Test") {
-                    echo "API Test"
+                    steps {
+                        echo "API Test"
+                    }
                 }
                 stage("UI Test") {
-                    echo "UI Test"
+                    steps {
+                        echo "UI Test"
+                    }
                 }
             }
         }
