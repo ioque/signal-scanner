@@ -19,7 +19,7 @@ pipeline {
         }
 
         stage('Build and Test') {
-            agent none
+            agent any
             parallel {
                 stage("Backend") {
                     agent {
