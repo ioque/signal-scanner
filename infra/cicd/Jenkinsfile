@@ -56,8 +56,8 @@ pipeline {
                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
                     sh "docker push ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
                     sh "docker push ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
-                    sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
-                    sh "docker rmi ioque/backend:${env.IMAGE_TAG}"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
                     sh "docker logout ${env.NEXUS_URL}"
                 }
             }
