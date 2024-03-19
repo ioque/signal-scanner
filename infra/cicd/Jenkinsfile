@@ -24,13 +24,13 @@ pipeline {
         stage('Backend application test') {
           steps {
             sh 'cd backend && ./gradlew :application:test'
-            junit '**/application/build/reports/tests/test/index.html'
+            junit '**/application/build/test-results/test/*.xml'
           }
         }
         stage('Backend adapters test') {
           steps {
             sh 'cd backend && ./gradlew :adapters:test'
-            junit '**/adapters/build/reports/tests/test/index.html'
+            junit '**/adapters/build/test-results/test/*.xml'
           }
         }
       }

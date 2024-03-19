@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.0-SNAPSHOT'
     id 'io.spring.dependency-management' version '1.1.3'
-    id "jacoco"
 }
 
 allprojects {
@@ -20,7 +19,6 @@ allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java-library'
-    apply plugin: 'jacoco'
     apply plugin: 'application'
 
     mainClassName = 'ru.ioque.investfund.Application'
@@ -33,29 +31,5 @@ subprojects {
         testLogging {
             events "passed"
         }
-    }
-}
-
-tasks.register("codeCoverageReport", JacocoReport) {
-    subprojects { subproject ->
-        subproject.plugins.withType(JacocoPlugin).configureEach {
-            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
-                if (testTask.extensions.getByType(JacocoTaskExtension).isEnabled()) {
-                    sourceSets subproject.sourceSets.main
-                    executionData(testTask)
-                } else {
-                    logger.warn('Jacoco extension is disabled for test task \'{}\' in project \'{}\'. this test task will be excluded from jacoco report.',testTask.getName(),subproject.getName())
-                }
-            }
-            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
-                rootProject.tasks.codeCoverageReport.dependsOn(it)
-            }
-        }
-    }
-
-    reports {
-        xml.required = true
-        html.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
