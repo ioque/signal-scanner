@@ -18,8 +18,8 @@ pipeline {
             }
         }
 
-        stage("Test and Build") {
-            parallel {
+        stage("Test") {
+            stages {
                 stage("Backend") {
                     agent {
                         docker {
@@ -39,33 +39,13 @@ pipeline {
                                 junit '**/adapters/build/test-results/test/*.xml'
                             }
                         }
-                        stage('Build') {
-                            steps {
-                                sh 'cd backend && ./gradlew clean build -x test'
-                            }
-                        }
-                    }
-                }
-                stage("Frontend") {
-                    agent {
-                        docker {
-                            image 'node:17-bullseye'
-                            args '-u root'
-                        }
-                    }
-                    stages {
-                        stage("Dependency Install") {
-                            steps {
-                                sh 'cd frontend && npm install'
-                            }
-                        }
                     }
                 }
             }
         }
 
 
-        stage('Push docker images') {
+        stage('Build and Push') {
             agent any
             when { branch 'master' }
             steps {
