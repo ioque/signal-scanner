@@ -51,11 +51,11 @@ pipeline {
             when { branch 'master' }
             steps {
                 script {
-                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ioque/frontend:${env.IMAGE_TAG}"
-                    sh "cd backend && docker build . -t ioque/backend:${env.IMAGE_TAG}"
+                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t frontend:${env.IMAGE_TAG}"
+                    sh "cd backend && docker build . -t backend:${env.IMAGE_TAG}"
                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                    sh "docker push ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
-                    sh "docker push ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
+                    sh "docker push ${env.NEXUS_URL}/frontend:${env.IMAGE_TAG}"
+                    sh "docker push ${env.NEXUS_URL}/backend:${env.IMAGE_TAG}"
                     sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
                     sh "docker rmi ioque/backend:${env.IMAGE_TAG}"
                     sh "docker logout ${env.NEXUS_URL}"
