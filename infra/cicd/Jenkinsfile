@@ -78,19 +78,17 @@ pipeline {
             }
         }
 
-        stage("Acceptance Test") {
+        stage("API Test") {
             agent any
-            stages {
-                stage("API Test") {
-                    steps {
-                        echo "API Test"
-                    }
-                }
-                stage("UI Test") {
-                    steps {
-                        echo "UI Test"
-                    }
-                }
+            steps {
+                echo "API Test"
+            }
+        }
+
+        stage("UI Test") {
+            agent any
+            steps {
+                echo "UI Test"
             }
         }
 
