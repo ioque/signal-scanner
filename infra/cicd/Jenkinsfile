@@ -22,19 +22,24 @@ pipeline {
         stage("Unit Test and Build") {
             parallel {
                 stage("Backend") {
-                    agent {
-                        docker {
-                            image 'openjdk:17-jdk-alpine'
-                        }
-                    }
                     stages {
                         stage('Application Test') {
+                            agent {
+                                docker {
+                                    image 'openjdk:17-jdk-alpine'
+                                }
+                            }
                             steps {
                                 sh 'cd backend && ./gradlew :application:test'
                                 junit '**/application/build/test-results/test/*.xml'
                             }
                         }
                         stage('Adapters Test') {
+                            agent {
+                                docker {
+                                    image 'openjdk:17-jdk-alpine'
+                                }
+                            }
                             steps {
                                 sh 'cd backend && ./gradlew :adapters:test'
                                 junit '**/adapters/build/test-results/test/*.xml'
