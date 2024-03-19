@@ -12,12 +12,14 @@ pipeline {
     }
     stages {
         stage('Git Checkout') {
+            agent any
             steps {
                 checkout scm
             }
         }
 
         stage('Build and Test') {
+            agent none
             parallel {
                 stage("Backend") {
                     agent {
