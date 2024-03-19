@@ -1,57 +1,57 @@
 #!groovy
 pipeline {
-  agent none
-  options {
-    skipStagesAfterUnstable()
-    skipDefaultCheckout()
-  }
-  environment {
-    IMAGE_TAG = "v$BUILD_NUMBER"
-  }
-  stages {
-    stage("Backend") {
-      agent {
-        docker {
-          image 'openjdk:17-jdk-alpine'
-        }
-      }
-      stages {
-        stage('checkout') {
-          steps {
-            checkout scm
-          }
-        }
-        stage('Backend application test') {
-          steps {
-            sh 'cd backend && ./gradlew :application:test'
-            junit '**/application/build/test-results/test/*.xml'
-          }
-        }
-        stage('Backend adapters test') {
-          steps {
-            sh 'cd backend && ./gradlew :adapters:test'
-            junit '**/adapters/build/test-results/test/*.xml'
-          }
-        }
-      }
+    agent none
+    options {
+        skipStagesAfterUnstable()
+        skipDefaultCheckout()
     }
+    environment {
+        IMAGE_TAG = "v$BUILD_NUMBER"
+        NEXUS_URL = "http://localhost:8001"
+    }
+    stages {
+        stage("Backend") {
+            agent {
+                docker {
+                    image 'openjdk:17-jdk-alpine'
+                }
+            }
+            stages {
+                stage('Git Checkout') {
+                    steps {
+                        checkout scm
+                    }
+                }
+                stage('Backend Application Test') {
+                    steps {
+                        sh 'cd backend && ./gradlew :application:test'
+                        junit '**/application/build/test-results/test/*.xml'
+                    }
+                }
+                stage('Backend Adapters Test') {
+                    steps {
+                        sh 'cd backend && ./gradlew :adapters:test'
+                        junit '**/adapters/build/test-results/test/*.xml'
+                    }
+                }
+            }
+        }
 
-    stage('Push images') {
-      agent any
-      when { branch 'master' }
-      steps {
-        script {
-          def frontendImage = docker.build("ioque/frontend:${env.IMAGE_TAG}", "-f Dockerfile ./frontend")
-          def backendImage = docker.build("ioque/backend:${env.IMAGE_TAG}", "-f Dockerfile ./backend")
-//          docker.withRegistry('', 'dockerhub-creds') {
-//            dockerImage.push()
-//            dockerImage.push("latest")
-//          }
-//          echo "Success Pushed Docker Images"
+        stage('Push docker images') {
+            agent any
+            when { branch 'master' }
+            steps {
+                script {
+                    docker.build("ioque/frontend:${env.IMAGE_TAG}", "-f frontend/Dockerfile .")
+                    docker.build("ioque/backend:${env.IMAGE_TAG}", "-f backend/Dockerfile .")
+                    sh "docker login 'nexus-cred' ${env.NEXUS_URL}"
+                    sh "docker push ioque/frontend:${env.IMAGE_TAG}"
+                    sh "docker push ioque/backend:${env.IMAGE_TAG}"
+                    sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
+                    sh "docker rmi ioque/backend:${env.IMAGE_TAG}"
+                    sh "docker logout ${env.NEXUS_URL}"
+                }
+            }
         }
-//        sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
-//        sh "docker rmi ioque/backend:${env.IMAGE_TAG}"
-      }
     }
-  }
 }

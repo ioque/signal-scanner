@@ -3,3 +3,4 @@
 ./application/build
 ./domain/build
 ./infra/build
+/build/
