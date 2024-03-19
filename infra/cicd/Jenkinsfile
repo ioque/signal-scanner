@@ -7,6 +7,7 @@ pipeline {
     }
     environment {
         IMAGE_TAG = "v$BUILD_NUMBER"
+        REACT_APP_API_URL = "http://192.168.0.62:8080"
         NEXUS_URL = "http://localhost:8001"
     }
     stages {
@@ -42,8 +43,8 @@ pipeline {
             when { branch 'master' }
             steps {
                 script {
-                    docker.build("ioque/frontend:${env.IMAGE_TAG}", "-f frontend/Dockerfile .")
-                    docker.build("ioque/backend:${env.IMAGE_TAG}", "-f backend/Dockerfile .")
+                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ioque/frontend:${env.IMAGE_TAG}"
+                    sh "cd backend && docker build . -t ioque/backend:${env.IMAGE_TAG}"
                     sh "docker login 'nexus-cred' ${env.NEXUS_URL}"
                     sh "docker push ioque/frontend:${env.IMAGE_TAG}"
                     sh "docker push ioque/backend:${env.IMAGE_TAG}"
