@@ -39,15 +39,18 @@ pipeline {
                 }
             }
         }
+
         stage("Frontend") {
             agent {
                 docker {
                     image 'node:17-bullseye'
                 }
             }
-            stage("NPM Install") {
-                steps {
-                    sh 'cd frontend && npm run install'
+            stages {
+                stage("NPM Install") {
+                    steps {
+                        sh 'cd frontend && npm run install'
+                    }
                 }
             }
         }
