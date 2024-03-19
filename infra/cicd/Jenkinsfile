@@ -11,49 +11,53 @@ pipeline {
         NEXUS_URL = "http://localhost:8001"
     }
     stages {
-        stage("Backend") {
-            agent {
-                docker {
-                    image 'openjdk:17-jdk-alpine'
-                }
+        stage('Git Checkout') {
+            steps {
+                checkout scm
             }
-            stages {
-                stage('Git Checkout') {
-                    steps {
-                        checkout scm
-                    }
-                }
-                parallel {
-                    stage('Backend Application Test') {
-                        steps {
-                            sh 'cd backend && ./gradlew :application:test'
-                            junit '**/application/build/test-results/test/*.xml'
+        }
+
+        stage('Build and Test') {
+            parallel {
+                stage("Backend") {
+                    agent {
+                        docker {
+                            image 'openjdk:17-jdk-alpine'
                         }
                     }
-                    stage('Backend Adapters Test') {
-                        steps {
-                            sh 'cd backend && ./gradlew :adapters:test'
-                            junit '**/adapters/build/test-results/test/*.xml'
+                    parallel {
+                        stage('Backend Application Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :application:test'
+                                junit '**/application/build/test-results/test/*.xml'
+                            }
+                        }
+                        stage('Backend Adapters Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :adapters:test'
+                                junit '**/adapters/build/test-results/test/*.xml'
+                            }
+                        }
+                    }
+                }
+
+                stage("Frontend") {
+                    agent {
+                        docker {
+                            image 'node:17-bullseye'
+                        }
+                    }
+                    stages {
+                        stage("NPM Install") {
+                            steps {
+                                sh 'cd frontend && npm run install'
+                            }
                         }
                     }
                 }
             }
         }
 
-        stage("Frontend") {
-            agent {
-                docker {
-                    image 'node:17-bullseye'
-                }
-            }
-            stages {
-                stage("NPM Install") {
-                    steps {
-                        sh 'cd frontend && npm run install'
-                    }
-                }
-            }
-        }
 
         stage('Push docker images') {
             agent any
