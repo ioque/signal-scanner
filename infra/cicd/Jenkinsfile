@@ -17,15 +17,21 @@ pipeline {
       }
       stages {
         stage('checkout') {
-          checkout scm
+          steps {
+            checkout scm
+          }
         }
         stage('Backend application test') {
-          sh 'cd backend && ./gradlew :application:test'
-          junit '**/backend/application/reports/tests/test/index.html'
+          steps {
+            sh 'cd backend && ./gradlew :application:test'
+            junit '**/backend/application/reports/tests/test/index.html'
+          }
         }
         stage('Backend adapters test') {
-          sh 'cd backend && ./gradlew :adapters:test'
-          junit '**/backend/adapters/reports/tests/test/index.html'
+          steps {
+            sh 'cd backend && ./gradlew :adapters:test'
+            junit '**/backend/adapters/reports/tests/test/index.html'
+          }
         }
       }
     }
