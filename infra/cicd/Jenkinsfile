@@ -1,0 +1,51 @@
+#!groovy
+pipeline {
+  agent none
+  options {
+    skipStagesAfterUnstable()
+    skipDefaultCheckout()
+  }
+  environment {
+    IMAGE_TAG = "v$BUILD_NUMBER"
+  }
+  stages {
+    stage("Backend") {
+      agent {
+        docker {
+          image 'openjdk:17-jdk-alpine'
+        }
+      }
+      stages {
+        stage('checkout') {
+          checkout scm
+        }
+        stage('Backend application test') {
+          sh 'cd backend && ./gradlew :application:test'
+          junit '**/backend/application/reports/tests/test/index.html'
+        }
+        stage('Backend adapters test') {
+          sh 'cd backend && ./gradlew :adapters:test'
+          junit '**/backend/adapters/reports/tests/test/index.html'
+        }
+      }
+    }
+
+    stage('Push images') {
+      agent any
+      when { branch 'master' }
+      steps {
+        script {
+          def frontendImage = docker.build("ioque/frontend:${env.IMAGE_TAG}", "-f Dockerfile ./frontend")
+          def backendImage = docker.build("ioque/backend:${env.IMAGE_TAG}", "-f Dockerfile ./backend")
+//          docker.withRegistry('', 'dockerhub-creds') {
+//            dockerImage.push()
+//            dockerImage.push("latest")
+//          }
+//          echo "Success Pushed Docker Images"
+        }
+//        sh "docker rmi ioque/frontend:${env.IMAGE_TAG}"
+//        sh "docker rmi ioque/backend:${env.IMAGE_TAG}"
+      }
+    }
+  }
+}
