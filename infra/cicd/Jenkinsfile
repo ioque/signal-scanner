@@ -22,30 +22,25 @@ pipeline {
         stage("Unit Test and Build") {
             parallel {
                 stage("Backend") {
+                    agent {
+                        docker {
+                            image 'openjdk:17-jdk-alpine'
+                        }
+                    }
                     stages {
-                        stage("Unit Test") {
-                            agent {
-                                docker {
-                                    image 'openjdk:17-jdk-alpine'
-                                }
-                            }
-                            stages {
-                                stage('Application Test') {
-                                    steps {
-                                        sh 'cd backend && ./gradlew :application:test'
-                                        junit '**/application/build/test-results/test/*.xml'
-                                    }
-                                }
-                                stage('Adapters Test') {
-                                    steps {
-                                        sh 'cd backend && ./gradlew :adapters:test'
-                                        junit '**/adapters/build/test-results/test/*.xml'
-                                    }
-                                }
+                        stage('Application Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :application:test'
+                                junit '**/application/build/test-results/test/*.xml'
                             }
                         }
-                        stage("Backend Build and Push") {
-                            agent any
+                        stage('Adapters Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :adapters:test'
+                                junit '**/adapters/build/test-results/test/*.xml'
+                            }
+                        }
+                        stage("Build and Push") {
                             steps {
                                 script {
                                     sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
