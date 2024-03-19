@@ -41,6 +41,7 @@ pipeline {
                             }
                         }
                         stage("Build and Push") {
+                            agent any
                             steps {
                                 script {
                                     sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
