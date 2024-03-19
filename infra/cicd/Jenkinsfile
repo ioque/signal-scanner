@@ -19,9 +19,9 @@ pipeline {
             }
         }
 
-        stage("Test") {
-            stages {
-                stage("Backend") {
+        stage("Unit Test and Build") {
+            parallel {
+                stage("Backend Unit Test") {
                     agent {
                         docker {
                             image 'openjdk:17-jdk-alpine'
@@ -42,24 +42,47 @@ pipeline {
                         }
                     }
                 }
+                stage("Backend Build and Push") {
+                    steps {
+                        script {
+                            sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
+                            sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                            sh "docker push ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
+                            sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
+                            sh "docker logout ${env.NEXUS_URL}"
+                        }
+                    }
+                }
+                stage("Frontend Build and Push") {
+                    steps {
+                        script {
+                            sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
+                            sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                            sh "docker push ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
+                            sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
+                            sh "docker logout ${env.NEXUS_URL}"
+                        }
+                    }
+                }
             }
         }
 
-
-        stage('Build and Push') {
+        stage("Acceptance Test") {
             agent any
-            when { branch 'master' }
-            steps {
-                script {
-                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
-                    sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
-                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                    sh "docker push ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
-                    sh "docker push ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
-                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
-                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
-                    sh "docker logout ${env.NEXUS_URL}"
+            stages {
+                stage("API Test") {
+                    echo "API Test"
                 }
+                stage("UI Test") {
+                    echo "UI Test"
+                }
+            }
+        }
+
+        stage("Deploy") {
+            agent any
+            steps {
+                echo "DEPLOY"
             }
         }
     }
