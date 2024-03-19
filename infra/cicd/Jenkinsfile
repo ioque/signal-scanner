@@ -25,7 +25,7 @@ pipeline {
                             image 'openjdk:17-jdk-alpine'
                         }
                     }
-                    parallel {
+                    stages {
                         stage('Backend Application Test') {
                             steps {
                                 sh 'cd backend && ./gradlew :application:test'
