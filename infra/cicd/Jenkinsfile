@@ -11,28 +11,44 @@ pipeline {
         NEXUS_URL = "http://localhost:8001"
     }
     stages {
-        stage("Backend") {
-            agent {
-                docker {
-                    image 'openjdk:17-jdk-alpine'
+        parallel {
+            stage("Backend") {
+                agent {
+                    docker {
+                        image 'openjdk:17-jdk-alpine'
+                    }
+                }
+                stages {
+                    stage('Git Checkout') {
+                        steps {
+                            checkout scm
+                        }
+                    }
+                    parallel {
+                        stage('Backend Application Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :application:test'
+                                junit '**/application/build/test-results/test/*.xml'
+                            }
+                        }
+                        stage('Backend Adapters Test') {
+                            steps {
+                                sh 'cd backend && ./gradlew :adapters:test'
+                                junit '**/adapters/build/test-results/test/*.xml'
+                            }
+                        }
+                    }
                 }
             }
-            stages {
-                stage('Git Checkout') {
-                    steps {
-                        checkout scm
+            stage("Frontend") {
+                agent {
+                    docker {
+                        image 'node:17-bullseye'
                     }
                 }
-                stage('Backend Application Test') {
+                stage("NPM Install") {
                     steps {
-                        sh 'cd backend && ./gradlew :application:test'
-                        junit '**/application/build/test-results/test/*.xml'
-                    }
-                }
-                stage('Backend Adapters Test') {
-                    steps {
-                        sh 'cd backend && ./gradlew :adapters:test'
-                        junit '**/adapters/build/test-results/test/*.xml'
+                        sh 'cd frontend && npm run install'
                     }
                 }
             }
