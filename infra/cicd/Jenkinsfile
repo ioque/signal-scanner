@@ -54,7 +54,9 @@ pipeline {
                     }
                     stages {
                         stage("Dependency Install") {
-                            sh 'cd frontend && npm install'
+                            steps {
+                                sh 'cd frontend && npm install'
+                            }
                         }
                     }
                 }
