@@ -4,11 +4,6 @@ variable "basename" {
   default = "calc-server"
 }
 
-variable "prefix" {
-  type    = string
-  default = "prod"
-}
-
 # Путь, где будет хранится пул проекта
 variable "pool_path" {
   type    = string
@@ -31,4 +26,14 @@ variable "vm" {
     disk   = number
     bridge = string
   })
+}
+
+variable "domains" {
+  description = "List of VMs with specified parameters"
+  type = list(object({
+    name = string,
+    cpu  = number,
+    ram  = number,
+    disk = number
+  }))
 }

@@ -12,19 +12,22 @@ resource "libvirt_volume" "image" {
 }
 
 resource "libvirt_volume" "root" {
-  name           = "${var.prefix}-${var.basename}-root"
+  count = length(var.domains)
+
+  name           = "${var.domains[count.index].name}-root"
   pool           = libvirt_pool.pool.name
   base_volume_id = libvirt_volume.image.id
-  size           = var.vm.disk
+  size           = var.domains[count.index].disk
 }
 
 resource "libvirt_domain" "vm" {
-  name   = "${var.prefix}-${var.basename}"
-  memory = var.vm.ram
-  vcpu   = var.vm.cpu
+  count = length(var.domains)
+
+  name   = var.domains[count.index].name
+  memory = var.domains[count.index].ram
+  vcpu   = var.domains[count.index].cpu
   qemu_agent = true
   autostart  = true
-
   cloudinit = libvirt_cloudinit_disk.commoninit.id
 
   network_interface {
@@ -33,7 +36,22 @@ resource "libvirt_domain" "vm" {
   }
 
   disk {
-    volume_id = libvirt_volume.root.id
+    volume_id = libvirt_volume.root[count.index].id
+  }
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
+  }
+  console {
+    type        = "pty"
+    target_type = "virtio"
+    target_port = "1"
+  }
+  graphics {
+    type        = "vnc"
+    listen_type = "address"
+    autoport    = true
   }
 }
 

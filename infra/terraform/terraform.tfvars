@@ -1,5 +1,4 @@
 basename = "calc-server"
-prefix = "test"
 
 pool_path = "/var/lib/libvirt/"
 
@@ -9,8 +8,23 @@ image = {
 }
 
 vm = {
-  bridge = "virbr0"
+  bridge = "br0"
   cpu    = 8
   disk   = 50 * 1024 * 1024 * 1024
   ram    = 16 * 1024
 }
+
+domains = [
+  {
+    name = "test-calc-server"
+    cpu  = 10
+    ram  = 32 * 1024
+    disk = 50 * 1024 * 1024 * 1024
+  },
+  {
+    name = "prod-calc-server"
+    cpu  = 30
+    ram  = 64 * 1024
+    disk = 1000 * 1024 * 1024 * 1024
+  }
+]

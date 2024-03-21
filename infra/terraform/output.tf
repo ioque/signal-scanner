@@ -1,9 +1,9 @@
-output "vm_name" {
-  value       = libvirt_domain.vm.name
-  description = "VM name"
-}
-
-output "vm_ip" {
-  value       = libvirt_domain.vm.network_interface[0].addresses.0
-  description = "Interface IPs"
+output "vms_info" {
+  description = "General information about created VMs"
+  value = [
+    for vm in libvirt_domain.vm : {
+      id = vm.name
+      ip = vm.network_interface[0].addresses.0
+    }
+  ]
 }
