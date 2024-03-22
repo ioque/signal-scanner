@@ -1,0 +1,16 @@
+- name: Copy docker-compose file
+  copy:
+    src: ../../../../docker-compose.yml
+    dest: ~/investment-fund/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Start
+  shell: |
+    export HOST={{ ansible_host }} 
+    docker compose down
+    docker compose up --wait
+    exit 0
+  args:
+    chdir: ~/investment-fund

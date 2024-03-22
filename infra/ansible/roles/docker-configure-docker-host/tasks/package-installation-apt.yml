@@ -1,0 +1,32 @@
+- name: install packages to allow apt to use a repository over HTTPS
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest
+    update_cache: yes
+
+- name: Add an Apt signing key
+  shell: |
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+- name: set up the repository
+  shell: |
+    echo \
+    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+    "bullseye" stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: INSTALL DOCKER PACKAGE
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: yes

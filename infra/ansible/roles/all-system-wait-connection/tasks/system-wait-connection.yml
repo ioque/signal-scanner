@@ -1,0 +1,3 @@
+---
+- name: WAIT CONNECTION TASK
+  wait_for_connection:

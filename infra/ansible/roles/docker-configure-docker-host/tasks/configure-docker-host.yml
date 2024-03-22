@@ -1,0 +1,13 @@
+---
+- name: COPY daemon.json FILE
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: RESTART DOCKER
+  systemd:
+    name: docker
+    state: restarted

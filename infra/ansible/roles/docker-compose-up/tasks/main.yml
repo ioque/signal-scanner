@@ -1,0 +1,2 @@
+---
+- import_tasks: run-docker-compose.yml
