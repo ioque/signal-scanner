@@ -2,14 +2,14 @@ version: "3.9"
 services:
   signal-scanner-db:
     container_name: signal-scanner-db
-    image: 192.168.0.62:8001/ioque/postgrespro
+    image: 192.168.0.62:8002/ioque/postgrespro
     ports:
       - "5432:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
   backend:
     container_name: backend
-    image: 192.168.0.62:8001/ioque/backend
+    image: 192.168.0.62:8002/ioque/backend
     ports:
       - "8080:8080"
     environment:
@@ -25,7 +25,7 @@ services:
       timeout: 10s
   frontend:
     container_name: frontend
-    image: 192.168.0.62:8001/ioque/frontend
+    image: 192.168.0.62:8002/ioque/frontend
     ports:
       - "4200:4200"
     healthcheck:
