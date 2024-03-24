@@ -39,13 +39,13 @@ pipeline {
                             agent any
                             steps {
                                 script {
-                                    sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend"
-                                    sh "cd infra && cd containers && cd postgres && docker build . -t ${env.NEXUS_URL}/ioque/postgrespro"
+                                    sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:latest"
+                                    sh "cd infra && cd containers && cd postgres && docker build . -t ${env.NEXUS_URL}/ioque/postgrespro:latest"
                                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/backend"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/postgrespro"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/backend:latest"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
                                     sh "docker logout ${env.NEXUS_URL}"
                                 }
                             }
@@ -58,10 +58,10 @@ pipeline {
                             agent any
                             steps {
                                 script {
-                                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend"
+                                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend:latest"
                                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/frontend"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/frontend:latest"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
                                     sh "docker logout ${env.NEXUS_URL}"
                                 }
                             }
