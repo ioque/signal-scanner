@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_TAG = "v$BUILD_NUMBER"
         REACT_APP_API_URL = "http://192.168.0.62:8080"
-        NEXUS_URL = "127.0.0.1:8002"
+        NEXUS_URL = "192.168.0.62:8002"
         NEXUS_CREDENTIALS = credentials('nexus-cred')
     }
     stages {
@@ -39,13 +39,13 @@ pipeline {
                             agent any
                             steps {
                                 script {
-                                    sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend:latest"
-                                    sh "cd infra && cd containers && cd postgres && docker build . -t ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                                    sh "cd backend && docker build . -t ${env.NEXUS_URL}/ioque/backend"
+                                    sh "cd infra && cd containers && cd postgres && docker build . -t ${env.NEXUS_URL}/ioque/postgrespro"
                                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/backend:latest"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/postgrespro:latest"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/backend"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/postgrespro"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro"
                                     sh "docker logout ${env.NEXUS_URL}"
                                 }
                             }
@@ -58,10 +58,10 @@ pipeline {
                             agent any
                             steps {
                                 script {
-                                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend:latest"
+                                    sh "cd frontend && docker build . --build-arg REACT_APP_API_URL=${env.REACT_APP_API_URL} -t ${env.NEXUS_URL}/ioque/frontend"
                                     sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                                    sh "docker push ${env.NEXUS_URL}/ioque/frontend:latest"
-                                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
+                                    sh "docker push ${env.NEXUS_URL}/ioque/frontend"
+                                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend"
                                     sh "docker logout ${env.NEXUS_URL}"
                                 }
                             }
