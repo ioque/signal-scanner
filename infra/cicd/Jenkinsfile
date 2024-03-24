@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_TAG = "v$BUILD_NUMBER"
         REACT_APP_API_URL = "http://192.168.0.62:8080"
-        NEXUS_URL = "192.168.0.62:8002"
+        NEXUS_URL = "http://192.168.0.62:8002"
         NEXUS_CREDENTIALS = credentials('nexus-cred')
     }
     stages {
