@@ -5,7 +5,7 @@ services:
     build:
       context: containers/postgres
     ports:
-      - "5432:5432"
+      - "54321:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
   backend:
@@ -14,9 +14,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: ${DOCKER_DB_HOST}
-      DB_PORT: "5432"
-      EXCHANGE_URL: ${DOCKER_EXCHANGE_URL} # https://iss.moex.com
+      DB_HOST: "192.168.0.62"
+      DB_PORT: "54321"
+      EXCHANGE_URL: "http://192.168.0.62:8081" # https://iss.moex.com
       SPRING_PROFILES_ACTIVE: "test"
     healthcheck:
       test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1

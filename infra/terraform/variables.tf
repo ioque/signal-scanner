@@ -35,5 +35,6 @@ variable "domains" {
     cpu  = number,
     ram  = number,
     disk = number
+    mac = string,
   }))
 }

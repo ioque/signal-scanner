@@ -4,6 +4,8 @@
     - test
   gather_facts: false
   become: true
+  vars_files:
+    - "../environments/group_vars/docker-configure-docker-host.yml"
   roles:
     - all-system-wait-connection
     - all-system-reboot

@@ -33,6 +33,7 @@ resource "libvirt_domain" "vm" {
   network_interface {
     bridge         = var.vm.bridge
     wait_for_lease = true
+    mac = var.domains[count.index].mac
   }
 
   disk {

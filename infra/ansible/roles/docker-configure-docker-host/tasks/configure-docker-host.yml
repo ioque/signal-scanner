@@ -1,4 +1,12 @@
 ---
+- name: COPY config.json FILE
+  copy:
+    src: files/config.json
+    dest: ~/.docker/
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: COPY daemon.json FILE
   template:
     src: daemon.json.j2

@@ -1,6 +1,6 @@
 kvm_hosts:
   hosts:
     test:
-      ansible_host: 192.168.0.83
+      ansible_host: signal-system.test
     prod:
-      ansible_host: 192.168.0.84
+      ansible_host: signal-system.prod
