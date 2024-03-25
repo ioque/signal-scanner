@@ -1,6 +1,6 @@
-const apiUrl: string = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-console.log(process.env.REACT_APP_API_URL)
-const baseUrl: string = apiUrl + "/api/v1";
+import {environment} from "../../environments/environment";
+
+const baseUrl: string = environment.apiUrl;
 
 export type QueryParam = {
     name: string;

@@ -41,12 +41,12 @@ public class ServiceController {
     ExchangeManager exchangeManager;
     DateTimeProvider dateTimeProvider;
 
-    @PostMapping("/api/v1/service/date-time")
+    @PostMapping("/api/service/date-time")
     public void initDateTime(@RequestBody InitDateTimeRequest request) {
         dateTimeProvider.initToday(request.getDate().atTime(request.getTime()));
     }
 
-    @DeleteMapping("/api/v1/service/state")
+    @DeleteMapping("/api/service/state")
     public void clearState() {
         instrumentEntityRepository.deleteAll();
         dailyValueEntityRepository.deleteAll();

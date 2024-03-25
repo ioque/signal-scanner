@@ -2,21 +2,21 @@ version: "3.9"
 services:
   signal-scanner-db:
     container_name: signal-scanner-db
-    image: 192.168.0.62:8002/ioque/postgrespro
+    image: 192.168.0.62:8002/ioque/postgrespro:${COMMIT_TAG:-latest}
     ports:
       - "5432:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
   backend:
     container_name: backend
-    image: 192.168.0.62:8002/ioque/backend
+    image: 192.168.0.62:8002/ioque/backend:${COMMIT_TAG:-latest}
     ports:
       - "8080:8080"
     environment:
       DB_HOST: ${DOCKER_DB_HOST}
       DB_PORT: "5432"
       EXCHANGE_URL: ${DOCKER_EXCHANGE_URL} # https://iss.moex.com
-      SPRING_PROFILES_ACTIVE: "test"
+      SPRING_PROFILES_ACTIVE: ${DOCKER_SPRING_PROFILES}
     healthcheck:
       test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
       interval: 5s
@@ -25,7 +25,10 @@ services:
       timeout: 10s
   frontend:
     container_name: frontend
-    image: 192.168.0.62:8002/ioque/frontend
+    image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
+    environment:
+      API_HOST: ${DOCKER_API_HOST}
+      API_HTTP_MODE: ${DOCKER_API_HTTP_MODE}
     ports:
       - "4200:4200"
     healthcheck:

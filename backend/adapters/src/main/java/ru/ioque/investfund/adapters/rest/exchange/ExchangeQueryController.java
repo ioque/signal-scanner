@@ -26,12 +26,12 @@ public class ExchangeQueryController {
     JpaInstrumentQueryRepository instrumentQueryRepository;
     ExchangeRepository exchangeRepository;
 
-    @GetMapping("/api/v1/exchange")
+    @GetMapping("/api/exchange")
     public ExchangeResponse getExchange() {
         return ExchangeResponse.fromDomain(exchangeRepository.get().orElseThrow(() -> new ResourceNotFoundException("Данные о бирже не найдены.")));
     }
 
-    @GetMapping("/api/v1/instruments/{id}")
+    @GetMapping("/api/instruments/{id}")
     public InstrumentResponse getInstrument(@PathVariable UUID id) {
         return InstrumentResponse
             .fromDomain(
@@ -44,7 +44,7 @@ public class ExchangeQueryController {
             );
     }
 
-    @GetMapping("/api/v1/instruments")
+    @GetMapping("/api/instruments")
     public List<InstrumentInListResponse> getInstruments(
         @RequestParam(required = false) String ticker,
         @RequestParam(required = false) String type,

@@ -24,7 +24,7 @@ import java.util.UUID;
 public class SignaScannerCommandController {
     ScannerManager scannerManager;
 
-    @PostMapping("/api/v1/signal-scanner")
+    @PostMapping("/api/signal-scanner")
     public void addNewSignalScanner(@Valid @RequestBody ScannerRequest request) {
         scannerManager
             .addNewScanner(
@@ -37,7 +37,7 @@ public class SignaScannerCommandController {
             );
     }
 
-    @PatchMapping("/api/v1/signal-scanner/{id}")
+    @PatchMapping("/api/signal-scanner/{id}")
     public void updateSignalScannerInfo(@PathVariable("id") UUID id, @Valid @RequestBody ScannerRequest request) {
         scannerManager
             .updateScanner(
@@ -51,7 +51,7 @@ public class SignaScannerCommandController {
             );
     }
 
-    @PostMapping("/api/v1/signal-scanner/run")
+    @PostMapping("/api/signal-scanner/run")
     public void runSignalScanners() {
         scannerManager.execute();
     }

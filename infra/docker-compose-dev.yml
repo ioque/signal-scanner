@@ -9,8 +9,9 @@ services:
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
   backend:
-    container_name: backend
-    image: ioque/backend
+    container_name: backend-dev
+    build:
+      context: ../backend
     ports:
       - "8080:8080"
     environment:
@@ -25,8 +26,12 @@ services:
       start_period: 20s
       timeout: 10s
   frontend:
-    container_name: frontend
-    image: ioque/frontend
+    container_name: frontend-dev
+    build:
+      context: ../frontend
+    environment:
+      API_HOST: ${API_HOST:-localhost}
+      API_HTTP_MODE: ${API_HTTP_MODE:-http}
     ports:
       - "4200:4200"
     healthcheck:

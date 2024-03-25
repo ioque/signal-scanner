@@ -22,27 +22,27 @@ public class ExchangeCommandController {
     ExchangeManager exchangeManager;
     IntradayValueEntityRepository intradayValueEntityRepository;
 
-    @PostMapping("/api/v1/integrate")
+    @PostMapping("/api/integrate")
     public void integrateInstruments() {
         exchangeManager.integrateWithDataSource();
     }
 
-    @PostMapping("/api/v1/daily-integrate")
+    @PostMapping("/api/daily-integrate")
     public void integrateTradingData() {
         exchangeManager.execute();
     }
 
-    @PatchMapping("/api/v1/enable-update")
+    @PatchMapping("/api/enable-update")
     public void enableUpdate(@RequestBody EnableUpdateInstrumentRequest request) {
         exchangeManager.enableUpdate(request.getInstrumentIds());
     }
 
-    @PatchMapping("/api/v1/disable-update")
+    @PatchMapping("/api/disable-update")
     public void disableUpdate(@RequestBody DisableUpdateInstrumentRequest request) {
         exchangeManager.disableUpdate(request.getInstrumentIds());
     }
 
-    @DeleteMapping("/api/v1/intraday-value")
+    @DeleteMapping("/api/intraday-value")
     public void clearIntradayValue() {
         intradayValueEntityRepository.deleteAll();
     }

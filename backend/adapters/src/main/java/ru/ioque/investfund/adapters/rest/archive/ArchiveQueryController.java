@@ -20,7 +20,7 @@ public class ArchiveQueryController {
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
 
-    @GetMapping("/api/v1/daily-values")
+    @GetMapping("/api/daily-values")
     public List<DailyValueResponse> getDailyValues(
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize
@@ -32,7 +32,7 @@ public class ArchiveQueryController {
             .toList();
     }
 
-    @GetMapping("/api/v1/intraday-values")
+    @GetMapping("/api/intraday-values")
     public List<IntradayValueResponse> getIntradayValues(
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize

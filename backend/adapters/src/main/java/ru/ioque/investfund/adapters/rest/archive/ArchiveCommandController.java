@@ -14,7 +14,7 @@ public class ArchiveCommandController {
     ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
 
-    @PostMapping("/api/v1/archiving")
+    @PostMapping("/api/archiving")
     public void archiving() {
         archivedDailyValueEntityRepository.archivingDailyValues();
         archivedIntradayValueEntityRepository.archivingIntradayValues();
