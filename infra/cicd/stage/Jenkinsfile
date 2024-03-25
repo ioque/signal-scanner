@@ -8,6 +8,7 @@ pipeline {
         skipDefaultCheckout()
     }
     environment {
+        IMAGE_TAG = "v$BUILD_NUMBER"
         NEXUS_URL = "192.168.0.62:8002"
         NEXUS_CREDENTIALS = credentials('nexus-cred')
     }
@@ -41,11 +42,11 @@ pipeline {
                     agent any
                     steps {
                         script {
-                            sh "cd backend && docker build . --pull -t ${env.NEXUS_URL}/ioque/backend:${env.GIT_COMMIT} ${env.NEXUS_URL}/ioque/backend:latest"
+                            sh "cd backend && docker build . --pull -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG} ${env.NEXUS_URL}/ioque/backend:latest"
                             sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
                             sh "docker push --all-tags ${env.NEXUS_URL}/ioque/backend"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.GIT_COMMIT}"
+                            sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
                         }
                     }
@@ -54,11 +55,11 @@ pipeline {
                     agent any
                     steps {
                         script {
-                            sh "cd infra && cd containers && cd postgres && docker build . --pull -t ${env.NEXUS_URL}/ioque/postgrespro:${env.GIT_COMMIT} ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                            sh "cd infra && cd containers && cd postgres && docker build . --pull -t ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG} ${env.NEXUS_URL}/ioque/postgrespro:latest"
                             sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
                             sh "docker push --all-tags ${env.NEXUS_URL}/ioque/postgrespro"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:${env.GIT_COMMIT}"
+                            sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
                         }
                     }
@@ -67,11 +68,11 @@ pipeline {
                     agent any
                     steps {
                         script {
-                            sh "cd frontend && docker build . --pull -t ${env.NEXUS_URL}/ioque/frontend:${env.GIT_COMMIT} ${env.NEXUS_URL}/ioque/frontend:latest"
+                            sh "cd frontend && docker build . --pull -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG} ${env.NEXUS_URL}/ioque/frontend:latest"
                             sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
                             sh "docker push --all-tags ${env.NEXUS_URL}/ioque/frontend"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.GIT_COMMIT}"
+                            sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
                         }
                     }
