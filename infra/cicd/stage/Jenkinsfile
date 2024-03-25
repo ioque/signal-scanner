@@ -89,6 +89,7 @@ pipeline {
         stage("Deploy to Staging Server") {
             agent any
             steps {
+                sh 'whoami'
                 sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
                 sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
                 sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
