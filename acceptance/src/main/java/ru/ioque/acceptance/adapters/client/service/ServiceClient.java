@@ -23,12 +23,12 @@ public class ServiceClient {
     ObjectMapper objectMapper;
 
     public void clearState() {
-        restTemplateFacade.delete("/api/v1/service/state");
+        restTemplateFacade.delete("/api/service/state");
     }
 
     @SneakyThrows
     public void initDateTime(LocalDateTime date) {
-        restTemplateFacade.post("/api/v1/service/date-time", objectMapper.writeValueAsString(getInitDateTimeRequest(date)));
+        restTemplateFacade.post("/api/service/date-time", objectMapper.writeValueAsString(getInitDateTimeRequest(date)));
     }
 
     private InitDateTimRequest getInitDateTimeRequest(LocalDateTime date) {

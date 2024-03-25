@@ -50,7 +50,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner.
+        T1. Выполнение запроса по эндпоинту GET /api/signal-scanner.
         """)
     public void testCase1() {
         var signalProducers = getSignalScanners();
@@ -60,7 +60,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             .thenReturn(signalProducers);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/signal-scanner"))
+            .perform(MockMvcRequestBuilders.get("/api/signal-scanner"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -79,7 +79,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T2. Выполнение запроса по эндпоинту GET /api/v1/signal-scanner/{id}.
+        T2. Выполнение запроса по эндпоинту GET /api/signal-scanner/{id}.
         """)
     public void testCase2() {
         final SignalScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
@@ -98,7 +98,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             .when(scannerLogEntityRepository.findAllByScannerId(SIGNAL_PRODUCER_ID))
             .thenReturn(logs);
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/signal-scanner/" + SIGNAL_PRODUCER_ID))
+            .perform(MockMvcRequestBuilders.get("/api/signal-scanner/" + SIGNAL_PRODUCER_ID))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -112,13 +112,13 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner.
+        T3. Выполнение запроса по эндпоинту POST /api/signal-scanner.
         """)
     public void testCase33() {
         mvc
             .perform(
                 MockMvcRequestBuilders
-                    .post("/api/v1/signal-scanner")
+                    .post("/api/signal-scanner")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(toJson(PrefSimpleScannerRequest
                         .builder()
@@ -135,11 +135,11 @@ public class SignalScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T4. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner/run.
+        T4. Выполнение запроса по эндпоинту POST /api/signal-scanner/run.
         """)
     public void testCase4() {
         mvc
-            .perform(MockMvcRequestBuilders.post("/api/v1/signal-scanner/run"))
+            .perform(MockMvcRequestBuilders.post("/api/signal-scanner/run"))
             .andExpect(status().isOk());
     }
 

@@ -16,10 +16,10 @@ public class ScheduleRestClient {
 
     @SneakyThrows
     public void saveSchedule(SaveScheduleRequest request) {
-        restTemplateFacade.post("/api/v1/schedule", objectMapper.writeValueAsString(request));
+        restTemplateFacade.post("/api/schedule", objectMapper.writeValueAsString(request));
     }
 
     public Schedule getSchedule() {
-        return restTemplateFacade.get("/api/v1/schedule", Schedule.class);
+        return restTemplateFacade.get("/api/schedule", Schedule.class);
     }
 }

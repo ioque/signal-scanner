@@ -23,47 +23,47 @@ public class ExchangeRestClient {
     ObjectMapper objectMapper;
 
     public void synchronizeWithDataSource() {
-        restTemplateFacade.post("/api/v1/integrate", null);
+        restTemplateFacade.post("/api/integrate", null);
     }
 
     @SneakyThrows
     public void integrateTradingData() {
-        restTemplateFacade.post("/api/v1/daily-integrate", null);
+        restTemplateFacade.post("/api/daily-integrate", null);
     }
 
     public Exchange getExchange() {
-        return restTemplateFacade.get("/api/v1/exchange", Exchange.class);
+        return restTemplateFacade.get("/api/exchange", Exchange.class);
     }
 
     @SneakyThrows
     public List<InstrumentInList> getInstruments(String params) {
-        String path = "/api/v1/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
+        String path = "/api/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
         return objectMapper.readValue(restTemplateFacade.get(path, String.class), new TypeReference<>(){});
     }
 
     @SneakyThrows
     public void enableUpdateInstruments(EnableUpdateInstrumentRequest request) {
-        restTemplateFacade.patch("/api/v1/enable-update", objectMapper.writeValueAsString(request), String.class);
+        restTemplateFacade.patch("/api/enable-update", objectMapper.writeValueAsString(request), String.class);
     }
 
     @SneakyThrows
     public void disableUpdateInstruments(DisableUpdateInstrumentRequest request) {
-        restTemplateFacade.patch("/api/v1/disable-update", objectMapper.writeValueAsString(request), String.class);
+        restTemplateFacade.patch("/api/disable-update", objectMapper.writeValueAsString(request), String.class);
     }
 
     public Instrument getInstrumentBy(UUID id) {
-        return restTemplateFacade.get("/api/v1/instruments/" + id, Instrument.class);
+        return restTemplateFacade.get("/api/instruments/" + id, Instrument.class);
     }
 
     public InstrumentStatistic getInstrumentStatisticBy(UUID id) {
-        return restTemplateFacade.get("/api/v1/instruments/" + id + "/statistic", InstrumentStatistic.class);
+        return restTemplateFacade.get("/api/instruments/" + id + "/statistic", InstrumentStatistic.class);
     }
 
     public void clearIntradayValue() {
-        restTemplateFacade.delete("/api/v1/intraday-value");
+        restTemplateFacade.delete("/api/intraday-value");
     }
 
     public void runArchiving() {
-        restTemplateFacade.post("/api/v1/archiving", null);
+        restTemplateFacade.post("/api/archiving", null);
     }
 }

@@ -21,20 +21,20 @@ public class SignalScannerRestClient {
 
     @SneakyThrows
     public List<SignalScannerInList> getDataScanners() {
-        return objectMapper.readValue(restTemplateFacade.get("/api/v1/signal-scanner", String.class), new TypeReference<>(){});
+        return objectMapper.readValue(restTemplateFacade.get("/api/signal-scanner", String.class), new TypeReference<>(){});
     }
 
     public SignalScanner getSignalScannerBy(UUID id) {
-        return restTemplateFacade.get("/api/v1/signal-scanner/" + id, SignalScanner.class);
+        return restTemplateFacade.get("/api/signal-scanner/" + id, SignalScanner.class);
     }
 
     @SneakyThrows
     public void saveDataScannerConfig(AddSignalScannerRequest request) {
-        restTemplateFacade.post("/api/v1/signal-scanner", objectMapper.writeValueAsString(request));
+        restTemplateFacade.post("/api/signal-scanner", objectMapper.writeValueAsString(request));
     }
 
     @SneakyThrows
     public void runScanning() {
-        restTemplateFacade.post("/api/v1/signal-scanner/run", null);
+        restTemplateFacade.post("/api/signal-scanner/run", null);
     }
 }

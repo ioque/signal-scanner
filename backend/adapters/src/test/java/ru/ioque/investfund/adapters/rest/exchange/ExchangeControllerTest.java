@@ -51,35 +51,35 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту POST /api/v1/integrate.
+        T1. Выполнение запроса по эндпоинту POST /api/integrate.
         """)
     public void testCase1() {
         mvc
-            .perform(MockMvcRequestBuilders.post("/api/v1/integrate"))
+            .perform(MockMvcRequestBuilders.post("/api/integrate"))
             .andExpect(status().isOk());
     }
 
     @Test
     @SneakyThrows
     @DisplayName("""
-        T2. Выполнение запроса по эндпоинту POST /api/v1/daily-integrate.
+        T2. Выполнение запроса по эндпоинту POST /api/daily-integrate.
         """)
     public void testCase2() {
         mvc
-            .perform(MockMvcRequestBuilders.post("/api/v1/daily-integrate"))
+            .perform(MockMvcRequestBuilders.post("/api/daily-integrate"))
             .andExpect(status().isOk());
     }
 
     @Test
     @SneakyThrows
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту PATCH /api/v1/enable-update.
+        T3. Выполнение запроса по эндпоинту PATCH /api/enable-update.
         """)
     public void testCase3() {
         List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
         mvc
             .perform(MockMvcRequestBuilders
-                .patch("/api/v1/enable-update")
+                .patch("/api/enable-update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new EnableUpdateInstrumentRequest(ids)))
             )
@@ -89,13 +89,13 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T4. Выполнение запроса по эндпоинту PATCH /api/v1/disable-update.
+        T4. Выполнение запроса по эндпоинту PATCH /api/disable-update.
         """)
     public void testCase4() {
         List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
         mvc
             .perform(MockMvcRequestBuilders
-                .patch("/api/v1/disable-update")
+                .patch("/api/disable-update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new DisableUpdateInstrumentRequest(ids)))
             )
@@ -105,7 +105,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T5. Выполнение запроса по эндпоинту GET /api/v1/exchange.
+        T5. Выполнение запроса по эндпоинту GET /api/exchange.
         """)
     public void testCase5() {
         final Exchange exchange = Exchange.builder()
@@ -119,7 +119,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .when(exchangeRepository.get())
             .thenReturn(Optional.of(exchange));
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/exchange"))
+            .perform(MockMvcRequestBuilders.get("/api/exchange"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -139,7 +139,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T6. Выполнение запроса по эндпоинту GET /api/v1/instruments.
+        T6. Выполнение запроса по эндпоинту GET /api/instruments.
         """)
     public void testCase6() {
         List<Instrument> instrumentInLists = getInstruments();
@@ -157,7 +157,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .thenReturn(instrumentInLists);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/instruments"))
+            .perform(MockMvcRequestBuilders.get("/api/instruments"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -176,7 +176,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T7. Выполнение запроса по эндпоинту GET /api/v1/instruments/{id}
+        T7. Выполнение запроса по эндпоинту GET /api/instruments/{id}
         """)
     public void testCase7() {
         LocalDate date = LocalDate.parse("2024-01-12");
@@ -194,7 +194,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .thenReturn(Optional.of(stock));
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/v1/instruments/" + stock.getId()))
+            .perform(MockMvcRequestBuilders.get("/api/instruments/" + stock.getId()))
             .andExpect(status().isOk())
             .andExpect(
                 content()

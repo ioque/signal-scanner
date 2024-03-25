@@ -32,7 +32,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T1. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         аномальных объемов.
         """)
     public void testCase1() {
@@ -50,7 +50,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T2. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T2. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         аномальных объемов. Не передан параметр scaleCoefficient.
         """)
     public void testCase2() {
@@ -69,7 +69,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T3. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         аномальных объемов. Не переданы параметры scaleCoefficient и indexTicker.
         """)
     public void testCase3() {
@@ -87,7 +87,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T4. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T4. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         аномальных объемов. Не переданы параметры scaleCoefficient и indexTicker.
         """)
     public void testCase4() {
@@ -106,7 +106,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T5. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T5. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         дельта анализа пар преф-обычка.
         """)
     public void testCase5() {
@@ -122,7 +122,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T6. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T6. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         дельта анализа пар преф-обычка, не передан параметр spreadParam и описание.
         """)
     public void testCase6() {
@@ -138,7 +138,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T7. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T7. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         секторальный отстающий.
         """)
     public void testCase7() {
@@ -156,7 +156,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T8. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T8. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         секторальный отстающий, не передан список объектов и параметр intradayScale.
         """)
     public void testCase8() {
@@ -173,7 +173,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T9. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T9. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         секторальный отстающий, не передан параметр historyScale и передано пустое описание.
         """)
     public void testCase9() {
@@ -191,7 +191,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T10. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T10. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         корреляции сектора с фьючерсом на основной товар сектора.
         """)
     public void testCase10() {
@@ -209,7 +209,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("""
-        T11. Выполнение запроса по эндпоинту POST /api/v1/signal-scanner на добавление сканера сигналов по алгоритму
+        T11. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму
         корреляции сектора с фьючерсом на основной товар сектора, не переданы параметры.
         """)
     public void testCase11() {
@@ -231,7 +231,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     private void assertValidationErrors(ScannerRequest request, List<String> errors) {
         mvc
             .perform(MockMvcRequestBuilders
-                .post("/api/v1/signal-scanner")
+                .post("/api/signal-scanner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
             )
@@ -249,7 +249,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
     private void assertIsOk(ScannerRequest request) {
         mvc
             .perform(MockMvcRequestBuilders
-                .post("/api/v1/signal-scanner")
+                .post("/api/signal-scanner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
             )
