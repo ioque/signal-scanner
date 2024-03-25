@@ -15,8 +15,10 @@ pipeline {
         stage('Git Checkout') {
             agent any
             steps {
-                checkout scm
-                env.GIT_COMMIT = scmVars.GIT_COMMIT
+                script {
+                    def scmVars = checkout([$class: 'GitSCM'])
+                    env.GIT_COMMIT = scmVars.GIT_COMMIT
+                }
             }
         }
 
