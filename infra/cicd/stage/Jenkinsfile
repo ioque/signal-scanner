@@ -94,9 +94,7 @@ pipeline {
                 sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
                 sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
                 sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
-                withCredentials([sshUserPrivateKey(credentialsId: 'ioque', keyFileVariable: 'PRIVATE')]) {
-                    sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test' --private-key $PRIVATE"
-                }
+                sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test'"
                 echo "Deploy to Staging Server was successfully."
             }
         }
