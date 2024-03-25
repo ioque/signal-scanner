@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class BaseFrontendTest {
+    protected String uiHost = System.getenv("FRONTEND_HOST");
+
     protected WebDriver driver;
 
     @BeforeEach
@@ -26,13 +28,13 @@ public class BaseFrontendTest {
     }
 
     protected void loadPageInstrumentList() {
-        driver.get("http://localhost:3000/instruments");
+        driver.get("http://" + uiHost + ":3000/instruments");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
 
     protected void loadPageScannerList() {
-        driver.get("http://localhost:3000/scanners");
+        driver.get("http://" + uiHost + ":3000/scanners");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }

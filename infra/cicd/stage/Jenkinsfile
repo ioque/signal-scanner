@@ -8,6 +8,11 @@ pipeline {
         skipDefaultCheckout()
     }
     environment {
+        DOCKER_DB_HOST = "192.168.0.85"
+        DOCKER_EXCHANGE_URL = "http://192.168.0.62:8081"
+        DOCKER_SPRING_PROFILES = "test"
+        DOCKER_API_HOST = "192.168.0.85"
+        DOCKER_API_HTTP_MODE = "http"
         IMAGE_TAG = "v$BUILD_NUMBER"
         NEXUS_URL = "192.168.0.62:8002"
         NEXUS_CREDENTIALS = credentials('nexus-cred')
@@ -20,7 +25,7 @@ pipeline {
             }
         }
 
-        stage("Unit Test") {
+        stage("Unit Tests") {
             agent {
                 docker {
                     image 'openjdk:17-jdk-alpine'
@@ -30,6 +35,7 @@ pipeline {
                 sh 'cd backend && ./gradlew test'
                 junit '**/application/build/test-results/test/*.xml'
                 junit '**/adapters/build/test-results/test/*.xml'
+                echo "Running unit tests was successful."
             }
         }
 
@@ -45,6 +51,7 @@ pipeline {
                             sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
+                            echo "Docker image of Backend was successfully built and pushed to nexus."
                         }
                     }
                 }
@@ -58,6 +65,7 @@ pipeline {
                             sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
+                            echo "Docker image of Postgres was successfully built and pushed to nexus."
                         }
                     }
                 }
@@ -71,30 +79,42 @@ pipeline {
                             sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
                             sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
                             sh "docker logout ${env.NEXUS_URL}"
+                            echo "Docker image of Frontend was successfully built and pushed to nexus."
                         }
                     }
                 }
             }
         }
 
-        stage("API Test") {
+        stage("Deploy to Staging Server") {
             agent any
             steps {
-                echo "API Test"
+                sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
+                sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
+                sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
+                sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
+                sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test'"
+                echo "Deploy to Staging Server was successfully."
             }
         }
 
-        stage("UI Test") {
+        stage("API Tests") {
             agent any
             steps {
-                echo "UI Test"
+                sh "export SYSTEM_HOST=192.168.0.85"
+                sh "cd acceptance && ./gradlew test"
+                echo "Running API tests was successful."
             }
         }
 
-        stage("Deploy") {
+        stage("UI Tests") {
             agent any
             steps {
-                echo "DEPLOY"
+                sh "export API_HOST=192.168.0.85"
+                sh "export FRONTEND_HOST=192.168.0.85"
+                sh "cd acceptance && ./gradlew boorRun --args='--spring.profiles.active=frontend'"
+                sh "cd selenium && ./gradlew test"
+                echo "Running UI tests was successful."
             }
         }
     }

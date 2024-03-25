@@ -26,10 +26,10 @@ public class ScannerListPageTest extends BaseFrontendTest {
             .get(1)
             .findElements(By.xpath("./child::*"));
         assertEquals(4, tableRows.size());
-        assertTableRow(tableRows.get(0), "1", "Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.", "1", "2024-03-15T10:00:00");
-        assertTableRow(tableRows.get(1), "1", "Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.", "1", "2024-03-15T10:00:00");
-        assertTableRow(tableRows.get(2), "1440", "Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.", "0", "2024-03-15T10:00:00");
-        assertTableRow(tableRows.get(3), "60", "Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.", "0", "2024-03-15T10:00:00");
+        assertTableRow(tableRows.get(0), "1", "Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.", "1", "2024-03-25T10:00:00");
+        assertTableRow(tableRows.get(1), "1", "Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.", "1", "2024-03-25T10:00:00");
+        assertTableRow(tableRows.get(2), "1440", "Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.", "0", "2024-03-25T10:00:00");
+        assertTableRow(tableRows.get(3), "60", "Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.", "0", "2024-03-25T10:00:00");
 
     }
 

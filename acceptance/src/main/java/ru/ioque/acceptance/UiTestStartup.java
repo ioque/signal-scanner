@@ -15,7 +15,7 @@ import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import java.time.LocalTime;
 
 @Component
-@Profile("ui-test")
+@Profile("frontend")
 @AllArgsConstructor
 public class UiTestStartup implements ApplicationListener<ApplicationReadyEvent> {
     ExchangeRestClient exchangeRestClient;

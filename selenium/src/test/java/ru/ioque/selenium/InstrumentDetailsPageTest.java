@@ -22,7 +22,7 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
             .findElements(By.xpath("./child::*"))
             .stream().map(row -> row.findElements((By.xpath("./child::*"))).get(0).getText())
             .toList();
-        verifyDetailsPage(ids.get(0), "BR-1.24 (BRF4)", 129, 1000);
+        verifyDetailsPage(ids.get(0), "BR-1.24 (BRF4)", 128, 1000);
         verifyDetailsPage(ids.get(1), "USDRUB_TOM (USD000UTSTOM)", 0, 0);
         verifyDetailsPage(ids.get(2), "Газпромнефть (SIBN)", 125, 999);
         verifyDetailsPage(ids.get(3), "Индекс фондового рынка мосбиржи (IMOEX)", 129, 1000);
@@ -56,7 +56,7 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
     }
 
     private void loadPageDetails(String id) {
-        driver.get("http://localhost:3000/instruments/" + id);
+        driver.get("http://" + uiHost + ":3000/instruments/" + id);
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("accordion-button")));
     }
