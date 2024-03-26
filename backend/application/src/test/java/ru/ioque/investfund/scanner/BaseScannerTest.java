@@ -29,6 +29,11 @@ public class BaseScannerTest extends BaseTest {
         loggerProvider().clearLogs();
     }
 
+    protected void runWorkPipelineAndClearLogs() {
+        exchangeManager().execute();
+        loggerProvider().clearLogs();
+    }
+
     protected void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
         assertEquals(allSize, signals.size());
         assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());

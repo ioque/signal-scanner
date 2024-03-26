@@ -124,7 +124,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberAndSberpHistory();
         initPositiveDeals();
         initScanner("SBER", "SBERP");
-        runScannerAndClearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
 
         exchangeManager().execute();
@@ -145,7 +145,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberAndSberpHistory();
         initNegativeDeals();
         initScanner("SBER", "SBERP");
-        runScannerAndClearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
 
         exchangeManager().execute();
@@ -476,11 +476,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:55:00", 251D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-    }
-
-    private void runScannerAndClearLogs() {
-        exchangeManager().execute();
-        clearLogs();
     }
 
     private List<ScannerLog> getLogs() {

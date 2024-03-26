@@ -1,5 +1,6 @@
 package ru.ioque.investfund.fakes;
 
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
@@ -12,18 +13,25 @@ import java.util.UUID;
 
 public class FakeFinInstrumentRepository implements FinInstrumentRepository {
     ExchangeRepository exchangeRepository;
+    DateTimeProvider dateTimeProvider;
 
-    public FakeFinInstrumentRepository(ExchangeRepository exchangeRepository) {
+    public FakeFinInstrumentRepository(ExchangeRepository exchangeRepository, DateTimeProvider dateTimeProvider) {
         this.exchangeRepository = exchangeRepository;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
     public List<FinInstrument> getByIdIn(List<UUID> instrumentIds) {
         if (instrumentIds == null || instrumentIds.isEmpty()) return List.of();
         return instrumentIds.stream().map(id -> {
-            Instrument instrument = exchangeRepository.get().orElseThrow().getInstruments().stream().filter(row -> row
-                .getId()
-                .equals(id)).findFirst().orElseThrow();
+            Instrument instrument = exchangeRepository
+                .get()
+                .orElseThrow()
+                .getInstruments()
+                .stream()
+                .filter(row -> row.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
             return FinInstrument.builder()
                 .instrumentId(instrument.getId())
                 .ticker(instrument.getTicker())
@@ -39,6 +47,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
                     instrument
                         .getIntradayValues()
                         .stream()
+                        .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                         .map(intradayValue -> new TimeSeriesValue<>(
                             intradayValue.getValue(),
                             intradayValue.getDateTime().toLocalTime()
@@ -63,6 +72,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
                 .todayPriceSeries(instrument
                     .getIntradayValues()
                     .stream()
+                    .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getPrice(),
                         intradayValue.getDateTime().toLocalTime()

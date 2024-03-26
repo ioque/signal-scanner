@@ -79,7 +79,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
-                null)
+                null
+            )
         ));
 
         assertEquals("Не передан параметр futuresTicker.", error.getMessage());
@@ -100,7 +101,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
-                "")
+                ""
+            )
         ));
 
         assertEquals("Не передан параметр futuresTicker.", error.getMessage());
@@ -121,7 +123,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 0D,
                 stockOvernightScale,
-                BRF4)
+                BRF4
+            )
         ));
 
         assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
@@ -142,7 +145,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 -1D,
                 stockOvernightScale,
-                BRF4)
+                BRF4
+            )
         ));
 
         assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
@@ -163,7 +167,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 0D,
-                BRF4)
+                BRF4
+            )
         ));
 
         assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
@@ -184,7 +189,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 -1D,
-                BRF4)
+                BRF4
+            )
         ));
 
         assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
@@ -238,8 +244,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDeals();
         initPositiveDealResults();
         initScanner();
-        loggerProvider().clearLogs();
-        exchangeManager().execute();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T18:00:00");
 
         exchangeManager().execute();
@@ -259,15 +264,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDeals();
         initPositiveDealResults();
         initScanner();
-        loggerProvider().clearLogs();
-        exchangeManager().execute();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-23T13:00:00");
 
         exchangeManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -280,12 +284,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments();
         initPositiveDeals();
-        exchangeDataFixture().initTradingResults(
-            List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
-                buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-                buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
-            )
+        initTradingResults(
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
+            buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner();
 
@@ -304,12 +306,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments();
         initPositiveDealResults();
-        exchangeDataFixture().initDealDatas(
-            List.of(
-                buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
-            )
+        initDealDatas(
+            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
         initScanner();
 
@@ -330,11 +330,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments();
         initPositiveDeals();
-        exchangeDataFixture().initTradingResults(
-            List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1)
-            )
+        initTradingResults(
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1)
         );
         initScanner();
 
@@ -355,11 +353,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments();
         initPositiveDealResults();
-        exchangeDataFixture().initDealDatas(
-            List.of(
-                buildFuturesDealBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
-                buildFuturesDealBy(2L, BRF4, "12:00:00", 96D, 96000D, 1)
-            )
+        initDealDatas(
+            buildFuturesDealBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
+            buildFuturesDealBy(2L, BRF4, "12:00:00", 96D, 96000D, 1)
         );
         initScanner();
 
@@ -380,12 +376,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments();
         initPositiveDeals();
-        exchangeDataFixture().initTradingResults(
-            List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
-                buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
-            )
+        initTradingResults(
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
+            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner();
 
@@ -404,13 +398,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
-                BRF4)
+                BRF4
+            )
         );
-    }
-
-    private void loadInitalizedData() {
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
     }
 
     private void initPositiveDealResults() {
@@ -425,37 +415,31 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initNegativeDealResults() {
-        exchangeDataFixture().initTradingResults(
-            List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 74D, 10D, 1),
-                buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-                buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
-            )
+        initTradingResults(
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 74D, 10D, 1),
+            buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
     }
 
     private void initNegativeDeals() {
-        exchangeDataFixture().initDealDatas(
-            List.of(
-                buildFuturesDealBy(1L, BRF4, "10:00:00", 73D, 73000D, 1),
-                buildFuturesDealBy(2L, BRF4, "12:00:00", 72D, 73000D, 1),
-                buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
-            )
+        initDealDatas(
+            buildFuturesDealBy(1L, BRF4, "10:00:00", 73D, 73000D, 1),
+            buildFuturesDealBy(2L, BRF4, "12:00:00", 72D, 73000D, 1),
+            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals() {
-        exchangeDataFixture().initDealDatas(
-            List.of(
-                buildFuturesDealBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
-                buildFuturesDealBy(2L, BRF4, "12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
-            )
+        initDealDatas(
+            buildFuturesDealBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
+            buildFuturesDealBy(2L, BRF4, "12:00:00", 96D, 96000D, 1),
+            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 

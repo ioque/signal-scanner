@@ -196,8 +196,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         initScanner("ROSN", "LKOH", "SIBN", "TATN");
-        exchangeManager().execute();
-        clearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:30:00");
 
         exchangeManager().execute();
@@ -219,8 +218,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initTradingResultsForTestCase2();
         initDealsTatnFallOtherRise();
         initScanner("ROSN", "LKOH", "SIBN", "TATN");
-        exchangeManager().execute();
-        clearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T14:00:00");
 
         exchangeManager().execute();

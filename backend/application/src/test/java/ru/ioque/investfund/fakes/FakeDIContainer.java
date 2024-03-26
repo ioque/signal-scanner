@@ -37,7 +37,7 @@ public class FakeDIContainer {
         configureProvider = new FakeConfigureProvider();
         loggerFacade = new LoggerFacade(loggerProvider);
         exchangeRepository = new FakeExchangeRepository();
-        finInstrumentRepository = new FakeFinInstrumentRepository(exchangeRepository);
+        finInstrumentRepository = new FakeFinInstrumentRepository(exchangeRepository, dateTimeProvider);
         scannerRepository = new FakeScannerRepository(finInstrumentRepository);
         exchangeManager = new ExchangeManager(
             dateTimeProvider,

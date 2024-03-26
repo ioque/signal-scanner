@@ -5,9 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +24,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase1() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -45,7 +46,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase2() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -54,7 +54,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 null,
-                "IMOEX")
+                "IMOEX"
+            )
         ));
 
         assertEquals("Не передан параметр historyPeriod.", error.getMessage());
@@ -67,7 +68,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase3() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -76,7 +76,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
-                null)
+                null
+            )
         ));
 
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
@@ -89,7 +90,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase4() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -98,7 +98,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 180,
-                "")
+                ""
+            )
         ));
 
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
@@ -111,7 +112,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase5() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -120,7 +120,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 0D,
                 180,
-                "IMOEX")
+                "IMOEX"
+            )
         ));
 
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
@@ -133,7 +134,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase6() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -142,7 +142,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 -1D,
                 180,
-                "IMOEX")
+                "IMOEX"
+            )
         ));
 
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
@@ -155,7 +156,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase7() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -164,7 +164,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 0,
-                "IMOEX")
+                "IMOEX"
+            )
         ));
 
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
@@ -177,7 +178,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase8() {
         initTgknAndTgkbAndImoex();
-        exchangeManager().integrateWithDataSource();
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
@@ -186,7 +186,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             new AnomalyVolumeAlgorithmConfigurator(
                 1.5,
                 -180,
-                "IMOEX")
+                "IMOEX"
+            )
         ));
 
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
@@ -201,21 +202,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: зарегистрировано два сигнала.
         """)
     void testCase9() {
-        final var tickers = List.of("TGKN", "TGKB", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTgknAndTgkbAndImoexHistoryTradingData();
         initTgknAndTgkbAndImoexIntradayData();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "TGKB", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -231,24 +224,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T10. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
     void testCase10() {
-        final var tickers = List.of("TGKN", "TGKB", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTgknAndTgkbAndImoexHistoryTradingData();
         initTgknAndTgkbAndImoexIntradayData();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "TGKB", "IMOEX"
         );
-        exchangeManager().execute();
-        loggerProvider().clearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:00:30");
 
         exchangeManager().execute();
@@ -265,25 +249,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T11. С последнего запуска прошла минута, сканер запущен.
         """)
     void testCase11() {
-        final var tickers = List.of("TGKN", "TGKB", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTgknAndTgkbAndImoexHistoryTradingData();
         initTgknAndTgkbAndImoexIntradayData();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "TGKB", "IMOEX"
         );
-        exchangeManager().execute();
-        dataScannerManager().execute();
-        loggerProvider().clearLogs();
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 
         exchangeManager().execute();
@@ -303,24 +277,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: зарегистрирован сигнал к продаже. Сигнал к покупке закрыт.
         """)
     void testCase12() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTgknBuySignalDataset();
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
-        exchangeManager().execute();
-        loggerProvider().clearLogs();
-        getInstrumentsBy(tickers).forEach(row -> row.getIntradayValues().clear());
+        runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset();
 
@@ -339,7 +303,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase13() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -354,16 +317,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -381,7 +337,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -393,16 +348,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -420,7 +368,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -436,16 +383,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
             buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 469D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -463,7 +403,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -476,16 +415,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -503,7 +435,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase17() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -518,16 +449,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -545,7 +469,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase18() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -557,16 +480,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
             buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -585,7 +501,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигнал есть.
         """)
     void testCase19() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -601,16 +516,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -628,7 +536,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase20() {
-        final var tickers = List.of("TGKN", "IMOEX");
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex();
         initTradingResults(
@@ -642,16 +549,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
-                1.5,
-                180,
-                "IMOEX")
+        initScanner(
+            defaultConfiguration(),
+            "TGKN", "IMOEX"
         );
 
         exchangeManager().execute();
@@ -659,6 +559,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
         assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
+    }
+
+    private static AnomalyVolumeAlgorithmConfigurator defaultConfiguration() {
+        return new AnomalyVolumeAlgorithmConfigurator(
+            1.5,
+            180,
+            "IMOEX"
+        );
     }
 
     public void assertFinInstrument(
@@ -759,11 +667,20 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeDataFixture().initInstruments(
             List.of(
                 imoex(),
-                brf4(),
-                usdRub(),
                 tgkb(),
                 tgkn()
             )
+        );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentIds());
+    }
+
+    private void initScanner(AlgorithmConfigurator configurator, String... tickers) {
+        addScanner(
+            1,
+            "Аномальные объемы, третий эшелон.",
+            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getId).toList(),
+            configurator
         );
     }
 }
