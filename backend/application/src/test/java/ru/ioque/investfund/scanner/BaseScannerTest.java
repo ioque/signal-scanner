@@ -35,10 +35,6 @@ public class BaseScannerTest extends BaseTest {
         assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
     }
 
-    protected void runWorkPipline() {
-        exchangeManager().execute();
-    }
-
     protected List<Signal> getSignals() {
         return fakeDataScannerStorage()
             .getAll()

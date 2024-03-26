@@ -45,15 +45,15 @@ public class BaseTest {
     }
 
     protected FakeExchangeRepository exchangeRepository() {
-        return (FakeExchangeRepository) fakeDIContainer.getExchangeRepository();
+        return fakeDIContainer.getExchangeRepository();
     }
 
     protected FakeDateTimeProvider dateTimeProvider() {
-        return (FakeDateTimeProvider) fakeDIContainer.getDateTimeProvider();
+        return fakeDIContainer.getDateTimeProvider();
     }
 
     protected FakeScannerRepository signalProducerRepo() {
-        return (FakeScannerRepository) fakeDIContainer.getScannerRepository();
+        return fakeDIContainer.getScannerRepository();
     }
 
     protected final ScannerManager dataScannerManager() {
@@ -61,11 +61,11 @@ public class BaseTest {
     }
 
     protected final FakeScannerLogRepository scannerLogRepository() {
-        return (FakeScannerLogRepository) fakeDIContainer.getScannerLogRepository();
+        return fakeDIContainer.getScannerLogRepository();
     }
 
     protected final FakeLoggerProvider loggerProvider() {
-        return (FakeLoggerProvider) fakeDIContainer.getLoggerProvider();
+        return fakeDIContainer.getLoggerProvider();
     }
 
     protected final ExchangeManager exchangeManager() {
@@ -73,11 +73,11 @@ public class BaseTest {
     }
 
     protected final FakeEventBus eventBus() {
-        return (FakeEventBus) fakeDIContainer.getEventBus();
+        return fakeDIContainer.getEventBus();
     }
 
     protected final FakeScannerRepository fakeDataScannerStorage() {
-        return (FakeScannerRepository) fakeDIContainer.getScannerRepository();
+        return fakeDIContainer.getScannerRepository();
     }
 
     protected LocalDate nowMinus1Days() {
