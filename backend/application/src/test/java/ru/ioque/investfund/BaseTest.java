@@ -110,8 +110,8 @@ public class BaseTest {
         return exchangeRepository().getBy(dateTimeProvider().nowDate()).map(Exchange::getInstruments).orElse(new ArrayList<>());
     }
 
-    protected void initTodayDateTime(String text) {
-        dateTimeProvider().setNow(LocalDateTime.parse(text));
+    protected void initTodayDateTime(String dateTime) {
+        dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
     protected Stream<Instrument> getInstrumentsBy(List<String> tickers) {

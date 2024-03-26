@@ -124,7 +124,7 @@ public class ExchangeManagerTest extends BaseTest {
         """)
     void testCase5() {
         exchangeDataFixture().initInstruments(List.of(afks()));
-        dateTimeProvider().setNow(LocalDateTime.parse("2023-12-08T10:15:00"));
+        initTodayDateTime("2023-12-08T10:15:00");
         exchangeManager().integrateWithDataSource();
         clearLogs();
         initDealDatas(

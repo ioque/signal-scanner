@@ -8,6 +8,7 @@ import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefS
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,14 +24,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         """)
     void testCase1() {
         initSberSberp();
-        exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
             getInstrumentIds(),
-            new PrefSimpleAlgorithmConfigurator(
-                null)
+            new PrefSimpleAlgorithmConfigurator(null)
         ));
+
         assertEquals("Не передан параметр spreadParam.", error.getMessage());
     }
 
@@ -41,14 +42,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         """)
     void testCase2() {
         initSberSberp();
-        exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
             getInstrumentIds(),
-            new PrefSimpleAlgorithmConfigurator(
-                0D)
+            new PrefSimpleAlgorithmConfigurator(0D)
         ));
+
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
 
@@ -59,14 +60,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         """)
     void testCase3() {
         initSberSberp();
-        exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
             getInstrumentIds(),
-            new PrefSimpleAlgorithmConfigurator(
-                -1D)
+            new PrefSimpleAlgorithmConfigurator(-1D)
         ));
+
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
     }
 
@@ -76,15 +77,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигнал есть.
         """)
     void testCase4() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        initSberSberPSecurityAndHistoryTradingData();
+        initSberAndSberpHistory();
         initPositiveDeals();
-        initExchange(tickers);
-        initScanner(tickers);
+        initScanner("SBER", "SBERP");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
@@ -95,10 +94,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         return new PrefSimplePair(getSberp(), getSber());
     }
 
-    private void initExchange(List<String> tickers) {
-        exchangeManager().integrateWithDataSource();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
-    }
 
     @Test
     @DisplayName("""
@@ -106,15 +101,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигналов нет.
         """)
     void testCase5() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        initSberSberPSecurityAndHistoryTradingData();
+        initSberAndSberpHistory();
         initNegativeDeals();
-        initExchange(tickers);
-        initScanner(tickers);
+        initScanner("SBER", "SBERP");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
@@ -126,18 +119,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         T6. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
     void testCase6() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        initSberSberPSecurityAndHistoryTradingData();
+        initSberAndSberpHistory();
         initPositiveDeals();
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
-        clearLogs();
+        initScanner("SBER", "SBERP");
+        runScannerAndClearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertEquals(3, getLogs().size());
         assertSignals(getSignals(), 1, 1, 0);
@@ -145,26 +135,20 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
 
-    private List<ScannerLog> getLogs() {
-        return scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId());
-    }
-
     @Test
     @DisplayName("""
         T7. С последнего запуска прошла минута, сканер запущен.
         """)
     void testCase7() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        initSberSberPSecurityAndHistoryTradingData();
+        initSberAndSberpHistory();
         initNegativeDeals();
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
-        clearLogs();
+        initScanner("SBER", "SBERP");
+        runScannerAndClearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertEquals(6, getLogs().size());
         assertSignals(getSignals(), 0, 0, 0);
@@ -180,7 +164,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase8() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -192,10 +175,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
+        initScanner("SBER", "SBERP");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -210,7 +192,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -222,10 +203,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
+        initScanner("SBER", "SBERP");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -240,7 +220,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase10() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -251,10 +230,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
+        initScanner("SBER", "SBERP");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -269,7 +247,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase11() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -280,9 +257,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -297,7 +274,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase12() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -307,9 +283,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -324,7 +300,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase13() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
@@ -334,9 +309,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -351,16 +326,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -375,15 +349,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initDealDatas(
             buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -398,16 +371,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -422,15 +394,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase17() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initDealDatas(
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -445,25 +416,23 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase18() {
-        final var tickers = List.of("SBER", "SBERP");
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
-        initExchange(tickers);
-        initScanner(tickers);
-        runWorkPipline();
+        initScanner("SBER", "SBERP");
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
-    private void initScanner(List<String> tickers) {
+    private void initScanner(String... tickers) {
         addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentsBy(tickers).map(Instrument::getId).toList(),
-            new PrefSimpleAlgorithmConfigurator(
-                SPREAD_PARAM)
+            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getId).toList(),
+            new PrefSimpleAlgorithmConfigurator(SPREAD_PARAM)
         );
     }
 
@@ -472,9 +441,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sber(),
             sberP()
         );
+        exchangeManager().integrateWithDataSource();
+        exchangeManager().enableUpdate(getInstrumentIds());
     }
 
-    private void initSberSberPSecurityAndHistoryTradingData() {
+    private void initSberAndSberpHistory() {
         initTradingResults(
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy("SBER", "2023-12-16", 1D, 1D, 260.58, 1D),
@@ -505,5 +476,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(1L, "SBER", "10:55:00", 251D, 136926D, 1),
             buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
+    }
+
+    private void runScannerAndClearLogs() {
+        exchangeManager().execute();
+        clearLogs();
+    }
+
+    private List<ScannerLog> getLogs() {
+        return scannerLogRepository().logs.get(fakeDataScannerStorage().getAll().get(0).getId());
     }
 }
