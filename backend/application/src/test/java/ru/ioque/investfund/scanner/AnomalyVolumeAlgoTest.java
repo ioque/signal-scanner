@@ -23,6 +23,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase1() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -33,6 +34,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 "IMOEX"
             )
         ));
+
         assertEquals("Не передан параметр scaleCoefficient.", error.getMessage());
     }
 
@@ -44,6 +46,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase2() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -53,6 +56,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 null,
                 "IMOEX")
         ));
+
         assertEquals("Не передан параметр historyPeriod.", error.getMessage());
     }
 
@@ -64,6 +68,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase3() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -73,6 +78,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 null)
         ));
+
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
     }
 
@@ -84,6 +90,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase4() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -93,6 +100,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "")
         ));
+
         assertEquals("Не передан параметр indexTicker.", error.getMessage());
     }
 
@@ -104,6 +112,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase5() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -113,6 +122,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         ));
+
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
     }
 
@@ -124,6 +134,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase6() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -133,6 +144,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         ));
+
         assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
     }
 
@@ -144,6 +156,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase7() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -153,6 +166,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 0,
                 "IMOEX")
         ));
+
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
     }
 
@@ -164,6 +178,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     void testCase8() {
         initTgknAndTgkbAndImoex();
         exchangeManager().integrateWithDataSource();
+
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
@@ -173,6 +188,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 -180,
                 "IMOEX")
         ));
+
         assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
     }
 
@@ -201,7 +217,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
+
         assertSignals(getSignals(), 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
@@ -229,11 +247,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+        exchangeManager().execute();
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:00:30");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertEquals(8, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -268,7 +286,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         loggerProvider().clearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertEquals(10, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -300,13 +318,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+        exchangeManager().execute();
         loggerProvider().clearLogs();
         getInstrumentsBy(tickers).forEach(row -> row.getIntradayValues().clear());
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset();
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 1, 0, 1);
         assertFinInstrument(getTgkn(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
@@ -348,7 +366,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 "IMOEX")
         );
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, 1000.0, 100.0, 99.0, null);
@@ -387,7 +405,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 "IMOEX")
         );
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, null, null, null, null);
@@ -430,7 +448,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 "IMOEX")
         );
 
-        runWorkPipline();
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
@@ -469,7 +487,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, null, null, null);
@@ -510,7 +529,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
@@ -548,7 +568,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertEquals(0, getSignals().size());
         assertSignals(getSignals(), 0, 0, 0);
@@ -591,7 +612,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, null, true);
@@ -631,7 +653,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 180,
                 "IMOEX")
         );
-        runWorkPipline();
+
+        exchangeManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
