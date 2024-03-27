@@ -104,7 +104,7 @@ pipeline {
         stage("API Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew test -i"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew test"
                 echo "Running API tests was successful."
             }
         }
@@ -112,10 +112,8 @@ pipeline {
         stage("UI Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.DOCKER_API_HOST}"
-                sh "export FRONTEND_HOST=${env.DOCKER_API_HOST}"
-                sh "cd acceptance && ./gradlew bootRun --args='--spring.profiles.active=frontend'"
-                sh "cd selenium && ./gradlew test -i"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew bootRun --args='--spring.profiles.active=frontend'"
+                sh "export FRONTEND_HOST=${env.DOCKER_API_HOST} && cd selenium && ./gradlew test"
                 echo "Running UI tests was successful."
             }
         }

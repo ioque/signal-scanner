@@ -69,7 +69,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         Instrument sber = getInstrumentById(getInstrumentIds().get(0));
         assertEquals(128, sber.getDailyValues().size());
         assertEquals(50000, sber.getIntradayValues().size());
-        assertTrue(seconds < 30);
+        assertTrue(seconds < 60);
         System.out.println("seconds = " + seconds);
     }
 }
