@@ -104,8 +104,7 @@ pipeline {
         stage("API Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.DOCKER_API_HOST}"
-                sh "cd acceptance && ./gradlew test -i"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew test -i"
                 echo "Running API tests was successful."
             }
         }
