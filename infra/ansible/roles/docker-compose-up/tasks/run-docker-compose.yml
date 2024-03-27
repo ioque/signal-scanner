@@ -13,6 +13,7 @@
     export DOCKER_SPRING_PROFILES={{ lookup('ansible.builtin.env', 'DOCKER_SPRING_PROFILES') }} 
     export DOCKER_API_HOST={{ lookup('ansible.builtin.env', 'DOCKER_API_HOST') }} 
     docker compose down
+    docker system prune
     docker compose up --wait
     exit 0
   args:
