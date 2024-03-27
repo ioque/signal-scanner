@@ -89,11 +89,11 @@ pipeline {
         stage("Deploy to Staging Server") {
             agent any
             steps {
-                sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
-                sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
-                sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
-                sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
                 withCredentials([sshUserPrivateKey(credentialsId: 'ioque', keyFileVariable: 'PRIVATE')]) {
+                    sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
+                    sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
+                    sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
+                    sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
                     sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test' --private-key $PRIVATE"
                 }
                 echo "Deploy to Staging Server was successfully."
@@ -114,7 +114,7 @@ pipeline {
             steps {
                 sh "export API_HOST=192.168.0.85"
                 sh "export FRONTEND_HOST=192.168.0.85"
-                sh "cd acceptance && ./gradlew boorRun --args='--spring.profiles.active=frontend'"
+                sh "cd acceptance && ./gradlew bootRun --args='--spring.profiles.active=frontend'"
                 sh "cd selenium && ./gradlew test"
                 echo "Running UI tests was successful."
             }

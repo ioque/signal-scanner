@@ -10,6 +10,8 @@
   shell: |
     export DOCKER_DB_HOST={{ lookup('ansible.builtin.env', 'DOCKER_DB_HOST') }} 
     export DOCKER_EXCHANGE_URL={{ lookup('ansible.builtin.env', 'DOCKER_EXCHANGE_URL') }} 
+    export DOCKER_SPRING_PROFILES={{ lookup('ansible.builtin.env', 'DOCKER_SPRING_PROFILES') }} 
+    export DOCKER_API_HOST={{ lookup('ansible.builtin.env', 'DOCKER_API_HOST') }} 
     docker compose down
     docker compose up --wait
     exit 0
