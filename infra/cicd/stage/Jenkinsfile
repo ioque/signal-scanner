@@ -94,6 +94,7 @@ pipeline {
                     sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
                     sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
                     sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
+                    sh "export DOCKER_API_HTTP_MODE=${env.DOCKER_API_HTTP_MODE}"
                     sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test' --private-key $PRIVATE"
                 }
                 echo "Deploy to Staging Server was successfully."
@@ -104,7 +105,7 @@ pipeline {
             agent any
             steps {
                 sh "export API_HOST=${env.DOCKER_API_HOST}"
-                sh "cd acceptance && ./gradlew test"
+                sh "cd acceptance && ./gradlew test -i"
                 echo "Running API tests was successful."
             }
         }
@@ -115,7 +116,7 @@ pipeline {
                 sh "export API_HOST=${env.DOCKER_API_HOST}"
                 sh "export FRONTEND_HOST=${env.DOCKER_API_HOST}"
                 sh "cd acceptance && ./gradlew bootRun --args='--spring.profiles.active=frontend'"
-                sh "cd selenium && ./gradlew test"
+                sh "cd selenium && ./gradlew test -i"
                 echo "Running UI tests was successful."
             }
         }

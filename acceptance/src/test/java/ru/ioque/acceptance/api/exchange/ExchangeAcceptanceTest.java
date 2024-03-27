@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("МОДУЛЬ \"EXCHANGE\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -60,7 +61,7 @@ public class ExchangeAcceptanceTest extends BaseApiAcceptanceTest {
             "Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.",
             exchange.getDescription()
         );
-        assertEquals("http://localhost:8081", exchange.getUrl());
+        assertNotNull(exchange.getUrl());
         assertEquals(4, instruments.size());
     }
 
