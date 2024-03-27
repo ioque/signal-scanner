@@ -89,7 +89,6 @@ pipeline {
         stage("Deploy to Staging Server") {
             agent any
             steps {
-                sh 'whoami'
                 sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
                 sh "export DOCKER_EXCHANGE_URL=${env.DOCKER_EXCHANGE_URL}"
                 sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
@@ -104,7 +103,7 @@ pipeline {
         stage("API Tests") {
             agent any
             steps {
-                sh "export SYSTEM_HOST=192.168.0.85"
+                sh "export API_HOST=192.168.0.85"
                 sh "cd acceptance && ./gradlew test"
                 echo "Running API tests was successful."
             }
