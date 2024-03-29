@@ -1,6 +1,7 @@
 package ru.ioque.acceptance;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -15,6 +16,7 @@ import ru.ioque.acceptance.domain.exchange.InstrumentInList;
 import java.time.LocalTime;
 
 @Component
+@Slf4j
 @Profile("frontend")
 @AllArgsConstructor
 public class UiTestStartup implements ApplicationListener<ApplicationReadyEvent> {
@@ -23,6 +25,7 @@ public class UiTestStartup implements ApplicationListener<ApplicationReadyEvent>
     ServiceClient serviceClient;
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
+        log.info("UiTestStartup run");
         serviceClient.clearState();
         serviceClient.initDateTime(DefaultDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
         exchangeRestClient.synchronizeWithDataSource();
@@ -42,5 +45,6 @@ public class UiTestStartup implements ApplicationListener<ApplicationReadyEvent>
         signalScannerRestClient.saveDataScannerConfig(DefaultDataset.getCorrelationSectoralScannerRequest(exchangeRestClient.getInstruments("")));
         signalScannerRestClient.saveDataScannerConfig(DefaultDataset.getSectoralRetardScannerRequest(exchangeRestClient.getInstruments("")));
         signalScannerRestClient.runScanning();
+        log.info("UiTestStartup finish");
     }
 }

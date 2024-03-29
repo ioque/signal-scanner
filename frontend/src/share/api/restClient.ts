@@ -1,6 +1,4 @@
-import {environment} from "../../environments/environment";
-
-const baseUrl: string = environment.apiUrl;
+const baseUrl: string = process.env.REACT_APP_API_URL ?? "api";
 
 export type QueryParam = {
     name: string;
