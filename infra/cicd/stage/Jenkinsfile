@@ -41,7 +41,7 @@ pipeline {
 
         stage("Build and Push Docker Images") {
             agent any
-            parallel {
+            stages {
                 stage("Backend") {
                     steps {
                         script {
