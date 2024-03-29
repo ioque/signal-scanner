@@ -1,5 +1,6 @@
 const baseUrl: string = process.env.REACT_APP_API_URL ?? "api";
-
+console.log(process.env.REACT_APP_API_URL)
+console.log(baseUrl)
 export type QueryParam = {
     name: string;
     value: string;

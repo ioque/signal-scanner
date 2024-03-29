@@ -39,50 +39,45 @@ pipeline {
             }
         }
 
-        stage("Build and Push Docker Images") {
+        stage("Build and Push Backend") {
             agent any
-            stages {
-                stage("Backend") {
-                    steps {
-                        script {
-                            sh "pwd"
-                            sh "cd backend && docker build . --pull -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/backend:latest"
-                            sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                            sh "docker push --all-tags ${env.NEXUS_URL}/ioque/backend"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
-                            sh "docker logout ${env.NEXUS_URL}"
-                            echo "Docker image of Backend was successfully built and pushed to nexus."
-                        }
-                    }
+            steps {
+                script {
+                    sh "cd backend && docker build . --pull -t ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/backend:latest"
+                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                    sh "docker push --all-tags ${env.NEXUS_URL}/ioque/backend"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:latest"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/backend:${env.IMAGE_TAG}"
+                    sh "docker logout ${env.NEXUS_URL}"
+                    echo "Docker image of Backend was successfully built and pushed to nexus."
                 }
-                stage("Postgres") {
-                    steps {
-                        script {
-                            sh "pwd"
-                            sh "cd infra && cd containers && cd postgres && docker build . --pull -t ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/postgrespro:latest"
-                            sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                            sh "docker push --all-tags ${env.NEXUS_URL}/ioque/postgrespro"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG}"
-                            sh "docker logout ${env.NEXUS_URL}"
-                            echo "Docker image of Postgres was successfully built and pushed to nexus."
-                        }
-                    }
+            }
+        }
+        stage("Build and Push Postgres") {
+            agent any
+            steps {
+                script {
+                    sh "cd infra && cd containers && cd postgres && docker build . --pull -t ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                    sh "docker push --all-tags ${env.NEXUS_URL}/ioque/postgrespro"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:latest"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/postgrespro:${env.IMAGE_TAG}"
+                    sh "docker logout ${env.NEXUS_URL}"
+                    echo "Docker image of Postgres was successfully built and pushed to nexus."
                 }
-                stage("Frontend") {
-                    steps {
-                        script {
-                            sh "pwd"
-                            sh "cd frontend && docker build . --pull -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/frontend:latest"
-                            sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
-                            sh "docker push --all-tags ${env.NEXUS_URL}/ioque/frontend"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
-                            sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
-                            sh "docker logout ${env.NEXUS_URL}"
-                            echo "Docker image of Frontend was successfully built and pushed to nexus."
-                        }
-                    }
+            }
+        }
+        stage("Build and Push Frontend") {
+            agent any
+            steps {
+                script {
+                    sh "cd frontend && docker build . --pull -t ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/frontend:latest"
+                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                    sh "docker push --all-tags ${env.NEXUS_URL}/ioque/frontend"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:latest"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/frontend:${env.IMAGE_TAG}"
+                    sh "docker logout ${env.NEXUS_URL}"
+                    echo "Docker image of Frontend was successfully built and pushed to nexus."
                 }
             }
         }
