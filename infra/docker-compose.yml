@@ -27,8 +27,8 @@ services:
     container_name: frontend
     image: 192.168.0.62:8002/ioque/frontend:${DOCKER_TAG:-latest}
     environment:
-      API_HOST: 192.168.0.85
-      API_HTTP_MODE: http
+      API_HOST: ${DOCKER_API_HOST}
+      API_HTTP_MODE: ${DOCKER_API_HTTP_MODE}
     ports:
       - "4200:4200"
     healthcheck:
