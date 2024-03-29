@@ -41,13 +41,13 @@ public class BaseFrontendTest {
     }
 
     protected void loadPageInstrumentList() {
-        driver.get("http://" + uiHost + ":3000/instruments");
+        driver.get("http://" + uiHost + ":4200/instruments");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
 
     protected void loadPageScannerList() {
-        driver.get("http://" + uiHost + ":3000/scanners");
+        driver.get("http://" + uiHost + ":4200/scanners");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
