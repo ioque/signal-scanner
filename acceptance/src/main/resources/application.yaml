@@ -1,4 +1,0 @@
-variables:
-  system_host: http://${API_HOST}:8080
-server:
-  port: 8081
