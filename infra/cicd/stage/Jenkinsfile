@@ -40,9 +40,9 @@ pipeline {
         }
 
         stage("Build and Push Docker Images") {
+            agent any
             parallel {
                 stage("Backend") {
-                    agent any
                     steps {
                         script {
                             sh "pwd"
@@ -57,7 +57,6 @@ pipeline {
                     }
                 }
                 stage("Postgres") {
-                    agent any
                     steps {
                         script {
                             sh "pwd"
@@ -72,7 +71,6 @@ pipeline {
                     }
                 }
                 stage("Frontend") {
-                    agent any
                     steps {
                         script {
                             sh "pwd"
