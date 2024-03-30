@@ -21,19 +21,16 @@ public class Instrument {
     String ticker;
     String shortName;
     String name;
-    String engine;
-    String market;
-    String board;
 
     public String path() {
         return "";
     }
 
-    public List<IntradayValue> parseIntradayValues(List<JsonNode> nodes) {
+    public List<IntradayValue> parseIntradayValues(JsonNode nodes) {
         return List.of();
     }
 
-    public List<HistoryValue> parseHistoryValues(List<JsonNode> nodes) {
+    public List<HistoryValue> parseHistoryValues(JsonNode nodes) {
         return List.of();
     }
 }

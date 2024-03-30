@@ -17,14 +17,14 @@ public class TradingDataService {
     public List<HistoryValue> getHistory(String ticker) {
         return instrumentRepo
             .findBy(ticker)
-            .map(instrument -> instrument.parseHistoryValues(moexProvider.fetch(instrument)))
+            .map(instrument -> instrument.parseHistoryValues(moexProvider.fetchHistory(instrument)))
             .orElseThrow();
     }
 
     public List<IntradayValue> getIntradayValues(String ticker) {
         return instrumentRepo
             .findBy(ticker)
-            .map(instrument -> instrument.parseIntradayValues(moexProvider.fetch(instrument)))
+            .map(instrument -> instrument.parseIntradayValues(moexProvider.fetchIntradayValues(instrument)))
             .orElseThrow();
     }
 }

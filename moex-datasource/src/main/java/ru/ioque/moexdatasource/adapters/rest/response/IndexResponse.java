@@ -6,11 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.entity.Index;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -25,19 +20,5 @@ public class IndexResponse extends InstrumentResponse {
         super(ticker, shortName, name);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
-    }
-
-    @Override
-    public Instrument toDomain(UUID id) {
-        return Index.builder()
-            .id(id)
-            .ticker(ticker)
-            .shortName(shortName)
-            .name(name)
-            .annualHigh(annualHigh)
-            .annualLow(annualLow)
-            .dailyValues(new ArrayList<>())
-            .intradayValues(new ArrayList<>())
-            .build();
     }
 }

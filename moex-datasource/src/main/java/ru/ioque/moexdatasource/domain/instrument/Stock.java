@@ -22,15 +22,12 @@ public class Stock extends Instrument {
         String ticker,
         String shortName,
         String name,
-        String engine,
-        String market,
-        String board,
         Integer lotSize,
         String isin,
         String regNumber,
         Integer listLevel
     ) {
-        super(ticker, shortName, name, engine, market, board);
+        super(ticker, shortName, name);
         this.lotSize = lotSize;
         this.isin = isin;
         this.regNumber = regNumber;

@@ -15,16 +15,16 @@ public class InstrumentRepoImpl implements InstrumentRepo {
 
     @Override
     public Optional<Instrument> findBy(String ticker) {
-        return Optional.empty();
+        return Optional.ofNullable(instruments.get(ticker));
     }
 
     @Override
     public List<Instrument> getAll() {
-        return null;
+        return instruments.values().stream().toList();
     }
 
     @Override
     public void saveAll(List<Instrument> instruments) {
-
+        instruments.forEach(instrument -> this.instruments.put(instrument.getTicker(), instrument));
     }
 }

@@ -20,13 +20,10 @@ public class Index extends Instrument {
         String ticker,
         String shortName,
         String name,
-        String engine,
-        String market,
-        String board,
         Double annualHigh,
         Double annualLow
     ) {
-        super(ticker, shortName, name, engine, market, board);
+        super(ticker, shortName, name);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
     }

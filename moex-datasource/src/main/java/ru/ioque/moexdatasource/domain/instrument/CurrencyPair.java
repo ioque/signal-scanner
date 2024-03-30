@@ -20,13 +20,10 @@ public class CurrencyPair extends Instrument {
         String ticker,
         String shortName,
         String name,
-        String engine,
-        String market,
-        String board,
         Integer lotSize,
         String faceUnit
     ) {
-        super(ticker, shortName, name, engine, market, board);
+        super(ticker, shortName, name);
         this.lotSize = lotSize;
         this.faceUnit = faceUnit;
     }

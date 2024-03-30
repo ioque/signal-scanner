@@ -23,16 +23,13 @@ public class Futures extends Instrument {
         String ticker,
         String shortName,
         String name,
-        String engine,
-        String market,
-        String board,
         Integer lotVolume,
         Double initialMargin,
         Double highLimit,
         Double lowLimit,
         String assetCode
     ) {
-        super(ticker, shortName, name, engine, market, board);
+        super(ticker, shortName, name);
         this.lotVolume = lotVolume;
         this.initialMargin = initialMargin;
         this.highLimit = highLimit;
