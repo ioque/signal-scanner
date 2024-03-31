@@ -11,6 +11,4 @@ public interface InstrumentRepo {
     List<Instrument> getAll();
 
     void saveAll(List<Instrument> instruments);
-
-    int currentSize();
 }

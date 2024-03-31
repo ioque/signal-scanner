@@ -1,4 +1,4 @@
-package ru.ioque.moexdatasource.adapters.rest.response;
+package ru.ioque.moexdatasource.adapters.rest.response.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.moexdatasource.domain.instrument.CurrencyPair;
 
 @Getter
 @ToString(callSuper = true)
@@ -20,5 +21,15 @@ public class CurrencyPairResponse extends InstrumentResponse {
         super(ticker, shortName, name);
         this.lotSize = lotSize;
         this.faceUnit = faceUnit;
+    }
+
+    public static CurrencyPairResponse from(CurrencyPair instrument) {
+        return CurrencyPairResponse.builder()
+            .ticker(instrument.getTicker())
+            .shortName(instrument.getShortName())
+            .name(instrument.getName())
+            .lotSize(instrument.getLotSize())
+            .faceUnit(instrument.getFaceUnit())
+            .build();
     }
 }

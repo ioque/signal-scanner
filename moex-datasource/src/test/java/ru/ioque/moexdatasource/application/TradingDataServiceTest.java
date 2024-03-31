@@ -26,9 +26,9 @@ public class TradingDataServiceTest extends BaseTest {
         """)
     void testCase2() {
         getInstrumentService().downloadInstruments();
-        assertEquals(100, getTradingDataService().getIntradayValues("SBER", 0L).size());
-        assertEquals(100, getTradingDataService().getIntradayValues("USD000UTSTOM", 0L).size());
-        assertEquals(100, getTradingDataService().getIntradayValues("IMOEX", 0L).size());
-        assertEquals(100, getTradingDataService().getIntradayValues("BRF4", 0L).size());
+        assertEquals(100, getTradingDataService().getIntradayValues("SBER", 0).size());
+        assertEquals(100, getTradingDataService().getIntradayValues("USD000UTSTOM", 0).size());
+        assertEquals(100, getTradingDataService().getIntradayValues("IMOEX", 0).size());
+        assertEquals(100, getTradingDataService().getIntradayValues("BRF4", 0).size());
     }
 }

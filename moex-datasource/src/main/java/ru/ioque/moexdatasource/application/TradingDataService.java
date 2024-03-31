@@ -35,7 +35,7 @@ public class TradingDataService {
             .orElseThrow();
     }
 
-    public List<IntradayValue> getIntradayValues(String ticker, Long start) {
+    public List<IntradayValue> getIntradayValues(String ticker, int start) {
         return instrumentRepo
             .findBy(ticker)
             .map(instrument ->

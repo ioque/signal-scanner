@@ -1,0 +1,5 @@
+server:
+  port: 8081
+
+exchange:
+  url: https://iss.moex.com

@@ -16,5 +16,5 @@ public interface MoexProvider {
         LocalDate to
     );
 
-    List<JsonNode> fetchIntradayValues(Instrument instrument, Long start);
+    List<JsonNode> fetchIntradayValues(Instrument instrument, int start);
 }

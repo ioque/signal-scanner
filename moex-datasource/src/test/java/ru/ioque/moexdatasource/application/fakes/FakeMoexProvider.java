@@ -37,7 +37,7 @@ public class FakeMoexProvider implements MoexProvider {
 
     @Override
     @SneakyThrows
-    public List<JsonNode> fetchIntradayValues(Instrument instrument, Long start) {
+    public List<JsonNode> fetchIntradayValues(Instrument instrument, int start) {
         Resource resource = new ClassPathResource("intraday_value_" + instrument.getTicker() + ".json");
         byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
         return List.of(new ObjectMapper().readTree(new String(fileData)).get("trades"));

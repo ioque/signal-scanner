@@ -3,7 +3,10 @@ package ru.ioque.moexdatasource.adapters.providers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.ioque.moexdatasource.application.adapters.MoexProvider;
@@ -13,6 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MoexProviderImpl implements MoexProvider {
     QueryBuilder queryBuilder;
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -44,7 +49,7 @@ public class MoexProviderImpl implements MoexProvider {
     }
 
     @Override
-    public List<JsonNode> fetchIntradayValues(Instrument instrument, Long start) {
+    public List<JsonNode> fetchIntradayValues(Instrument instrument, int start) {
         return PageReader
             .builder()
             .start(start)

@@ -25,9 +25,6 @@ public class InstrumentService {
     MoexProvider moexProvider;
 
     public List<Instrument> getInstruments() {
-        if (instrumentRepo.currentSize() == 0) {
-            downloadInstruments();
-        }
         return instrumentRepo.getAll();
     }
 

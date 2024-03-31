@@ -1,4 +1,4 @@
-package ru.ioque.moexdatasource.adapters.rest.response;
+package ru.ioque.moexdatasource.adapters.rest.response.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.moexdatasource.domain.instrument.Futures;
 
 @Getter
 @ToString(callSuper = true)
@@ -35,5 +36,18 @@ public class FuturesResponse extends InstrumentResponse {
         this.highLimit = highLimit;
         this.lowLimit = lowLimit;
         this.assetCode = assetCode;
+    }
+
+    public static FuturesResponse from(Futures instrument) {
+        return FuturesResponse.builder()
+            .ticker(instrument.getTicker())
+            .shortName(instrument.getShortName())
+            .name(instrument.getName())
+            .lotVolume(instrument.getLotVolume())
+            .initialMargin(instrument.getInitialMargin())
+            .highLimit(instrument.getHighLimit())
+            .lowLimit(instrument.getLowLimit())
+            .assetCode(instrument.getAssetCode())
+            .build();
     }
 }

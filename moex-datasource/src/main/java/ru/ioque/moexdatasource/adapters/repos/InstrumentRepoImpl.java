@@ -1,5 +1,7 @@
 package ru.ioque.moexdatasource.adapters.repos;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.moexdatasource.application.adapters.InstrumentRepo;
 import ru.ioque.moexdatasource.domain.instrument.Instrument;
@@ -10,6 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InstrumentRepoImpl implements InstrumentRepo {
     Map<String, Instrument> instruments = new ConcurrentHashMap<>();
 
@@ -26,10 +29,5 @@ public class InstrumentRepoImpl implements InstrumentRepo {
     @Override
     public void saveAll(List<Instrument> instruments) {
         instruments.forEach(instrument -> this.instruments.put(instrument.getTicker(), instrument));
-    }
-
-    @Override
-    public int currentSize() {
-        return instruments.size();
     }
 }

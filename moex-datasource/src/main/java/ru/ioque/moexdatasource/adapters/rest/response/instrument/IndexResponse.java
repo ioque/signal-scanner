@@ -1,4 +1,4 @@
-package ru.ioque.moexdatasource.adapters.rest.response;
+package ru.ioque.moexdatasource.adapters.rest.response.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.moexdatasource.domain.instrument.Index;
 
 @Getter
 @ToString(callSuper = true)
@@ -20,5 +21,15 @@ public class IndexResponse extends InstrumentResponse {
         super(ticker, shortName, name);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
+    }
+
+    public static IndexResponse from(Index instrument) {
+        return IndexResponse.builder()
+            .ticker(instrument.getTicker())
+            .shortName(instrument.getShortName())
+            .name(instrument.getName())
+            .annualHigh(instrument.getAnnualHigh())
+            .annualHigh(instrument.getAnnualLow())
+            .build();
     }
 }

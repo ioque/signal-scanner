@@ -1,4 +1,4 @@
-package ru.ioque.moexdatasource.adapters.rest.response;
+package ru.ioque.moexdatasource.adapters.rest.response.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.moexdatasource.domain.instrument.Stock;
 
 @Getter
 @ToString(callSuper = true)
@@ -32,5 +33,17 @@ public class StockResponse extends InstrumentResponse {
         this.isin = isin;
         this.regNumber = regNumber;
         this.listLevel = listLevel;
+    }
+
+    public static StockResponse from(Stock instrument) {
+        return StockResponse.builder()
+            .ticker(instrument.getTicker())
+            .shortName(instrument.getShortName())
+            .name(instrument.getName())
+            .lotSize(instrument.getLotSize())
+            .isin(instrument.getIsin())
+            .regNumber(instrument.getRegNumber())
+            .listLevel(instrument.getListLevel())
+            .build();
     }
 }
