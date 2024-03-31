@@ -30,7 +30,7 @@ public class InstrumentResponse implements Serializable {
             .ticker(instrument.getTicker())
             .name(instrument.getName())
             .shortName(instrument.getShortName())
-            .dailyValues(instrument.getDailyValues().stream().map(DailyValueResponse::fromDomain).toList())
+            .dailyValues(instrument.getHistoryValues().stream().map(DailyValueResponse::fromDomain).toList())
             .intradayValues(instrument.getIntradayValues().stream().map(IntradayValueResponse::fromDomain).toList())
             .build();
     }

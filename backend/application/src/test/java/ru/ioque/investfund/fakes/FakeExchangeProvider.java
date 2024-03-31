@@ -4,10 +4,11 @@ import lombok.Setter;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class FakeExchangeProvider implements ExchangeProvider {
@@ -20,15 +21,15 @@ public class FakeExchangeProvider implements ExchangeProvider {
     }
 
     @Override
-    public List<DailyValue> fetchDailyTradingResultsBy(
-        Instrument instrument
+    public List<HistoryValue> fetchHistoryBy(
+        String ticker, LocalDate from, LocalDate to
     ) {
-        return exchangeDataFixture.getHistoryDataByTicker(instrument.getTicker()).stream().toList();
+        return exchangeDataFixture.getHistoryDataByTicker(ticker).stream().toList();
     }
 
     @Override
-    public List<IntradayValue> fetchIntradayValuesBy(Instrument instrument) {
-        return exchangeDataFixture.getDealsByTicker(instrument.getTicker());
+    public List<IntradayValue> fetchIntradayValuesBy(String ticker, int start) {
+        return exchangeDataFixture.getDealsByTicker(ticker);
     }
 
     @Override

@@ -11,7 +11,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class CurrencyPairEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain(
-        List<DailyValue> dailyValues,
+        List<HistoryValue> historyValues,
         List<IntradayValue> intradayValues
     ) {
         return CurrencyPair.builder()
@@ -81,7 +81,7 @@ public class CurrencyPairEntity extends InstrumentEntity {
             .lotSize(this.getLotSize())
             .faceUnit(this.getFaceUnit())
             .updatable(this.getUpdatable())
-            .dailyValues(dailyValues)
+            .historyValues(historyValues)
             .intradayValues(intradayValues)
             .build();
     }

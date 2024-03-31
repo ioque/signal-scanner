@@ -7,7 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ public abstract class Instrument extends Domain {
     @NonFinal
     Boolean updatable;
     TreeSet<IntradayValue> intradayValues;
-    TreeSet<DailyValue> dailyValues;
+    TreeSet<HistoryValue> historyValues;
 
     public Instrument(
         UUID id,
@@ -37,7 +37,7 @@ public abstract class Instrument extends Domain {
         String name,
         Boolean updatable,
         List<IntradayValue> intradayValues,
-        List<DailyValue> dailyValues
+        List<HistoryValue> historyValues
     ) {
         super(id);
         this.ticker = ticker;
@@ -45,15 +45,15 @@ public abstract class Instrument extends Domain {
         this.name = name;
         this.updatable = updatable;
         this.intradayValues = intradayValues == null ? new TreeSet<>() : new TreeSet<>(intradayValues);
-        this.dailyValues = dailyValues == null ? new TreeSet<>() : new TreeSet<>(dailyValues);
+        this.historyValues = historyValues == null ? new TreeSet<>() : new TreeSet<>(historyValues);
     }
 
     public void enableUpdate() {
-        this.updatable = true;
+        updatable = true;
     }
 
     public void disableUpdate() {
-        this.updatable = false;
+        updatable = false;
     }
 
     public boolean isUpdatable() {
@@ -62,35 +62,46 @@ public abstract class Instrument extends Domain {
 
     public void addNewIntradayValue(IntradayValue intradayValue) {
         if (lastIntradayValue().map(intradayValue::isAfter).orElse(true)) {
-            this.intradayValues.add(intradayValue);
+            intradayValues.add(intradayValue);
         }
     }
 
-    public void addNewDailyValue(DailyValue dailyValue) {
-        if (lastDailyValue().map(dailyValue::isAfter).orElse(true)) {
-            this.dailyValues.add(dailyValue);
+    public void addNewDailyValue(HistoryValue historyValue) {
+        if (lastDailyValue().map(historyValue::isAfter).orElse(true)) {
+            historyValues.add(historyValue);
         }
     }
 
     public void addIntradayValue(IntradayValue intradayValue) {
-        this.intradayValues.add(intradayValue);
+        intradayValues.add(intradayValue);
     }
 
-    public void addDailyValue(DailyValue dailyValue) {
-        this.dailyValues.add(dailyValue);
+    public void addDailyValue(HistoryValue historyValue) {
+        historyValues.add(historyValue);
     }
 
-    public Optional<DailyValue> lastDailyValue() {
-        return this.dailyValues.stream().max(DailyValue::compareTo);
+    public Optional<HistoryValue> lastDailyValue() {
+        return historyValues.stream().max(HistoryValue::compareTo);
+    }
+
+    public Optional<LocalDate> lastHistoryValueDate() {
+        return lastDailyValue().map(HistoryValue::getTradeDate);
+    }
+
+    public boolean isNeedUpdateHistory(LocalDate nowDate) {
+        return lastDailyValue()
+            .map(HistoryValue::getTradeDate)
+            .map(date -> !date.equals(nowDate.minusDays(1)))
+            .orElse(true);
     }
 
     public Optional<IntradayValue> lastIntradayValue() {
-        if (this.intradayValues.isEmpty()) return Optional.empty();
-        return Optional.of(this.intradayValues.last());
+        if (intradayValues.isEmpty()) return Optional.empty();
+        return Optional.of(intradayValues.last());
     }
 
-    public Optional<Long> getLastDealNumber() {
-        return lastIntradayValue().map(IntradayValue::getNumber);
+    public int getIntradayValueNumbers() {
+        return intradayValues.size();
     }
 
     public String printMarketStat() {
@@ -109,16 +120,16 @@ public abstract class Instrument extends Domain {
                 .map(IntradayValue::getDateTime)
                 .map(LocalDateTime::toString)
                 .orElse("<_>"),
-            getDailyValues()
+            getHistoryValues()
                 .stream()
-                .min(DailyValue::compareTo)
-                .map(DailyValue::getTradeDate)
+                .min(HistoryValue::compareTo)
+                .map(HistoryValue::getTradeDate)
                 .map(LocalDate::toString)
                 .orElse("<_>"),
-            getDailyValues()
+            getHistoryValues()
                 .stream()
-                .max(DailyValue::compareTo)
-                .map(DailyValue::getTradeDate)
+                .max(HistoryValue::compareTo)
+                .map(HistoryValue::getTradeDate)
                 .map(LocalDate::toString)
                 .orElse("<_>")
         );

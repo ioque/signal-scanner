@@ -24,11 +24,9 @@ import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.exchange.value.Deal;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
-import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.FuturesDealResult;
-import ru.ioque.investfund.domain.exchange.value.IndexDelta;
-import ru.ioque.investfund.domain.exchange.value.IndexDeltaResult;
+import ru.ioque.investfund.domain.exchange.value.Contract;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
+import ru.ioque.investfund.domain.exchange.value.Delta;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -218,19 +216,17 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .isin("ISIN")
                 .listLevel(1)
                 .regNumber("REG_NUMBER")
-                .dailyValues(
+                .historyValues(
                     List.of(
-                        DealResult
+                        HistoryValue
                             .builder()
                             .ticker("TEST_STOCK")
                             .tradeDate(LocalDate.now())
-                            .maxPrice(1D)
-                            .minPrice(1D)
+                            .highPrice(1D)
+                            .lowPrice(1D)
                             .openPrice(1D)
                             .closePrice(1D)
                             .value(1D)
-                            .numTrades(1D)
-                            .volume(1D)
                             .waPrice(1D)
                             .build()
                     )
@@ -238,7 +234,6 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .intradayValues(
                     List.of(
                         Deal.builder()
-                            .number(1L)
                             .ticker("TEST_STOCK")
                             .dateTime(LocalDateTime.now())
                             .price(1D)
@@ -258,26 +253,23 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .initialMargin(1D)
                 .highLimit(1D)
                 .lotVolume(1)
-                .dailyValues(
+                .historyValues(
                     List.of(
-                        FuturesDealResult.builder()
+                        HistoryValue.builder()
                             .tradeDate(LocalDate.now())
                             .ticker("TEST_FUTURES")
                             .openPrice(1D)
                             .closePrice(1D)
-                            .minPrice(1D)
-                            .maxPrice(1D)
+                            .lowPrice(1D)
+                            .highPrice(1D)
                             .value(1D)
-                            .volume(1)
-                            .openPositionValue(1D)
                             .build()
                     )
                 )
                 .intradayValues(
                     List.of(
-                        FuturesDeal
+                        Contract
                             .builder()
-                            .number(1L)
                             .ticker("TEST_FUTURES")
                             .dateTime(LocalDateTime.now())
                             .price(1D)
@@ -293,26 +285,24 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .ticker("TEST_INDEX")
                 .annualHigh(1D)
                 .annualLow(1D)
-                .dailyValues(
+                .historyValues(
                     List.of(
-                        IndexDeltaResult
+                        HistoryValue
                             .builder()
                             .ticker("TEST_INDEX")
                             .tradeDate(LocalDate.now())
                             .openPrice(1D)
                             .closePrice(1D)
-                            .minPrice(1D)
-                            .maxPrice(1D)
+                            .lowPrice(1D)
+                            .highPrice(1D)
                             .value(1D)
-                            .capitalization(1D)
                             .build()
                     )
                 )
                 .intradayValues(
                     List.of(
-                        IndexDelta
+                        Delta
                             .builder()
-                            .number(1L)
                             .ticker("TEST_INDEX")
                             .dateTime(LocalDateTime.now())
                             .price(1D)
@@ -327,19 +317,17 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .ticker("TEST_CURRENCY_PAIR")
                 .lotSize(1)
                 .faceUnit("RUR")
-                .dailyValues(
+                .historyValues(
                     List.of(
-                        DealResult
+                        HistoryValue
                             .builder()
                             .ticker("TEST_CURRENCY_PAIR")
                             .tradeDate(LocalDate.now())
-                            .maxPrice(1D)
-                            .minPrice(1D)
+                            .highPrice(1D)
+                            .lowPrice(1D)
                             .openPrice(1D)
                             .closePrice(1D)
                             .value(1D)
-                            .numTrades(1D)
-                            .volume(1D)
                             .waPrice(1D)
                             .build()
                     )
@@ -347,7 +335,6 @@ public class ExchangeControllerTest extends BaseControllerTest {
                 .intradayValues(
                     List.of(
                         Deal.builder()
-                            .number(1L)
                             .ticker("TEST_CURRENCY_PAIR")
                             .dateTime(LocalDateTime.now())
                             .price(1D)

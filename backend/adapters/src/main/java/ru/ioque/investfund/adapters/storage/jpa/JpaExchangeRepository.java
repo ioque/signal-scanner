@@ -7,10 +7,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 public class JpaExchangeRepository implements ExchangeRepository {
     ExchangeEntityRepository exchangeRepository;
     InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueEntityRepository dailyValueEntityRepository;
+    HistoryValueEntityRepository historyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
     ExchangeCache exchangeCache;
 
@@ -63,10 +63,10 @@ public class JpaExchangeRepository implements ExchangeRepository {
                         .findAll()
                         .stream()
                         .map(instrumentEntity -> instrumentEntity.toDomain(
-                                dailyValueEntityRepository
+                                historyValueEntityRepository
                                     .findAllBy(instrumentEntity.getTicker(), today.minusMonths(6))
                                     .stream()
-                                    .map(DailyValueEntity::toDomain)
+                                    .map(HistoryValueEntity::toDomain)
                                     .toList(),
                                 intradayValueEntityRepository
                                     .findAllBy(instrumentEntity.getTicker(), today.atStartOfDay())
@@ -90,20 +90,18 @@ public class JpaExchangeRepository implements ExchangeRepository {
             .stream()
             .map(instrument -> CompletableFuture.runAsync(() -> {
                 instrumentEntityRepository.save(InstrumentEntity.fromDomain(instrument));
-                final Long lastIntradayValueNumber = getLastNumber(instrument.getTicker());
                 final Optional<LocalDate> lastDailyValueDate = getLastDate(instrument.getTicker());
-                dailyValueEntityRepository.saveAll(instrument
-                    .getDailyValues()
+                historyValueEntityRepository.saveAll(instrument
+                    .getHistoryValues()
                     .stream()
                     .filter(row -> lastDailyValueDate
                         .map(lastDate -> lastDate.isBefore(row.getTradeDate()))
                         .orElse(true))
-                    .map(DailyValueEntity::fromDomain)
+                    .map(HistoryValueEntity::fromDomain)
                     .toList());
                 intradayValueEntityRepository.saveAll(instrument
                     .getIntradayValues()
                     .stream()
-                    .filter(value -> value.getNumber() > lastIntradayValueNumber)
                     .map(IntradayValueEntity::fromDomain)
                     .toList());
             }))
@@ -112,10 +110,6 @@ public class JpaExchangeRepository implements ExchangeRepository {
     }
 
     private Optional<LocalDate> getLastDate(String ticker) {
-        return dailyValueEntityRepository.lastDateBy(ticker);
-    }
-
-    private Long getLastNumber(String ticker) {
-        return intradayValueEntityRepository.lastNumberBy(ticker).orElse(0L);
+        return historyValueEntityRepository.lastDateBy(ticker);
     }
 }

@@ -144,7 +144,7 @@ public class ExchangeManagerTest extends BaseTest {
         final var instrument = getInstruments().get(0);
         assertEquals(1, getInstruments().size());
         assertEquals(3, instrument.getIntradayValues().size());
-        assertEquals(4, instrument.getDailyValues().size());
+        assertEquals(4, instrument.getHistoryValues().size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()

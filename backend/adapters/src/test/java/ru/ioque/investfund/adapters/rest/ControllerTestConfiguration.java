@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
@@ -59,8 +59,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public DailyValueEntityRepository mockHistoryTradeDataRepository() {
-        return mock(DailyValueEntityRepository.class);
+    public HistoryValueEntityRepository mockHistoryTradeDataRepository() {
+        return mock(HistoryValueEntityRepository.class);
     }
 
     @Bean
@@ -101,8 +101,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public ArchivedDailyValueEntityRepository mockArchivedDailyValueEntityRepository() {
-        return mock(ArchivedDailyValueEntityRepository.class);
+    public ArchivedHistoryValueEntityRepository mockArchivedDailyValueEntityRepository() {
+        return mock(ArchivedHistoryValueEntityRepository.class);
     }
 
     @Bean

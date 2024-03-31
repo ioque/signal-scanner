@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.other.InMemoryEventBus;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.adapters.storage.jpa.ExchangeCache;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
@@ -30,12 +30,12 @@ import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
 public class ServiceController {
     ExchangeEntityRepository exchangeEntityRepository;
     InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueEntityRepository dailyValueEntityRepository;
+    HistoryValueEntityRepository historyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
     ScannerLogEntityRepository scannerLogEntityRepository;
     SignalScannerEntityRepository signalScannerEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
-    ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
+    ArchivedHistoryValueEntityRepository archivedHistoryValueEntityRepository;
     ExchangeCache exchangeCache;
     InMemoryEventBus eventBus;
     ExchangeManager exchangeManager;
@@ -49,13 +49,13 @@ public class ServiceController {
     @DeleteMapping("/api/service/state")
     public void clearState() {
         instrumentEntityRepository.deleteAll();
-        dailyValueEntityRepository.deleteAll();
+        historyValueEntityRepository.deleteAll();
         intradayValueEntityRepository.deleteAll();
         exchangeEntityRepository.deleteAll();
         scannerLogEntityRepository.deleteAll();
         signalScannerEntityRepository.deleteAll();
         archivedIntradayValueEntityRepository.deleteAll();
-        archivedDailyValueEntityRepository.deleteAll();
+        archivedHistoryValueEntityRepository.deleteAll();
         exchangeCache.clear();
         dateTimeProvider.initToday(null);
     }

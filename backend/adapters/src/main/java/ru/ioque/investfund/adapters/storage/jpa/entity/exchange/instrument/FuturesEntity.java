@@ -11,7 +11,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class FuturesEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain(
-        List<DailyValue> dailyValues,
+        List<HistoryValue> historyValues,
         List<IntradayValue> intradayValues
     ) {
         return Futures.builder()
@@ -67,7 +67,7 @@ public class FuturesEntity extends InstrumentEntity {
             .highLimit(this.getHighLimit())
             .lowLimit(this.getLowLimit())
             .assetCode(this.getAssetCode())
-            .dailyValues(dailyValues)
+            .historyValues(historyValues)
             .intradayValues(intradayValues)
             .build();
     }

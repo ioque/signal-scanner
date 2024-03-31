@@ -65,17 +65,29 @@ public class ExchangeManager implements SystemModule {
         final Exchange exchange = getExchangeFromRepo();
         exchange.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
+
             exchangeProvider
-                .fetchIntradayValuesBy(instrument)
+                .fetchIntradayValuesBy(instrument.getTicker(), instrument.getIntradayValueNumbers())
                 .stream()
-                .filter(row -> row.getDateTime().toLocalDate().isEqual(dateTimeProvider.nowDate()))
+                .filter(row -> row.isSameByDate(dateTimeProvider.nowDate()))
                 .forEach(instrument::addNewIntradayValue);
-            exchangeProvider
-                .fetchDailyTradingResultsBy(instrument)
-                .forEach(instrument::addNewDailyValue);
+
+            if (instrument.isNeedUpdateHistory(dateTimeProvider.nowDate())) {
+                exchangeProvider
+                    .fetchHistoryBy(
+                        instrument.getTicker(),
+                        instrument.lastHistoryValueDate().orElse(dateTimeProvider.monthsAgo(6)),
+                        dateTimeProvider.nowDate().minusDays(1)
+                    )
+                    .forEach(instrument::addNewDailyValue);
+            }
+
             loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
+
         });
+
         repository.save(exchange);
+
         eventBus.publish(new TradingDataUpdatedEvent(uuidProvider.generate(), dateTimeProvider.nowDateTime()));
     }
 

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.IndexDelta;
+import ru.ioque.investfund.domain.exchange.value.Delta;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDateTime;
@@ -26,20 +26,18 @@ public class IndexDeltaEntity extends IntradayValueEntity {
 
     @Builder
     public IndexDeltaEntity(
-        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
-        super(number, dateTime, ticker, price);
+        super(dateTime, ticker, price);
         this.value = value;
     }
 
     @Override
     public IntradayValue toDomain() {
-        return IndexDelta.builder()
-            .number(number)
+        return Delta.builder()
             .dateTime(dateTime)
             .ticker(ticker)
             .price(price)
@@ -47,9 +45,8 @@ public class IndexDeltaEntity extends IntradayValueEntity {
             .build();
     }
 
-    public static IntradayValueEntity from(IndexDelta domain) {
+    public static IntradayValueEntity from(Delta domain) {
         return IndexDeltaEntity.builder()
-            .number(domain.getNumber())
             .dateTime(domain.getDateTime())
             .ticker(domain.getTicker())
             .price(domain.getPrice())

@@ -7,7 +7,7 @@ import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ExchangeDataFixture {
         .listLevel(1)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NAUK = Stock
@@ -40,7 +40,7 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NAUK_positive = Stock
@@ -53,7 +53,7 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NSVZ = Stock
@@ -66,7 +66,7 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static Stock SBER = Stock
@@ -79,7 +79,7 @@ public class ExchangeDataFixture {
         .listLevel(1)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static Stock UNAC = Stock
@@ -92,7 +92,7 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     //фьючерс на нефть
@@ -107,7 +107,7 @@ public class ExchangeDataFixture {
         .highLimit(100D)
         .lowLimit(100D)
         .assetCode("BR")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     //индекс мосбиржи
@@ -119,7 +119,7 @@ public class ExchangeDataFixture {
         .name("Индекс МосБиржи")
         .annualHigh(100D)
         .annualLow(100D)
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     //фьючерс на курс доллара
@@ -134,7 +134,7 @@ public class ExchangeDataFixture {
         .highLimit(100D)
         .lowLimit(100D)
         .assetCode("Si")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
     public final static CurrencyPair USD000UTSTOM = CurrencyPair
@@ -145,19 +145,19 @@ public class ExchangeDataFixture {
         .ticker("USD000UTSTOM")
         .lotSize(1)
         .faceUnit("RUB")
-        .dailyValues(new ArrayList<>())
+        .historyValues(new ArrayList<>())
         .intradayValues(new ArrayList<>())
         .build();
 
     @Getter
     private final List<IntradayValue> intradayValues = new ArrayList<>();
     @Getter
-    private final List<DailyValue> dailyValues = new ArrayList<>();
+    private final List<HistoryValue> historyValues = new ArrayList<>();
     private final List<Instrument> instruments = new ArrayList<>(List.of(AFKS, NAUK, NAUK_positive, NSVZ, SBER, UNAC, IMOEX, SiZ3, BRF4, USD000UTSTOM));
 
     @SneakyThrows
-    public List<DailyValue> getHistoryDataByTicker(String ticker) {
-        return dailyValues.stream().filter(row -> row.getTicker().equals(ticker)).toList();
+    public List<HistoryValue> getHistoryDataByTicker(String ticker) {
+        return historyValues.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     @SneakyThrows
@@ -175,9 +175,9 @@ public class ExchangeDataFixture {
         this.intradayValues.addAll(intradayValues);
     }
 
-    public void initTradingResults(List<DailyValue> dailyValues) {
-        this.dailyValues.clear();
-        this.dailyValues.addAll(dailyValues);
+    public void initTradingResults(List<HistoryValue> historyValues) {
+        this.historyValues.clear();
+        this.historyValues.addAll(historyValues);
     }
 
     public List<Instrument> getInstruments() {
@@ -203,7 +203,7 @@ public class ExchangeDataFixture {
             .lowLimit(futures.getLowLimit())
             .highLimit(futures.getHighLimit())
             .lotVolume(futures.getLotVolume())
-            .dailyValues(futures.getDailyValues().stream().toList())
+            .historyValues(futures.getHistoryValues().stream().toList())
             .intradayValues(futures.getIntradayValues().stream().toList())
             .build();
     }
@@ -217,7 +217,7 @@ public class ExchangeDataFixture {
             .shortName(index.getShortName())
             .annualHigh(index.getAnnualHigh())
             .annualLow(index.getAnnualLow())
-            .dailyValues(index.getDailyValues().stream().toList())
+            .historyValues(index.getHistoryValues().stream().toList())
             .intradayValues(index.getIntradayValues().stream().toList())
             .build();
     }
@@ -231,7 +231,7 @@ public class ExchangeDataFixture {
             .shortName(currencyPair.getShortName())
             .lotSize(currencyPair.getLotSize())
             .faceUnit(currencyPair.getFaceUnit())
-            .dailyValues(currencyPair.getDailyValues().stream().toList())
+            .historyValues(currencyPair.getHistoryValues().stream().toList())
             .intradayValues(currencyPair.getIntradayValues().stream().toList())
             .build();
     }
@@ -246,7 +246,7 @@ public class ExchangeDataFixture {
             .isin(stock.getIsin())
             .regNumber(stock.getRegNumber())
             .listLevel(stock.getListLevel())
-            .dailyValues(stock.getDailyValues().stream().toList())
+            .historyValues(stock.getHistoryValues().stream().toList())
             .intradayValues(stock.getIntradayValues().stream().toList())
             .build();
     }

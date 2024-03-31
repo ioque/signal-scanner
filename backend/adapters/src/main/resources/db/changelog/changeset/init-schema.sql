@@ -1,23 +1,18 @@
-create table if not exists archived_daily_value
+create table if not exists archived_history_value
 (
-    capitalization      double precision,
     close_price         double precision not null,
     max_price           double precision not null,
     min_price           double precision not null,
     num_trades          double precision,
-    open_position_value double precision,
     open_price          double precision not null,
     trade_date          date             not null,
     value               double precision not null,
-    volume              double precision,
     wa_price            double precision,
-    id                  bigserial
-        primary key,
-    daily_value_type    varchar(255)     not null,
+    id                  bigserial primary key,
     ticker              varchar(255)     not null
 );
 
-alter table archived_daily_value
+alter table archived_history_value
     owner to postgres;
 
 create table if not exists archived_intraday_value
@@ -27,8 +22,7 @@ create table if not exists archived_intraday_value
     qnt                 integer,
     value               double precision,
     date_time           timestamp(6)     not null,
-    id                  bigserial
-        primary key,
+    id                  bigserial primary key,
     number              bigint           not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null
@@ -37,26 +31,21 @@ create table if not exists archived_intraday_value
 alter table archived_intraday_value
     owner to postgres;
 
-create table if not exists daily_value
+create table if not exists history_value
 (
-    capitalization      double precision,
     close_price         double precision not null,
     max_price           double precision not null,
     min_price           double precision not null,
     num_trades          double precision,
-    open_position_value double precision,
     open_price          double precision not null,
     trade_date          date             not null,
     value               double precision not null,
-    volume              double precision,
     wa_price            double precision,
-    id                  bigserial
-        primary key,
-    daily_value_type    varchar(255)     not null,
+    id                  bigserial  primary key,
     ticker              varchar(255)     not null
 );
 
-alter table daily_value
+alter table history_value
     owner to postgres;
 
 create table if not exists exchange
@@ -185,18 +174,18 @@ create table if not exists signal_scanner_entity_object_ids
 alter table signal_scanner_entity_object_ids
     owner to postgres;
 
-create or replace procedure archiving_daily_values()
+create or replace procedure archiving_history_values()
     language plpgsql
 as
 $$
 declare
     lastDate date;
 begin
-    select into lastDate from archived_daily_value order by trade_date desc limit 1;
+    select into lastDate from archived_history_value order by trade_date desc limit 1;
     if lastDate is not null then
-        insert into archived_daily_value (select * from daily_value where daily_value.trade_date > lastDate);
+        insert into archived_history_value (select * from history_value where history_value.trade_date > lastDate);
     else
-        insert into archived_daily_value (select * from daily_value);
+        insert into archived_history_value (select * from history_value);
     end if;
     commit;
 end;

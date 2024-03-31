@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.storage.jpa.entity.testingsystem.intradayvalue.ArchivedIntradayValueEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.archive.intradayvalue.ArchivedIntradayValueEntity;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.io.Serializable;
@@ -28,7 +28,6 @@ public class IntradayValueResponse implements Serializable {
         return IntradayValueResponse.builder()
             .dateTime(deal.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(deal.getPrice())
-            .tradeNumber(deal.getNumber())
             .build();
     }
 
@@ -36,7 +35,6 @@ public class IntradayValueResponse implements Serializable {
         return IntradayValueResponse.builder()
             .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(intradayValueEntity.getPrice())
-            .tradeNumber(intradayValueEntity.getNumber())
             .build();
     }
 }

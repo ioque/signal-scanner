@@ -10,11 +10,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class IndexEntity extends InstrumentEntity {
         String shortName,
         String name,
         Boolean updatable,
-        List<DailyValueEntity> dailyTradingResults,
+        List<HistoryValueEntity> dailyTradingResults,
         List<IntradayValueEntity> intradayValues,
         Double annualHigh,
         Double annualLow
@@ -51,7 +51,7 @@ public class IndexEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain(
-        List<DailyValue> dailyValues,
+        List<HistoryValue> historyValues,
         List<IntradayValue> intradayValues
     ) {
         return Index.builder()
@@ -62,7 +62,7 @@ public class IndexEntity extends InstrumentEntity {
             .updatable(this.getUpdatable())
             .annualHigh(this.getAnnualHigh())
             .annualLow(this.getAnnualLow())
-            .dailyValues(dailyValues)
+            .historyValues(historyValues)
             .intradayValues(intradayValues)
             .build();
     }

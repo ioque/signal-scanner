@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
@@ -14,7 +14,7 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.exchange.value.Deal;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class BaseJpaTest {
     @Autowired
     protected InstrumentEntityRepository instrumentEntityRepository;
     @Autowired
-    protected DailyValueEntityRepository dailyValueEntityRepository;
+    protected HistoryValueEntityRepository historyValueEntityRepository;
     @Autowired
     protected IntradayValueEntityRepository intradayValueEntityRepository;
 
@@ -42,7 +42,7 @@ public class BaseJpaTest {
         exchangeEntityRepository.deleteAll();
         instrumentEntityRepository.deleteAll();
         intradayValueEntityRepository.deleteAll();
-        dailyValueEntityRepository.deleteAll();
+        historyValueEntityRepository.deleteAll();
     }
 
     protected Stock.StockBuilder buildStockWith() {
@@ -69,7 +69,6 @@ public class BaseJpaTest {
 
     protected IntradayValue buildDealWith(String ticker, LocalDateTime dateTime) {
         return Deal.builder()
-            .number(1L)
             .dateTime(dateTime)
             .ticker(ticker)
             .value(1.0)
@@ -79,16 +78,15 @@ public class BaseJpaTest {
             .build();
     }
 
-    protected DealResult buildTradingResult(String ticker, LocalDate tradeDate) {
-        return DealResult.builder()
+    protected HistoryValue buildTradingResult(String ticker, LocalDate tradeDate) {
+        return HistoryValue.builder()
             .tradeDate(tradeDate)
             .ticker(ticker)
             .closePrice(1.0)
-            .maxPrice(1.0)
-            .minPrice(1.0)
+            .highPrice(1.0)
+            .lowPrice(1.0)
             .openPrice(1.0)
             .value(1.0)
-            .numTrades(1D)
             .build();
     }
 }

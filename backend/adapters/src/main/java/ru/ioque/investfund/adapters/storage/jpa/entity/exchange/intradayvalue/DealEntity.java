@@ -28,7 +28,6 @@ public class DealEntity extends IntradayValueEntity {
 
     @Builder
     public DealEntity(
-        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
@@ -36,7 +35,7 @@ public class DealEntity extends IntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(number, dateTime, ticker, price);
+        super(dateTime, ticker, price);
         this.isBuy = isBuy;
         this.qnt = qnt;
         this.value = value;
@@ -45,7 +44,6 @@ public class DealEntity extends IntradayValueEntity {
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
-            .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
             .price(price)
@@ -57,7 +55,6 @@ public class DealEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Deal deal) {
         return DealEntity.builder()
-            .number(deal.getNumber())
             .dateTime(deal.getDateTime())
             .ticker(deal.getTicker())
             .price(deal.getPrice())

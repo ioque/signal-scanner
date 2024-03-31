@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.exchange.response.DailyValueResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.IntradayValueResponse;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedDailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
 
 import java.util.List;
@@ -17,15 +17,15 @@ import java.util.List;
 @AllArgsConstructor
 @Tag(name = "TestingSystemQueryController", description = "Контроллер запросов к модулю \"Система тестирования\"")
 public class ArchiveQueryController {
-    ArchivedDailyValueEntityRepository archivedDailyValueEntityRepository;
+    ArchivedHistoryValueEntityRepository archivedHistoryValueEntityRepository;
     ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
 
-    @GetMapping("/api/daily-values")
+    @GetMapping("/api/history-values")
     public List<DailyValueResponse> getDailyValues(
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize
     ) {
-        return archivedDailyValueEntityRepository
+        return archivedHistoryValueEntityRepository
             .findAll(PageRequest.of(pageNumber, pageSize))
             .stream()
             .map(DailyValueResponse::fromEntity)

@@ -45,7 +45,7 @@ public class DatasourceRestController {
             .toList();
     }
 
-    @GetMapping("/api/instruments/{ticker}/intraday-values")
+    @GetMapping("/api/instruments/{ticker}/intraday")
     public List<IntradayValueResponse> intradayValues(
         @PathVariable String ticker,
         @RequestParam(required = false, defaultValue = "0") int start

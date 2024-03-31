@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.exchange.value.Deal;
-import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.IndexDelta;
+import ru.ioque.investfund.domain.exchange.value.Contract;
+import ru.ioque.investfund.domain.exchange.value.Delta;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.time.LocalDateTime;
@@ -38,14 +38,11 @@ public abstract class IntradayValueEntity {
     @Column(nullable = false)
     LocalDateTime dateTime;
     @Column(nullable = false)
-    Long number;
-    @Column(nullable = false)
     String ticker;
     @Column(nullable = false)
     Double price;
 
     public IntradayValueEntity(
-        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price
@@ -53,7 +50,6 @@ public abstract class IntradayValueEntity {
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;
-        this.number = number;
     }
 
     public abstract IntradayValue toDomain();
@@ -64,8 +60,8 @@ public abstract class IntradayValueEntity {
 
     private static Map<Class<? extends IntradayValue>, Function<IntradayValue, IntradayValueEntity>> mappers = Map.of(
         Deal.class, domain -> DealEntity.from((Deal) domain),
-        FuturesDeal.class, domain -> FuturesDealEntity.from((FuturesDeal) domain),
-        IndexDelta.class, domain -> IndexDeltaEntity.from((IndexDelta) domain)
+        Contract.class, domain -> ContractEntity.from((Contract) domain),
+        Delta.class, domain -> IndexDeltaEntity.from((Delta) domain)
     );
 }
 

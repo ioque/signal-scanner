@@ -17,7 +17,7 @@ import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public abstract class InstrumentEntity extends AbstractEntity {
         this.updatable = updatable;
     }
 
-    public abstract Instrument toDomain(List<DailyValue> dailyValues, List<IntradayValue> intradayValues);
+    public abstract Instrument toDomain(List<HistoryValue> historyValues, List<IntradayValue> intradayValues);
 
     public abstract Instrument toDomain();
 

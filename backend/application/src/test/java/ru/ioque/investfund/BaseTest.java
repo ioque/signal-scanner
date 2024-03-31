@@ -9,13 +9,10 @@ import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.DailyValue;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 import ru.ioque.investfund.domain.exchange.value.Deal;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
-import ru.ioque.investfund.domain.exchange.value.FuturesDeal;
-import ru.ioque.investfund.domain.exchange.value.FuturesDealResult;
-import ru.ioque.investfund.domain.exchange.value.IndexDelta;
-import ru.ioque.investfund.domain.exchange.value.IndexDeltaResult;
+import ru.ioque.investfund.domain.exchange.value.Contract;
+import ru.ioque.investfund.domain.exchange.value.Delta;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.fakes.FakeDIContainer;
@@ -118,16 +115,16 @@ public class BaseTest {
         return getInstruments().stream().filter(row -> tickers.contains(row.getTicker()));
     }
 
-    protected List<DailyValue> generateTradingResultsBy(String ticker, LocalDate start, LocalDate stop) {
-        final List<DailyValue> dailyValues = new ArrayList<>();
+    protected List<HistoryValue> generateTradingResultsBy(String ticker, LocalDate start, LocalDate stop) {
+        final List<HistoryValue> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                dailyValues.add(buildTradingResultWith(ticker, cursor).build());
+                historyValues.add(buildTradingResultWith(ticker, cursor).build());
             }
             cursor = cursor.plusDays(1);
         }
-        return dailyValues;
+        return historyValues;
     }
 
     protected Instrument getInstrumentBy(String afks) {
@@ -143,11 +140,11 @@ public class BaseTest {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
     }
 
-    protected void initTradingResults(List<DailyValue> tradingResults) {
+    protected void initTradingResults(List<HistoryValue> tradingResults) {
         exchangeDataFixture().initTradingResults(tradingResults);
     }
 
-    protected void initTradingResults(DailyValue... tradingResults) {
+    protected void initTradingResults(HistoryValue... tradingResults) {
         initTradingResults(Arrays.asList(tradingResults));
     }
 
@@ -160,8 +157,8 @@ public class BaseTest {
         return getInstrumentBy(ticker).getIntradayValues().stream().toList();
     }
 
-    protected List<DailyValue> getDailyTradingResultsBy(String ticker) {
-        return getInstrumentBy(ticker).getDailyValues().stream().toList();
+    protected List<HistoryValue> getDailyTradingResultsBy(String ticker) {
+        return getInstrumentBy(ticker).getHistoryValues().stream().toList();
     }
 
     protected void clearLogs() {
@@ -180,7 +177,6 @@ public class BaseTest {
             .isBuy(true)
             .qnt(qnt)
             .price(price)
-            .number(number)
             .build();
     }
 
@@ -192,67 +188,60 @@ public class BaseTest {
             .isBuy(false)
             .qnt(qnt)
             .price(price)
-            .number(number)
             .build();
     }
 
-    protected FuturesDeal buildFuturesDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
-        return FuturesDeal.builder()
+    protected Contract buildFuturesDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
+        return Contract.builder()
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .price(price)
-            .number(number)
             .qnt(qnt)
             .value(value)
             .build();
     }
 
-    protected IndexDelta buildDeltaBy(Long number, String ticker, String localTime, Double price, Double value) {
-        return IndexDelta.builder()
+    protected Delta buildDeltaBy(Long number, String ticker, String localTime, Double price, Double value) {
+        return Delta.builder()
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .value(value)
             .price(price)
-            .number(number)
             .build();
     }
 
-    protected DailyValue buildFuturesDealResultBy(String ticker, String tradeDate, Double openPrice, Double closePrice, Double value, Integer volume) {
-        return FuturesDealResult.builder()
+    protected HistoryValue buildFuturesDealResultBy(String ticker, String tradeDate, Double openPrice, Double closePrice, Double value, Integer volume) {
+        return HistoryValue.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(1D)
             .closePrice(closePrice)
-            .maxPrice(1D)
-            .minPrice(1D)
+            .highPrice(1D)
+            .lowPrice(1D)
             .value(value)
-            .volume(volume)
-            .openPositionValue(1D)
             .build();
     }
 
-    protected DailyValue buildDeltaResultBy(String ticker, String tradeDate, double openPrice, double closePrice, double value) {
-        return IndexDeltaResult.builder()
+    protected HistoryValue buildDeltaResultBy(String ticker, String tradeDate, double openPrice, double closePrice, double value) {
+        return HistoryValue.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
-            .maxPrice(1D)
-            .minPrice(1D)
+            .highPrice(1D)
+            .lowPrice(1D)
             .value(value)
-            .capitalization(1D)
             .build();
     }
 
-    protected DealResult buildDealResultBy(String ticker, String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
-        return DealResult.builder()
+    protected HistoryValue buildDealResultBy(String ticker, String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return HistoryValue.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
-            .numTrades(1D)
-            .maxPrice(1D)
-            .minPrice(1D)
+            .highPrice(1D)
+            .lowPrice(1D)
             .value(value)
             .waPrice(waPrice)
             .build();
@@ -270,17 +259,15 @@ public class BaseTest {
             .build();
     }
 
-    protected DealResult.DealResultBuilder buildTradingResultWith(String ticker, LocalDate localDate) {
-        return DealResult.builder()
+    protected HistoryValue.HistoryValueBuilder buildTradingResultWith(String ticker, LocalDate localDate) {
+        return HistoryValue.builder()
             .tradeDate(localDate)
             .ticker(ticker)
             .openPrice(1.0)
             .closePrice(1.0)
-            .minPrice(1.0)
-            .maxPrice(1.0)
+            .lowPrice(1.0)
+            .highPrice(1.0)
             .value(1.0)
-            .numTrades(1D)
-            .volume(1D)
             .waPrice(1D);
     }
 
@@ -292,7 +279,6 @@ public class BaseTest {
             .isBuy(false)
             .qnt(1)
             .price(100D)
-            .number(1L)
             .build();
     }
 
@@ -308,7 +294,7 @@ public class BaseTest {
             .isin("isin")
             .listLevel(1)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -324,7 +310,7 @@ public class BaseTest {
             .isin("isin")
             .listLevel(1)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -340,7 +326,7 @@ public class BaseTest {
             .isin("isin")
             .listLevel(1)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -356,7 +342,7 @@ public class BaseTest {
             .isin("isin")
             .listLevel(1)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -373,7 +359,7 @@ public class BaseTest {
             .initialMargin(100D)
             .lotVolume(1000)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -389,7 +375,7 @@ public class BaseTest {
             .isin("isin")
             .listLevel(1)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -402,7 +388,7 @@ public class BaseTest {
             .name("Татнефть")
             .lotSize(100)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -415,7 +401,7 @@ public class BaseTest {
             .name("Роснефть")
             .lotSize(100)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -429,7 +415,7 @@ public class BaseTest {
             .faceUnit("RUB")
             .lotSize(1000)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -442,7 +428,7 @@ public class BaseTest {
             .shortName("TGKB")
             .lotSize(100)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 
@@ -455,7 +441,7 @@ public class BaseTest {
             .shortName("TGKN")
             .lotSize(100)
             .intradayValues(new ArrayList<>())
-            .dailyValues(new ArrayList<>())
+            .historyValues(new ArrayList<>())
             .build();
     }
 

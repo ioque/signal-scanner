@@ -2,28 +2,27 @@ package ru.ioque.investfund.adapters.storage.jpa;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.dailyvalue.DailyValueEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.DailyValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
 @AllArgsConstructor
 public class JpaFinInstrumentRepository implements FinInstrumentRepository {
     InstrumentEntityRepository instrumentEntityRepository;
-    DailyValueEntityRepository dailyValueEntityRepository;
+    HistoryValueEntityRepository historyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;
-
     DateTimeProvider dateTimeProvider;
 
     @Override
@@ -35,10 +34,10 @@ public class JpaFinInstrumentRepository implements FinInstrumentRepository {
                     .findById(id)
                     .map(entity ->
                         entity.toDomain(
-                            dailyValueEntityRepository
+                            historyValueEntityRepository
                                 .findAllBy(entity.getTicker(), dateTimeProvider.nowDate().minusMonths(6))
                                 .stream()
-                                .map(DailyValueEntity::toDomain)
+                                .map(HistoryValueEntity::toDomain)
                                 .toList(),
                             intradayValueEntityRepository
                                 .findAllBy(entity.getTicker(), dateTimeProvider.nowDate().atStartOfDay())
@@ -52,25 +51,24 @@ public class JpaFinInstrumentRepository implements FinInstrumentRepository {
                     .instrumentId(instrument.getId())
                     .ticker(instrument.getTicker())
                     .waPriceSeries(instrument
-                        .getDailyValues()
+                        .getHistoryValues()
                         .stream()
-                        .filter(row -> row.getClass().equals(DealResult.class))
-                        .map(DealResult.class::cast)
+                        .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                         .toList()
                     )
                     .closePriceSeries(instrument
-                        .getDailyValues()
+                        .getHistoryValues()
                         .stream()
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
                         .toList())
                     .openPriceSeries(instrument
-                        .getDailyValues()
+                        .getHistoryValues()
                         .stream()
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
                         .toList())
                     .valueSeries(instrument
-                        .getDailyValues()
+                        .getHistoryValues()
                         .stream()
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                         .toList())

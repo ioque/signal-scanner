@@ -4,11 +4,11 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.DealResult;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class FakeFinInstrumentRepository implements FinInstrumentRepository {
@@ -36,10 +36,9 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
                 .instrumentId(instrument.getId())
                 .ticker(instrument.getTicker())
                 .waPriceSeries(instrument
-                    .getDailyValues()
+                    .getHistoryValues()
                     .stream()
-                    .filter(row -> row.getClass().equals(DealResult.class))
-                    .map(DealResult.class::cast)
+                    .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                     .toList()
                 )
@@ -55,17 +54,17 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
                         .toList()
                 )
                 .closePriceSeries(instrument
-                    .getDailyValues()
+                    .getHistoryValues()
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
                     .toList())
                 .openPriceSeries(instrument
-                    .getDailyValues()
+                    .getHistoryValues()
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
                     .toList())
                 .valueSeries(instrument
-                    .getDailyValues()
+                    .getHistoryValues()
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                     .toList())
