@@ -27,4 +27,9 @@ public class InstrumentRepoImpl implements InstrumentRepo {
     public void saveAll(List<Instrument> instruments) {
         instruments.forEach(instrument -> this.instruments.put(instrument.getTicker(), instrument));
     }
+
+    @Override
+    public int currentSize() {
+        return instruments.size();
+    }
 }

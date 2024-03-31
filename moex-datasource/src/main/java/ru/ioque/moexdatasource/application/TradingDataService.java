@@ -1,30 +1,49 @@
 package ru.ioque.moexdatasource.application;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.moexdatasource.application.adapters.InstrumentRepo;
 import ru.ioque.moexdatasource.application.adapters.MoexProvider;
 import ru.ioque.moexdatasource.domain.history.HistoryValue;
 import ru.ioque.moexdatasource.domain.intraday.IntradayValue;
+import ru.ioque.moexdatasource.domain.parser.HistoryValueMoexParser;
+import ru.ioque.moexdatasource.domain.parser.IntradayValueMoexParser;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TradingDataService {
+    IntradayValueMoexParser intradayValueParser = new IntradayValueMoexParser();
+    HistoryValueMoexParser historyValueParser = new HistoryValueMoexParser();
     InstrumentRepo instrumentRepo;
     MoexProvider moexProvider;
-    public List<HistoryValue> getHistory(String ticker) {
+
+    public List<HistoryValue> getHistory(String ticker, LocalDate from, LocalDate to) {
         return instrumentRepo
             .findBy(ticker)
-            .map(instrument -> instrument.parseHistoryValues(moexProvider.fetchHistory(instrument)))
+            .map(instrument ->
+                historyValueParser.parse(
+                    moexProvider.fetchHistory(instrument, from, to),
+                    instrument.getClass()
+                )
+            )
             .orElseThrow();
     }
 
-    public List<IntradayValue> getIntradayValues(String ticker) {
+    public List<IntradayValue> getIntradayValues(String ticker, Long start) {
         return instrumentRepo
             .findBy(ticker)
-            .map(instrument -> instrument.parseIntradayValues(moexProvider.fetchIntradayValues(instrument)))
+            .map(instrument ->
+                intradayValueParser.parse(
+                    moexProvider.fetchIntradayValues(instrument, start),
+                    instrument
+                )
+            )
             .orElseThrow();
     }
 }

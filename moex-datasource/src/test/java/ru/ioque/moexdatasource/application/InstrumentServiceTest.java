@@ -16,4 +16,12 @@ public class InstrumentServiceTest extends BaseTest {
 
         assertEquals(892, getInstrumentService().getInstruments().size());
     }
+
+    @Test
+    @DisplayName("""
+        T2. Запросить список финансовых инструментов без предварительной выгрузки
+        """)
+    void testCase2() {
+        assertEquals(892, getInstrumentService().getInstruments().size());
+    }
 }

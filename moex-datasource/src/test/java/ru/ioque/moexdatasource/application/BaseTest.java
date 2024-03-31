@@ -13,4 +13,5 @@ public class BaseTest {
     InstrumentRepo instrumentRepo = new InstrumentRepoImpl();
     FakeMoexProvider moexProvider = new FakeMoexProvider();
     InstrumentService instrumentService = new InstrumentService(instrumentRepo, moexProvider);
+    TradingDataService tradingDataService = new TradingDataService(instrumentRepo, moexProvider);
 }

@@ -1,14 +1,28 @@
-package ru.ioque.moexdatasource.domain.instrument;
+package ru.ioque.moexdatasource.domain.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import ru.ioque.moexdatasource.domain.instrument.CurrencyPair;
+import ru.ioque.moexdatasource.domain.instrument.Futures;
+import ru.ioque.moexdatasource.domain.instrument.Index;
+import ru.ioque.moexdatasource.domain.instrument.Instrument;
+import ru.ioque.moexdatasource.domain.instrument.Stock;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
 public class InstrumentParser {
-    public List<Instrument> parse(JsonNode jsonNode, Class<? extends Instrument> type) {
+    public List<Instrument> parse(List<JsonNode> batches, Class<? extends Instrument> type) {
+        return batches
+            .stream()
+            .map(batch -> parseBatch(batch, type))
+            .flatMap(Collection::stream)
+            .toList();
+    }
+
+    public List<Instrument> parseBatch(JsonNode jsonNode, Class<? extends Instrument> type) {
         final MoexValueExtractor moexValueExtractor = new MoexValueExtractor(jsonNode.get("columns"));
         final JsonNode rows = jsonNode.get("data");
         List<Instrument> instruments = new ArrayList<>();

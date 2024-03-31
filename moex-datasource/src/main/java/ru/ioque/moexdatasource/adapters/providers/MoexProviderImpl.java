@@ -9,6 +9,9 @@ import org.springframework.web.client.RestClient;
 import ru.ioque.moexdatasource.application.adapters.MoexProvider;
 import ru.ioque.moexdatasource.domain.instrument.Instrument;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Component
 public class MoexProviderImpl implements MoexProvider {
     QueryBuilder queryBuilder;
@@ -16,20 +19,40 @@ public class MoexProviderImpl implements MoexProvider {
     RestClient defaultClient = RestClient.create();
 
     @SneakyThrows
-    public JsonNode fetchInstruments(Class<? extends Instrument> type) {
-        return objectMapper
-            .readTree(fetch(queryBuilder.getSecurityListQuery(type)))
-            .get("securities");
+    public List<JsonNode> fetchInstruments(Class<? extends Instrument> type) {
+        return List.of(
+            objectMapper
+                .readTree(fetch(queryBuilder.getSecurityListQuery(type)))
+                .get("securities")
+        );
     }
 
     @Override
-    public JsonNode fetchHistory(Instrument instrument) {
-        return null;
+    public List<JsonNode> fetchHistory(
+        Instrument instrument,
+        LocalDate from,
+        LocalDate to
+    ) {
+        return PageReader
+            .builder()
+            .start(0)
+            .pageSize(100)
+            .url(dailyTradingResultPath(instrument, from, to))
+            .fetch(this::fetchHistoryBatch)
+            .build()
+            .readAllPage();
     }
 
     @Override
-    public JsonNode fetchIntradayValues(Instrument instrument) {
-        return null;
+    public List<JsonNode> fetchIntradayValues(Instrument instrument, Long start) {
+        return PageReader
+            .builder()
+            .start(start)
+            .pageSize(5000)
+            .url(intradayPath(instrument))
+            .fetch(this::fetchIntradayBatch)
+            .build()
+            .readAllPage();
     }
 
     private String fetch(String path) {
@@ -41,5 +64,33 @@ public class MoexProviderImpl implements MoexProvider {
         } catch (Exception ex) {
             throw new RestClientException(ex.getMessage(), ex.getCause());
         }
+    }
+
+    @SneakyThrows
+    private JsonNode fetchIntradayBatch(String path) {
+        return objectMapper.readTree(fetch(path)).get("trades");
+    }
+
+    @SneakyThrows
+    private JsonNode fetchHistoryBatch(String path) {
+        return objectMapper.readTree(fetch(path)).get("history");
+    }
+
+    private String intradayPath(Instrument instrument) {
+        return queryBuilder
+            .getFetchDealBy(
+                instrument.getClass(),
+                instrument.getTicker()
+            );
+    }
+
+    private String dailyTradingResultPath(Instrument instrument, LocalDate from, LocalDate to) {
+        return queryBuilder
+            .fetchTradingResultsBy(
+                instrument.getClass(),
+                instrument.getTicker(),
+                from,
+                to
+            );
     }
 }

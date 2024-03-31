@@ -1,4 +1,4 @@
-package ru.ioque.moexdatasource.domain.instrument;
+package ru.ioque.moexdatasource.domain.parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package ru.ioque.moexdatasource.application;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.moexdatasource.application.adapters.InstrumentRepo;
@@ -10,14 +10,14 @@ import ru.ioque.moexdatasource.domain.instrument.CurrencyPair;
 import ru.ioque.moexdatasource.domain.instrument.Futures;
 import ru.ioque.moexdatasource.domain.instrument.Index;
 import ru.ioque.moexdatasource.domain.instrument.Instrument;
-import ru.ioque.moexdatasource.domain.instrument.InstrumentParser;
 import ru.ioque.moexdatasource.domain.instrument.Stock;
+import ru.ioque.moexdatasource.domain.parser.InstrumentParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InstrumentService {
     InstrumentParser instrumentParser = new InstrumentParser();
@@ -25,6 +25,9 @@ public class InstrumentService {
     MoexProvider moexProvider;
 
     public List<Instrument> getInstruments() {
+        if (instrumentRepo.currentSize() == 0) {
+            downloadInstruments();
+        }
         return instrumentRepo.getAll();
     }
 

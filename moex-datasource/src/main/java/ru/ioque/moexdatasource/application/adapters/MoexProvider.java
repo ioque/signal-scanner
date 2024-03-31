@@ -3,11 +3,18 @@ package ru.ioque.moexdatasource.application.adapters;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.ioque.moexdatasource.domain.instrument.Instrument;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface MoexProvider {
 
-    JsonNode fetchInstruments(Class<? extends Instrument> stockClass);
+    List<JsonNode> fetchInstruments(Class<? extends Instrument> stockClass);
 
-    JsonNode fetchHistory(Instrument instrument);
+    List<JsonNode> fetchHistory(
+        Instrument instrument,
+        LocalDate from,
+        LocalDate to
+    );
 
-    JsonNode fetchIntradayValues(Instrument instrument);
+    List<JsonNode> fetchIntradayValues(Instrument instrument, Long start);
 }

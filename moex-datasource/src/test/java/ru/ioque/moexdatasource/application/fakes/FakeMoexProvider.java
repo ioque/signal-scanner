@@ -13,32 +13,34 @@ import ru.ioque.moexdatasource.domain.instrument.Index;
 import ru.ioque.moexdatasource.domain.instrument.Instrument;
 import ru.ioque.moexdatasource.domain.instrument.Stock;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public class FakeMoexProvider implements MoexProvider {
 
     @Override
     @SneakyThrows
-    public JsonNode fetchInstruments(Class<? extends Instrument> type) {
+    public List<JsonNode> fetchInstruments(Class<? extends Instrument> type) {
         Resource resource = new ClassPathResource("instruments_" + typeToFileMap.get(type) + ".json");
         byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        return new ObjectMapper().readTree(new String(fileData)).get("securities");
+        return List.of(new ObjectMapper().readTree(new String(fileData)).get("securities"));
     }
 
     @Override
     @SneakyThrows
-    public JsonNode fetchHistory(Instrument instrument) {
+    public List<JsonNode> fetchHistory(Instrument instrument, LocalDate from, LocalDate to) {
         Resource resource = new ClassPathResource("trading_results_" + instrument.getTicker() + ".json");
         byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        return new ObjectMapper().readTree(new String(fileData)).get("history");
+        return List.of(new ObjectMapper().readTree(new String(fileData)).get("history"));
     }
 
     @Override
     @SneakyThrows
-    public JsonNode fetchIntradayValues(Instrument instrument) {
+    public List<JsonNode> fetchIntradayValues(Instrument instrument, Long start) {
         Resource resource = new ClassPathResource("intraday_value_" + instrument.getTicker() + ".json");
         byte[] fileData = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        return new ObjectMapper().readTree(new String(fileData)).get("trades");
+        return List.of(new ObjectMapper().readTree(new String(fileData)).get("trades"));
     }
 
     Map<Class<? extends Instrument>, String> typeToFileMap = Map.of(
