@@ -38,7 +38,7 @@ public class IndexIntradayGenerator extends IntradayGenerator<Delta, IndexDeltas
     }
 
     protected Double getStartValue(IndexDeltasGeneratorConfig config, List<Delta> stockTrades) {
-        return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
+        return stockTrades.isEmpty() ? config.getValue().getStartValue() : stockTrades
             .get(stockTrades.size() - 1)
             .getValue();
     }

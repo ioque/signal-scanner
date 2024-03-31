@@ -9,7 +9,6 @@ import ru.ioque.core.model.intraday.Delta;
 import ru.ioque.core.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.core.tradingdatagenerator.currencypair.CurrencyPairTradeGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.stock.DealGeneratorConfig;

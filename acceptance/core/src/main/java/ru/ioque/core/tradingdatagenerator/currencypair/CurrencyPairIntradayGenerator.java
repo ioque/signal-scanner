@@ -39,7 +39,7 @@ public class CurrencyPairIntradayGenerator extends
     }
 
     private Double getStartValue(CurrencyPairTradeGeneratorConfig config, List<Deal> stockTrades) {
-        return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
+        return stockTrades.isEmpty() ? config.getValue().getStartValue() : stockTrades
             .get(stockTrades.size() - 1)
             .getValue();
     }

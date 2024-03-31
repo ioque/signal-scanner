@@ -1,5 +1,6 @@
 package ru.ioque.apitest.repos;
 
+import lombok.Getter;
 import ru.ioque.core.model.history.HistoryValue;
 import ru.ioque.core.model.instrument.Instrument;
 import ru.ioque.core.model.intraday.IntradayValue;
@@ -7,14 +8,11 @@ import ru.ioque.core.model.intraday.IntradayValue;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class DatasetStorage {
     List<Instrument> instruments = new ArrayList<>();
     List<IntradayValue> intradayValues = new ArrayList<>();
     List<HistoryValue> dailyResultValues = new ArrayList<>();
-
-    public List<Instrument> getInstruments() {
-        return instruments;
-    }
 
     public List<IntradayValue> getIntradayValuesBy(String ticker) {
         return intradayValues

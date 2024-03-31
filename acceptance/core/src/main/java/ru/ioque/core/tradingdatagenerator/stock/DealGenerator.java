@@ -38,7 +38,7 @@ public class DealGenerator extends IntradayGenerator<Deal, DealGeneratorConfig> 
     }
 
     private Double getStartValue(DealGeneratorConfig config, List<Deal> stockTrades) {
-        return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
+        return stockTrades.isEmpty() ? config.getValue().getStartValue() : stockTrades
             .get(stockTrades.size() - 1)
             .getValue();
     }
