@@ -1,4 +1,4 @@
 variables:
-  api_host: http://${API_HOST}:8080
+  api_host: http://${API_HOST:localhost}:8080
 server:
   port: 8081

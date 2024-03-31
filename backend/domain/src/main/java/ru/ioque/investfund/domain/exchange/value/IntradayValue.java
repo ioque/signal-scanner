@@ -16,17 +16,20 @@ import java.util.Objects;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable, Comparable<IntradayValue> {
+    Long number;
     LocalDateTime dateTime;
     String ticker;
     Double price;
     Double value;
 
     public IntradayValue(
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
+        this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;

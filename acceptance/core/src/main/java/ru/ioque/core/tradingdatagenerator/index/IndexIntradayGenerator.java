@@ -1,6 +1,6 @@
 package ru.ioque.core.tradingdatagenerator.index;
 
-import ru.ioque.core.dataemulator.index.IndexDelta;
+import ru.ioque.core.model.intraday.Delta;
 import ru.ioque.core.tradingdatagenerator.core.IntradayGenerator;
 import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
 
@@ -9,14 +9,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndexIntradayGenerator extends IntradayGenerator<IndexDelta, IndexDeltasGeneratorConfig> {
-    public List<IndexDelta> generateIntradayValues(IndexDeltasGeneratorConfig config) {
-        List<IndexDelta> indexDeltas = new ArrayList<>();
+public class IndexIntradayGenerator extends IntradayGenerator<Delta, IndexDeltasGeneratorConfig> {
+    public List<Delta> generateIntradayValues(IndexDeltasGeneratorConfig config) {
+        List<Delta> indexDeltas = new ArrayList<>();
         for (int i = 0; i < config.getValue().getPercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, indexDeltas);
             Double startPrice = getStartPrice(config, indexDeltas);
-            int tradeNumber = getTradeNumber(indexDeltas);
+            long tradeNumber = getTradeNumber(indexDeltas);
             long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, indexDeltas);
@@ -37,17 +37,16 @@ public class IndexIntradayGenerator extends IntradayGenerator<IndexDelta, IndexD
         return indexDeltas;
     }
 
-    protected Double getStartValue(IndexDeltasGeneratorConfig config, List<IndexDelta> stockTrades) {
+    protected Double getStartValue(IndexDeltasGeneratorConfig config, List<Delta> stockTrades) {
         return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
             .get(stockTrades.size() - 1)
-            .getValue()
             .getValue();
     }
 
-    private List<IndexDelta> generateBatch(
+    private List<Delta> generateBatch(
         PercentageGrowths pricePercentageGrowths,
         PercentageGrowths valuePercentageGrowths,
-        int tradeNumber,
+        long tradeNumber,
         Double startPrice,
         long numTrades,
         Double startValue,
@@ -61,17 +60,16 @@ public class IndexIntradayGenerator extends IntradayGenerator<IndexDelta, IndexD
         double finalValue = linearGrowthFinalResult(valuePercentageGrowths.getValue(), startValue);
         double deltaValue = getDeltaByMean(startValue, finalValue, numTrades);
 
-        List<IndexDelta> indexDeltas = new ArrayList<>();
+        List<Delta> indexDeltas = new ArrayList<>();
 
         for (int i = 0; i < numTrades; i++) {
             indexDeltas.add(
-                IndexDelta.builder()
-                    .secId(ticker)
-                    .tradeNo(tradeNumber + i)
-                    .tradeTime(startTime.plusSeconds(i * 10L))
+                Delta.builder()
+                    .ticker(ticker)
+                    .tradeNumber(tradeNumber + i)
+                    .dateTime(nowDate.atTime(startTime.plusSeconds(i * 10L)))
                     .value(startValue + deltaValue * i)
                     .price(startPrice + deltaPrice * i)
-                    .sysTime(nowDate.atTime(startTime.plusSeconds(i)))
                     .build()
             );
         }

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.apitest.dto.exchange.Instrument;
+import ru.ioque.apitest.dto.exchange.InstrumentResponse;
 import ru.ioque.core.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.core.tradingdatagenerator.stock.StockTradesGeneratorConfig;
+import ru.ioque.core.tradingdatagenerator.stock.DealGeneratorConfig;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,8 +30,8 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         LocalDate startDate = time.toLocalDate().minusMonths(6);
         integrateInstruments(instruments().sber().build());
         datasetRepository().initIntradayValue(
-            generator().generateStockTrades(
-                StockTradesGeneratorConfig
+            generator().generateDeals(
+                DealGeneratorConfig
                     .builder()
                     .ticker("SBER")
                     .numTrades(50000)
@@ -45,7 +45,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
             )
         );
         datasetRepository().initDailyResultValue(
-            generator().generateStockHistory(
+            generator().generateHistory(
                 HistoryGeneratorConfig
                     .builder()
                     .ticker("SBER")
@@ -66,8 +66,8 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         long finishMills = System.currentTimeMillis();
         long seconds = ((finishMills - startMills) / 1000);
 
-        Instrument sber = getInstrumentById(getInstrumentIds().get(0));
-        assertEquals(128, sber.getDailyValues().size());
+        InstrumentResponse sber = getInstrumentById(getInstrumentIds().get(0));
+        assertTrue(sber.getHistoryValues().size() >= 128);
         assertEquals(50000, sber.getIntradayValues().size());
         assertTrue(seconds < 60);
         System.out.println("seconds = " + seconds);

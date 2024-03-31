@@ -26,18 +26,20 @@ public class ContractEntity extends IntradayValueEntity {
 
     @Builder
     public ContractEntity(
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Integer qnt
     ) {
-        super(dateTime, ticker, price);
+        super(number, dateTime, ticker, price);
         this.qnt = qnt;
     }
 
     @Override
     public IntradayValue toDomain() {
         return Contract.builder()
+            .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
             .price(price)
@@ -47,6 +49,7 @@ public class ContractEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Contract contract) {
         return ContractEntity.builder()
+            .number(contract.getNumber())
             .dateTime(contract.getDateTime())
             .ticker(contract.getTicker())
             .price(contract.getPrice())

@@ -1,6 +1,6 @@
 package ru.ioque.core.tradingdatagenerator.currencypair;
 
-import ru.ioque.core.dataemulator.currencyPair.CurrencyPairTrade;
+import ru.ioque.core.model.intraday.Deal;
 import ru.ioque.core.tradingdatagenerator.core.IntradayGenerator;
 import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
 
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CurrencyPairIntradayGenerator extends
-    IntradayGenerator<CurrencyPairTrade, CurrencyPairTradeGeneratorConfig> {
-    public List<CurrencyPairTrade> generateIntradayValues(CurrencyPairTradeGeneratorConfig config) {
-        List<CurrencyPairTrade> currencyPairTrades = new ArrayList<>();
+    IntradayGenerator<Deal, CurrencyPairTradeGeneratorConfig> {
+    public List<Deal> generateIntradayValues(CurrencyPairTradeGeneratorConfig config) {
+        List<Deal> currencyPairTrades = new ArrayList<>();
         for (int i = 0; i < config.getValue().getPercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, currencyPairTrades);
             Double startPrice = getStartPrice(config, currencyPairTrades);
-            int tradeNumber = getTradeNumber(currencyPairTrades);
+            long tradeNumber = getTradeNumber(currencyPairTrades);
             long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, currencyPairTrades);
@@ -38,17 +38,16 @@ public class CurrencyPairIntradayGenerator extends
         return currencyPairTrades;
     }
 
-    private Double getStartValue(CurrencyPairTradeGeneratorConfig config, List<CurrencyPairTrade> stockTrades) {
+    private Double getStartValue(CurrencyPairTradeGeneratorConfig config, List<Deal> stockTrades) {
         return stockTrades.isEmpty() ? config.getValue().getStartValue() : (Double) stockTrades
             .get(stockTrades.size() - 1)
-            .getValue()
             .getValue();
     }
 
-    private List<CurrencyPairTrade> generateBatch(
+    private List<Deal> generateBatch(
         PercentageGrowths pricePercentageGrowths,
         PercentageGrowths valuePercentageGrowths,
-        int tradeNumber,
+        long tradeNumber,
         Double startPrice,
         long numTrades,
         Double startValue,
@@ -72,25 +71,23 @@ public class CurrencyPairIntradayGenerator extends
         double finalValue = linearGrowthFinalResult(valuePercentageGrowths.getValue(), startValue);
         double deltaValue = getDeltaByMean(startValue, finalValue, numTrades);
 
-        List<CurrencyPairTrade> stockTrades = new ArrayList<>();
+        List<Deal> stockTrades = new ArrayList<>();
 
         for (int i = 0; i < numTrades; i++) {
-            String buysell = buysell(buyQnt > 0, sellQnt > 0);
-            if (buysell.equals("SELL")) {
+            Boolean isBuy = isBuy(buyQnt > 0, sellQnt > 0);
+            if (isBuy) {
+                buyQnt--;
+            } else {
                 sellQnt--;
             }
-            if (buysell.equals("BUY")) {
-                buyQnt--;
-            }
             stockTrades.add(
-                CurrencyPairTrade.builder()
-                    .secId(ticker)
-                    .tradeNo(tradeNumber + i)
-                    .tradeTime(startTime.plusSeconds(i))
+                Deal.builder()
+                    .ticker(ticker)
+                    .tradeNumber(tradeNumber + i)
+                    .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
                     .value(startValue + deltaValue * i)
                     .price(startPrice + deltaPrice * i)
-                    .buySell(buysell)
-                    .sysTime(nowDate.atTime(startTime.plusSeconds(i)))
+                    .isBuy(isBuy)
                     .build()
             );
         }
@@ -98,13 +95,9 @@ public class CurrencyPairIntradayGenerator extends
         return stockTrades;
     }
 
-    public String buysell(boolean buyIsPossible, boolean sellIsPossible) {
-        if (!buyIsPossible) return "SELL";
-        if (!sellIsPossible) return "BUY";
-        if (Math.random() > 0.5) {
-            return "BUY";
-        } else {
-            return "SELL";
-        }
+    public Boolean isBuy(boolean buyIsPossible, boolean sellIsPossible) {
+        if (!buyIsPossible) return true;
+        if (!sellIsPossible) return false;
+        return Math.random() > 0.5;
     }
 }

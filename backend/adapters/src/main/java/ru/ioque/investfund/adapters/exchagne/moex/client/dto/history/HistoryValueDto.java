@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.exchange.value.HistoryValue;
@@ -16,9 +17,10 @@ import java.time.LocalDate;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HistoryValueDto {
     LocalDate tradeDate;
     String ticker;
@@ -37,8 +39,8 @@ public class HistoryValueDto {
             .closePrice(closePrice)
             .highPrice(highPrice)
             .lowPrice(lowPrice)
-            .waPrice(lowPrice)
-            .value(lowPrice)
+            .waPrice(waPrice)
+            .value(value)
             .build();
     }
 }

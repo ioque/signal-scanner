@@ -69,6 +69,7 @@ public class BaseJpaTest {
 
     protected IntradayValue buildDealWith(String ticker, LocalDateTime dateTime) {
         return Deal.builder()
+            .number(1L)
             .dateTime(dateTime)
             .ticker(ticker)
             .value(1.0)

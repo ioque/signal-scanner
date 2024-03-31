@@ -2,21 +2,17 @@ package ru.ioque.apitest.tradingDataGenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.core.dataemulator.currencyPair.CurrencyPairDailyResult;
-import ru.ioque.core.dataemulator.currencyPair.CurrencyPairTrade;
-import ru.ioque.core.dataemulator.futures.FuturesDailyResult;
-import ru.ioque.core.dataemulator.futures.FuturesTrade;
-import ru.ioque.core.dataemulator.index.IndexDailyResult;
-import ru.ioque.core.dataemulator.index.IndexDelta;
-import ru.ioque.core.dataemulator.stock.StockDailyResult;
-import ru.ioque.core.dataemulator.stock.StockTrade;
+import ru.ioque.core.model.history.HistoryValue;
+import ru.ioque.core.model.intraday.Contract;
+import ru.ioque.core.model.intraday.Deal;
+import ru.ioque.core.model.intraday.Delta;
 import ru.ioque.core.tradingdatagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.tradingdatagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
 import ru.ioque.core.tradingdatagenerator.currencypair.CurrencyPairTradeGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.futures.FuturesTradesGeneratorConfig;
 import ru.ioque.core.tradingdatagenerator.index.IndexDeltasGeneratorConfig;
-import ru.ioque.core.tradingdatagenerator.stock.StockTradesGeneratorConfig;
+import ru.ioque.core.tradingdatagenerator.stock.DealGeneratorConfig;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,7 +28,7 @@ public class TradingDataGeneratorFacadeTest {
         T1. Генерация исторических данных для акций
         """)
     void testCase1() {
-        List<StockDailyResult> stockDailyResults = generator.generateStockHistory(
+        List<HistoryValue> stockDailyResults = generator.generateHistory(
             HistoryGeneratorConfig
                 .builder()
                 .ticker("SBER")
@@ -48,8 +44,8 @@ public class TradingDataGeneratorFacadeTest {
         );
 
         assertEquals(129, stockDailyResults.size());
-        assertEquals(1091, Math.round((Double) stockDailyResults.get(128).getValue().getValue()));
-        assertEquals(11, Math.round((Double) stockDailyResults.get(128).getClose().getValue()));
+        assertEquals(1091, Math.round(stockDailyResults.get(128).getValue()));
+        assertEquals(11, Math.round(stockDailyResults.get(128).getClosePrice()));
     }
 
     @Test
@@ -57,8 +53,8 @@ public class TradingDataGeneratorFacadeTest {
         T2. Генерация внутридневных данных для акций
         """)
     void testCase2() {
-        List<StockTrade> stockTrades = generator.generateStockTrades(
-            StockTradesGeneratorConfig
+        List<Deal> stockTrades = generator.generateDeals(
+            DealGeneratorConfig
                 .builder()
                 .ticker("SBER")
                 .numTrades(20)
@@ -71,10 +67,10 @@ public class TradingDataGeneratorFacadeTest {
                 .build()
         );
         assertEquals(20, stockTrades.size());
-        assertEquals(12.0, stockTrades.get(9).getPrice().getValue());
-        assertEquals(120.0, stockTrades.get(9).getValue().getValue());
-        assertEquals(10.92, stockTrades.get(19).getPrice().getValue());
-        assertEquals(72.0, stockTrades.get(19).getValue().getValue());
+        assertEquals(12.0, stockTrades.get(9).getPrice());
+        assertEquals(120.0, stockTrades.get(9).getValue());
+        assertEquals(10.92, stockTrades.get(19).getPrice());
+        assertEquals(72.0, stockTrades.get(19).getValue());
     }
 
     @Test
@@ -82,7 +78,7 @@ public class TradingDataGeneratorFacadeTest {
         T3. Генерация исторических данных для индексов
         """)
     void testCase3() {
-        List<IndexDailyResult> indexDailyResults = generator.generateIndexHistory(
+        List<HistoryValue> indexDailyResults = generator.generateHistory(
             HistoryGeneratorConfig
                 .builder()
                 .ticker("IMOEX")
@@ -104,7 +100,7 @@ public class TradingDataGeneratorFacadeTest {
         T4. Генерация внутридневных данных для индексов
         """)
     void testCase4() {
-        List<IndexDelta> indexDeltas = generator.generateIndexDeltas(
+        List<Delta> indexDeltas = generator.generateDeltas(
             IndexDeltasGeneratorConfig.builder()
                 .ticker("IMOEX")
                 .numTrades(20)
@@ -124,7 +120,7 @@ public class TradingDataGeneratorFacadeTest {
         T5. Генерация исторических данных для валютных пар
         """)
     void testCase5() {
-        List<CurrencyPairDailyResult> currencyPairDailyResults = generator.generateCurrencyPairHistory(
+        List<HistoryValue> currencyPairDailyResults = generator.generateHistory(
             HistoryGeneratorConfig
                 .builder()
                 .ticker("USDRUB")
@@ -146,8 +142,8 @@ public class TradingDataGeneratorFacadeTest {
         T6. Генерация внутридневных данных для валютных пар
         """)
     void testCase6() {
-        List<CurrencyPairTrade> currencyPairTrades = generator.generateCurrencyPairTrades(
-            CurrencyPairTradeGeneratorConfig.builder()
+        List<Deal> currencyPairTrades = generator.generateDeals(
+            DealGeneratorConfig.builder()
                 .ticker("USDRUB")
                 .numTrades(20)
                 .startPrice(10.)
@@ -166,7 +162,7 @@ public class TradingDataGeneratorFacadeTest {
         T7. Генерация исторических данных для фьючерсов
         """)
     void testCase7() {
-        List<FuturesDailyResult> futuresDailyResults = generator.generateFuturesHistory(
+        List<HistoryValue> futuresDailyResults = generator.generateHistory(
             HistoryGeneratorConfig
                 .builder()
                 .ticker("BRF4")
@@ -188,7 +184,7 @@ public class TradingDataGeneratorFacadeTest {
         T8. Генерация внутридневных данных для фьючерсов
         """)
     void testCase8() {
-        List<FuturesTrade> futuresTrades = generator.generateFuturesTrades(
+        List<Contract> futuresTrades = generator.generateContracts(
             FuturesTradesGeneratorConfig.builder()
                 .ticker("BRF4")
                 .numTrades(20)

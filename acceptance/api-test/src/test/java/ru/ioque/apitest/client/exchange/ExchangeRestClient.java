@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 import ru.ioque.apitest.client.RestTemplateFacade;
 import ru.ioque.apitest.client.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.apitest.client.exchange.request.EnableUpdateInstrumentRequest;
-import ru.ioque.apitest.dto.exchange.Exchange;
-import ru.ioque.apitest.dto.exchange.Instrument;
-import ru.ioque.apitest.dto.exchange.InstrumentInList;
-import ru.ioque.apitest.dto.exchange.InstrumentStatistic;
+import ru.ioque.apitest.dto.exchange.ExchangeResponse;
+import ru.ioque.apitest.dto.exchange.InstrumentInListResponse;
+import ru.ioque.apitest.dto.exchange.InstrumentResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,12 +30,12 @@ public class ExchangeRestClient {
         restTemplateFacade.post("/api/daily-integrate", null);
     }
 
-    public Exchange getExchange() {
-        return restTemplateFacade.get("/api/exchange", Exchange.class);
+    public ExchangeResponse getExchange() {
+        return restTemplateFacade.get("/api/exchange", ExchangeResponse.class);
     }
 
     @SneakyThrows
-    public List<InstrumentInList> getInstruments(String params) {
+    public List<InstrumentInListResponse> getInstruments(String params) {
         String path = "/api/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
         return objectMapper.readValue(restTemplateFacade.get(path, String.class), new TypeReference<>(){});
     }
@@ -51,12 +50,8 @@ public class ExchangeRestClient {
         restTemplateFacade.patch("/api/disable-update", objectMapper.writeValueAsString(request), String.class);
     }
 
-    public Instrument getInstrumentBy(UUID id) {
-        return restTemplateFacade.get("/api/instruments/" + id, Instrument.class);
-    }
-
-    public InstrumentStatistic getInstrumentStatisticBy(UUID id) {
-        return restTemplateFacade.get("/api/instruments/" + id + "/statistic", InstrumentStatistic.class);
+    public InstrumentResponse getInstrumentBy(UUID id) {
+        return restTemplateFacade.get("/api/instruments/" + id, InstrumentResponse.class);
     }
 
     public void clearIntradayValue() {

@@ -36,10 +36,8 @@ public class HistoryValueEntity {
     Double openPrice;
     @Column(nullable = false)
     Double closePrice;
-    @Column(nullable = false)
-    Double minPrice;
-    @Column(nullable = false)
-    Double maxPrice;
+    Double lowPrice;
+    Double highPrice;
     Double waPrice;
     @Column(nullable = false)
     Double value;
@@ -50,8 +48,8 @@ public class HistoryValueEntity {
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)
-            .lowPrice(minPrice)
-            .highPrice(maxPrice)
+            .lowPrice(lowPrice)
+            .highPrice(highPrice)
             .value(value)
             .waPrice(waPrice)
             .build();
@@ -63,8 +61,8 @@ public class HistoryValueEntity {
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())
-            .minPrice(historyValue.getLowPrice())
-            .maxPrice(historyValue.getHighPrice())
+            .lowPrice(historyValue.getLowPrice())
+            .highPrice(historyValue.getHighPrice())
             .value(historyValue.getValue())
             .waPrice(historyValue.getWaPrice())
             .build();

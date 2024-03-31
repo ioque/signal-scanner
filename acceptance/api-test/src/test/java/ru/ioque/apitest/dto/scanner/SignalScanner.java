@@ -10,7 +10,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.apitest.client.signalscanner.response.Report;
 import ru.ioque.apitest.client.signalscanner.response.Signal;
-import ru.ioque.apitest.dto.exchange.InstrumentInList;
+import ru.ioque.apitest.dto.exchange.InstrumentInListResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class SignalScanner {
     UUID id;
     String description;
-    List<InstrumentInList> instruments;
+    List<InstrumentInListResponse> instruments;
     List<Report> reports;
     List<Signal> signals;
 }

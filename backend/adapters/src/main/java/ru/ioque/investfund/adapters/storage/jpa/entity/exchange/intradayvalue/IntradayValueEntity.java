@@ -36,6 +36,8 @@ public abstract class IntradayValueEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(nullable = false)
+    Long number;
+    @Column(nullable = false)
     LocalDateTime dateTime;
     @Column(nullable = false)
     String ticker;
@@ -43,10 +45,12 @@ public abstract class IntradayValueEntity {
     Double price;
 
     public IntradayValueEntity(
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price
     ) {
+        this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;

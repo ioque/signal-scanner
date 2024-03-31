@@ -18,8 +18,8 @@ public class TestingSystemRestClient {
     ObjectMapper objectMapper;
 
     @SneakyThrows
-    public List<DailyValueResponse> getDailyValues(int pageNumber, int pageSize) {
-        String path = "/api/daily-values?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+    public List<DailyValueResponse> getHistoryValues(int pageNumber, int pageSize) {
+        String path = "/api/history-values?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
         return objectMapper.readValue(restTemplateFacade.get(path, String.class), new TypeReference<>(){});
     }
 

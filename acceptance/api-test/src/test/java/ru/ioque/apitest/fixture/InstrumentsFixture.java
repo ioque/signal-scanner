@@ -1,110 +1,91 @@
 package ru.ioque.apitest.fixture;
 
-import ru.ioque.core.dataemulator.core.InstrumentType;
-import ru.ioque.core.dataemulator.currencyPair.CurrencyPair;
-import ru.ioque.core.dataemulator.futures.Futures;
-import ru.ioque.core.dataemulator.index.Index;
-import ru.ioque.core.dataemulator.stock.Stock;
+import ru.ioque.core.model.instrument.CurrencyPair;
+import ru.ioque.core.model.instrument.Futures;
+import ru.ioque.core.model.instrument.Index;
+import ru.ioque.core.model.instrument.Stock;
 
 public class InstrumentsFixture {
     public Index.IndexBuilder imoex() {
         return Index.builder()
-            .secId("IMOEX")
-            .boardId("SNDX")
+            .ticker("IMOEX")
             .name("Индекс фондового рынка мосбиржи")
             .shortName("Индекс фондового рынка мосбиржи")
             .annualHigh(3287.34)
-            .annualLow(2126.4)
-            .currencyId("RUB")
-            .decimals(2)
-            .type(InstrumentType.INDEX);
+            .annualLow(2126.4);
     }
 
     public CurrencyPair.CurrencyPairBuilder usbRub() {
         return CurrencyPair.builder()
-            .secId("USD000UTSTOM")
-            .shortname("USDRUB_TOM")
-            .secName("USDRUB_TOM - USD/РУБ")
+            .ticker("USD000UTSTOM")
+            .shortName("USDRUB_TOM")
+            .name("USDRUB_TOM - USD/РУБ")
             .lotSize(1000)
-            .type(InstrumentType.CURRENCY);
+            .faceUnit("RUB");
     }
 
     public Futures.FuturesBuilder brf4() {
         return Futures.builder()
-            .secId("BRF4")
-            .boardId("RFUD")
-            .secName("Фьючерсный контракт BR-1.24")
-            .shortname("BR-1.24")
-            .type(InstrumentType.FUTURES);
+            .ticker("BRF4")
+            .name("Фьючерсный контракт BR-1.24")
+            .shortName("BR-1.24")
+            .lotVolume(1000)
+            .assetCode("BR");
     }
 
     public Stock.StockBuilder sber() {
         return Stock.builder()
-            .secId("SBER")
-            .boardId("TQBR")
+            .ticker("SBER")
             .lotSize(100)
-            .secName("ПАО Сбербанк")
-            .shortname("Сбербанк")
-            .type(InstrumentType.STOCK);
+            .name("ПАО Сбербанк")
+            .shortName("Сбербанк");
     }
 
     public Stock.StockBuilder sberp() {
         return Stock.builder()
-            .secId("SBERP")
-            .boardId("TQBR")
+            .ticker("SBERP")
             .lotSize(100)
-            .secName("Сбербанк-п")
-            .shortname("Сбербанк-п")
-            .type(InstrumentType.STOCK);
+            .name("Сбербанк-п")
+            .shortName("Сбербанк-п");
     }
 
     public Stock.StockBuilder sibn() {
         return Stock.builder()
-            .secId("SIBN")
-            .boardId("TQBR")
+            .ticker("SIBN")
             .lotSize(100)
-            .secName("Газпромнефть")
-            .shortname("Газпромнефть")
-            .type(InstrumentType.STOCK);
+            .name("Газпромнефть")
+            .shortName("Газпромнефть");
     }
 
     public Stock.StockBuilder lkoh() {
         return Stock.builder()
-            .secId("LKOH")
-            .boardId("TQBR")
+            .ticker("LKOH")
             .lotSize(100)
-            .secName("Лукойл")
-            .shortname("Лукойл")
-            .type(InstrumentType.STOCK);
+            .name("Лукойл")
+            .shortName("Лукойл");
     }
 
     public Stock.StockBuilder rosn() {
         return Stock.builder()
-            .secId("ROSN")
-            .boardId("TQBR")
+            .ticker("ROSN")
             .lotSize(100)
-            .secName("Роснефть")
-            .shortname("Роснефть")
-            .type(InstrumentType.STOCK);
+            .name("Роснефть")
+            .shortName("Роснефть");
     }
 
     public Stock.StockBuilder tatn() {
         return Stock.builder()
-            .secId("TATN")
-            .boardId("TQBR")
+            .ticker("TATN")
             .lotSize(100)
-            .secName("Татнефть")
-            .shortname("Татнефть")
-            .type(InstrumentType.STOCK);
+            .name("Татнефть")
+            .shortName("Татнефть");
     }
 
     public Stock.StockBuilder tgkn() {
         return Stock.builder()
-            .secId("TGKN")
-            .boardId("TQBR")
+            .ticker("TGKN")
             .lotSize(100)
-            .secName("ТГК-14")
-            .shortname("ТГК-14")
-            .type(InstrumentType.STOCK);
+            .name("ТГК-14")
+            .shortName("ТГК-14");
     }
 }

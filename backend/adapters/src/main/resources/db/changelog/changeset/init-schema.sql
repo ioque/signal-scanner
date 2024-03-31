@@ -1,8 +1,8 @@
 create table if not exists archived_history_value
 (
     close_price         double precision not null,
-    max_price           double precision not null,
-    min_price           double precision not null,
+    high_price           double precision,
+    low_price           double precision,
     num_trades          double precision,
     open_price          double precision not null,
     trade_date          date             not null,
@@ -34,8 +34,8 @@ alter table archived_intraday_value
 create table if not exists history_value
 (
     close_price         double precision not null,
-    max_price           double precision not null,
-    min_price           double precision not null,
+    high_price           double precision,
+    low_price           double precision,
     num_trades          double precision,
     open_price          double precision not null,
     trade_date          date             not null,

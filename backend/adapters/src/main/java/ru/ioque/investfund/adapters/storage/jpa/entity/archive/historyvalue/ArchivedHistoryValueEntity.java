@@ -39,10 +39,8 @@ public class ArchivedHistoryValueEntity {
     Double openPrice;
     @Column(nullable = false)
     Double closePrice;
-    @Column(nullable = false)
-    Double minPrice;
-    @Column(nullable = false)
-    Double maxPrice;
+    Double highPrice;
+    Double lowPrice;
     Double waPrice;
     @Column(nullable = false)
     Double value;
@@ -52,16 +50,16 @@ public class ArchivedHistoryValueEntity {
         String ticker,
         Double openPrice,
         Double closePrice,
-        Double minPrice,
-        Double maxPrice,
+        Double lowPrice,
+        Double highPrice,
         Double value
     ) {
         this.tradeDate = tradeDate;
         this.ticker = ticker;
         this.openPrice = openPrice;
         this.closePrice = closePrice;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
+        this.lowPrice = lowPrice;
+        this.highPrice = highPrice;
         this.value = value;
     }
 
@@ -71,8 +69,8 @@ public class ArchivedHistoryValueEntity {
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)
-            .lowPrice(minPrice)
-            .highPrice(maxPrice)
+            .lowPrice(lowPrice)
+            .highPrice(highPrice)
             .value(value)
             .waPrice(waPrice)
             .build();
@@ -84,8 +82,8 @@ public class ArchivedHistoryValueEntity {
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())
-            .minPrice(historyValue.getLowPrice())
-            .maxPrice(historyValue.getHighPrice())
+            .lowPrice(historyValue.getLowPrice())
+            .highPrice(historyValue.getHighPrice())
             .value(historyValue.getValue())
             .waPrice(historyValue.getWaPrice())
             .build();

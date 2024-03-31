@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION, defaultImpl = DeltaDto.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = DeltaDto.class, name = "DeltaDto"),
@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
     @JsonSubTypes.Type(value = DealDto.class, name = "DealDto")
 })
 public abstract class IntradayValueDto {
+    Long tradeNumber;
     LocalDateTime dateTime;
     String ticker;
     Double value;

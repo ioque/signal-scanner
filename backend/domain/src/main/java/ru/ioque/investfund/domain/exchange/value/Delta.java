@@ -13,7 +13,13 @@ import java.time.LocalDateTime;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Delta extends IntradayValue {
     @Builder
-    public Delta(LocalDateTime dateTime, String ticker, Double price, Double value) {
-        super(dateTime, ticker, price, value);
+    public Delta(
+        Long number,
+        LocalDateTime dateTime,
+        String ticker,
+        Double price,
+        Double value
+    ) {
+        super(number, dateTime, ticker, price, value);
     }
 }

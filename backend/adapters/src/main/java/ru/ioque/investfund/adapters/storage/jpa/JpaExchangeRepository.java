@@ -90,6 +90,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
             .stream()
             .map(instrument -> CompletableFuture.runAsync(() -> {
                 instrumentEntityRepository.save(InstrumentEntity.fromDomain(instrument));
+                final Long lastIntradayValueNumber = getLastNumber(instrument.getTicker());
                 final Optional<LocalDate> lastDailyValueDate = getLastDate(instrument.getTicker());
                 historyValueEntityRepository.saveAll(instrument
                     .getHistoryValues()
@@ -102,6 +103,7 @@ public class JpaExchangeRepository implements ExchangeRepository {
                 intradayValueEntityRepository.saveAll(instrument
                     .getIntradayValues()
                     .stream()
+                    .filter(value -> value.getNumber() > lastIntradayValueNumber)
                     .map(IntradayValueEntity::fromDomain)
                     .toList());
             }))
@@ -111,5 +113,9 @@ public class JpaExchangeRepository implements ExchangeRepository {
 
     private Optional<LocalDate> getLastDate(String ticker) {
         return historyValueEntityRepository.lastDateBy(ticker);
+    }
+
+    private Long getLastNumber(String ticker) {
+        return intradayValueEntityRepository.lastNumberBy(ticker).orElse(0L);
     }
 }

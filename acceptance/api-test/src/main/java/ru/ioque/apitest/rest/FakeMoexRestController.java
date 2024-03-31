@@ -1,91 +1,49 @@
 package ru.ioque.apitest.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.apitest.storage.DatasetRepository;
-import ru.ioque.core.dataemulator.core.InstrumentType;
+import ru.ioque.apitest.repos.DatasetRepository;
+import ru.ioque.core.model.history.HistoryValue;
+import ru.ioque.core.model.instrument.Instrument;
+import ru.ioque.core.model.intraday.IntradayValue;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FakeMoexRestController {
-    ObjectMapper objectMapper;
     DatasetRepository datasetRepository;
 
     @SneakyThrows
-    @GetMapping(value = "/iss/engines/{engine}/markets/{market}/boards/{board}/securities.json", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> getInstruments(@PathVariable String engine, @PathVariable String market, @PathVariable String board) {
-        return getInstrumentsBy(board);
-    }
-
-    @GetMapping("/iss/engines/{engine}/markets/{market}/boards/{board}/securities/{ticker}/trades.json")
-    ResponseEntity<String> getStockDeals(@PathVariable String ticker,
-                                         @PathVariable String board,
-                                         @PathVariable String engine,
-                                         @PathVariable String market,
-                                         @RequestParam Integer limit,
-                                         @RequestParam Integer start
+    @GetMapping(value = "/api/instruments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Instrument> getInstruments(
     ) {
-        return getIntradayValuesBy(ticker, limit, start);
+        return datasetRepository.getInstruments();
     }
 
-    @GetMapping("/iss/history/engines/{engine}/markets/{market}/boards/{board}/securities/{ticker}.json")
-    ResponseEntity<String> getStockHistory(
+    @GetMapping("/api/instruments/{ticker}/intraday")
+    public List<IntradayValue> getIntraday(
         @PathVariable String ticker,
-        @PathVariable String board,
-        @PathVariable String engine,
-        @PathVariable String market,
-        @RequestParam LocalDate from,
-        @RequestParam LocalDate till,
-        @RequestParam Integer limit,
-        @RequestParam Integer start
+        @RequestParam(required = false, defaultValue = "0") int start
     ) {
-        return getHistoryValues(ticker, from, till, limit, start);
+        return datasetRepository.getIntradayValuesBy(ticker, start);
     }
 
-    private ResponseEntity<String> getHistoryValues(String ticker, LocalDate from, LocalDate till, Integer limit, Integer start) {
-        return new ResponseEntity<>(
-            toJson(HistoryResponse.fromBy(datasetRepository.getHistoryValuesBy(ticker, from, till, limit, start))),
-            HttpStatus.OK
-        );
-    }
-
-    private ResponseEntity<String> getIntradayValuesBy(String ticker, Integer limit, Integer start) {
-        return new ResponseEntity<>(
-            toJson(TradesResponse.fromBy(datasetRepository.getIntradayValuesBy(ticker, limit, start))),
-            HttpStatus.OK
-        );
-    }
-
-    private ResponseEntity<String> getInstrumentsBy(String board) {
-        return new ResponseEntity<>(
-            toJson(SecuritiesResponse.fromBy(datasetRepository.getInstrumentsBy(typeMap.get(board)))),
-            HttpStatus.OK
-        );
-    }
-
-    private final Map<String, InstrumentType> typeMap = Map.of(
-        "TQBR", InstrumentType.STOCK,
-        "RFUD", InstrumentType.FUTURES,
-        "CETS", InstrumentType.CURRENCY,
-        "SNDX", InstrumentType.INDEX
-    );
-
-    @SneakyThrows
-    private String toJson(Object object) {
-        return objectMapper.writeValueAsString(object);
+    @GetMapping("/api/instruments/{ticker}/history")
+    public List<HistoryValue> getHistory(
+        @PathVariable String ticker,
+        @RequestParam LocalDate from,
+        @RequestParam LocalDate to
+    ) {
+        return datasetRepository.getHistoryValues(ticker, from, to);
     }
 }
