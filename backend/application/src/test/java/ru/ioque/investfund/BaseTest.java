@@ -104,7 +104,11 @@ public class BaseTest {
     }
 
     protected List<Instrument> getInstruments() {
-        return exchangeRepository().getBy(dateTimeProvider().nowDate()).map(Exchange::getInstruments).orElse(new ArrayList<>());
+        return exchangeRepository()
+            .getAllBy(dateTimeProvider().nowDate())
+            .stream().findFirst()
+            .map(Exchange::getInstruments)
+            .orElse(new ArrayList<>());
     }
 
     protected void initTodayDateTime(String dateTime) {

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.modules.exchange.AddDatasourceCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.core.DomainException;
@@ -24,6 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ScannerManagerTest extends BaseTest {
     @BeforeEach
     void initRepo() {
+        exchangeManager().registerDatasource(
+            AddDatasourceCommand.builder()
+                .name("Московская биржа")
+                .description("Московская биржа")
+                .url("http://localhost:8080")
+                .build()
+        );
         exchangeManager().integrateWithDataSource();
     }
 

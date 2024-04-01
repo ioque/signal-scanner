@@ -25,7 +25,9 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
         if (instrumentIds == null || instrumentIds.isEmpty()) return List.of();
         return instrumentIds.stream().map(id -> {
             Instrument instrument = exchangeRepository
-                .get()
+                .getAllBy(dateTimeProvider.nowDate())
+                .stream()
+                .findFirst()
                 .orElseThrow()
                 .getInstruments()
                 .stream()

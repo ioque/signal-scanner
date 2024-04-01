@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.ConfigureProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
@@ -27,7 +26,6 @@ import java.util.function.Supplier;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ExchangeManager implements SystemModule {
     DateTimeProvider dateTimeProvider;
-    ConfigureProvider configureProvider;
     ExchangeProvider exchangeProvider;
     ExchangeRepository repository;
     UUIDProvider uuidProvider;
@@ -36,9 +34,7 @@ public class ExchangeManager implements SystemModule {
 
     @Override
     public synchronized void execute() {
-        if (repository.getBy(dateTimeProvider.nowDate()).isPresent()) {
-            integrateTradingData();
-        }
+        integrateTradingData();
     }
 
     public synchronized void enableUpdate(List<UUID> ids) {
@@ -54,8 +50,7 @@ public class ExchangeManager implements SystemModule {
     }
 
     public synchronized void integrateWithDataSource() {
-        final Exchange exchange =
-            repository.getBy(dateTimeProvider.nowDate()).orElseGet(this::newExchange);
+        final Exchange exchange = getExchangeFromRepo();
         loggerFacade.logRunSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
         exchangeProvider.fetchInstruments().forEach(exchange::saveInstrument);
         repository.save(exchange);
@@ -93,21 +88,26 @@ public class ExchangeManager implements SystemModule {
     }
 
     private Exchange getExchangeFromRepo() {
-        return repository.getBy(dateTimeProvider.nowDate()).orElseThrow(exchangeNotFound());
+        return repository
+            .getAllBy(dateTimeProvider.nowDate())
+            .stream()
+            .findFirst()
+            .orElseThrow(exchangeNotFound());
     }
 
     private Supplier<ApplicationException> exchangeNotFound() {
         return () -> new ApplicationException("Биржа не зарегистрирована.");
     }
 
-    private Exchange newExchange() {
-        return Exchange
+    public void registerDatasource(AddDatasourceCommand command) {
+        var exchange = Exchange
             .builder()
             .id(uuidProvider.generate())
-            .name(configureProvider.exchangeName())
-            .url(configureProvider.exchangeServerUrl())
-            .description(configureProvider.exchangeDescription())
+            .name(command.getName())
+            .url(command.getUrl())
+            .description(command.getDescription())
             .instruments(new ArrayList<>())
             .build();
+        repository.save(exchange);
     }
 }

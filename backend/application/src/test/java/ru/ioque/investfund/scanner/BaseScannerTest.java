@@ -2,6 +2,7 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.modules.exchange.AddDatasourceCommand;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -25,6 +26,13 @@ public class BaseScannerTest extends BaseTest {
     protected static final String SBERP = "SBERP";
     @BeforeEach
     void beforeEach() {
+        exchangeManager().registerDatasource(
+            AddDatasourceCommand.builder()
+                .name("Московская биржа")
+                .description("Московская биржа")
+                .url("http://localhost:8080")
+                .build()
+        );
         eventBus().subscribe(TradingDataUpdatedEvent.class, dataScannerManager());
         loggerProvider().clearLogs();
     }

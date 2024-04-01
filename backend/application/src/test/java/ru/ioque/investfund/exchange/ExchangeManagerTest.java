@@ -1,8 +1,10 @@
 package ru.ioque.investfund.exchange;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.modules.exchange.AddDatasourceCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
@@ -21,6 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("EXCHANGE MANAGER - INTEGRATION")
 public class ExchangeManagerTest extends BaseTest {
+    @BeforeEach
+    void beforeEach() {
+        exchangeManager().registerDatasource(
+            AddDatasourceCommand.builder()
+                .name("Московская биржа")
+                .description("Московская биржа")
+                .url("http://localhost:8080")
+                .build()
+        );
+    }
     @Test
     @DisplayName("""
         T1. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
@@ -37,10 +49,10 @@ public class ExchangeManagerTest extends BaseTest {
         );
 
         exchangeManager().integrateWithDataSource();
-        final Optional<Exchange> exchange = exchangeRepository().getBy(dateTimeProvider().nowDate());
+        final Optional<Exchange> exchange = exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst();
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
-        assertEquals("http://localhost:8081", exchange.get().getUrl());
+        assertEquals("http://localhost:8080", exchange.get().getUrl());
         assertEquals("Московская биржа", exchange.get().getDescription());
         assertEquals(2, exchange.get().getInstruments().size());
         assertEquals(2, getInstruments().size());
@@ -65,10 +77,10 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().integrateWithDataSource();
         clearLogs();
 
-        final var id = exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId();
+        final var id = exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst().orElseThrow().getId();
         exchangeManager().integrateWithDataSource();
         assertEquals(10, getInstruments().size());
-        assertEquals(id, exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId());
+        assertEquals(id, exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst().orElseThrow().getId());
     }
 
     @Test
@@ -378,6 +390,7 @@ public class ExchangeManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase16() {
+        exchangeRepository().clear();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
@@ -389,6 +402,7 @@ public class ExchangeManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase17() {
+        exchangeRepository().clear();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
@@ -400,6 +414,7 @@ public class ExchangeManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase18() {
+        exchangeRepository().clear();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().integrateTradingData());
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
