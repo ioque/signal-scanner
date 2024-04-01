@@ -1,9 +1,9 @@
 package ru.ioque.apitest.repos;
 
 import lombok.Getter;
-import ru.ioque.core.model.history.HistoryValue;
-import ru.ioque.core.model.instrument.Instrument;
-import ru.ioque.core.model.intraday.IntradayValue;
+import ru.ioque.core.datagenerator.history.HistoryValue;
+import ru.ioque.core.datagenerator.instrument.Instrument;
+import ru.ioque.core.datagenerator.intraday.IntradayValue;
 
 import java.util.ArrayList;
 import java.util.List;

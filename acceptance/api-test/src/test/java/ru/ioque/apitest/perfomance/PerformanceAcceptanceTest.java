@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.apitest.dto.exchange.InstrumentResponse;
-import ru.ioque.core.tradingdatagenerator.core.HistoryGeneratorConfig;
-import ru.ioque.core.tradingdatagenerator.core.PercentageGrowths;
-import ru.ioque.core.tradingdatagenerator.stock.DealGeneratorConfig;
+import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
+import ru.ioque.core.datagenerator.core.PercentageGrowths;
+import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.dto.exchange.response.InstrumentResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         integrateInstruments(instruments().sber().build());
         datasetRepository().initIntradayValue(
             generator().generateDeals(
-                DealGeneratorConfig
+                DealsGeneratorConfig
                     .builder()
                     .ticker("SBER")
                     .numTrades(50000)

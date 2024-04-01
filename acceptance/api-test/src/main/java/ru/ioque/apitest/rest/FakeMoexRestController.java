@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.apitest.repos.DatasetRepository;
-import ru.ioque.core.model.history.HistoryValue;
-import ru.ioque.core.model.instrument.Instrument;
-import ru.ioque.core.model.intraday.IntradayValue;
+import ru.ioque.core.datagenerator.history.HistoryValue;
+import ru.ioque.core.datagenerator.instrument.Instrument;
+import ru.ioque.core.datagenerator.intraday.IntradayValue;
 
 import java.time.LocalDate;
 import java.util.List;

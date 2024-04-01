@@ -1,9 +1,9 @@
 package ru.ioque.apitest.fixture;
 
-import ru.ioque.core.model.instrument.CurrencyPair;
-import ru.ioque.core.model.instrument.Futures;
-import ru.ioque.core.model.instrument.Index;
-import ru.ioque.core.model.instrument.Stock;
+import ru.ioque.core.datagenerator.instrument.CurrencyPair;
+import ru.ioque.core.datagenerator.instrument.Futures;
+import ru.ioque.core.datagenerator.instrument.Index;
+import ru.ioque.core.datagenerator.instrument.Stock;
 
 public class InstrumentsFixture {
     public Index.IndexBuilder imoex() {

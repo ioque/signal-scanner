@@ -48,10 +48,10 @@ public class DatasourceRestController {
     @GetMapping("/api/instruments/{ticker}/intraday")
     public List<IntradayValueResponse> intradayValues(
         @PathVariable String ticker,
-        @RequestParam(required = false, defaultValue = "0") int start
+        @RequestParam(required = false, defaultValue = "0") long lastNumber
     ) {
         return tradingDataService
-            .getIntradayValues(ticker, start)
+            .getIntradayValues(ticker, lastNumber)
             .stream()
             .map(IntradayValueResponse::from)
             .toList();

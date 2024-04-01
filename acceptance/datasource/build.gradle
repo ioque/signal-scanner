@@ -1,4 +1,5 @@
 dependencies {
+    implementation project(":core")
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }

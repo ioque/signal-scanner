@@ -54,9 +54,9 @@ public class ExchangeProviderImpl implements ExchangeProvider {
 
     @Override
     @SneakyThrows
-    public List<IntradayValue> fetchIntradayValuesBy(String ticker, int start) {
+    public List<IntradayValue> fetchIntradayValuesBy(String ticker, long lastNumber) {
         return moexClient
-            .fetchIntradayValues(ticker, start)
+            .fetchIntradayValues(ticker, lastNumber)
             .stream()
             .map(IntradayValueDto::toDomain)
             .toList();

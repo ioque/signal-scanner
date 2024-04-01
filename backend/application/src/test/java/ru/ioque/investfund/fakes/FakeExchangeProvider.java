@@ -28,7 +28,7 @@ public class FakeExchangeProvider implements ExchangeProvider {
     }
 
     @Override
-    public List<IntradayValue> fetchIntradayValuesBy(String ticker, int start) {
+    public List<IntradayValue> fetchIntradayValuesBy(String ticker, long lastNumber) {
         return exchangeDataFixture.getDealsByTicker(ticker);
     }
 

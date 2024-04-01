@@ -15,6 +15,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ExchangeManager implements SystemModule {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
 
             exchangeProvider
-                .fetchIntradayValuesBy(instrument.getTicker(), instrument.getIntradayValueNumbers())
+                .fetchIntradayValuesBy(instrument.getTicker(), instrument.lastIntradayValue().map(IntradayValue::getNumber).orElse(0L))
                 .stream()
                 .filter(row -> row.isSameByDate(dateTimeProvider.nowDate()))
                 .forEach(instrument::addNewIntradayValue);

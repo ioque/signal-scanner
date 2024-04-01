@@ -41,13 +41,13 @@ public class ExchangeRestClient {
         }
     }
 
-    public List<IntradayValueDto> fetchIntradayValues(String ticker, int start) {
+    public List<IntradayValueDto> fetchIntradayValues(String ticker, long lastNumber) {
         try {
             return objectMapper
                 .readValue(
                     defaultClient
                         .get()
-                        .uri(exchangeUrl + "/api/instruments/" + ticker + "/intraday?start=" + start)
+                        .uri(exchangeUrl + "/api/instruments/" + ticker + "/intraday?lastNumber=" + lastNumber)
                         .retrieve()
                         .body(String.class),
                     new TypeReference<>() {}

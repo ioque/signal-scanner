@@ -49,12 +49,12 @@ public class MoexProviderImpl implements MoexProvider {
     }
 
     @Override
-    public List<JsonNode> fetchIntradayValues(Instrument instrument, int start) {
+    public List<JsonNode> fetchIntradayValues(Instrument instrument, long lastNumber) {
         return PageReader
             .builder()
-            .start(start)
+            .start(0)
             .pageSize(5000)
-            .url(intradayPath(instrument))
+            .url(intradayPath(instrument, lastNumber))
             .fetch(this::fetchIntradayBatch)
             .build()
             .readAllPage();
@@ -81,12 +81,12 @@ public class MoexProviderImpl implements MoexProvider {
         return objectMapper.readTree(fetch(path)).get("history");
     }
 
-    private String intradayPath(Instrument instrument) {
+    private String intradayPath(Instrument instrument, long lastNumber) {
         return queryBuilder
             .getFetchDealBy(
                 instrument.getClass(),
                 instrument.getTicker()
-            );
+            ) + (lastNumber > 0 ? ("&tradeno=" + lastNumber + "&") : "");
     }
 
     private String dailyTradingResultPath(Instrument instrument, LocalDate from, LocalDate to) {

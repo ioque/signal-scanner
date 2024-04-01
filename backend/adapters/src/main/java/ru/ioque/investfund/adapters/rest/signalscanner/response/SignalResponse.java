@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class SignalResponse implements Serializable {
     String ticker;
     String dateTime;
-    boolean isBuy;
+    Boolean isBuy;
     public static SignalResponse from(SignalEntity signalEntity, InstrumentEntity instrument) {
         return SignalResponse.builder()
             .ticker(instrument.getTicker())

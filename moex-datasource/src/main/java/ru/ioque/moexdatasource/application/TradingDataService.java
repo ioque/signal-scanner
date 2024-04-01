@@ -35,12 +35,12 @@ public class TradingDataService {
             .orElseThrow();
     }
 
-    public List<IntradayValue> getIntradayValues(String ticker, int start) {
+    public List<IntradayValue> getIntradayValues(String ticker, long lastNumber) {
         return instrumentRepo
             .findBy(ticker)
             .map(instrument ->
                 intradayValueParser.parse(
-                    moexProvider.fetchIntradayValues(instrument, start),
+                    moexProvider.fetchIntradayValues(instrument, lastNumber),
                     instrument
                 )
             )
