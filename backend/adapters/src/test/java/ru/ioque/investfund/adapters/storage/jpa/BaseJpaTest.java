@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("unit-test")
 public class BaseJpaTest {
     @Autowired
     protected UUIDProvider uuidProvider;
