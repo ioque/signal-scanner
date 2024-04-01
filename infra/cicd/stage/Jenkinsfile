@@ -81,6 +81,20 @@ pipeline {
                 }
             }
         }
+        stage("Build and Push Datasource") {
+            agent any
+            steps {
+                script {
+                    sh "cd acceptance/datasource && docker build . --pull -t ${env.NEXUS_URL}/ioque/datasource:${env.IMAGE_TAG} -t ${env.NEXUS_URL}/ioque/datasource:latest"
+                    sh "docker login ${env.NEXUS_CREDENTIALS} ${env.NEXUS_URL}"
+                    sh "docker push --all-tags ${env.NEXUS_URL}/ioque/datasource"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/datasource:latest"
+                    sh "docker rmi ${env.NEXUS_URL}/ioque/datasource:${env.IMAGE_TAG}"
+                    sh "docker logout ${env.NEXUS_URL}"
+                    echo "Docker image of Datasource was successfully built and pushed to nexus."
+                }
+            }
+        }
 
         stage("Deploy to Staging Server") {
             agent any
@@ -108,10 +122,8 @@ pipeline {
         stage("UI Tests") {
             agent any
             steps {
-                sh "cd acceptance && ./gradlew -p datasource bootRun &"
                 sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew -p ui-seeder bootRun"
                 sh "export UI_HOST=${env.DOCKER_API_HOST} && export UI_PORT=4200 && cd selenium && ./gradlew test"
-                sh "fg 1"
                 echo "Running UI tests was successful."
             }
         }
