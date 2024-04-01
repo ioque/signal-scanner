@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.ioque.investfund.adapters.exchagne.moex.client.ExchangeRestClientException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,5 +30,10 @@ public class ExceptionHandlerController {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> notFound(ResourceNotFoundException ex, HttpServletRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ExchangeRestClientException.class)
+    public ResponseEntity<?> exchangeRestClientError(ExchangeRestClientException ex, HttpServletRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

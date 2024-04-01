@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,47 +25,56 @@ public class ExchangeRestClient {
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     final RestClient defaultClient = RestClient.create();
 
-    @SneakyThrows
     public List<InstrumentDto> fetchInstruments() {
-        return objectMapper
-            .readValue(
-                defaultClient
-                    .get()
-                    .uri(exchangeUrl + "/api/instruments")
-                    .retrieve()
-                    .body(String.class),
-                new TypeReference<>() {}
-            );
+        try {
+            return objectMapper
+                .readValue(
+                    defaultClient
+                        .get()
+                        .uri(exchangeUrl + "/api/instruments")
+                        .retrieve()
+                        .body(String.class),
+                    new TypeReference<>() {}
+                );
+        } catch (Exception ex) {
+            throw new ExchangeRestClientException(ex.getMessage(), ex);
+        }
     }
 
-    @SneakyThrows
     public List<IntradayValueDto> fetchIntradayValues(String ticker, int start) {
-        return objectMapper
-            .readValue(
-                defaultClient
-                    .get()
-                    .uri(exchangeUrl + "/api/instruments/" + ticker + "/intraday?start=" + start)
-                    .retrieve()
-                    .body(String.class),
-                new TypeReference<>() {}
-            );
+        try {
+            return objectMapper
+                .readValue(
+                    defaultClient
+                        .get()
+                        .uri(exchangeUrl + "/api/instruments/" + ticker + "/intraday?start=" + start)
+                        .retrieve()
+                        .body(String.class),
+                    new TypeReference<>() {}
+                );
+        } catch (Exception ex) {
+            throw new ExchangeRestClientException(ex.getMessage(), ex);
+        }
     }
 
-    @SneakyThrows
     public List<HistoryValueDto> fetchHistory(
         String ticker,
         LocalDate from,
         LocalDate to
     ) {
-        return objectMapper
-            .readValue(
-                defaultClient
-                    .get()
-                    .uri(exchangeUrl + "/api/instruments/" + ticker + "/history?from=" + from + "&to=" + to)
-                    .retrieve()
-                    .body(String.class),
-                new TypeReference<>() {}
-            );
+        try {
+            return objectMapper
+                .readValue(
+                    defaultClient
+                        .get()
+                        .uri(exchangeUrl + "/api/instruments/" + ticker + "/history?from=" + from + "&to=" + to)
+                        .retrieve()
+                        .body(String.class),
+                    new TypeReference<>() {}
+                );
+        } catch (Exception ex) {
+            throw new ExchangeRestClientException(ex.getMessage(), ex);
+        }
     }
 }
 
