@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ExchangeRestClient extends BaseClient {
-    public ExchangeRestClient(String baseUrl) {
-        super(baseUrl);
+    public ExchangeRestClient(String apiUrl) {
+        super(apiUrl);
     }
 
     @SneakyThrows

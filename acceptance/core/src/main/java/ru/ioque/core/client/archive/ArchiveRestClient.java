@@ -8,8 +8,8 @@ import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
 import java.util.List;
 
 public class ArchiveRestClient extends BaseClient {
-    public ArchiveRestClient(String apiHost) {
-        super(apiHost);
+    public ArchiveRestClient(String apiUrl) {
+        super(apiUrl);
     }
 
     @SneakyThrows

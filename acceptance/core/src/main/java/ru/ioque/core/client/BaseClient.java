@@ -12,14 +12,14 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 @RequiredArgsConstructor
 public class BaseClient {
-    protected final String apiHost;
+    protected final String apiUrl;
     protected final HttpClient client = HttpClient.newHttpClient();
     protected final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @SneakyThrows
     protected String get(String path) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(new URI(apiHost + path))
+            .uri(new URI(apiUrl + path))
             .header("Content-Type", "application/json")
             .GET()
             .build();
@@ -29,7 +29,7 @@ public class BaseClient {
     @SneakyThrows
     protected void post(String path) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(new URI(apiHost + path))
+            .uri(new URI(apiUrl + path))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.noBody())
             .build();
@@ -39,7 +39,7 @@ public class BaseClient {
     @SneakyThrows
     protected void post(String path, String body) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(new URI(apiHost + path))
+            .uri(new URI(apiUrl + path))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(body))
             .build();
@@ -49,7 +49,7 @@ public class BaseClient {
     @SneakyThrows
     protected void patch(String path, String body) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(new URI(apiHost + path))
+            .uri(new URI(apiUrl + path))
             .header("Content-Type", "application/json")
             .method("PATCH", HttpRequest.BodyPublishers.ofString(body))
             .build();
@@ -59,7 +59,7 @@ public class BaseClient {
     @SneakyThrows
     protected void delete(String path) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(new URI(apiHost + path))
+            .uri(new URI(apiUrl + path))
             .header("Content-Type", "application/json")
             .DELETE()
             .build();

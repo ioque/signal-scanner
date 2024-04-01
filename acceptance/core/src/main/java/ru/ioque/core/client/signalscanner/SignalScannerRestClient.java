@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class SignalScannerRestClient extends BaseClient {
-    public SignalScannerRestClient(String apiHost) {
-        super(apiHost);
+    public SignalScannerRestClient(String apiUrl) {
+        super(apiUrl);
     }
 
     @SneakyThrows

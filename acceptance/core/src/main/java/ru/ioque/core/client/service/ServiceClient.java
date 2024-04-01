@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ServiceClient extends BaseClient {
-    public ServiceClient(String baseUrl) {
-        super(baseUrl);
+    public ServiceClient(String apiUrl) {
+        super(apiUrl);
     }
 
     @SneakyThrows

@@ -10,8 +10,3 @@ spring:
     generate-ddl: true
   liquibase:
     enabled: false
-
-exchange:
-  name: 'Московская Биржа'
-  description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
-  url: http://localhost:8081

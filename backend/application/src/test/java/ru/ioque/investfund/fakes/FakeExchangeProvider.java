@@ -22,18 +22,18 @@ public class FakeExchangeProvider implements ExchangeProvider {
 
     @Override
     public List<HistoryValue> fetchHistoryBy(
-        String ticker, LocalDate from, LocalDate to
+        String exchangeUrl, String ticker, LocalDate from, LocalDate to
     ) {
         return exchangeDataFixture.getHistoryDataByTicker(ticker).stream().toList();
     }
 
     @Override
-    public List<IntradayValue> fetchIntradayValuesBy(String ticker, long lastNumber) {
+    public List<IntradayValue> fetchIntradayValuesBy(String exchangeUrl, String ticker, long lastNumber) {
         return exchangeDataFixture.getDealsByTicker(ticker);
     }
 
     @Override
-    public List<Instrument> fetchInstruments() {
+    public List<Instrument> fetchInstruments(String exchangeUrl) {
         return exchangeDataFixture.getInstruments();
     }
 }
