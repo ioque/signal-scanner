@@ -8,10 +8,10 @@ pipeline {
         skipDefaultCheckout()
     }
     environment {
-        DB_HOST = "192.168.0.85"
-        SPRING_PROFILES = "test"
-        API_HOST = "192.168.0.85"
-        API_HTTP_MODE = "http"
+        DOCKER_DB_HOST = "192.168.0.85"
+        DOCKER_SPRING_PROFILES = "test"
+        DOCKER_API_HOST = "192.168.0.85"
+        DOCKER_API_HTTP_MODE = "http"
         IMAGE_TAG = "v$BUILD_NUMBER"
         NEXUS_URL = "192.168.0.62:8002"
         NEXUS_CREDENTIALS = credentials('nexus-cred')
@@ -99,10 +99,10 @@ pipeline {
             agent any
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ioque', keyFileVariable: 'PRIVATE')]) {
-                    sh "export DOCKER_DB_HOST=${env.DB_HOST}"
-                    sh "export DOCKER_SPRING_PROFILES=${env.SPRING_PROFILES}"
-                    sh "export DOCKER_API_HOST=${env.API_HOST}"
-                    sh "export DOCKER_API_HTTP_MODE=${env.API_HTTP_MODE}"
+                    sh "export DOCKER_DB_HOST=${env.DOCKER_DB_HOST}"
+                    sh "export DOCKER_SPRING_PROFILES=${env.DOCKER_SPRING_PROFILES}"
+                    sh "export DOCKER_API_HOST=${env.DOCKER_API_HOST}"
+                    sh "export DOCKER_API_HTTP_MODE=${env.DOCKER_API_HTTP_MODE}"
                     sh "cd infra/ansible && ansible-playbook -v playbooks/deploy.yml -l 'test' --private-key $PRIVATE"
                 }
                 echo "Deploy to Staging Server was successfully."
@@ -112,7 +112,7 @@ pipeline {
         stage("API Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.API_HOST} && cd acceptance && ./gradlew api-test:test"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew api-test:test"
                 echo "Running API tests was successful."
             }
         }
@@ -120,8 +120,8 @@ pipeline {
         stage("UI Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.API_HOST} && export DATASOURCE_HOST=${env.API_HOST} && cd acceptance && ./gradlew -p ui-seeder bootRun"
-                sh "export UI_HOST=${env.API_HOST} && export UI_PORT=4200 && cd selenium && ./gradlew test"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && export DATASOURCE_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew -p ui-seeder bootRun"
+                sh "export UI_HOST=${env.DOCKER_API_HOST} && export UI_PORT=4200 && cd selenium && ./gradlew test"
                 echo "Running UI tests was successful."
             }
         }
