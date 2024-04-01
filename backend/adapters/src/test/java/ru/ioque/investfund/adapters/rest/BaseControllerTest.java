@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
     DataSourceTransactionManagerAutoConfiguration.class,
     HibernateJpaAutoConfiguration.class
 })
-@ActiveProfiles("test")
 public class BaseControllerTest {
     @Autowired
     protected MockMvc mvc;
