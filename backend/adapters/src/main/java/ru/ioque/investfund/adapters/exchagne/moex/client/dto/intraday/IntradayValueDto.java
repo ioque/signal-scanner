@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
     @JsonSubTypes.Type(value = DealDto.class, name = "DealDto")
 })
 public abstract class IntradayValueDto {
-    Long tradeNumber;
+    Long number;
     LocalDateTime dateTime;
     String ticker;
     Double value;

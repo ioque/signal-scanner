@@ -19,7 +19,7 @@ public class Deal extends IntradayValue {
 
     @Builder
     public Deal(
-        Long tradeNumber,
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double value,
@@ -27,7 +27,7 @@ public class Deal extends IntradayValue {
         Integer qnt,
         Boolean isBuy
     ) {
-        super(tradeNumber, dateTime, ticker, value, price);
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
         this.isBuy = isBuy;
     }

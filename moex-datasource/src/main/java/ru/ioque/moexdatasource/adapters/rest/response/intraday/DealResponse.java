@@ -20,7 +20,7 @@ public class DealResponse extends IntradayValueResponse {
 
     @Builder
     public DealResponse(
-        Long tradeNumber,
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double value,
@@ -28,14 +28,14 @@ public class DealResponse extends IntradayValueResponse {
         Integer qnt,
         Boolean isBuy
     ) {
-        super(tradeNumber, dateTime, ticker, value, price);
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
         this.isBuy = isBuy;
     }
 
     public static DealResponse from(Deal intradayValue) {
         return DealResponse.builder()
-            .tradeNumber(intradayValue.getTradeNumber())
+            .number(intradayValue.getNumber())
             .ticker(intradayValue.getTicker())
             .dateTime(intradayValue.getDateTime())
             .price(intradayValue.getPrice())

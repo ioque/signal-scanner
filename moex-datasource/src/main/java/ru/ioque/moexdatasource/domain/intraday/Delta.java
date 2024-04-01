@@ -15,12 +15,12 @@ public class Delta extends IntradayValue {
     @Builder
     public Delta(
         String ticker,
-        Long tradeNumber,
+        Long number,
         String board,
         LocalDateTime dateTime,
         Double value,
         Double price
     ) {
-        super(ticker, tradeNumber, board, dateTime, value, price);
+        super(ticker, number, board, dateTime, value, price);
     }
 }

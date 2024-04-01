@@ -65,7 +65,7 @@ public class IntradayValueMoexParser {
             .ticker(extractor.extractValue(node, "SECID").asText())
             .qnt(extractor.extractValue(node, "QUANTITY").asInt())
             .price(extractor.extractValue(node, "PRICE").asDouble())
-            .tradeNumber(extractor.extractValue(node, "TRADENO").asLong())
+            .number(extractor.extractValue(node, "TRADENO").asLong())
             .board(extractor.extractValue(node, "BOARDNAME").asText())
             .value(
                 ((Futures) instrument).getLotVolume() *
@@ -80,7 +80,7 @@ public class IntradayValueMoexParser {
             .ticker(extractor.extractValue(node, "SECID").asText())
             .value(extractor.extractValue(node, "VALUE").asDouble())
             .price(extractor.extractValue(node, "PRICE").asDouble())
-            .tradeNumber(extractor.extractValue(node, "TRADENO").asLong())
+            .number(extractor.extractValue(node, "TRADENO").asLong())
             .board(extractor.extractValue(node, "BOARDID").asText())
             .build();
     }
@@ -93,7 +93,7 @@ public class IntradayValueMoexParser {
             .isBuy(extractor.extractValue(node, "BUYSELL").asText().equals("BUY"))
             .qnt(extractor.extractValue(node, "QUANTITY").asInt())
             .price(extractor.extractValue(node, "PRICE").asDouble())
-            .tradeNumber(extractor.extractValue(node, "TRADENO").asLong())
+            .number(extractor.extractValue(node, "TRADENO").asLong())
             .board(extractor.extractValue(node, "BOARDID").asText())
             .build();
     }

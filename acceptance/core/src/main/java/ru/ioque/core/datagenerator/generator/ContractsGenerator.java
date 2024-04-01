@@ -16,14 +16,14 @@ public class ContractsGenerator extends IntradayGenerator<Contract, ContractsGen
         for (int i = 0; i < config.getPrice().getPercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
             Double startPrice = getStartPrice(config, futuresTrades);
-            long tradeNumber = getTradeNumber(futuresTrades);
+            long number = getTradeNumber(futuresTrades);
             long numTrades = (long) (config.getNumTrades() * config.getPrice().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, futuresTrades);
             futuresTrades.addAll(
                 generateBatch(
                     config.getPrice().getPercentageGrowths().get(i),
-                    tradeNumber,
+                    number,
                     startPrice,
                     numTrades,
                     ticker,
@@ -37,7 +37,7 @@ public class ContractsGenerator extends IntradayGenerator<Contract, ContractsGen
 
     private List<Contract> generateBatch(
         PercentageGrowths pricePercentageGrowths,
-        long tradeNumber,
+        long number,
         Double startPrice,
         long numTrades,
         String ticker,
@@ -53,7 +53,7 @@ public class ContractsGenerator extends IntradayGenerator<Contract, ContractsGen
             stockTrades.add(
                 Contract.builder()
                     .ticker(ticker)
-                    .tradeNumber(tradeNumber + i)
+                    .number(number + i)
                     .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
                     .price(startPrice + deltaPrice * i)
                     .value(10000D)

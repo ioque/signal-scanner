@@ -23,7 +23,7 @@ public class DealDto extends IntradayValueDto {
 
     @Builder
     public DealDto(
-        Long tradeNumber,
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double value,
@@ -31,7 +31,7 @@ public class DealDto extends IntradayValueDto {
         Integer qnt,
         Boolean isBuy
     ) {
-        super(tradeNumber, dateTime, ticker, value, price);
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
         this.isBuy = isBuy;
     }
@@ -39,7 +39,7 @@ public class DealDto extends IntradayValueDto {
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
-            .number(getTradeNumber())
+            .number(getNumber())
             .ticker(getTicker())
             .dateTime(getDateTime())
             .value(getValue())

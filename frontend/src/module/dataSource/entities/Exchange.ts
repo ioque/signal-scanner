@@ -9,7 +9,7 @@ export type Instrument = {
     id: string;
     ticker: string;
     shortName: string;
-    dailyValues: Array<DailyValue>;
+    historyValues: Array<HistoryValue>;
     intradayValues: Array<IntradayValue>;
 }
 
@@ -19,7 +19,7 @@ export type InstrumentInList = {
     ticker: string;
 }
 
-export type DailyValue = {
+export type HistoryValue = {
     tradeDate: string;
     ticker: string;
     value: number;
@@ -28,7 +28,7 @@ export type DailyValue = {
 }
 
 export type IntradayValue = {
-    tradeNumber: number;
+    number: number;
     dateTime: string;
     price: number;
 }

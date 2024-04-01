@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Delta extends IntradayValue {
 
     @Builder
-    public Delta(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public Delta(Long number, LocalDateTime dateTime, String ticker, Double value, Double price) {
+        super(number, dateTime, ticker, value, price);
     }
 }

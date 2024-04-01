@@ -21,15 +21,15 @@ public class ContractDto extends IntradayValueDto {
     Integer qnt;
 
     @Builder
-    public ContractDto(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public ContractDto(Long number, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
     }
 
     @Override
     public IntradayValue toDomain() {
         return Contract.builder()
-            .number(getTradeNumber())
+            .number(getNumber())
             .ticker(getTicker())
             .dateTime(getDateTime())
             .value(getValue())

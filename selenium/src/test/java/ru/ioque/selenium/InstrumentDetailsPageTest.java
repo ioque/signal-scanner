@@ -24,8 +24,8 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
             .toList();
         verifyDetailsPage(ids.get(0), "BR-1.24 (BRF4)", 128, 1000);
         verifyDetailsPage(ids.get(1), "USDRUB_TOM (USD000UTSTOM)", 0, 0);
-        verifyDetailsPage(ids.get(2), "Газпромнефть (SIBN)", 125, 999);
-        verifyDetailsPage(ids.get(3), "Индекс фондового рынка мосбиржи (IMOEX)", 129, 1000);
+        verifyDetailsPage(ids.get(2), "Газпромнефть (SIBN)", 123, 999);
+        verifyDetailsPage(ids.get(3), "Индекс фондового рынка мосбиржи (IMOEX)", 128, 1000);
     }
 
     private void verifyDetailsPage(String id, String name, int dailyValueQnt, int intradayValueQnt) {
@@ -56,7 +56,7 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
     }
 
     private void loadPageDetails(String id) {
-        driver.get("http://" + uiHost + ":3000/instruments/" + id);
+        driver.get("http://" + getUiUrl() + "/instruments/" + id);
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("accordion-button")));
     }

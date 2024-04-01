@@ -17,5 +17,5 @@ import lombok.experimental.FieldDefaults;
 public class IntradayValueResponse {
     String dateTime;
     Double price;
-    Long tradeNumber;
+    Long number;
 }

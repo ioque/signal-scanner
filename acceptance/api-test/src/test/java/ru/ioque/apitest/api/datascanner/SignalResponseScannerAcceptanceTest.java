@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.core.DefaultDataset;
+import ru.ioque.core.dataset.DefaultDataset;
 import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;

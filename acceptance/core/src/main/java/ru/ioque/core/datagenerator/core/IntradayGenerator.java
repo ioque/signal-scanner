@@ -17,7 +17,7 @@ public abstract class IntradayGenerator<T extends IntradayValue, C extends Intra
     protected long getTradeNumber(List<T> stockTrades) {
         return stockTrades.isEmpty() ?
             1 :
-            stockTrades.get(stockTrades.size() - 1).getTradeNumber();
+            stockTrades.get(stockTrades.size() - 1).getNumber();
     }
 
     protected Double getStartPrice(C config, List<T> stockTrades) {

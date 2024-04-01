@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 public class DeltaResponse extends IntradayValueResponse {
 
     @Builder
-    public DeltaResponse(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public DeltaResponse(Long number, LocalDateTime dateTime, String ticker, Double value, Double price) {
+        super(number, dateTime, ticker, value, price);
     }
 
     public static DeltaResponse from(Delta intradayValue) {
         return DeltaResponse.builder()
-            .tradeNumber(intradayValue.getTradeNumber())
+            .number(intradayValue.getNumber())
             .ticker(intradayValue.getTicker())
             .dateTime(intradayValue.getDateTime())
             .price(intradayValue.getPrice())

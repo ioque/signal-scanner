@@ -36,6 +36,8 @@ public abstract class ArchivedIntradayValueEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(nullable = false)
+    Long number;
+    @Column(nullable = false)
     LocalDateTime dateTime;
     @Column(nullable = false)
     String ticker;

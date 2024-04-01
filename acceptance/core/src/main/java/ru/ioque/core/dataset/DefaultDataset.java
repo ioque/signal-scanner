@@ -1,4 +1,4 @@
-package ru.ioque.core;
+package ru.ioque.core.dataset;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
+import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
+import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
+import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
+import ru.ioque.core.datagenerator.core.ParameterConfig;
+import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.instrument.CurrencyPair;
 import ru.ioque.core.datagenerator.instrument.Futures;
@@ -16,13 +23,6 @@ import ru.ioque.core.datagenerator.intraday.Contract;
 import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
-import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
-import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
-import ru.ioque.core.datagenerator.core.ParameterConfig;
-import ru.ioque.core.datagenerator.core.PercentageGrowths;
-import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
-import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
-import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
@@ -30,7 +30,6 @@ import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
 import ru.ioque.core.dto.scanner.request.PrefSimpleRequest;
 import ru.ioque.core.dto.scanner.request.SectoralRetardScannerRequest;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -276,14 +275,7 @@ public class DefaultDataset {
     }
 
     public static LocalDate getLastWorkDay() {
-        LocalDate now = LocalDate.now();
-        if (now.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-            now = now.minusDays(2);
-        }
-        if (now.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-            now = now.minusDays(1);
-        }
-        return now;
+        return LocalDate.parse("2024-04-01");
     }
 
     private static StartParameters getStartParametersBy(String ticker) {

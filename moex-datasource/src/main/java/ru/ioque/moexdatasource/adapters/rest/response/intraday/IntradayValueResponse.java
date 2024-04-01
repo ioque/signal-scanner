@@ -22,7 +22,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class IntradayValueResponse implements Serializable {
-    Long tradeNumber;
+    Long number;
     LocalDateTime dateTime;
     String ticker;
     Double value;

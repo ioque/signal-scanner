@@ -17,7 +17,7 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, stockTrades);
             Double startPrice = getStartPrice(config, stockTrades);
-            long tradeNumber = getTradeNumber(stockTrades);
+            long number = getTradeNumber(stockTrades);
             long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, stockTrades);
@@ -25,7 +25,7 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
                 generateStockTradesBatch(
                     config.getPrice().getPercentageGrowths().get(i),
                     config.getValue().getPercentageGrowths().get(i),
-                    tradeNumber,
+                    number,
                     startPrice,
                     numTrades,
                     startValue,
@@ -47,7 +47,7 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
     private List<Deal> generateStockTradesBatch(
         PercentageGrowths pricePercentageGrowths,
         PercentageGrowths valuePercentageGrowths,
-        long tradeNumber,
+        long number,
         Double startPrice,
         long numTrades,
         Double startValue,
@@ -83,7 +83,7 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
             stockTrades.add(
                 Deal.builder()
                     .ticker(ticker)
-                    .tradeNumber(tradeNumber + i)
+                    .number(number + i)
                     .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
                     .value(startValue + deltaValue * i)
                     .price(startPrice + deltaPrice * i)

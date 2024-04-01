@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable {
     String ticker;
-    Long tradeNumber;
+    Long number;
     String board;
     LocalDateTime dateTime;
     Double value;
@@ -23,14 +23,14 @@ public abstract class IntradayValue implements Serializable {
 
     public IntradayValue(
         String ticker,
-        Long tradeNumber,
+        Long number,
         String board,
         LocalDateTime dateTime,
         Double value,
         Double price
     ) {
         this.ticker = ticker;
-        this.tradeNumber = tradeNumber;
+        this.number = number;
         this.board = board;
         this.dateTime = dateTime;
         this.value = value;

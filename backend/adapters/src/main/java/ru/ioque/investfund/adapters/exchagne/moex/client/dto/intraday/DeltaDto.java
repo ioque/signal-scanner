@@ -19,14 +19,14 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeltaDto extends IntradayValueDto {
     @Builder
-    public DeltaDto(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public DeltaDto(Long number, LocalDateTime dateTime, String ticker, Double value, Double price) {
+        super(number, dateTime, ticker, value, price);
     }
 
     @Override
     public IntradayValue toDomain() {
         return Delta.builder()
-            .number(getTradeNumber())
+            .number(getNumber())
             .ticker(getTicker())
             .dateTime(getDateTime())
             .value(getValue())

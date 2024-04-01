@@ -22,17 +22,19 @@ import java.time.format.DateTimeFormatter;
 public class IntradayValueResponse implements Serializable {
     String dateTime;
     Double price;
-    Long tradeNumber;
+    Long number;
 
-    public static IntradayValueResponse fromDomain(IntradayValue deal) {
+    public static IntradayValueResponse fromDomain(IntradayValue intradayValue) {
         return IntradayValueResponse.builder()
-            .dateTime(deal.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-            .price(deal.getPrice())
+            .number(intradayValue.getNumber())
+            .dateTime(intradayValue.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+            .price(intradayValue.getPrice())
             .build();
     }
 
     public static IntradayValueResponse fromEntity(ArchivedIntradayValueEntity intradayValueEntity) {
         return IntradayValueResponse.builder()
+            .number(intradayValueEntity.getNumber())
             .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(intradayValueEntity.getPrice())
             .build();

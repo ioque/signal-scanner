@@ -18,14 +18,14 @@ public class ContractResponse extends IntradayValueResponse {
     Integer qnt;
 
     @Builder
-    public ContractResponse(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public ContractResponse(Long number, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
     }
 
     public static ContractResponse from(Contract intradayValue) {
         return ContractResponse.builder()
-            .tradeNumber(intradayValue.getTradeNumber())
+            .number(intradayValue.getNumber())
             .ticker(intradayValue.getTicker())
             .dateTime(intradayValue.getDateTime())
             .price(intradayValue.getPrice())

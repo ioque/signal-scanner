@@ -17,7 +17,7 @@ public class DeltasGenerator extends IntradayGenerator<Delta, DeltasGeneratorCon
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, indexDeltas);
             Double startPrice = getStartPrice(config, indexDeltas);
-            long tradeNumber = getTradeNumber(indexDeltas);
+            long number = getTradeNumber(indexDeltas);
             long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, indexDeltas);
@@ -25,7 +25,7 @@ public class DeltasGenerator extends IntradayGenerator<Delta, DeltasGeneratorCon
                 generateBatch(
                     config.getPrice().getPercentageGrowths().get(i),
                     config.getValue().getPercentageGrowths().get(i),
-                    tradeNumber,
+                    number,
                     startPrice,
                     numTrades,
                     startValue,
@@ -47,7 +47,7 @@ public class DeltasGenerator extends IntradayGenerator<Delta, DeltasGeneratorCon
     private List<Delta> generateBatch(
         PercentageGrowths pricePercentageGrowths,
         PercentageGrowths valuePercentageGrowths,
-        long tradeNumber,
+        long number,
         Double startPrice,
         long numTrades,
         Double startValue,
@@ -67,7 +67,7 @@ public class DeltasGenerator extends IntradayGenerator<Delta, DeltasGeneratorCon
             indexDeltas.add(
                 Delta.builder()
                     .ticker(ticker)
-                    .tradeNumber(tradeNumber + i)
+                    .number(number + i)
                     .dateTime(nowDate.atTime(startTime.plusSeconds(i * 10L)))
                     .value(startValue + deltaValue * i)
                     .price(startPrice + deltaPrice * i)

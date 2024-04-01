@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable {
-    Long tradeNumber;
+    Long number;
     LocalDateTime dateTime;
     String ticker;
     Double value;

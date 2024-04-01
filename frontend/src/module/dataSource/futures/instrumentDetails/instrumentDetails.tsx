@@ -30,7 +30,7 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
             </Accordion.Item>
         </Accordion>;
 
-    const dailyValues = instrument.dailyValues.map((dailyValue, index) =>
+    const dailyValues = instrument.historyValues.map((dailyValue, index) =>
         <tr key={index}>
             <td>{dailyValue.tradeDate}</td>
             <td>{dailyValue.value}</td>
@@ -41,7 +41,7 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
 
     const intradayValues = instrument.intradayValues.map((intradayValue, index) =>
         <tr key={index}>
-            <td>{intradayValue.tradeNumber}</td>
+            <td>{intradayValue.number}</td>
             <td>{intradayValue.price}</td>
             <td>{intradayValue.dateTime}</td>
         </tr>

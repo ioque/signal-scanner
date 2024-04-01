@@ -17,8 +17,8 @@ public class Contract extends IntradayValue {
     Integer qnt;
 
     @Builder
-    public Contract(Long tradeNumber, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
-        super(tradeNumber, dateTime, ticker, value, price);
+    public Contract(Long number, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
+        super(number, dateTime, ticker, value, price);
         this.qnt = qnt;
     }
 }

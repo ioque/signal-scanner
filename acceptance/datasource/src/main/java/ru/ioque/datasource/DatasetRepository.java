@@ -1,11 +1,12 @@
-package ru.ioque.apitest.repos;
+package ru.ioque.datasource;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import ru.ioque.core.dataset.DatasetStorage;
 import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
+import ru.ioque.core.dataset.DatasetStorage;
+import ru.ioque.core.dataset.DefaultDataset;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,12 @@ import java.util.List;
 @Component
 public class DatasetRepository {
     DatasetStorage datasetStorage = new DatasetStorage();
+
+    public DatasetRepository() {
+        initInstruments(DefaultDataset.getInstruments());
+        initIntradayValue(DefaultDataset.getIntradayValues());
+        initDailyResultValue(DefaultDataset.getHistoryValues());
+    }
 
     @SneakyThrows
     public List<Instrument> getInstruments() {

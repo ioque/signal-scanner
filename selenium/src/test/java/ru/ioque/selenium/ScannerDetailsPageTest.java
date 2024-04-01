@@ -118,7 +118,7 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
     }
 
     private void loadPageDetails(String id) {
-        driver.get("http://" + uiHost + ":3000/scanners/" + id);
+        driver.get("http://" + getUiUrl() + "/scanners/" + id);
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("accordion-button")));
     }

@@ -1,4 +1,4 @@
-package ru.ioque.apitest.repos;
+package ru.ioque.core.dataset;
 
 import lombok.Getter;
 import ru.ioque.core.datagenerator.history.HistoryValue;
