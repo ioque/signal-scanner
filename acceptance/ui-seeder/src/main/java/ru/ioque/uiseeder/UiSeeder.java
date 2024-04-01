@@ -28,7 +28,7 @@ public class UiSeeder implements CommandLineRunner {
         clientFacade.getExchangeRestClient().registerDatasource(
             RegisterDatasourceRequest.builder()
                 .name("Московская биржа")
-                .description("Московская биржа")
+                .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
                 .url(datasourceUrl)
                 .build()
         );
