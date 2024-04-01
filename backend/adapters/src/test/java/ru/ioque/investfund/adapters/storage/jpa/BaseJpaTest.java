@@ -3,10 +3,9 @@ package ru.ioque.investfund.adapters.storage.jpa;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.ExchangeRepository;
@@ -20,9 +19,8 @@ import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@SpringBootTest
 @Transactional
-@Import(JpaTestConfiguration.class)
+@SpringBootTest
 public class BaseJpaTest {
     @Autowired
     protected UUIDProvider uuidProvider;

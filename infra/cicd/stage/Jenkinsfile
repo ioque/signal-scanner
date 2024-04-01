@@ -31,7 +31,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'cd backend && ./gradlew clean test -i'
+                sh 'cd backend && ./gradlew clean test -Dspring.test.context.failure.threshold=10'
                 junit '**/application/build/test-results/test/*.xml'
                 junit '**/adapters/build/test-results/test/*.xml'
                 echo "Running unit tests was successful."

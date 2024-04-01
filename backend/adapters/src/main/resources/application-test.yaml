@@ -1,7 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: "test"
   jpa:
     hibernate.ddl-auto: none
     generate-ddl: false

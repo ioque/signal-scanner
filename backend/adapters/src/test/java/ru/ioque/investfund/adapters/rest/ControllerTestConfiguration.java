@@ -1,15 +1,15 @@
 package ru.ioque.investfund.adapters.rest;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import ru.ioque.investfund.adapters.storage.jpa.InstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
@@ -24,9 +24,8 @@ import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import static org.mockito.Mockito.mock;
 
 @Order(1)
-@Configuration
+@TestConfiguration
 public class ControllerTestConfiguration {
-
     @Bean
     @Primary
     public ExchangeManager mockAggregatorManager() {
