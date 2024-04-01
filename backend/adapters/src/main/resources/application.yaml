@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: "development"
   jpa:
     hibernate.ddl-auto: none
     generate-ddl: false
