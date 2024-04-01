@@ -41,11 +41,11 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
     }
 
     public boolean isAfter(IntradayValue intradayValue) {
-        return getDateTime().isAfter(intradayValue.getDateTime());
+        return getNumber() > intradayValue.getNumber();
     }
 
     @Override
     public int compareTo(IntradayValue intradayValue) {
-        return Objects.compare(getDateTime(), intradayValue.getDateTime(), LocalDateTime::compareTo);
+        return Objects.compare(getNumber(), intradayValue.getNumber(), Long::compareTo);
     }
 }

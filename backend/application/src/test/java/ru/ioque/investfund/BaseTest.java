@@ -171,6 +171,7 @@ public class BaseTest {
 
     protected Deal buildBuyDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
         return Deal.builder()
+            .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .value(value)
@@ -182,6 +183,7 @@ public class BaseTest {
 
     protected Deal buildSellDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
         return Deal.builder()
+            .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .value(value)
@@ -191,8 +193,9 @@ public class BaseTest {
             .build();
     }
 
-    protected Contract buildFuturesDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
+    protected Contract buildContractBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {
         return Contract.builder()
+            .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .price(price)
@@ -203,6 +206,7 @@ public class BaseTest {
 
     protected Delta buildDeltaBy(Long number, String ticker, String localTime, Double price, Double value) {
         return Delta.builder()
+            .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .ticker(ticker)
             .value(value)
@@ -271,8 +275,9 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected Deal buildDealWith(String ticker, LocalDateTime dateTime) {
+    protected Deal buildDealWith(Long number, String ticker, LocalDateTime dateTime) {
         return Deal.builder()
+            .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
             .value(10000.0)

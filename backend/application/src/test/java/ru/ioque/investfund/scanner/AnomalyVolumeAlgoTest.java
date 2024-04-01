@@ -618,13 +618,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy("IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(2L, "TGKN", "10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(4L, "TGKN", "11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(5L, "TGKN", "11:45:00", 96D, 5000D, 1)
+            buildDeltaBy(3L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(4L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(6L, "TGKN", "10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(7L, "TGKN", "10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(8L, "TGKN", "11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(9L, "TGKN", "11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(10L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
     }
 

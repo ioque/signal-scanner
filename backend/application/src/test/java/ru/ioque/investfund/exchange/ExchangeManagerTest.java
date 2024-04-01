@@ -128,9 +128,9 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().integrateWithDataSource();
         clearLogs();
         initDealDatas(
-                buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
-                buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
-                buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
+                buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
+                buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+                buildDealWith(3L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
         initTradingResults(
                 buildTradingResultWith("AFKS", LocalDate.parse("2023-12-08")).build(),
@@ -201,11 +201,11 @@ public class ExchangeManagerTest extends BaseTest {
         integrateInstruments(afks());
         clearLogs();
         initDealDatas(
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
+            buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(5L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
@@ -234,11 +234,11 @@ public class ExchangeManagerTest extends BaseTest {
         integrateInstruments(afks());
         clearLogs();
         initDealDatas(
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:10:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:20:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T10:10:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T11:12:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-08T11:35:00"))
+            buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:10:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-07T11:20:00")),
+            buildDealWith(3L, "AFKS", LocalDateTime.parse("2023-12-08T10:10:00")),
+            buildDealWith(4L, "AFKS", LocalDateTime.parse("2023-12-08T11:12:00")),
+            buildDealWith(5L, "AFKS", LocalDateTime.parse("2023-12-08T11:35:00"))
         );
 
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
@@ -266,19 +266,19 @@ public class ExchangeManagerTest extends BaseTest {
         initTodayDateTime("2023-12-07T12:00:00");
         integrateInstruments(afks());
         initDealDatas(
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
+            buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:30:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T12:10:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T12:30:00")),
-            buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
+            buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
+            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00")),
+            buildDealWith(3L, "AFKS", LocalDateTime.parse("2023-12-07T12:10:00")),
+            buildDealWith(4L, "AFKS", LocalDateTime.parse("2023-12-07T12:30:00")),
+            buildDealWith(5L, "AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
         exchangeManager().execute();
@@ -331,7 +331,7 @@ public class ExchangeManagerTest extends BaseTest {
     void testCase14() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
-        initDealDatas(buildDealWith("AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
+        initDealDatas(buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy("AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
         exchangeManager().execute();
 
@@ -416,5 +416,42 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().execute();
         assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
+    }
+
+    @Test
+    @DisplayName("""
+        T20. У сделок одинаковое время, но разные номера. Все сделки сохранены.
+        """)
+    void testCase20() {
+        initTodayDateTime("2023-12-08T10:15:00");
+        integrateInstruments(afks());
+        initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
+        initDealDatas(
+            buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
+            buildBuyDealBy(2L,"AFKS", "10:00:00", 11D, 10D, 1),
+            buildBuyDealBy(3L,"AFKS", "10:00:00", 11D, 10D, 2)
+        );
+        exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
+        exchangeManager().execute();
+        Instrument afks = getInstrumentBy("AFKS");
+        assertEquals(3, afks.getIntradayValueNumbers());
+    }
+
+    @Test
+    @DisplayName("""
+        T21. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
+        """)
+    void testCase21() {
+        initTodayDateTime("2023-12-08T10:15:00");
+        integrateInstruments(afks());
+        initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
+        initDealDatas(
+            buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1)
+        );
+        exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
+        exchangeManager().execute();
+        exchangeManager().execute();
+        Instrument afks = getInstrumentBy("AFKS");
+        assertEquals(1, afks.getIntradayValueNumbers());
     }
 }
