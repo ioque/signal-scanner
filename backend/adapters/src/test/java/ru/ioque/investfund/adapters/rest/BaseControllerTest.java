@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+@ActiveProfiles("unit-test")
 @Import(ControllerTestConfiguration.class)
 @SpringBootTest
 @AutoConfigureMockMvc
