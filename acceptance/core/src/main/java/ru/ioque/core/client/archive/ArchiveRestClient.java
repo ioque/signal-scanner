@@ -1,22 +1,15 @@
-package ru.ioque.core.client.testingsystem;
+package ru.ioque.core.client.archive;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import ru.ioque.core.client.BaseClient;
-import ru.ioque.core.dto.exchange.response.HistoryValueResponse;
 import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
 
 import java.util.List;
 
-public class TestingSystemRestClient extends BaseClient {
-    public TestingSystemRestClient(String apiHost) {
+public class ArchiveRestClient extends BaseClient {
+    public ArchiveRestClient(String apiHost) {
         super(apiHost);
-    }
-
-    @SneakyThrows
-    public List<HistoryValueResponse> getHistoryValues(int pageNumber, int pageSize) {
-        String path = "/api/history-values?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
-        return objectMapper.readValue(get(path), new TypeReference<>(){});
     }
 
     @SneakyThrows

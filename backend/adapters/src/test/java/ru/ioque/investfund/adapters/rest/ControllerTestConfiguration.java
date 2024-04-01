@@ -4,7 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.InstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
@@ -77,8 +77,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public JpaInstrumentQueryRepository mockInstrumentRepository() {
-        return mock(JpaInstrumentQueryRepository.class);
+    public InstrumentQueryRepository mockInstrumentRepository() {
+        return mock(InstrumentQueryRepository.class);
     }
 
     @Bean

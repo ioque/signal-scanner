@@ -32,7 +32,6 @@ public class JpaExchangeRepository implements ExchangeRepository {
     IntradayValueEntityRepository intradayValueEntityRepository;
     ExchangeCache exchangeCache;
 
-    @Override
     @Transactional(readOnly = true)
     public Optional<Exchange> get() {
         return exchangeRepository
@@ -109,6 +108,16 @@ public class JpaExchangeRepository implements ExchangeRepository {
             }))
             .forEach(CompletableFuture::join);
         exchangeCache.put(exchange);
+    }
+
+    @Override
+    @Transactional
+    public void delete() {
+        intradayValueEntityRepository.deleteAll();
+        historyValueEntityRepository.deleteAll();
+        instrumentEntityRepository.deleteAll();
+        exchangeRepository.deleteAll();
+        exchangeCache.clear();
     }
 
     private Optional<LocalDate> getLastDate(String ticker) {

@@ -26,9 +26,9 @@ public class ExchangeProviderImpl implements ExchangeProvider {
 
     @Override
     @SneakyThrows
-    public List<Instrument> fetchInstruments() {
+    public List<Instrument> fetchInstruments(String exchangeUrl) {
         return moexClient
-            .fetchInstruments()
+            .fetchInstruments(exchangeUrl)
             .stream()
             .map(dto -> dto.toDomain(uuidProvider.generate()))
             .toList();
@@ -37,12 +37,14 @@ public class ExchangeProviderImpl implements ExchangeProvider {
     @Override
     @SneakyThrows
     public List<HistoryValue> fetchHistoryBy(
+        String exchangeUrl,
         String ticker,
         LocalDate from,
         LocalDate to
     ) {
         return moexClient
             .fetchHistory(
+                exchangeUrl,
                 ticker,
                 from,
                 to
@@ -54,9 +56,9 @@ public class ExchangeProviderImpl implements ExchangeProvider {
 
     @Override
     @SneakyThrows
-    public List<IntradayValue> fetchIntradayValuesBy(String ticker, long lastNumber) {
+    public List<IntradayValue> fetchIntradayValuesBy(String exchangeUrl, String ticker, long lastNumber) {
         return moexClient
-            .fetchIntradayValues(ticker, lastNumber)
+            .fetchIntradayValues(exchangeUrl, ticker, lastNumber)
             .stream()
             .map(IntradayValueDto::toDomain)
             .toList();

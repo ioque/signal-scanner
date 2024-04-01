@@ -105,8 +105,7 @@ public class BaseTest {
 
     protected List<Instrument> getInstruments() {
         return exchangeRepository()
-            .getAllBy(dateTimeProvider().nowDate())
-            .stream().findFirst()
+            .getBy(dateTimeProvider().nowDate())
             .map(Exchange::getInstruments)
             .orElse(new ArrayList<>());
     }
@@ -453,5 +452,4 @@ public class BaseTest {
             .historyValues(new ArrayList<>())
             .build();
     }
-
 }

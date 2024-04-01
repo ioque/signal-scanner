@@ -10,23 +10,24 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.exchange.request.EnableUpdateInstrumentRequest;
+import ru.ioque.investfund.adapters.rest.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
-import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.InstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
 import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Futures;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.Contract;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
+import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.Delta;
+import ru.ioque.investfund.domain.exchange.value.HistoryValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,9 +41,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("EXCHANGE REST CONTROLLER")
 public class ExchangeControllerTest extends BaseControllerTest {
     @Autowired
-    JpaInstrumentQueryRepository instrumentQueryRepository;
+    InstrumentQueryRepository instrumentQueryRepository;
     @Autowired
-    ExchangeRepository exchangeRepository;
+    ExchangeEntityRepository exchangeRepository;
     @Autowired
     DateTimeProvider dateTimeProvider;
 
@@ -106,7 +107,7 @@ public class ExchangeControllerTest extends BaseControllerTest {
         T5. Выполнение запроса по эндпоинту GET /api/exchange.
         """)
     public void testCase5() {
-        final Exchange exchange = Exchange.builder()
+        final ExchangeEntity exchange = ExchangeEntity.builder()
             .id(UUID.randomUUID())
             .name("EXCHANGE")
             .url("http://exchange.ru")
@@ -114,8 +115,8 @@ public class ExchangeControllerTest extends BaseControllerTest {
             .instruments(List.of())
             .build();
         Mockito
-            .when(exchangeRepository.get())
-            .thenReturn(Optional.of(exchange));
+            .when(exchangeRepository.findAll())
+            .thenReturn(List.of(exchange));
         mvc
             .perform(MockMvcRequestBuilders.get("/api/exchange"))
             .andExpect(status().isOk())
@@ -204,6 +205,27 @@ public class ExchangeControllerTest extends BaseControllerTest {
                     )
             );
     }
+
+     @Test
+     @SneakyThrows
+     @DisplayName("""
+         T8. Выполнение запроса по эндпоинту POST /api/datasource
+         """)
+     public void testCase8() {
+         mvc
+             .perform(MockMvcRequestBuilders
+                 .post("/api/datasource")
+                 .contentType(MediaType.APPLICATION_JSON)
+                 .content(objectMapper.writeValueAsString(
+                     RegisterDatasourceRequest.builder()
+                         .name("Московская биржа")
+                         .url("http://localhost:8080")
+                         .description("Московская биржа")
+                         .build()
+                 ))
+             )
+             .andExpect(status().isOk());
+     }
 
     protected List<Instrument> getInstruments() {
         return List.of(

@@ -16,8 +16,3 @@ spring:
     url: jdbc:postgresql://localhost:54321/postgres?reWriteBatchedInserts=true
     username: postgres
     password:
-
-exchange:
-  name: 'Московская Биржа'
-  description: 'Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.'
-  url: http://localhost:8081

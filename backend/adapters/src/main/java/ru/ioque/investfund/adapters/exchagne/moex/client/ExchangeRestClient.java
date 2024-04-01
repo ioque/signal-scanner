@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.ioque.investfund.adapters.exchagne.moex.client.dto.history.HistoryValueDto;
@@ -20,12 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExchangeRestClient {
-    @Value("${exchange.url}")
-    String exchangeUrl;
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     final RestClient defaultClient = RestClient.create();
 
-    public List<InstrumentDto> fetchInstruments() {
+    public List<InstrumentDto> fetchInstruments(String exchangeUrl) {
         try {
             return objectMapper
                 .readValue(
@@ -41,7 +38,7 @@ public class ExchangeRestClient {
         }
     }
 
-    public List<IntradayValueDto> fetchIntradayValues(String ticker, long lastNumber) {
+    public List<IntradayValueDto> fetchIntradayValues(String exchangeUrl, String ticker, long lastNumber) {
         try {
             return objectMapper
                 .readValue(
@@ -58,6 +55,7 @@ public class ExchangeRestClient {
     }
 
     public List<HistoryValueDto> fetchHistory(
+        String exchangeUrl,
         String ticker,
         LocalDate from,
         LocalDate to

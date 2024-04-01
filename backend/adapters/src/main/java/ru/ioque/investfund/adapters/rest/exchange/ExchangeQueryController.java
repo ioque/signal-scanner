@@ -10,10 +10,10 @@ import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
 import ru.ioque.investfund.adapters.rest.exchange.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.exchange.response.InstrumentResponse;
-import ru.ioque.investfund.adapters.storage.jpa.JpaInstrumentQueryRepository;
+import ru.ioque.investfund.adapters.storage.jpa.InstrumentQueryRepository;
 import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,12 +23,18 @@ import java.util.UUID;
 @Tag(name = "ExchangeQueryController", description = "Контроллер запросов к модулю \"EXCHANGE\"")
 public class ExchangeQueryController {
     DateTimeProvider dateTimeProvider;
-    JpaInstrumentQueryRepository instrumentQueryRepository;
-    ExchangeRepository exchangeRepository;
+    ExchangeEntityRepository exchangeRepository;
+    InstrumentQueryRepository instrumentQueryRepository;
 
     @GetMapping("/api/exchange")
     public ExchangeResponse getExchange() {
-        return ExchangeResponse.fromDomain(exchangeRepository.get().orElseThrow(() -> new ResourceNotFoundException("Данные о бирже не найдены.")));
+        return ExchangeResponse.fromEntity(
+            exchangeRepository
+                .findAll()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Биржа не зарегистрирована."))
+        );
     }
 
     @GetMapping("/api/instruments/{id}")

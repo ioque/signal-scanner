@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.core.dataset.DefaultDataset;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
@@ -14,8 +13,9 @@ import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.Contract;
 import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
+import ru.ioque.core.dataset.DefaultDataset;
+import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.ExchangeResponse;
-import ru.ioque.core.dto.exchange.response.HistoryValueResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentResponse;
 import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
@@ -36,6 +36,13 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
+        registerDatasource(
+            RegisterDatasourceRequest.builder()
+                .name("Московская Биржа")
+                .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
+                .url("http://localhost:8081")
+                .build()
+        );
     }
 
     @Test
@@ -360,22 +367,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
     @Test
     @DisplayName("""
-        T13. Очистка внутридневных данных.
-        """)
-    void testCase14() {
-        initInstrumentsWithTradingData();
-        fullIntegrate();
-        clearIntradayValue();
-
-        List<InstrumentResponse> instrumentResponses = getInstrumentIds().stream().map(this::getInstrumentById).toList();
-
-        assertEquals(4, instrumentResponses.stream().filter(row -> !row.getHistoryValues().isEmpty()).toList().size());
-        assertEquals(0, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
-    }
-
-    @Test
-    @DisplayName("""
-        T14. Перенос торговых данных в архив.
+        T13. Перенос внутридневных данных в архив.
         """)
     void testCase15() {
         initInstrumentsWithTradingData();
@@ -385,12 +377,8 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         List<InstrumentResponse> instrumentResponses = getInstrumentIds().stream().map(this::getInstrumentById).toList();
         List<IntradayValueResponse> intradayValues = getIntradayValues(0, 4);
-        List<HistoryValueResponse> dailyValues = getHistoryValues(0, 4);
-
-        assertEquals(4, instrumentResponses.stream().filter(row -> !row.getHistoryValues().isEmpty()).toList().size());
-        assertEquals(4, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+        assertEquals(0, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
         assertEquals(4, intradayValues.size());
-        assertEquals(4, dailyValues.size());
     }
 
     private void initInstrumentsWithTradingData() {

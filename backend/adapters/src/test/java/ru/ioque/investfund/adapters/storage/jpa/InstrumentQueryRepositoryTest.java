@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("INSTRUMENT QUERY REPOSITORY TEST")
-public class JpaInstrumentQueryRepositoryTest extends BaseJpaTest {
-    JpaInstrumentQueryRepository instrumentQueryRepository;
+public class InstrumentQueryRepositoryTest extends BaseJpaTest {
+    InstrumentQueryRepository instrumentQueryRepository;
     InstrumentEntityRepository instrumentEntityRepository;
 
-    public JpaInstrumentQueryRepositoryTest(
-        @Autowired JpaInstrumentQueryRepository instrumentQueryRepository,
+    public InstrumentQueryRepositoryTest(
+        @Autowired InstrumentQueryRepository instrumentQueryRepository,
         @Autowired InstrumentEntityRepository instrumentEntityRepository
     ) {
         this.instrumentQueryRepository = instrumentQueryRepository;

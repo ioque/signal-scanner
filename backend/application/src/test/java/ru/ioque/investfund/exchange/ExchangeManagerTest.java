@@ -49,7 +49,7 @@ public class ExchangeManagerTest extends BaseTest {
         );
 
         exchangeManager().integrateWithDataSource();
-        final Optional<Exchange> exchange = exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst();
+        final Optional<Exchange> exchange = exchangeRepository().getBy(dateTimeProvider().nowDate());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
         assertEquals("http://localhost:8080", exchange.get().getUrl());
@@ -77,10 +77,10 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().integrateWithDataSource();
         clearLogs();
 
-        final var id = exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst().orElseThrow().getId();
+        final var id = exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId();
         exchangeManager().integrateWithDataSource();
         assertEquals(10, getInstruments().size());
-        assertEquals(id, exchangeRepository().getAllBy(dateTimeProvider().nowDate()).stream().findFirst().orElseThrow().getId());
+        assertEquals(id, exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId());
     }
 
     @Test
@@ -390,7 +390,7 @@ public class ExchangeManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase16() {
-        exchangeRepository().clear();
+        exchangeManager().unregisterDatasource();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
@@ -402,26 +402,14 @@ public class ExchangeManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase17() {
-        exchangeRepository().clear();
+        exchangeManager().unregisterDatasource();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 
     @Test
     @DisplayName("""
-        T18. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
-        Попытка включить интеграцию торговых данных.
-        Результат: ошибка, "Биржа не зарегистрирована".
-        """)
-    void testCase18() {
-        exchangeRepository().clear();
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().integrateTradingData());
-        assertEquals("Биржа не зарегистрирована.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T19. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
+        T18. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
     void testCase19() {
         initTodayDateTime("2023-12-08T12:00:00");
@@ -435,7 +423,7 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T20. У сделок одинаковое время, но разные номера. Все сделки сохранены.
+        T19. У сделок одинаковое время, но разные номера. Все сделки сохранены.
         """)
     void testCase20() {
         initTodayDateTime("2023-12-08T10:15:00");
@@ -454,7 +442,7 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T21. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
+        T20. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
         """)
     void testCase21() {
         initTodayDateTime("2023-12-08T10:15:00");

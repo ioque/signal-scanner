@@ -14,6 +14,7 @@ import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
 import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
 import ru.ioque.core.dto.scanner.request.PrefSimpleRequest;
@@ -34,6 +35,13 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
+        registerDatasource(
+            RegisterDatasourceRequest.builder()
+                .name("Московская Биржа")
+                .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
+                .url("http://localhost:8081")
+                .build()
+        );
     }
 
     private static LocalDateTime getDateTimeNow() {

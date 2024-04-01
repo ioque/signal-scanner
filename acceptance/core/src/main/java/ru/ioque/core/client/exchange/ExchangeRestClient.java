@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import ru.ioque.core.client.BaseClient;
 import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
+import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.ExchangeResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentResponse;
@@ -15,6 +16,11 @@ import java.util.UUID;
 public class ExchangeRestClient extends BaseClient {
     public ExchangeRestClient(String baseUrl) {
         super(baseUrl);
+    }
+
+    @SneakyThrows
+    public void registerDatasource(RegisterDatasourceRequest request) {
+        post("/api/datasource", objectMapper.writeValueAsString(request));
     }
 
     @SneakyThrows
@@ -51,11 +57,6 @@ public class ExchangeRestClient extends BaseClient {
     @SneakyThrows
     public InstrumentResponse getInstrumentBy(UUID id) {
         return objectMapper.readValue(get("/api/instruments/" + id), InstrumentResponse.class);
-    }
-
-    @SneakyThrows
-    public void clearIntradayValue() {
-        delete("/api/intraday-value");
     }
 
     @SneakyThrows

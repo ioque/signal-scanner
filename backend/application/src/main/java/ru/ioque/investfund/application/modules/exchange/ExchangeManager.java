@@ -16,7 +16,6 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -34,7 +33,17 @@ public class ExchangeManager implements SystemModule {
 
     @Override
     public synchronized void execute() {
-        integrateTradingData();
+        if (repository.getBy(dateTimeProvider.nowDate()).isPresent()) {
+            integrateTradingData();
+        }
+    }
+
+    public synchronized void registerDatasource(AddDatasourceCommand command) {
+        repository.save(command.factory(uuidProvider.generate()));
+    }
+
+    public synchronized void unregisterDatasource() {
+        repository.delete();
     }
 
     public synchronized void enableUpdate(List<UUID> ids) {
@@ -52,18 +61,22 @@ public class ExchangeManager implements SystemModule {
     public synchronized void integrateWithDataSource() {
         final Exchange exchange = getExchangeFromRepo();
         loggerFacade.logRunSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
-        exchangeProvider.fetchInstruments().forEach(exchange::saveInstrument);
+        exchangeProvider.fetchInstruments(exchange.getUrl()).forEach(exchange::saveInstrument);
         repository.save(exchange);
         loggerFacade.logFinishSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
     }
 
-    public synchronized void integrateTradingData() {
+    private void integrateTradingData() {
         final Exchange exchange = getExchangeFromRepo();
         exchange.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
 
             exchangeProvider
-                .fetchIntradayValuesBy(instrument.getTicker(), instrument.lastIntradayValue().map(IntradayValue::getNumber).orElse(0L))
+                .fetchIntradayValuesBy(
+                    exchange.getUrl(),
+                    instrument.getTicker(),
+                    instrument.lastIntradayValue().map(IntradayValue::getNumber).orElse(0L)
+                )
                 .stream()
                 .filter(row -> row.isSameByDate(dateTimeProvider.nowDate()))
                 .forEach(instrument::addNewIntradayValue);
@@ -71,6 +84,7 @@ public class ExchangeManager implements SystemModule {
             if (instrument.isNeedUpdateHistory(dateTimeProvider.nowDate())) {
                 exchangeProvider
                     .fetchHistoryBy(
+                        exchange.getUrl(),
                         instrument.getTicker(),
                         instrument.lastHistoryValueDate().orElse(dateTimeProvider.monthsAgo(6)),
                         dateTimeProvider.nowDate().minusDays(1)
@@ -89,25 +103,11 @@ public class ExchangeManager implements SystemModule {
 
     private Exchange getExchangeFromRepo() {
         return repository
-            .getAllBy(dateTimeProvider.nowDate())
-            .stream()
-            .findFirst()
+            .getBy(dateTimeProvider.nowDate())
             .orElseThrow(exchangeNotFound());
     }
 
     private Supplier<ApplicationException> exchangeNotFound() {
         return () -> new ApplicationException("Биржа не зарегистрирована.");
-    }
-
-    public void registerDatasource(AddDatasourceCommand command) {
-        var exchange = Exchange
-            .builder()
-            .id(uuidProvider.generate())
-            .name(command.getName())
-            .url(command.getUrl())
-            .description(command.getDescription())
-            .instruments(new ArrayList<>())
-            .build();
-        repository.save(exchange);
     }
 }

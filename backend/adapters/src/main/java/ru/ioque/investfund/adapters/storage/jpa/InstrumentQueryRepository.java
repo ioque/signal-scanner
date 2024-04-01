@@ -23,7 +23,7 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class JpaInstrumentQueryRepository {
+public class InstrumentQueryRepository {
     InstrumentEntityRepository instrumentEntityRepository;
     HistoryValueEntityRepository historyValueEntityRepository;
     IntradayValueEntityRepository intradayValueEntityRepository;

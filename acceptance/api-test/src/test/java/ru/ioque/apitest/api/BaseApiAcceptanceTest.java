@@ -6,16 +6,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
 import ru.ioque.apitest.repos.DatasetRepository;
+import ru.ioque.core.client.archive.ArchiveRestClient;
 import ru.ioque.core.client.exchange.ExchangeRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
-import ru.ioque.core.client.testingsystem.TestingSystemRestClient;
 import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
+import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.ExchangeResponse;
-import ru.ioque.core.dto.exchange.response.HistoryValueResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentResponse;
 import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
@@ -37,13 +37,12 @@ public class BaseApiAcceptanceTest {
     @Autowired
     private DatasetRepository datasetRepository;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
-
     @BeforeEach
     void beforeEach() {
         serviceClient().clearState();
     }
-    private TestingSystemRestClient testingSystemClient() {
-        return clientFacade.getTestingSystemRestClient();
+    private ArchiveRestClient testingSystemClient() {
+        return clientFacade.getArchiveRestClient();
     }
     private ExchangeRestClient exchangeClient() {
         return clientFacade.getExchangeRestClient();
@@ -54,79 +53,62 @@ public class BaseApiAcceptanceTest {
     private ServiceClient serviceClient() {
         return clientFacade.getServiceClient();
     }
-
     protected void initDateTime(LocalDateTime dateTime) {
         serviceClient().initDateTime(dateTime);
     }
-
     protected DatasetRepository datasetRepository() {
         return datasetRepository;
     }
-
+    protected void registerDatasource(RegisterDatasourceRequest request) {
+        exchangeClient().registerDatasource(request);
+    }
     protected void integrateInstruments(
         Instrument... instruments
     ) {
         datasetRepository().initInstruments(Arrays.asList(instruments));
         synchronizeWithDataSource();
     }
-
     protected void synchronizeWithDataSource() {
         exchangeClient().synchronizeWithDataSource();
     }
-
     protected void addSignalScanner(AddSignalScannerRequest request) {
         signalScannerClient().saveDataScannerConfig(request);
     }
-
     protected List<SignalResponse> getSignalsBy(UUID id) {
         return signalScannerClient().getSignalScannerBy(id).getSignals();
     }
-
     protected List<UUID> getInstrumentIds() {
         return getInstruments()
             .stream()
             .map(InstrumentInListResponse::getId)
             .toList();
     }
-
     protected List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerClient().getDataScanners();
     }
-
     protected ExchangeResponse getExchange() {
         return exchangeClient().getExchange();
     }
-
     protected void fullIntegrate() {
         synchronizeWithDataSource();
         enableUpdateInstrumentBy(getInstrumentIds());
         integrateTradingData();
     }
-
-    protected void clearIntradayValue() {
-        exchangeClient().clearIntradayValue();
-    }
-
     protected void runArchiving() {
         exchangeClient().runArchiving();
     }
-
     protected void integrateTradingData() {
         exchangeClient().integrateTradingData();
     }
-
     protected void enableUpdateInstrumentBy(List<UUID> ids) {
         exchangeClient().enableUpdateInstruments(new EnableUpdateInstrumentRequest(ids));
     }
-
     protected void disableUpdateInstrumentBy(List<UUID> ids) {
         exchangeClient().disableUpdateInstruments(new DisableUpdateInstrumentRequest(ids));
     }
-
     protected List<InstrumentInListResponse> getInstruments() {
         return exchangeClient().getInstruments("");
     }
-
     protected List<InstrumentInListResponse> getInstruments(Map<String, String> params) {
         return exchangeClient()
             .getInstruments(params
@@ -136,18 +118,12 @@ public class BaseApiAcceptanceTest {
                 .collect(Collectors.joining("&"))
             );
     }
-
     protected InstrumentResponse getInstrumentById(UUID id) {
         return exchangeClient().getInstrumentBy(id);
     }
-
     protected List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
         return testingSystemClient().getIntradayValues(pageNumber, pageSize);
     }
-    protected List<HistoryValueResponse> getHistoryValues(int pageNumber, int pageSize) {
-        return testingSystemClient().getHistoryValues(pageNumber, pageSize);
-    }
-
     protected TradingDataGeneratorFacade generator() {
         return generator;
     }
