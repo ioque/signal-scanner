@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
-import ru.ioque.apitest.fixture.InstrumentsFixture;
 import ru.ioque.apitest.repos.DatasetRepository;
 import ru.ioque.core.client.exchange.ExchangeRestClient;
 import ru.ioque.core.client.service.ServiceClient;
@@ -38,7 +37,6 @@ public class BaseApiAcceptanceTest {
     @Autowired
     private DatasetRepository datasetRepository;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
-    InstrumentsFixture instrumentsFixture = new InstrumentsFixture();
 
     @BeforeEach
     void beforeEach() {
@@ -63,10 +61,6 @@ public class BaseApiAcceptanceTest {
 
     protected DatasetRepository datasetRepository() {
         return datasetRepository;
-    }
-
-    protected InstrumentsFixture instruments() {
-        return instrumentsFixture;
     }
 
     protected void integrateInstruments(

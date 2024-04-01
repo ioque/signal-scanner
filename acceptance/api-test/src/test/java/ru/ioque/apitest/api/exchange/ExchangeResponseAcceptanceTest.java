@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
+import ru.ioque.core.DefaultDataset;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
@@ -43,10 +44,10 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase1() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber()
         );
 
         ExchangeResponse exchangeResponse = getExchange();
@@ -67,19 +68,19 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase2() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber()
         );
         ExchangeResponse exchangeResponse = getExchange();
         List<InstrumentInListResponse> instruments = getInstruments();
 
         integrateInstruments(
-            instruments().imoex().shortName("Индекс мосбиржи").build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().shortName("Сбербанкич").build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber()
         );
         ExchangeResponse updatedExchangeResponse = getExchange();
         List<InstrumentInListResponse> updatedInstruments = getInstruments();
@@ -117,11 +118,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase3() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> instruments = getInstruments(Map.of("ticker", "SBER"));
@@ -135,11 +136,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase4() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> stocks = getInstruments(Map.of("type", "stock"));
@@ -159,11 +160,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase5() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> instruments = getInstruments(Map.of("shortname", "Сбер"));
@@ -177,11 +178,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase6() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> instruments = getInstruments(Map.of("shortname", "BR", "type", "futures"));
@@ -195,11 +196,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase7() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> instruments = getInstruments(Map.of("ticker", "IMOEX", "type", "index"));
@@ -213,11 +214,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase8() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().usbRub().build(),
-            instruments().brf4().build(),
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.usbRub(),
+            DefaultDataset.brf4(),
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
 
         List<InstrumentInListResponse> instruments = getInstruments(Map.of(
@@ -237,7 +238,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T9. Получение детализированной информации по финансовому инструменту.
         """)
     void testCase9() {
-        integrateInstruments(instruments().sber().build());
+        integrateInstruments(DefaultDataset.sber());
 
         InstrumentResponse instrumentResponse = getInstrumentById(
             getInstruments()
@@ -260,7 +261,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase10() {
         LocalDateTime time = getDateTimeNow();
         LocalDate startDate = time.toLocalDate().minusMonths(6);
-        integrateInstruments(instruments().sber().build());
+        integrateInstruments(DefaultDataset.sber());
         datasetRepository().initIntradayValue(
             generator().generateDeals(
                 DealsGeneratorConfig
@@ -310,7 +311,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase11() {
         LocalDateTime time = getDateTimeNow();
-        integrateInstruments(instruments().sber().build());
+        integrateInstruments(DefaultDataset.sber());
         datasetRepository().initIntradayValue(
             List.of(
                 Deal
@@ -396,11 +397,11 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         LocalDateTime time = getDateTimeNow().minusMinutes(5);
         datasetRepository().initInstruments(
             List.of(
-                instruments().imoex().build(),
-                instruments().usbRub().build(),
-                instruments().brf4().build(),
-                instruments().sber().build(),
-                instruments().imoex().build()
+                DefaultDataset.imoex(),
+                DefaultDataset.usbRub(),
+                DefaultDataset.brf4(),
+                DefaultDataset.sber(),
+                DefaultDataset.imoex()
             )
         );
         datasetRepository().initDailyResultValue(

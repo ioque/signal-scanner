@@ -1,4 +1,4 @@
-package ru.ioque.datasource;
+package ru.ioque.core;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,12 @@ import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
+import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
+import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
+import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
+import ru.ioque.core.dto.scanner.request.PrefSimpleRequest;
+import ru.ioque.core.dto.scanner.request.SectoralRetardScannerRequest;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -36,7 +42,7 @@ import java.util.stream.Stream;
 public class DefaultDataset {
     static TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
 
-    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(List<InstrumentInList> instruments) {
+    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(List<InstrumentInListResponse> instruments) {
         return AnomalyVolumeScannerRequest.builder()
             .workPeriodInMinutes(1)
             .scaleCoefficient(1.5)
@@ -46,31 +52,31 @@ public class DefaultDataset {
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("TGKN", "TGKB", "IMOEX").contains(row.getTicker()))
-                .map(InstrumentInList::getId)
+                .map(InstrumentInListResponse::getId)
                 .toList())
             .build();
     }
 
-    public static AddSignalScannerRequest getPrefSimpleRequest(List<InstrumentInList> instruments) {
+    public static AddSignalScannerRequest getPrefSimpleRequest(List<InstrumentInListResponse> instruments) {
         return PrefSimpleRequest.builder()
             .workPeriodInMinutes(1)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("SBER", "SBERP").contains(row.getTicker()))
-                .map(InstrumentInList::getId)
+                .map(InstrumentInListResponse::getId)
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
             .spreadParam(1.0)
             .build();
     }
 
-    public static AddSignalScannerRequest getSectoralRetardScannerRequest(List<InstrumentInList> instruments) {
+    public static AddSignalScannerRequest getSectoralRetardScannerRequest(List<InstrumentInListResponse> instruments) {
         return SectoralRetardScannerRequest.builder()
             .workPeriodInMinutes(60)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH").contains(row.getTicker()))
-                .map(InstrumentInList::getId)
+                .map(InstrumentInListResponse::getId)
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
             .historyScale(0.015)
@@ -78,13 +84,13 @@ public class DefaultDataset {
             .build();
     }
 
-    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(List<InstrumentInList> instruments) {
+    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(List<InstrumentInListResponse> instruments) {
         return CorrelationSectoralScannerRequest.builder()
             .workPeriodInMinutes(24 * 60)
             .ids(instruments
                 .stream()
                 .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4").contains(row.getTicker()))
-                .map(InstrumentInList::getId)
+                .map(InstrumentInListResponse::getId)
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
             .futuresTicker("BRF4")

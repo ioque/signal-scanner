@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
+import ru.ioque.core.DefaultDataset;
 import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
@@ -45,8 +46,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase1() {
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().sber().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.sber()
         );
 
         addSignalScanner(
@@ -69,8 +70,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase2() {
         integrateInstruments(
-            instruments().sberp().build(),
-            instruments().sber().build()
+            DefaultDataset.sberp(),
+            DefaultDataset.sber()
         );
 
         addSignalScanner(
@@ -91,10 +92,10 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase3() {
         integrateInstruments(
-            instruments().sibn().build(),
-            instruments().lkoh().build(),
-            instruments().tatn().build(),
-            instruments().rosn().build()
+            DefaultDataset.sibn(),
+            DefaultDataset.lkoh(),
+            DefaultDataset.tatn(),
+            DefaultDataset.rosn()
         );
 
         addSignalScanner(
@@ -116,11 +117,11 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase4() {
         integrateInstruments(
-            instruments().sibn().build(),
-            instruments().lkoh().build(),
-            instruments().tatn().build(),
-            instruments().rosn().build(),
-            instruments().brf4().build()
+            DefaultDataset.sibn(),
+            DefaultDataset.lkoh(),
+            DefaultDataset.tatn(),
+            DefaultDataset.rosn(),
+            DefaultDataset.brf4()
         );
 
         addSignalScanner(
@@ -145,8 +146,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         integrateInstruments(
-            instruments().imoex().build(),
-            instruments().tgkn().build()
+            DefaultDataset.imoex(),
+            DefaultDataset.tgkn()
         );
         enableUpdateInstrumentBy(getInstrumentIds());
         datasetRepository().initDailyResultValue(
@@ -251,8 +252,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         integrateInstruments(
-            instruments().sber().build(),
-            instruments().sberp().build()
+            DefaultDataset.sber(),
+            DefaultDataset.sberp()
         );
         enableUpdateInstrumentBy(getInstrumentIds());
         datasetRepository().initDailyResultValue(
@@ -345,10 +346,10 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase7() {
         LocalDateTime now = getDateTimeNow();
         integrateInstruments(
-            instruments().sibn().build(),
-            instruments().lkoh().build(),
-            instruments().tatn().build(),
-            instruments().rosn().build()
+            DefaultDataset.sibn(),
+            DefaultDataset.lkoh(),
+            DefaultDataset.tatn(),
+            DefaultDataset.rosn()
         );
         enableUpdateInstrumentBy(getInstrumentIds());
         List<HistoryValue> dailyResultValues = new ArrayList<>();
@@ -469,8 +470,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase8() {
         LocalDateTime now = getDateTimeNow();
         integrateInstruments(
-            instruments().sibn().build(),
-            instruments().brf4().build()
+            DefaultDataset.sibn(),
+            DefaultDataset.brf4()
         );
         enableUpdateInstrumentBy(getInstrumentIds());
         List<HistoryValue> dailyResultValues = new ArrayList<>();
