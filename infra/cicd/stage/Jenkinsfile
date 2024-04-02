@@ -8,6 +8,7 @@ pipeline {
         skipDefaultCheckout()
     }
     environment {
+        TEST_MACHINE_HOST = "192.168.0.62"
         DOCKER_DB_HOST = "192.168.0.85"
         DOCKER_SPRING_PROFILES = "test"
         DOCKER_API_HOST = "192.168.0.85"
@@ -112,7 +113,7 @@ pipeline {
         stage("API Tests") {
             agent any
             steps {
-                sh "export API_HOST=${env.DOCKER_API_HOST} && cd acceptance && ./gradlew api-test:test"
+                sh "export API_HOST=${env.DOCKER_API_HOST} && export DATASOURCE_HOST=${env.TEST_MACHINE_HOST} && cd acceptance && ./gradlew api-test:test"
                 echo "Running API tests was successful."
             }
         }

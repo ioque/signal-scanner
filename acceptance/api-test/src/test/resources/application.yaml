@@ -1,5 +1,5 @@
 variables:
-  api_host: http://${API_HOST:localhost}:8080
-  datasource_host: http://${API_HOST:localhost}:8082
+  api_url: http://${API_HOST:localhost}:8080
+  datasource_url: http://${DATASOURCE_HOST:localhost}:8082
 server:
   port: 8082

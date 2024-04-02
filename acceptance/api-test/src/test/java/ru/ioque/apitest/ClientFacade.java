@@ -15,7 +15,7 @@ public class ClientFacade {
     private final ArchiveRestClient archiveRestClient;
     private final SignalScannerRestClient signalScannerRestClient;
     private final ServiceClient serviceClient;
-    public ClientFacade(@Value("${variables.api_host}") String apiHost) {
+    public ClientFacade(@Value("${variables.api_url}") String apiHost) {
         exchangeRestClient = new ExchangeRestClient(apiHost);
         archiveRestClient = new ArchiveRestClient(apiHost);
         signalScannerRestClient = new SignalScannerRestClient(apiHost);

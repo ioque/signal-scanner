@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class BaseApiAcceptanceTest {
-    @Value("${variables.datasource_host}")
+    @Value("${variables.datasource_url}")
     protected String datasourceHost;
     @Autowired
     private ClientFacade clientFacade;
