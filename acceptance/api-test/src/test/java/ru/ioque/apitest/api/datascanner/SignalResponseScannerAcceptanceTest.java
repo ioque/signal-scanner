@@ -39,7 +39,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             RegisterDatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
-                .url("http://localhost:8081")
+                .url(datasourceHost)
                 .build()
         );
     }

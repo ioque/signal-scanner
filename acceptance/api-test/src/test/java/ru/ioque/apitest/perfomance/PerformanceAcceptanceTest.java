@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.core.dataset.DefaultDataset;
+import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
-import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.dataset.DefaultDataset;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.InstrumentResponse;
 
@@ -30,7 +30,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
             RegisterDatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
-                .url("http://localhost:8081")
+                .url(datasourceHost)
                 .build()
         );
     }

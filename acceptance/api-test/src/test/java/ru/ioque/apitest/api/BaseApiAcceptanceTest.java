@@ -2,6 +2,7 @@ package ru.ioque.apitest.api;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class BaseApiAcceptanceTest {
+    @Value("${variables.datasource_host}")
+    protected String datasourceHost;
     @Autowired
     private ClientFacade clientFacade;
     @Autowired
