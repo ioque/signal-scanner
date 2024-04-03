@@ -60,24 +60,12 @@ public abstract class Instrument extends Domain {
         return Boolean.TRUE.equals(updatable);
     }
 
-    public void addNewIntradayValue(IntradayValue intradayValue) {
-        if (lastIntradayValue().map(intradayValue::isAfter).orElse(true)) {
-            intradayValues.add(intradayValue);
-        }
+    public void addIntradayValues(List<IntradayValue> intradayValues) {
+        intradayValues.forEach(this::addIntradayValue);
     }
 
-    public void addNewDailyValue(HistoryValue historyValue) {
-        if (lastDailyValue().map(historyValue::isAfter).orElse(true)) {
-            historyValues.add(historyValue);
-        }
-    }
-
-    public void addIntradayValue(IntradayValue intradayValue) {
-        intradayValues.add(intradayValue);
-    }
-
-    public void addDailyValue(HistoryValue historyValue) {
-        historyValues.add(historyValue);
+    public void addHistoryValues(List<HistoryValue> historyValues) {
+        historyValues.forEach(this::addHistoryValue);
     }
 
     public Optional<HistoryValue> lastDailyValue() {
@@ -100,8 +88,16 @@ public abstract class Instrument extends Domain {
         return Optional.of(intradayValues.last());
     }
 
-    public int getIntradayValueNumbers() {
-        return intradayValues.size();
+    private void addIntradayValue(IntradayValue intradayValue) {
+        if (lastIntradayValue().map(intradayValue::isAfter).orElse(true)) {
+            intradayValues.add(intradayValue);
+        }
+    }
+
+    private void addHistoryValue(HistoryValue historyValue) {
+        if (lastDailyValue().map(historyValue::isAfter).orElse(true)) {
+            historyValues.add(historyValue);
+        }
     }
 
     public String printMarketStat() {

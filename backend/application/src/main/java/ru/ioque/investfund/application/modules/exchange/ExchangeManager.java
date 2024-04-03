@@ -68,33 +68,34 @@ public class ExchangeManager implements SystemModule {
 
     private void integrateTradingData() {
         final Exchange exchange = getExchangeFromRepo();
-        exchange.getUpdatableInstruments().forEach(instrument -> {
-            loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
-
-            exchangeProvider
-                .fetchIntradayValuesBy(
-                    exchange.getUrl(),
-                    instrument.getTicker(),
-                    instrument.lastIntradayValue().map(IntradayValue::getNumber).orElse(0L)
-                )
-                .stream()
-                .filter(row -> row.isSameByDate(dateTimeProvider.nowDate()))
-                .forEach(instrument::addNewIntradayValue);
-
-            if (instrument.isNeedUpdateHistory(dateTimeProvider.nowDate())) {
-                exchangeProvider
-                    .fetchHistoryBy(
-                        exchange.getUrl(),
-                        instrument.getTicker(),
-                        instrument.lastHistoryValueDate().orElse(dateTimeProvider.monthsAgo(6)),
-                        dateTimeProvider.nowDate().minusDays(1)
-                    )
-                    .forEach(instrument::addNewDailyValue);
-            }
-
-            loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
-
-        });
+        exchange
+            .getUpdatableInstruments()
+            .forEach(instrument -> {
+                loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
+                instrument.addIntradayValues(
+                    exchangeProvider
+                        .fetchIntradayValuesBy(
+                            exchange.getUrl(),
+                            instrument.getTicker(),
+                            instrument.lastIntradayValue().map(IntradayValue::getNumber).orElse(0L)
+                        )
+                        .stream()
+                        .filter(row -> row.isSameByDate(dateTimeProvider.nowDate()))
+                        .toList()
+                );
+                if (instrument.isNeedUpdateHistory(dateTimeProvider.nowDate())) {
+                    instrument.addHistoryValues(
+                        exchangeProvider
+                            .fetchHistoryBy(
+                                exchange.getUrl(),
+                                instrument.getTicker(),
+                                instrument.lastHistoryValueDate().orElse(dateTimeProvider.monthsAgo(6)),
+                                dateTimeProvider.nowDate().minusDays(1)
+                            )
+                    );
+                }
+                loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
+            });
 
         repository.save(exchange);
 

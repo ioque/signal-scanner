@@ -57,8 +57,8 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build()
+                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build()
             )
         );
         exchangeRepository.save(exchange);
@@ -78,7 +78,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildIndexWith().id(id2).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
@@ -107,9 +107,9 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
-                buildStockWith().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
+                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildAfks().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
@@ -138,7 +138,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
+                buildAfks().id(id1).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
                 buildIndexWith().id(id2).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
             )
         );
@@ -164,8 +164,8 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
@@ -194,8 +194,8 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("SBER").name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(id2).ticker("SBERP").name("SBER").shortName("Сбербанк-п").build(),
+                buildAfks().id(id1).ticker("SBER").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id2).ticker("SBERP").name("SBER").shortName("Сбербанк-п").build(),
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
@@ -223,9 +223,9 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
-                buildStockWith().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
+                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildAfks().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
@@ -260,9 +260,9 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
-                buildStockWith().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
-                buildStockWith().id(id3).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
+                buildAfks().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
+                buildAfks().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
+                buildAfks().id(id3).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );

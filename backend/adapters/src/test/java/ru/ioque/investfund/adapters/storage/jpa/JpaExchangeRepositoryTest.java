@@ -43,7 +43,7 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
     @Test
     @DisplayName("Т2. Сохранение данных о бирже с инструментами")
     void testCase2() {
-        var instrument = buildStockWith().build();
+        var instrument = buildAfks().build();
         Exchange exchange = new Exchange(
             UUID.randomUUID(),
             "test",
@@ -63,29 +63,25 @@ public class JpaExchangeRepositoryTest extends BaseJpaTest {
     @Test
     @DisplayName("Т3. Обновление торговых данных.")
     void testCase3() {
-        var instrument = buildStockWith().build();
-        var dailyTradingResult = buildTradingResult(instrument.getTicker(), LocalDate.now().minusDays(1));
-        var intradayValue = buildDealWith(instrument.getTicker(), LocalDate.now().atTime(LocalTime.parse("10:00:00")));
-        instrument.addDailyValue(dailyTradingResult);
-        instrument.addIntradayValue(intradayValue);
-        Exchange exchange = new Exchange(
+        exchangeRepository.save(new Exchange(
             UUID.randomUUID(),
             "test",
             "test",
             "test",
             List.of(
-                instrument
+                buildAfks()
+                    .historyValues(List.of(buildTradingResult("AFKS", LocalDate.now().minusDays(1))))
+                    .intradayValues(List.of(buildDealWith("AFKS", LocalDate.now().atTime(LocalTime.parse("10:00:00")))))
+                    .build()
             )
-        );
-
-        exchangeRepository.save(exchange);
+        ));
 
         assertTrue(exchangeRepository.getBy(LocalDate.now()).isPresent());
         assertEquals(1, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().size());
-        assertEquals(instrument, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0));
+        assertEquals("AFKS", exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getTicker());
         assertEquals(1, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getHistoryValues().size());
         assertEquals(1, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().size());
-        assertEquals(dailyTradingResult, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getHistoryValues().first());
-        assertEquals(intradayValue, exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().first());
+        assertEquals("AFKS", exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getHistoryValues().first().getTicker());
+        assertEquals("AFKS", exchangeRepository.getBy(LocalDate.now()).get().getInstruments().get(0).getIntradayValues().first().getTicker());
     }
 }

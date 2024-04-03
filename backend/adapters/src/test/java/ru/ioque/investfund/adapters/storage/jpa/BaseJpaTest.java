@@ -3,7 +3,6 @@ package ru.ioque.investfund.adapters.storage.jpa;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
@@ -44,7 +43,7 @@ public class BaseJpaTest {
         historyValueEntityRepository.deleteAll();
     }
 
-    protected Stock.StockBuilder buildStockWith() {
+    protected Stock.StockBuilder buildAfks() {
         return Stock
             .builder()
             .id(uuidProvider.generate())

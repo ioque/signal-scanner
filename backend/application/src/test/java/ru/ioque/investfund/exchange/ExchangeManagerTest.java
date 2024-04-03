@@ -437,7 +437,7 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
         exchangeManager().execute();
         Instrument afks = getInstrumentBy("AFKS");
-        assertEquals(3, afks.getIntradayValueNumbers());
+        assertEquals(3, afks.getIntradayValues().size());
     }
 
     @Test
@@ -455,6 +455,6 @@ public class ExchangeManagerTest extends BaseTest {
         exchangeManager().execute();
         exchangeManager().execute();
         Instrument afks = getInstrumentBy("AFKS");
-        assertEquals(1, afks.getIntradayValueNumbers());
+        assertEquals(1, afks.getIntradayValues().size());
     }
 }
