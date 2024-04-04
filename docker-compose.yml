@@ -17,10 +17,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: ${BACKEND_DB_HOST}
+      DB_HOST: ${BACKEND_DB_HOST:-localhost}
       DB_PORT: "5432"
-      EXCHANGE_URL: ${BACKEND_EXCHANGE_URL} # https://iss.moex.com
-      SPRING_PROFILES_ACTIVE: ${BACKEND_SPRING_PROFILES}
+      EXCHANGE_URL: ${BACKEND_EXCHANGE_URL:-localhost} # https://iss.moex.com
+      SPRING_PROFILES_ACTIVE: ${BACKEND_SPRING_PROFILES:-prod}
     healthcheck:
       test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
       interval: 5s
@@ -33,8 +33,8 @@ services:
     build:
       context: frontend
     environment:
-      API_HOST: ${FRONTEND_API_HOST}
-      API_HTTP_MODE: ${FRONTEND_API_HTTP_MODE}
+      API_HOST: ${FRONTEND_API_HOST:-localhost}
+      API_HTTP_MODE: ${FRONTEND_API_HTTP_MODE:-http}
     ports:
       - "4200:4200"
     healthcheck:

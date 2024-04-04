@@ -46,9 +46,6 @@ build and push:
   only:
     - master
   stage: build
-  services:
-    - name: docker:dind
-      command: [ "--insecure-registry=192.168.0.62:8002" ]
   script:
     - docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_URL}
     - docker compose build
