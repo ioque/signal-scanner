@@ -6,6 +6,10 @@ variables:
   NEXUS_USER: "$NEXUS_USER"
   NEXUS_PASS: "$NEXUS_PASS"
 
+services:
+  - name: docker:dind
+    command: [ "--insecure-registry=${NEXUS_URL}" ]
+
 stages:
   - test
   - build
@@ -14,7 +18,7 @@ application test:
   only:
     - master
   stage: test
-  image: openjdk:17-alpine
+  image: gradle:jdk17-focal
   variables:
     GIT_DEPTH: "0"
   script:
@@ -30,7 +34,7 @@ adapter tests:
   only:
     - master
   stage: test
-  image: openjdk:17-alpine
+  image: gradle:jdk17-focal
   variables:
     GIT_DEPTH: "0"
   script:
