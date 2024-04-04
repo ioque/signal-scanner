@@ -3,8 +3,8 @@ services:
   signal-scanner-db:
     container_name: signal-scanner-db
     build:
-      dockerfile: infra/containers/postgrespro/Dockerfile
-    image: 192.168.0.62:8002/ioque/postgrespro:${COMMIT_TAG:-latest}
+      dockerfile: infra/containers/postgres/Dockerfile
+    image: 192.168.0.62:8002/ioque/postgres:${COMMIT_TAG:-latest}
     ports:
       - "5432:5432"
     volumes:
