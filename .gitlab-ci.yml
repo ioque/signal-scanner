@@ -56,14 +56,15 @@ build and push:
 deploy to stage:
   allow_failure: false
   timeout: 15m
+  image: ansible
   only:
     - master
   environment: stage
   resource_group: stage
   stage: infrastructure
   script:
-    - mkdir ~/secret
-    - echo "$ANSIBLE_SSH_KEY" > ~/secret/ansible.key
+    - mkdir secret
+    - echo "$ANSIBLE_SSH_KEY" > secret/ansible.key
     - chmod 400 secret/ansible.key
     - export ANSIBLE_HOST_KEY_CHECKING=False
     - !reference [ .ansible-deploy ]
