@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  signal-scanner-db:
+    container_name: signal-scanner-db
+    build:
+      dockerfile: infra/containers/postgrespro/Dockerfile
+    image: 192.168.0.62:8002/ioque/postgrespro:${COMMIT_TAG:-latest}
+    ports:
+      - "5432:5432"
+    volumes:
+      - signal-scanner-db:/var/lib/pgpro/std-15/data
+  backend:
+    container_name: backend
+    image: 192.168.0.62:8002/ioque/backend:${COMMIT_TAG:-latest}
+    build:
+      context: backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: ${BACKEND_DB_HOST}
+      DB_PORT: "5432"
+      EXCHANGE_URL: ${BACKEND_EXCHANGE_URL} # https://iss.moex.com
+      SPRING_PROFILES_ACTIVE: ${BACKEND_SPRING_PROFILES}
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  frontend:
+    container_name: frontend
+    image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
+    build:
+      context: frontend
+    environment:
+      API_HOST: ${FRONTEND_API_HOST}
+      API_HTTP_MODE: ${FRONTEND_API_HTTP_MODE}
+    ports:
+      - "4200:4200"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://localhost:4200/ || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  datasource:
+    container_name: datasource
+    image: 192.168.0.62:8002/ioque/datasource:${COMMIT_TAG:-latest}
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://localhost:8081/actuator/health || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+volumes:
+  signal-scanner-db:
+    driver: local

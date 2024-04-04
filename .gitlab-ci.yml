@@ -1,16 +1,24 @@
-image: openjdk:17-alpine
-
 include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
 
+variables:
+  NEXUS_URL: "$NEXUS_URL"
+  NEXUS_USER: "$NEXUS_USER"
+  NEXUS_PASS: "$NEXUS_PASS"
+
+services:
+  - name: docker:dind
+    command: [ "--insecure-registry=${NEXUS_URL}" ]
+
 stages:
   - test
+  - build
 
 application test:
   only:
     - master
   stage: test
-  image: gradle:jdk17-focal
+  image: openjdk:17-alpine
   variables:
     GIT_DEPTH: "0"
   script:
@@ -23,11 +31,10 @@ application test:
         - backend/application/build/test-results/test/**/TEST-*.xml
 
 adapter tests:
-  needs: []
   only:
     - master
   stage: test
-  image: gradle:jdk17-focal
+  image: openjdk:17-alpine
   variables:
     GIT_DEPTH: "0"
   script:
@@ -38,3 +45,13 @@ adapter tests:
     reports:
       junit:
         - backend/adapters/build/test-results/test/**/TEST-*.xml
+
+build and push:
+  only:
+    - master
+  stage: build
+  script:
+    - docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_URL}
+    - docker compose build
+    - docker compose push
+    - docker logout ${NEXUS_URL}
