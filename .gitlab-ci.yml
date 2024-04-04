@@ -6,10 +6,6 @@ variables:
   NEXUS_USER: "$NEXUS_USER"
   NEXUS_PASS: "$NEXUS_PASS"
 
-services:
-  - name: docker:dind
-    command: [ "--insecure-registry=${NEXUS_URL}" ]
-
 stages:
   - test
   - build
@@ -50,6 +46,9 @@ build and push:
   only:
     - master
   stage: build
+  services:
+    - name: docker:dind
+      command: [ "--insecure-registry="${NEXUS_URL} ]
   script:
     - docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_URL}
     - docker compose build
