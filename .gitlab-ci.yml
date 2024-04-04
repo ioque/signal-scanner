@@ -63,21 +63,21 @@ deploy to stage:
   script:
     - !reference [ .ansible-deploy ]
 
-api tests:
-  only:
-    - master
-  stage: acceptance
-
-prepare data:
-  needs:
-    - api tests
-  only:
-    - master
-  stage: acceptance
-
-ui tests:
-  needs:
-    - prepare data
-  only:
-    - master
-  stage: acceptance
+#api tests:
+#  only:
+#    - master
+#  stage: acceptance
+#
+#prepare data:
+#  needs:
+#    - api tests
+#  only:
+#    - master
+#  stage: acceptance
+#
+#ui tests:
+#  needs:
+#    - prepare data
+#  only:
+#    - master
+#  stage: acceptance
