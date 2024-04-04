@@ -5,14 +5,15 @@ variables:
   NEXUS_URL: "$NEXUS_URL"
   NEXUS_USER: "$NEXUS_USER"
   NEXUS_PASS: "$NEXUS_PASS"
+  COMMIT_TAG: "$CI_COMMIT_SHORT_SHA"
 
 stages:
   - test
   - build
+  - infrastructure
+  - acceptance
 
 application test:
-  only:
-    - master
   stage: test
   image: gradle:jdk17-focal
   variables:
@@ -27,8 +28,6 @@ application test:
         - backend/application/build/test-results/test/**/TEST-*.xml
 
 adapter tests:
-  only:
-    - master
   stage: test
   image: gradle:jdk17-focal
   variables:
@@ -51,3 +50,33 @@ build and push:
     - docker compose build
     - docker compose push
     - docker logout ${NEXUS_URL}
+
+deploy to stage:
+  allow_failure: false
+  timeout: 15m
+  only:
+    - master
+  environment: stage
+  resource_group: stage
+  stage: infrastructure
+  script:
+    - !reference [ .ansible-deploy ]
+
+api tests:
+  only:
+    - master
+  stage: acceptance
+
+prepare data:
+  needs:
+    - api tests
+  only:
+    - master
+  stage: acceptance
+
+ui tests:
+  needs:
+    - prepare data
+  only:
+    - master
+  stage: acceptance

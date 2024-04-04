@@ -1,6 +1,6 @@
 kvm_hosts:
   hosts:
-    test:
-      ansible_host: signal-system.test
+    stage:
+      ansible_host: signal-system.stage
     prod:
       ansible_host: signal-system.prod
