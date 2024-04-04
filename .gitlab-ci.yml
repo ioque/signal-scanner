@@ -7,6 +7,7 @@ variables:
   NEXUS_USER: "$NEXUS_USER"
   NEXUS_PASS: "$NEXUS_PASS"
   COMMIT_TAG: "$CI_COMMIT_SHORT_SHA"
+  ANSIBLE_SSH_KEY: "$ANSIBLE_SSH_KEY"
 
 stages:
   - test
@@ -61,6 +62,9 @@ deploy to stage:
   resource_group: stage
   stage: infrastructure
   script:
+    - echo "$ANSIBLE_SSH_KEY" > secret/ansible.key
+    - chmod 400 secret/ansible.key
+    - export ANSIBLE_HOST_KEY_CHECKING=False
     - !reference [ .ansible-deploy ]
 
 #api tests:
