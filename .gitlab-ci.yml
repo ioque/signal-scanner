@@ -56,7 +56,7 @@ build and push:
 deploy to stage:
   allow_failure: false
   timeout: 15m
-  image: ansible
+  image: '$NEXUS_URL/ioque/ansible'
   only:
     - master
   environment: stage
