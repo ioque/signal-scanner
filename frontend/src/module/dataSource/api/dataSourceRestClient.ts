@@ -13,5 +13,6 @@ export const fetchInstruments = async (): Promise<Array<InstrumentInList>> => {
 
 export const fetchInstrumentDetails = async (ticker: string): Promise<Instrument> => {
     const response = await GetRequest("/instruments/" + ticker, []);
+    console.log(response)
     return await response.json();
 }

@@ -90,6 +90,11 @@ api tests:
   script:
     - cd acceptance
     - gradle clean api-test:test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - acceptance/build/test-results/test/**/TEST-*.xml
 
 prepare data:
   needs:
@@ -119,10 +124,15 @@ ui tests:
   resource_group: stage
   image: gradle:jdk17-focal
   services:
-    - name: selenium/standalone-firefox:latest
+    - selenium/standalone-chrome
   variables:
     UI_HOST: "192.168.0.85"
     UI_PORT: "4200"
   script:
     - cd selenium
     - gradle clean test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - selenium/build/test-results/test/**/TEST-*.xml

@@ -1,6 +1,5 @@
-const baseUrl: string = process.env.REACT_APP_API_URL ?? "api";
-console.log(process.env.REACT_APP_API_URL)
-console.log(baseUrl)
+const baseUrl: string = process.env.REACT_APP_API_URL ?? "/api";
+
 export type QueryParam = {
     name: string;
     value: string;
@@ -24,7 +23,10 @@ const GetRequestInit = (): RequestInit => {
 }
 
 const url = (path: string, params: Array<QueryParam>) => {
-    return baseUrl + path + paramsToString(params)
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        return "http://localhost:8080/api" + path + paramsToString(params)
+    }
+    return "/" + baseUrl + path + paramsToString(params)
 }
 
 export const GetRequest = async (path: string, params: Array<QueryParam>) => {

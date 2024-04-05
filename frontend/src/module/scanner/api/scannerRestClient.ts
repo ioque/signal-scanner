@@ -8,5 +8,6 @@ export const fetchScanners = async (): Promise<Array<ScannerInList>> => {
 
 export const fetchScanner = async (id: string): Promise<Scanner> => {
     const response = await GetRequest("/signal-scanner/" + id, []);
+    console.log(response)
     return await response.json();
 }
