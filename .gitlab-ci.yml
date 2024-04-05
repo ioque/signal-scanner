@@ -62,6 +62,11 @@ deploy to stage:
   environment: stage
   resource_group: stage
   stage: infrastructure
+  variables:
+    BACKEND_DB_HOST: "192.168.0.85"
+    BACKEND_ENV: "test"
+    FRONTEND_API_HOST: "192.168.0.85"
+    FRONTEND_API_HTTP_MODE: "http"
   script:
     - mkdir ${CI_PROJECT_DIR}/secret
     - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key

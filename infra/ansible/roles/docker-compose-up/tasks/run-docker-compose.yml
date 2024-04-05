@@ -8,10 +8,11 @@
 
 - name: Start
   shell: |
-    export DOCKER_DB_HOST={{ lookup('ansible.builtin.env', 'DOCKER_DB_HOST') }} 
-    export DOCKER_SPRING_PROFILES={{ lookup('ansible.builtin.env', 'DOCKER_SPRING_PROFILES') }} 
-    export DOCKER_API_HOST={{ lookup('ansible.builtin.env', 'DOCKER_API_HOST') }} 
-    export DOCKER_API_HTTP_MODE={{ lookup('ansible.builtin.env', 'DOCKER_API_HTTP_MODE') }} 
+    export BACKEND_DB_HOST={{ lookup('ansible.builtin.env', 'BACKEND_DB_HOST') }} 
+    export BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }} 
+    export FRONTEND_API_HOST={{ lookup('ansible.builtin.env', 'FRONTEND_API_HOST') }} 
+    export FRONTEND_API_HTTP_MODE={{ lookup('ansible.builtin.env', 'FRONTEND_API_HTTP_MODE') }} 
+    export COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }} 
     docker compose down -v --rmi all
     docker compose up --wait
     exit 0

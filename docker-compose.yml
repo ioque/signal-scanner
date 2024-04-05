@@ -19,8 +19,7 @@ services:
     environment:
       DB_HOST: ${BACKEND_DB_HOST:-localhost}
       DB_PORT: "5432"
-      EXCHANGE_URL: ${BACKEND_EXCHANGE_URL:-localhost} # https://iss.moex.com
-      SPRING_PROFILES_ACTIVE: ${BACKEND_SPRING_PROFILES:-prod}
+      SPRING_PROFILES_ACTIVE: ${BACKEND_ENV:-prod}
     healthcheck:
       test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
       interval: 5s
@@ -45,6 +44,8 @@ services:
       timeout: 10s
   datasource:
     container_name: datasource
+    build:
+      context: acceptance
     image: 192.168.0.62:8002/ioque/datasource:${COMMIT_TAG:-latest}
     ports:
       - "8081:8081"
