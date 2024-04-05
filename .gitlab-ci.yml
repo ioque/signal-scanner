@@ -26,6 +26,7 @@ deploy to stage:
   stage: infrastructure
   script:
     - mkdir secret
+    - echo pwd
     - echo "$ANSIBLE_SSH_KEY" > secret/ansible.key
     - chmod 400 secret/ansible.key
     - export ANSIBLE_HOST_KEY_CHECKING=False
