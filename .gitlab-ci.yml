@@ -94,7 +94,7 @@ api tests:
     when: always
     reports:
       junit:
-        - acceptance/build/test-results/test/**/TEST-*.xml
+        - acceptance/api-test/build/test-results/test/**/TEST-*.xml
 
 prepare data:
   needs:
