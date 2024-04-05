@@ -63,10 +63,6 @@ deploy to stage:
   resource_group: stage
   stage: infrastructure
   script:
-    - mkdir ${CI_PROJECT_DIR}/secret
-    - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key
-    - chmod 400 ${CI_PROJECT_DIR}/secret/ansible.key
-    - export ANSIBLE_HOST_KEY_CHECKING=False
     - !reference [ .ansible-deploy ]
 
 #api tests:
