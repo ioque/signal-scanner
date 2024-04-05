@@ -10,7 +10,10 @@ variables:
   ANSIBLE_SSH_KEY: "$ANSIBLE_SSH_KEY"
 
 stages:
-  - infra
+  - test
+  - build
+  - infrastructure
+  - acceptance
 
 deploy to stage:
   allow_failure: false
@@ -20,7 +23,7 @@ deploy to stage:
     - master
   environment: stage
   resource_group: stage
-  stage: infra
+  stage: infrastructure
   script:
     - mkdir ${CI_PROJECT_DIR}/secret
     - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key
