@@ -84,7 +84,8 @@ api tests:
   resource_group: stage
   variables:
     API_HOST: "192.168.0.85"
-    DATASOURCE_HOST: "192.168.0.47"
+    API_PORT: "8080"
+    DATASOURCE_HOST: "192.168.0.85"
     DATASOURCE_PORT: "8081"
   script:
     - cd acceptance
@@ -101,7 +102,9 @@ prepare data:
   resource_group: stage
   variables:
     API_HOST: "192.168.0.85"
+    API_PORT: "8080"
     DATASOURCE_HOST: "192.168.0.85"
+    DATASOURCE_PORT: "8081"
   script:
     - cd acceptance
     - gradle -p ui-seeder bootRun
@@ -119,7 +122,7 @@ ui tests:
     - name: selenium/standalone-firefox:latest
   variables:
     UI_HOST: "192.168.0.85"
-    UI_PORT: "192.168.0.85"
+    UI_PORT: "4200"
   script:
     - cd selenium
     - gradle clean test
