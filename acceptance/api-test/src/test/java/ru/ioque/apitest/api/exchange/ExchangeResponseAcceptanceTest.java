@@ -13,7 +13,8 @@ import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.Contract;
 import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
-import ru.ioque.core.dataset.DefaultDataset;
+import ru.ioque.core.dataset.Dataset;
+import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.ExchangeResponse;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
@@ -50,16 +51,23 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T1. Интеграция с Биржей.
         """)
     void testCase1() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber()
+                    )
+                )
+                .build()
         );
+
+        integrateInstruments();
 
         ExchangeResponse exchangeResponse = getExchange();
         List<InstrumentInListResponse> instruments = getInstruments();
-
         assertEquals("Московская Биржа", exchangeResponse.getName());
         assertEquals(
             "Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.",
@@ -74,21 +82,24 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T2. Повторная синхронизация с источником биржевых данных.
         """)
     void testCase2() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber()
+                    )
+                )
+                .build()
         );
+
+        integrateInstruments();
         ExchangeResponse exchangeResponse = getExchange();
         List<InstrumentInListResponse> instruments = getInstruments();
 
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber()
-        );
+        integrateInstruments();
         ExchangeResponse updatedExchangeResponse = getExchange();
         List<InstrumentInListResponse> updatedInstruments = getInstruments();
 
@@ -124,17 +135,23 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T3. Поиск финансовых инструментов по тикеру.
         """)
     void testCase3() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
 
-        List<InstrumentInListResponse> instruments = getInstruments(Map.of("ticker", "SBER"));
+        integrateInstruments();
 
-        assertEquals(2, instruments.size());
+        assertEquals(2, getInstruments(Map.of("ticker", "SBER")).size());
     }
 
     @Test
@@ -142,23 +159,25 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T4. Поиск финансовых инструментов по типу.
         """)
     void testCase4() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
+        integrateInstruments();
 
-        List<InstrumentInListResponse> stocks = getInstruments(Map.of("type", "stock"));
-        List<InstrumentInListResponse> currencyPairs = getInstruments(Map.of("type", "currencyPair"));
-        List<InstrumentInListResponse> futures = getInstruments(Map.of("type", "futures"));
-        List<InstrumentInListResponse> indexes = getInstruments(Map.of("type", "index"));
-
-        assertEquals(2, stocks.size());
-        assertEquals(1, currencyPairs.size());
-        assertEquals(1, futures.size());
-        assertEquals(1, indexes.size());
+        assertEquals(2, getInstruments(Map.of("type", "stock")).size());
+        assertEquals(1, getInstruments(Map.of("type", "currencyPair")).size());
+        assertEquals(1, getInstruments(Map.of("type", "futures")).size());
+        assertEquals(1, getInstruments(Map.of("type", "index")).size());
     }
 
     @Test
@@ -166,17 +185,22 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T5. Поиск финансовых инструментов по названию.
         """)
     void testCase5() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
+        integrateInstruments();
 
-        List<InstrumentInListResponse> instruments = getInstruments(Map.of("shortname", "Сбер"));
-
-        assertEquals(2, instruments.size());
+        assertEquals(2, getInstruments(Map.of("shortname", "Сбер")).size());
     }
 
     @Test
@@ -184,17 +208,22 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T6. Поиск финансовых инструментов по названию и типу.
         """)
     void testCase6() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
+        integrateInstruments();
 
-        List<InstrumentInListResponse> instruments = getInstruments(Map.of("shortname", "BR", "type", "futures"));
-
-        assertEquals(1, instruments.size());
+        assertEquals(1, getInstruments(Map.of("shortname", "BR", "type", "futures")).size());
     }
 
     @Test
@@ -202,17 +231,22 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T7. Поиск финансовых инструментов по тикеру и типу.
         """)
     void testCase7() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
+        integrateInstruments();
 
-        List<InstrumentInListResponse> instruments = getInstruments(Map.of("ticker", "IMOEX", "type", "index"));
-
-        assertEquals(1, instruments.size());
+        assertEquals(1, getInstruments(Map.of("ticker", "IMOEX", "type", "index")).size());
     }
 
     @Test
@@ -220,24 +254,22 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T8. Поиск финансовых инструментов по тикеру, названию и типу.
         """)
     void testCase8() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.usbRub(),
-            DefaultDataset.brf4(),
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.sberp()
+                    )
+                )
+                .build()
         );
+        integrateInstruments();
 
-        List<InstrumentInListResponse> instruments = getInstruments(Map.of(
-            "shortname",
-            "Сбер",
-            "ticker",
-            "SBER",
-            "type",
-            "stock"
-        ));
-
-        assertEquals(2, instruments.size());
+        assertEquals(2, getInstruments(Map.of("shortname", "Сбер", "ticker", "SBER", "type", "stock")).size());
     }
 
     @Test
@@ -245,7 +277,8 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         T9. Получение детализированной информации по финансовому инструменту.
         """)
     void testCase9() {
-        integrateInstruments(DefaultDataset.sber());
+        initDataset(Dataset.builder().instruments(List.of(DefaultInstrumentSet.sber())).build());
+        integrateInstruments();
 
         InstrumentResponse instrumentResponse = getInstrumentById(
             getInstruments()
@@ -268,39 +301,44 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase10() {
         LocalDateTime time = getDateTimeNow();
         LocalDate startDate = time.toLocalDate().minusMonths(6);
-        integrateInstruments(DefaultDataset.sber());
-        datasetRepository().initIntradayValue(
-            generator().generateDeals(
-                DealsGeneratorConfig
-                    .builder()
-                    .ticker("SBER")
-                    .numTrades(10)
-                    .startPrice(10.)
-                    .startValue(100D)
-                    .date(time.toLocalDate())
-                    .startTime(LocalTime.parse("10:00"))
-                    .pricePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
-                    .valuePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
-                    .build()
-            )
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.sber()))
+                .intradayValues(
+                    generator().generateDeals(
+                        DealsGeneratorConfig
+                            .builder()
+                            .ticker("SBER")
+                            .numTrades(10)
+                            .startPrice(10.)
+                            .startValue(100D)
+                            .date(time.toLocalDate())
+                            .startTime(LocalTime.parse("10:00"))
+                            .pricePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(9D, 1D)))
+                            .build()
+                    )
+                )
+                .historyValues(
+                    generator().generateHistory(
+                        HistoryGeneratorConfig
+                            .builder()
+                            .ticker("SBER")
+                            .startClose(10.)
+                            .startOpen(10.)
+                            .startValue(1000D)
+                            .days(180)
+                            .startDate(startDate)
+                            .openPricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                            .closePricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                            .valuePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                            .build()
+                    )
+                )
+                .build()
         );
-        datasetRepository().initDailyResultValue(
-            generator().generateHistory(
-                HistoryGeneratorConfig
-                    .builder()
-                    .ticker("SBER")
-                    .startClose(10.)
-                    .startOpen(10.)
-                    .startValue(1000D)
-                    .days(180)
-                    .startDate(startDate)
-                    .openPricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                    .closePricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                    .valuePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                    .build()
-            )
-        );
-        enableUpdateInstrumentBy(getInstrumentIds());
+        integrateInstruments();
+
         integrateTradingData();
 
         InstrumentResponse sber = getInstrumentById(getInstrumentIds().get(0));
@@ -318,33 +356,40 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase11() {
         LocalDateTime time = getDateTimeNow();
-        integrateInstruments(DefaultDataset.sber());
-        datasetRepository().initIntradayValue(
-            List.of(
-                Deal
-                    .builder()
-                    .number(1L)
-                    .ticker("SBER")
-                    .price(12.1)
-                    .value(12.3)
-                    .dateTime(time)
-                    .build()
-            )
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.sber()))
+                .intradayValues(
+                    List.of(
+                        Deal
+                            .builder()
+                            .number(1L)
+                            .ticker("SBER")
+                            .price(12.1)
+                            .value(12.3)
+                            .dateTime(time)
+                            .build()
+                    )
+                )
+                .historyValues(
+                    List.of(
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("SBER")
+                            .tradeDate(time.toLocalDate().minusDays(1))
+                            .build()
+                    )
+                )
+                .build()
         );
-        datasetRepository().initDailyResultValue(
-            List.of(
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("SBER")
-                    .tradeDate(time.toLocalDate().minusDays(1))
-                    .build()
-            )
-        );
+        integrateInstruments();
+
         List<UUID> ids = getInstrumentIds();
         disableUpdateInstrumentBy(ids);
+        integrateTradingData();
 
         InstrumentResponse sber = getInstrumentById(ids.get(0));
         assertEquals(0, sber.getHistoryValues().size());
@@ -359,7 +404,8 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
-        List<InstrumentResponse> instrumentResponses = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+        List<InstrumentResponse> instrumentResponses =
+            getInstrumentIds().stream().map(this::getInstrumentById).toList();
 
         assertEquals(4, instrumentResponses.stream().filter(row -> !row.getHistoryValues().isEmpty()).toList().size());
         assertEquals(4, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
@@ -383,128 +429,131 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
     private void initInstrumentsWithTradingData() {
         LocalDateTime time = getDateTimeNow().minusMinutes(5);
-        datasetRepository().initInstruments(
-            List.of(
-                DefaultDataset.imoex(),
-                DefaultDataset.usbRub(),
-                DefaultDataset.brf4(),
-                DefaultDataset.sber(),
-                DefaultDataset.imoex()
-            )
-        );
-        datasetRepository().initDailyResultValue(
-            List.of(
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("USD000UTSTOM")
-                    .tradeDate(time.toLocalDate().minusDays(1))
-                    .build(),
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("IMOEX")
-                    .tradeDate(time.toLocalDate().minusDays(1))
-                    .build(),
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("BRF4")
-                    .tradeDate(time.toLocalDate().minusDays(1))
-                    .build(),
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("SBER")
-                    .tradeDate(time.toLocalDate().minusDays(1))
-                    .build(),
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("SBER")
-                    .tradeDate(time.toLocalDate().minusDays(2))
-                    .build(),
-                HistoryValue
-                    .builder()
-                    .closePrice(3451.4)
-                    .openPrice(3411.1)
-                    .value(135132512351.1)
-                    .ticker("SBER")
-                    .tradeDate(time.toLocalDate().minusDays(3))
-                    .build()
-            )
-        );
-        datasetRepository()
-            .initIntradayValue(
-                List.of(
-                    Delta
-                        .builder()
-                        .number(1L)
-                        .ticker("IMOEX")
-                        .price(12.1)
-                        .value(12.3)
-                        .dateTime(time)
-                        .build(),
-                    Deal
-                        .builder()
-                        .number(1L)
-                        .ticker("USD000UTSTOM")
-                        .price(12.1)
-                        .value(12.3)
-                        .dateTime(time)
-                        .qnt(1)
-                        .isBuy(true)
-                        .build(),
-                    Contract
-                        .builder()
-                        .number(1L)
-                        .ticker("BRF4")
-                        .price(12.1)
-                        .dateTime(time)
-                        .value(100D)
-                        .qnt(10)
-                        .build(),
-                    Deal
-                        .builder()
-                        .number(1L)
-                        .ticker("SBER")
-                        .price(12.1)
-                        .value(12.3)
-                        .qnt(1)
-                        .dateTime(time)
-                        .isBuy(true)
-                        .build(),
-                    Deal
-                        .builder()
-                        .number(1L)
-                        .ticker("SBER")
-                        .price(12.1)
-                        .value(12.3)
-                        .qnt(1)
-                        .dateTime(time.plusMinutes(1))
-                        .isBuy(true)
-                        .build(),
-                    Deal
-                        .builder()
-                        .number(1L)
-                        .ticker("SBER")
-                        .price(12.1)
-                        .value(12.3)
-                        .qnt(1)
-                        .dateTime(time.plusMinutes(2))
-                        .isBuy(true)
-                        .build()
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.imoex(),
+                        DefaultInstrumentSet.usbRub(),
+                        DefaultInstrumentSet.brf4(),
+                        DefaultInstrumentSet.sber(),
+                        DefaultInstrumentSet.imoex()
+                    )
                 )
-            );
+                .intradayValues(
+                    List.of(
+                        Delta
+                            .builder()
+                            .number(1L)
+                            .ticker("IMOEX")
+                            .price(12.1)
+                            .value(12.3)
+                            .dateTime(time)
+                            .build(),
+                        Deal
+                            .builder()
+                            .number(1L)
+                            .ticker("USD000UTSTOM")
+                            .price(12.1)
+                            .value(12.3)
+                            .dateTime(time)
+                            .qnt(1)
+                            .isBuy(true)
+                            .build(),
+                        Contract
+                            .builder()
+                            .number(1L)
+                            .ticker("BRF4")
+                            .price(12.1)
+                            .dateTime(time)
+                            .value(100D)
+                            .qnt(10)
+                            .build(),
+                        Deal
+                            .builder()
+                            .number(1L)
+                            .ticker("SBER")
+                            .price(12.1)
+                            .value(12.3)
+                            .qnt(1)
+                            .dateTime(time)
+                            .isBuy(true)
+                            .build(),
+                        Deal
+                            .builder()
+                            .number(1L)
+                            .ticker("SBER")
+                            .price(12.1)
+                            .value(12.3)
+                            .qnt(1)
+                            .dateTime(time.plusMinutes(1))
+                            .isBuy(true)
+                            .build(),
+                        Deal
+                            .builder()
+                            .number(1L)
+                            .ticker("SBER")
+                            .price(12.1)
+                            .value(12.3)
+                            .qnt(1)
+                            .dateTime(time.plusMinutes(2))
+                            .isBuy(true)
+                            .build()
+                    )
+                )
+                .historyValues(
+                    List.of(
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("USD000UTSTOM")
+                            .tradeDate(time.toLocalDate().minusDays(1))
+                            .build(),
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("IMOEX")
+                            .tradeDate(time.toLocalDate().minusDays(1))
+                            .build(),
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("BRF4")
+                            .tradeDate(time.toLocalDate().minusDays(1))
+                            .build(),
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("SBER")
+                            .tradeDate(time.toLocalDate().minusDays(1))
+                            .build(),
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("SBER")
+                            .tradeDate(time.toLocalDate().minusDays(2))
+                            .build(),
+                        HistoryValue
+                            .builder()
+                            .closePrice(3451.4)
+                            .openPrice(3411.1)
+                            .value(135132512351.1)
+                            .ticker("SBER")
+                            .tradeDate(time.toLocalDate().minusDays(3))
+                            .build()
+                    )
+                )
+                .build()
+        );
     }
 }

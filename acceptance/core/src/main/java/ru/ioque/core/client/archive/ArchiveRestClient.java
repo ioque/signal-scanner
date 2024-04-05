@@ -2,12 +2,12 @@ package ru.ioque.core.client.archive;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
-import ru.ioque.core.client.BaseClient;
+import ru.ioque.core.client.JsonApplicationHttpClient;
 import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
 
 import java.util.List;
 
-public class ArchiveRestClient extends BaseClient {
+public class ArchiveRestClient extends JsonApplicationHttpClient {
     public ArchiveRestClient(String apiUrl) {
         super(apiUrl);
     }

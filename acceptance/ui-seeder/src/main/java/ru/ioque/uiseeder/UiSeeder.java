@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.ioque.core.dataset.DefaultDataset;
 import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
@@ -23,8 +22,9 @@ public class UiSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("UiTestStartup run");
+        clientFacade.getDatasourceClient().initDataset(UiTestsDataset.getUiTestsDataset());
         clientFacade.getServiceClient().clearState();
-        clientFacade.getServiceClient().initDateTime(DefaultDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
+        clientFacade.getServiceClient().initDateTime(UiTestsDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
         clientFacade.getExchangeRestClient().registerDatasource(
             RegisterDatasourceRequest.builder()
                 .name("Московская биржа")
@@ -43,10 +43,10 @@ public class UiSeeder implements CommandLineRunner {
                         .toList()
                 )
             );
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(DefaultDataset.getAnomalyVolumeSignalRequest(clientFacade.getExchangeRestClient().getInstruments("")));
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(DefaultDataset.getPrefSimpleRequest(clientFacade.getExchangeRestClient().getInstruments("")));
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(DefaultDataset.getCorrelationSectoralScannerRequest(clientFacade.getExchangeRestClient().getInstruments("")));
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(DefaultDataset.getSectoralRetardScannerRequest(clientFacade.getExchangeRestClient().getInstruments("")));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getAnomalyVolumeSignalRequest(clientFacade.getExchangeRestClient().getInstruments("")));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getPrefSimpleRequest(clientFacade.getExchangeRestClient().getInstruments("")));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getCorrelationSectoralScannerRequest(clientFacade.getExchangeRestClient().getInstruments("")));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getSectoralRetardScannerRequest(clientFacade.getExchangeRestClient().getInstruments("")));
         clientFacade.getExchangeRestClient().integrateTradingData();
         log.info("UiTestStartup finish");
     }

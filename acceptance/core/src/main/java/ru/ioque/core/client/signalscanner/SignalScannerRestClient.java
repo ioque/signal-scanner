@@ -2,7 +2,7 @@ package ru.ioque.core.client.signalscanner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
-import ru.ioque.core.client.BaseClient;
+import ru.ioque.core.client.JsonApplicationHttpClient;
 import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerResponse;
@@ -10,7 +10,7 @@ import ru.ioque.core.dto.scanner.response.SignalScannerResponse;
 import java.util.List;
 import java.util.UUID;
 
-public class SignalScannerRestClient extends BaseClient {
+public class SignalScannerRestClient extends JsonApplicationHttpClient {
     public SignalScannerRestClient(String apiUrl) {
         super(apiUrl);
     }

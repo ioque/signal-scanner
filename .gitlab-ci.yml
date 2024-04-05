@@ -85,6 +85,7 @@ api tests:
   variables:
     API_HOST: "192.168.0.85"
     DATASOURCE_HOST: "192.168.0.47"
+    DATASOURCE_PORT: "8081"
   script:
     - cd acceptance
     - gradle clean api-test:test

@@ -1,4 +1,4 @@
-package ru.ioque.core.dataset;
+package ru.ioque.uiseeder;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,15 +14,13 @@ import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.ParameterConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.datagenerator.history.HistoryValue;
-import ru.ioque.core.datagenerator.instrument.CurrencyPair;
-import ru.ioque.core.datagenerator.instrument.Futures;
-import ru.ioque.core.datagenerator.instrument.Index;
 import ru.ioque.core.datagenerator.instrument.Instrument;
-import ru.ioque.core.datagenerator.instrument.Stock;
 import ru.ioque.core.datagenerator.intraday.Contract;
 import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
+import ru.ioque.core.dataset.Dataset;
+import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
@@ -38,8 +36,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class DefaultDataset {
+public class UiTestsDataset {
     static TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
+
+    public static Dataset getUiTestsDataset() {
+        return Dataset.builder()
+            .instruments(getInstruments())
+            .historyValues(getHistoryValues())
+            .intradayValues(getIntradayValues())
+            .build();
+    }
+
+    private static List<Instrument> getInstruments() {
+        return new ArrayList<>(
+            List.of(
+                DefaultInstrumentSet.sber(),
+                DefaultInstrumentSet.sberp(),
+                DefaultInstrumentSet.tatn(),
+                DefaultInstrumentSet.tgkn(),
+                DefaultInstrumentSet.lkoh(),
+                DefaultInstrumentSet.rosn(),
+                DefaultInstrumentSet.sibn(),
+                DefaultInstrumentSet.usbRub(),
+                DefaultInstrumentSet.imoex(),
+                DefaultInstrumentSet.brf4()
+            )
+        );
+    }
+
+    private static List<IntradayValue> getIntradayValues() {
+        List<IntradayValue> intradayValues = new ArrayList<>();
+        intradayValues.addAll(getStockIntradayValues());
+        intradayValues.addAll(getFuturesIntradayValues());
+        intradayValues.addAll(getIndexIntradayValues());
+        intradayValues.addAll(getCurrencyPairIntradayValues());
+        return intradayValues;
+    }
+
+    private static List<HistoryValue> getHistoryValues() {
+        List<HistoryValue> dailyResults = new ArrayList<>();
+        dailyResults.addAll(getStockDailyResults());
+        dailyResults.addAll(getFuturesDailyResults());
+        dailyResults.addAll(getIndexDailyResults());
+        dailyResults.addAll(getCurrencyPairDailyResults());
+        return dailyResults;
+    }
 
     public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(List<InstrumentInListResponse> instruments) {
         return AnomalyVolumeScannerRequest.builder()
@@ -98,33 +139,7 @@ public class DefaultDataset {
             .build();
     }
 
-    public static List<Instrument> getInstruments() {
-        return new ArrayList<>(
-            List.of(
-                sber(),
-                sberp(),
-                tatn(),
-                tgkn(),
-                lkoh(),
-                rosn(),
-                sibn(),
-                usbRub(),
-                imoex(),
-                brf4()
-            )
-        );
-    }
-
-    public static List<IntradayValue> getIntradayValues() {
-        List<IntradayValue> intradayValues = new ArrayList<>();
-        intradayValues.addAll(getStockIntradayValues());
-        intradayValues.addAll(getFuturesIntradayValues());
-        intradayValues.addAll(getIndexIntradayValues());
-        intradayValues.addAll(getCurrencyPairIntradayValues());
-        return intradayValues;
-    }
-
-    private static List<Delta> getIndexIntradayValues() {
+    public static List<Delta> getIndexIntradayValues() {
         return generator.generateDeltas(
             DeltasGeneratorConfig
                 .builder()
@@ -140,7 +155,7 @@ public class DefaultDataset {
         );
     }
 
-    private static List<Contract> getFuturesIntradayValues() {
+    public static List<Contract> getFuturesIntradayValues() {
         return generator.generateContracts(ContractsGeneratorConfig
             .builder()
             .ticker("BRF4")
@@ -152,14 +167,14 @@ public class DefaultDataset {
             .build());
     }
 
-    private static List<Deal> getStockIntradayValues() {
+    public static List<Deal> getStockIntradayValues() {
         return Stream.of("TGKN", "TATN", "ROSN", "SIBN", "LKOH", "SBER", "SBERP")
             .map(row -> generator.generateDeals(defaultStockIntradayConfigBuilder(row)))
             .flatMap(Collection::stream)
             .toList();
     }
 
-    private static List<Deal> getCurrencyPairIntradayValues() {
+    public static List<Deal> getCurrencyPairIntradayValues() {
         return generator.generateDeals(
             DealsGeneratorConfig.builder()
                 .ticker("USDRUB_TOM")
@@ -174,16 +189,7 @@ public class DefaultDataset {
         );
     }
 
-    public static List<HistoryValue> getHistoryValues() {
-        List<HistoryValue> dailyResults = new ArrayList<>();
-        dailyResults.addAll(getStockDailyResults());
-        dailyResults.addAll(getFuturesDailyResults());
-        dailyResults.addAll(getIndexDailyResults());
-        dailyResults.addAll(getCurrencyPairDailyResults());
-        return dailyResults;
-    }
-
-    private static List<HistoryValue> getCurrencyPairDailyResults() {
+    public static List<HistoryValue> getCurrencyPairDailyResults() {
         return generator
             .generateHistory(
                 HistoryGeneratorConfig
@@ -201,7 +207,7 @@ public class DefaultDataset {
             );
     }
 
-    private static List<HistoryValue> getIndexDailyResults() {
+    public static List<HistoryValue> getIndexDailyResults() {
         return generator
             .generateHistory(
                 HistoryGeneratorConfig
@@ -219,7 +225,7 @@ public class DefaultDataset {
             );
     }
 
-    private static List<HistoryValue> getFuturesDailyResults() {
+    public static List<HistoryValue> getFuturesDailyResults() {
         return generator
             .generateHistory(
                 HistoryGeneratorConfig
@@ -237,14 +243,14 @@ public class DefaultDataset {
             );
     }
 
-    private static List<HistoryValue> getStockDailyResults() {
+    public static List<HistoryValue> getStockDailyResults() {
         return Stream.of("TGKN", "TATN", "ROSN", "SIBN", "LKOH", "SBER", "SBERP")
             .map(row -> generator.generateHistory(defaultStockHistoryConfig(row)))
             .flatMap(Collection::stream)
             .toList();
     }
 
-    private static HistoryGeneratorConfig defaultStockHistoryConfig(String ticker) {
+    public static HistoryGeneratorConfig defaultStockHistoryConfig(String ticker) {
         StartParameters startParameters = getStartParametersBy(ticker);
         return HistoryGeneratorConfig
             .builder()
@@ -260,7 +266,7 @@ public class DefaultDataset {
             .build();
     }
 
-    private static DealsGeneratorConfig defaultStockIntradayConfigBuilder(String ticker) {
+    public static DealsGeneratorConfig defaultStockIntradayConfigBuilder(String ticker) {
         StartParameters startParameters = getStartParametersBy(ticker);
         return DealsGeneratorConfig.builder()
             .ticker(ticker)
@@ -278,11 +284,11 @@ public class DefaultDataset {
         return LocalDate.parse("2024-04-01");
     }
 
-    private static StartParameters getStartParametersBy(String ticker) {
+    public static StartParameters getStartParametersBy(String ticker) {
         return startParametersMap.get(ticker);
     }
 
-    private static final Map<String, StartParameters> startParametersMap = Map.of(
+    public static final Map<String, StartParameters> startParametersMap = Map.of(
         "TGKN", new StartParameters(
             new ParameterConfig("openPrice", 70D, neutralHistoryTrend()),
             new ParameterConfig("closePrice", 72D, neutralHistoryTrend()),
@@ -355,7 +361,7 @@ public class DefaultDataset {
         )
     );
 
-    private static List<PercentageGrowths> upDailyTrend() {
+    public static List<PercentageGrowths> upDailyTrend() {
         return List.of(
             new PercentageGrowths(5D, 0.25),
             new PercentageGrowths(-2D, 0.25),
@@ -364,7 +370,7 @@ public class DefaultDataset {
         );
     }
 
-    private static List<PercentageGrowths> downDailyTrend() {
+    public static List<PercentageGrowths> downDailyTrend() {
         return List.of(
             new PercentageGrowths(5D, 0.25),
             new PercentageGrowths(-10D, 0.25),
@@ -373,14 +379,14 @@ public class DefaultDataset {
         );
     }
 
-    private static List<PercentageGrowths> upValueDailyTrend() {
+    public static List<PercentageGrowths> upValueDailyTrend() {
         return List.of(
             new PercentageGrowths(-5D, 0.5),
             new PercentageGrowths(10D, 0.5)
         );
     }
 
-    private static List<PercentageGrowths> upHistoryTrend() {
+    public static List<PercentageGrowths> upHistoryTrend() {
         return List.of(
             new PercentageGrowths(-5D, 0.25),
             new PercentageGrowths(5D, 0.25),
@@ -389,7 +395,7 @@ public class DefaultDataset {
         );
     }
 
-    private static List<PercentageGrowths> neutralHistoryTrend() {
+    public static List<PercentageGrowths> neutralHistoryTrend() {
         return List.of(
             new PercentageGrowths(-5D, 0.25),
             new PercentageGrowths(5D, 0.25),
@@ -403,104 +409,11 @@ public class DefaultDataset {
     @EqualsAndHashCode
     @AllArgsConstructor
     @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-    private static class StartParameters {
+    public static class StartParameters {
         ParameterConfig openPrice;
         ParameterConfig closePrice;
         ParameterConfig intradayPrice;
         ParameterConfig historyValue;
         ParameterConfig intradayValue;
-    }
-
-    public static Index imoex() {
-        return Index.builder()
-            .ticker("IMOEX")
-            .name("Индекс фондового рынка мосбиржи")
-            .shortName("Индекс фондового рынка мосбиржи")
-            .annualHigh(3287.34)
-            .annualLow(2126.4)
-            .build();
-    }
-
-    public static CurrencyPair usbRub() {
-        return CurrencyPair.builder()
-            .ticker("USD000UTSTOM")
-            .shortName("USDRUB_TOM")
-            .name("USDRUB_TOM - USD/РУБ")
-            .lotSize(1000)
-            .faceUnit("RUB")
-            .build();
-    }
-
-    public static Futures brf4() {
-        return Futures.builder()
-            .ticker("BRF4")
-            .name("Фьючерсный контракт BR-1.24")
-            .shortName("BR-1.24")
-            .lotVolume(1000)
-            .assetCode("BR")
-            .build();
-    }
-
-    public static Stock sber() {
-        return Stock.builder()
-            .ticker("SBER")
-            .lotSize(100)
-            .name("ПАО Сбербанк")
-            .shortName("Сбербанк")
-            .build();
-    }
-
-    public static Stock sberp() {
-        return Stock.builder()
-            .ticker("SBERP")
-            .lotSize(100)
-            .name("Сбербанк-п")
-            .shortName("Сбербанк-п")
-            .build();
-    }
-
-    public static Stock sibn() {
-        return Stock.builder()
-            .ticker("SIBN")
-            .lotSize(100)
-            .name("Газпромнефть")
-            .shortName("Газпромнефть")
-            .build();
-    }
-
-    public static Stock lkoh() {
-        return Stock.builder()
-            .ticker("LKOH")
-            .lotSize(100)
-            .name("Лукойл")
-            .shortName("Лукойл")
-            .build();
-    }
-
-    public static Stock rosn() {
-        return Stock.builder()
-            .ticker("ROSN")
-            .lotSize(100)
-            .name("Роснефть")
-            .shortName("Роснефть")
-            .build();
-    }
-
-    public static Stock tatn() {
-        return Stock.builder()
-            .ticker("TATN")
-            .lotSize(100)
-            .name("Татнефть")
-            .shortName("Татнефть")
-            .build();
-    }
-
-    public static Stock tgkn() {
-        return Stock.builder()
-            .ticker("TGKN")
-            .lotSize(100)
-            .name("ТГК-14")
-            .shortName("ТГК-14")
-            .build();
     }
 }

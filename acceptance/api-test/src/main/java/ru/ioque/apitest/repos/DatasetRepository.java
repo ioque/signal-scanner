@@ -43,10 +43,10 @@ public class DatasetRepository {
         datasetStorage.setInstruments(instruments);
     }
 
-    public void initIntradayValue(List<? extends IntradayValue> intradayValues) {
+    public void initIntradayValues(List<? extends IntradayValue> intradayValues) {
         datasetStorage.setIntradayValues(intradayValues);
     }
-    public void initDailyResultValue(List<HistoryValue> dailyResultValues) {
+    public void initHistoryValues(List<HistoryValue> dailyResultValues) {
         datasetStorage.setDailyResultValues(dailyResultValues);
     }
 }

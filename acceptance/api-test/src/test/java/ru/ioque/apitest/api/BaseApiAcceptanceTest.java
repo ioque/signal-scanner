@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
-import ru.ioque.apitest.repos.DatasetRepository;
-import ru.ioque.core.client.archive.ArchiveRestClient;
+import ru.ioque.apitest.DatasetManager;
 import ru.ioque.core.client.exchange.ExchangeRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
-import ru.ioque.core.datagenerator.instrument.Instrument;
+import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
@@ -25,7 +24,6 @@ import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -38,14 +36,11 @@ public class BaseApiAcceptanceTest {
     @Autowired
     private ClientFacade clientFacade;
     @Autowired
-    private DatasetRepository datasetRepository;
+    private DatasetManager datasetManager;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
     @BeforeEach
     void beforeEach() {
         serviceClient().clearState();
-    }
-    private ArchiveRestClient testingSystemClient() {
-        return clientFacade.getArchiveRestClient();
     }
     private ExchangeRestClient exchangeClient() {
         return clientFacade.getExchangeRestClient();
@@ -56,23 +51,12 @@ public class BaseApiAcceptanceTest {
     private ServiceClient serviceClient() {
         return clientFacade.getServiceClient();
     }
+
     protected void initDateTime(LocalDateTime dateTime) {
         serviceClient().initDateTime(dateTime);
     }
-    protected DatasetRepository datasetRepository() {
-        return datasetRepository;
-    }
     protected void registerDatasource(RegisterDatasourceRequest request) {
         exchangeClient().registerDatasource(request);
-    }
-    protected void integrateInstruments(
-        Instrument... instruments
-    ) {
-        datasetRepository().initInstruments(Arrays.asList(instruments));
-        synchronizeWithDataSource();
-    }
-    protected void synchronizeWithDataSource() {
-        exchangeClient().synchronizeWithDataSource();
     }
     protected void addSignalScanner(AddSignalScannerRequest request) {
         signalScannerClient().saveDataScannerConfig(request);
@@ -93,10 +77,15 @@ public class BaseApiAcceptanceTest {
         return exchangeClient().getExchange();
     }
     protected void fullIntegrate() {
-        synchronizeWithDataSource();
-        enableUpdateInstrumentBy(getInstrumentIds());
+        integrateInstruments();
         integrateTradingData();
     }
+
+    protected void integrateInstruments() {
+        exchangeClient().synchronizeWithDataSource();
+        enableUpdateInstrumentBy(getInstrumentIds());
+    }
+
     protected void runArchiving() {
         exchangeClient().runArchiving();
     }
@@ -125,9 +114,13 @@ public class BaseApiAcceptanceTest {
         return exchangeClient().getInstrumentBy(id);
     }
     protected List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
-        return testingSystemClient().getIntradayValues(pageNumber, pageSize);
+        return clientFacade.getArchiveRestClient().getIntradayValues(pageNumber, pageSize);
     }
     protected TradingDataGeneratorFacade generator() {
         return generator;
+    }
+
+    protected void initDataset(Dataset dataset) {
+        datasetManager.initDataset(dataset);
     }
 }

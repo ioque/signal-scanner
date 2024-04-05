@@ -11,7 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 
 @RequiredArgsConstructor
-public class BaseClient {
+public class JsonApplicationHttpClient {
     protected final String apiUrl;
     protected final HttpClient client = HttpClient.newHttpClient();
     protected final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());

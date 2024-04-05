@@ -2,7 +2,7 @@ package ru.ioque.core.client.exchange;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
-import ru.ioque.core.client.BaseClient;
+import ru.ioque.core.client.JsonApplicationHttpClient;
 import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
@@ -13,7 +13,7 @@ import ru.ioque.core.dto.exchange.response.InstrumentResponse;
 import java.util.List;
 import java.util.UUID;
 
-public class ExchangeRestClient extends BaseClient {
+public class ExchangeRestClient extends JsonApplicationHttpClient {
     public ExchangeRestClient(String apiUrl) {
         super(apiUrl);
     }

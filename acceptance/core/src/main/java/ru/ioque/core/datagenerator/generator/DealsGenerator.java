@@ -80,13 +80,16 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
             } else {
                 sellQnt--;
             }
+            double value = startValue + deltaValue * i;
+            double price = startPrice + deltaPrice * i;
             stockTrades.add(
                 Deal.builder()
                     .ticker(ticker)
                     .number(number + i)
                     .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
-                    .value(startValue + deltaValue * i)
-                    .price(startPrice + deltaPrice * i)
+                    .value(value)
+                    .price(price)
+                    .qnt(Double.valueOf(value/price).intValue())
                     .isBuy(isBuy)
                     .build()
             );

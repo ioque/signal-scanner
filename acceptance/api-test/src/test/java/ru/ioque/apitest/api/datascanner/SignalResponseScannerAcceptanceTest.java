@@ -6,14 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.core.dataset.DefaultDataset;
-import ru.ioque.core.datagenerator.history.HistoryValue;
-import ru.ioque.core.datagenerator.intraday.IntradayValue;
+import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
+import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
-import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
-import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
-import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
+import ru.ioque.core.datagenerator.history.HistoryValue;
+import ru.ioque.core.datagenerator.intraday.IntradayValue;
+import ru.ioque.core.dataset.Dataset;
+import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
 import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
@@ -53,10 +54,12 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T1. Создание сканера сигналов с алгоритмом "Аномальные объемы".
         """)
     void testCase1() {
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.sber()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
+                .build()
         );
+        integrateInstruments();
 
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
@@ -77,10 +80,12 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T2. Создание сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка".
         """)
     void testCase2() {
-        integrateInstruments(
-            DefaultDataset.sberp(),
-            DefaultDataset.sber()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.sber(), DefaultInstrumentSet.sberp()))
+                .build()
         );
+        integrateInstruments();
 
         addSignalScanner(
             PrefSimpleRequest.builder()
@@ -99,12 +104,17 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T3. Создание сканера сигналов с алгоритмом "Секторальный отстающий".
         """)
     void testCase3() {
-        integrateInstruments(
-            DefaultDataset.sibn(),
-            DefaultDataset.lkoh(),
-            DefaultDataset.tatn(),
-            DefaultDataset.rosn()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(
+                    DefaultInstrumentSet.sibn(),
+                    DefaultInstrumentSet.lkoh(),
+                    DefaultInstrumentSet.tatn(),
+                    DefaultInstrumentSet.rosn()
+                ))
+                .build()
         );
+        integrateInstruments();
 
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
@@ -124,13 +134,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T4. Создание сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора".
         """)
     void testCase4() {
-        integrateInstruments(
-            DefaultDataset.sibn(),
-            DefaultDataset.lkoh(),
-            DefaultDataset.tatn(),
-            DefaultDataset.rosn(),
-            DefaultDataset.brf4()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(
+                    DefaultInstrumentSet.sibn(),
+                    DefaultInstrumentSet.lkoh(),
+                    DefaultInstrumentSet.tatn(),
+                    DefaultInstrumentSet.rosn(),
+                    DefaultInstrumentSet.brf4()
+                ))
+                .build()
         );
+        integrateInstruments();
 
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
@@ -153,89 +168,91 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase5() {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
-        integrateInstruments(
-            DefaultDataset.imoex(),
-            DefaultDataset.tgkn()
-        );
-        enableUpdateInstrumentBy(getInstrumentIds());
-        datasetRepository().initDailyResultValue(
-            Stream.concat(
-                    generator()
-                        .generateHistory(
-                            HistoryGeneratorConfig
-                                .builder()
-                                .ticker("TGKN")
-                                .startClose(10.)
-                                .startOpen(10.)
-                                .startValue(1_000_000D)
-                                .days(30)
-                                .startDate(startDate)
-                                .openPricePercentageGrowths(List.of(
-                                    new PercentageGrowths(50D, 0.5),
-                                    new PercentageGrowths(-50D, 0.5)
-                                ))
-                                .closePricePercentageGrowths(List.of(
-                                    new PercentageGrowths(50D, 0.5),
-                                    new PercentageGrowths(-50D, 0.5)
-                                ))
-                                .valuePercentageGrowths(List.of(
-                                    new PercentageGrowths(50D, 0.5),
-                                    new PercentageGrowths(-50D, 0.5)
-                                ))
-                                .build()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.tgkn()))
+                .historyValues(
+                    Stream.concat(
+                            generator()
+                                .generateHistory(
+                                    HistoryGeneratorConfig
+                                        .builder()
+                                        .ticker("TGKN")
+                                        .startClose(10.)
+                                        .startOpen(10.)
+                                        .startValue(1_000_000D)
+                                        .days(30)
+                                        .startDate(startDate)
+                                        .openPricePercentageGrowths(List.of(
+                                            new PercentageGrowths(50D, 0.5),
+                                            new PercentageGrowths(-50D, 0.5)
+                                        ))
+                                        .closePricePercentageGrowths(List.of(
+                                            new PercentageGrowths(50D, 0.5),
+                                            new PercentageGrowths(-50D, 0.5)
+                                        ))
+                                        .valuePercentageGrowths(List.of(
+                                            new PercentageGrowths(50D, 0.5),
+                                            new PercentageGrowths(-50D, 0.5)
+                                        ))
+                                        .build()
+                                )
+                                .stream(),
+                            generator()
+                                .generateHistory(
+                                    HistoryGeneratorConfig
+                                        .builder()
+                                        .ticker("IMOEX")
+                                        .startClose(10.)
+                                        .startOpen(10.)
+                                        .startValue(2_000_000D)
+                                        .days(30)
+                                        .startDate(startDate)
+                                        .openPricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                        .closePricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                        .valuePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
+                                        .build()
+                                )
+                                .stream()
                         )
-                        .stream(),
-                    generator()
-                        .generateHistory(
-                            HistoryGeneratorConfig
-                                .builder()
-                                .ticker("IMOEX")
-                                .startClose(10.)
-                                .startOpen(10.)
-                                .startValue(2_000_000D)
-                                .days(30)
-                                .startDate(startDate)
-                                .openPricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
-                                .closePricePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
-                                .valuePercentageGrowths(List.of(new PercentageGrowths(20D, 1D)))
-                                .build()
+                        .toList()
+                )
+                .intradayValues(
+                    Stream
+                        .concat(
+                            generator().generateDeltas(
+                                DeltasGeneratorConfig
+                                    .builder()
+                                    .ticker("IMOEX")
+                                    .numTrades(2000)
+                                    .startPrice(10.)
+                                    .startValue(200_000D)
+                                    .date(now.toLocalDate())
+                                    .startTime(LocalTime.parse("10:00"))
+                                    .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
+                                    .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
+                                    .build()
+                            ).stream(),
+                            generator().generateDeals(
+                                DealsGeneratorConfig
+                                    .builder()
+                                    .ticker("TGKN")
+                                    .numTrades(2000)
+                                    .startPrice(10.)
+                                    .startValue(200_000D)
+                                    .date(now.toLocalDate())
+                                    .startTime(LocalTime.parse("10:00"))
+                                    .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
+                                    .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
+                                    .build()
+                            ).stream()
                         )
-                        .stream()
+                        .toList()
                 )
-                .toList()
+                .build()
         );
-        datasetRepository().initIntradayValue(
-            Stream
-                .concat(
-                    generator().generateDeltas(
-                        DeltasGeneratorConfig
-                            .builder()
-                            .ticker("IMOEX")
-                            .numTrades(2000)
-                            .startPrice(10.)
-                            .startValue(200_000D)
-                            .date(now.toLocalDate())
-                            .startTime(LocalTime.parse("10:00"))
-                            .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
-                            .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
-                            .build()
-                    ).stream(),
-                    generator().generateDeals(
-                        DealsGeneratorConfig
-                            .builder()
-                            .ticker("TGKN")
-                            .numTrades(2000)
-                            .startPrice(10.)
-                            .startValue(200_000D)
-                            .date(now.toLocalDate())
-                            .startTime(LocalTime.parse("10:00"))
-                            .pricePercentageGrowths(List.of(new PercentageGrowths(80D, 1D)))
-                            .valuePercentageGrowths(List.of(new PercentageGrowths(200D, 1D)))
-                            .build()
-                    ).stream()
-                )
-                .toList()
-        );
+        integrateInstruments();
+
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -246,7 +263,6 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .ids(getInstrumentIds())
                 .build()
         );
-
         integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
@@ -259,80 +275,82 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
     void testCase6() {
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
-        integrateInstruments(
-            DefaultDataset.sber(),
-            DefaultDataset.sberp()
-        );
-        enableUpdateInstrumentBy(getInstrumentIds());
-        datasetRepository().initDailyResultValue(
-            Stream.concat(
-                    generator()
-                        .generateHistory(
-                            HistoryGeneratorConfig
-                                .builder()
-                                .ticker("SBER")
-                                .startClose(245.)
-                                .startOpen(242.)
-                                .startValue(1_000_000D)
-                                .days(30)
-                                .startDate(startDate)
-                                .openPricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
-                                .closePricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
-                                .valuePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
-                                .build()
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.sber(), DefaultInstrumentSet.sberp()))
+                .intradayValues(
+                    Stream
+                        .concat(
+                            generator().generateDeals(
+                                DealsGeneratorConfig
+                                    .builder()
+                                    .ticker("SBER")
+                                    .numTrades(2000)
+                                    .startPrice(245.)
+                                    .startValue(200_000D)
+                                    .date(now.toLocalDate())
+                                    .startTime(LocalTime.parse("10:00"))
+                                    .pricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
+                                    .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
+                                    .build()
+                            ).stream(),
+                            generator().generateDeals(
+                                DealsGeneratorConfig
+                                    .builder()
+                                    .ticker("SBERP")
+                                    .numTrades(2000)
+                                    .startPrice(242.)
+                                    .startValue(200_000D)
+                                    .date(now.toLocalDate())
+                                    .startTime(LocalTime.parse("10:00"))
+                                    .pricePercentageGrowths(List.of(new PercentageGrowths(-15D, 1D)))
+                                    .valuePercentageGrowths(List.of(new PercentageGrowths(-2D, 1D)))
+                                    .build()
+                            ).stream()
                         )
-                        .stream(),
-                    generator()
-                        .generateHistory(
-                            HistoryGeneratorConfig
-                                .builder()
-                                .ticker("SBERP")
-                                .startClose(242.)
-                                .startOpen(239.)
-                                .startValue(1_000_000D)
-                                .days(30)
-                                .startDate(startDate)
-                                .openPricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
-                                .closePricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
-                                .valuePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
-                                .build()
+                        .toList()
+                )
+                .historyValues(
+                    Stream.concat(
+                            generator()
+                                .generateHistory(
+                                    HistoryGeneratorConfig
+                                        .builder()
+                                        .ticker("SBER")
+                                        .startClose(245.)
+                                        .startOpen(242.)
+                                        .startValue(1_000_000D)
+                                        .days(30)
+                                        .startDate(startDate)
+                                        .openPricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                        .closePricePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                        .valuePercentageGrowths(List.of(new PercentageGrowths(50D, 1D)))
+                                        .build()
+                                )
+                                .stream(),
+                            generator()
+                                .generateHistory(
+                                    HistoryGeneratorConfig
+                                        .builder()
+                                        .ticker("SBERP")
+                                        .startClose(242.)
+                                        .startOpen(239.)
+                                        .startValue(1_000_000D)
+                                        .days(30)
+                                        .startDate(startDate)
+                                        .openPricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                        .closePricePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                        .valuePercentageGrowths(List.of(new PercentageGrowths(25D, 1D)))
+                                        .build()
+                                )
+                                .stream()
                         )
-                        .stream()
+                        .toList()
                 )
-                .toList()
+                .build()
         );
-        datasetRepository().initIntradayValue(
-            Stream
-                .concat(
-                    generator().generateDeals(
-                        DealsGeneratorConfig
-                            .builder()
-                            .ticker("SBER")
-                            .numTrades(2000)
-                            .startPrice(245.)
-                            .startValue(200_000D)
-                            .date(now.toLocalDate())
-                            .startTime(LocalTime.parse("10:00"))
-                            .pricePercentageGrowths(List.of(new PercentageGrowths(5D, 1D)))
-                            .valuePercentageGrowths(List.of(new PercentageGrowths(2D, 1D)))
-                            .build()
-                    ).stream(),
-                    generator().generateDeals(
-                        DealsGeneratorConfig
-                            .builder()
-                            .ticker("SBERP")
-                            .numTrades(2000)
-                            .startPrice(242.)
-                            .startValue(200_000D)
-                            .date(now.toLocalDate())
-                            .startTime(LocalTime.parse("10:00"))
-                            .pricePercentageGrowths(List.of(new PercentageGrowths(-15D, 1D)))
-                            .valuePercentageGrowths(List.of(new PercentageGrowths(-2D, 1D)))
-                            .build()
-                    ).stream()
-                )
-                .toList()
-        );
+        integrateInstruments();
+
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .workPeriodInMinutes(1)
@@ -353,15 +371,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase7() {
         LocalDateTime now = getDateTimeNow();
-        integrateInstruments(
-            DefaultDataset.sibn(),
-            DefaultDataset.lkoh(),
-            DefaultDataset.tatn(),
-            DefaultDataset.rosn()
-        );
-        enableUpdateInstrumentBy(getInstrumentIds());
-        List<HistoryValue> dailyResultValues = new ArrayList<>();
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        List<HistoryValue> historyValues = new ArrayList<>();
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("SIBN")
             .startClose(105.)
@@ -373,7 +384,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .build()));
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("LKOH")
             .startClose(105.)
@@ -385,7 +396,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .build()));
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("TATN")
             .startClose(105.)
@@ -397,7 +408,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .build()));
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("ROSN")
             .startClose(105.)
@@ -409,7 +420,6 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(-20D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(-15D, 1D)))
             .build()));
-        datasetRepository().initDailyResultValue(dailyResultValues);
         List<IntradayValue> intradayValues = new ArrayList<>();
         intradayValues.addAll(generator().generateDeals(DealsGeneratorConfig
             .builder()
@@ -455,7 +465,22 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .pricePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(-1D, 1D)))
             .build()));
-        datasetRepository().initIntradayValue(intradayValues);
+        initDataset(
+            Dataset.builder()
+                .instruments(
+                    List.of(
+                        DefaultInstrumentSet.sibn(),
+                        DefaultInstrumentSet.lkoh(),
+                        DefaultInstrumentSet.tatn(),
+                        DefaultInstrumentSet.rosn()
+                    )
+                )
+                .intradayValues(intradayValues)
+                .historyValues(historyValues)
+                .build()
+        );
+        integrateInstruments();
+
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -465,7 +490,6 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .intradayScale(0.015)
                 .build()
         );
-
         integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
@@ -477,13 +501,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         """)
     void testCase8() {
         LocalDateTime now = getDateTimeNow();
-        integrateInstruments(
-            DefaultDataset.sibn(),
-            DefaultDataset.brf4()
-        );
-        enableUpdateInstrumentBy(getInstrumentIds());
-        List<HistoryValue> dailyResultValues = new ArrayList<>();
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        List<HistoryValue> historyValues = new ArrayList<>();
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("SIBN")
             .startClose(105.)
@@ -495,7 +514,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .build()));
-        dailyResultValues.addAll(generator().generateHistory(HistoryGeneratorConfig
+        historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
             .builder()
             .ticker("BRF4")
             .startClose(105.)
@@ -507,7 +526,6 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .closePricePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .valuePercentageGrowths(List.of(new PercentageGrowths(15D, 1D)))
             .build()));
-        datasetRepository().initDailyResultValue(dailyResultValues);
         List<IntradayValue> intradayValues = new ArrayList<>();
         intradayValues.addAll(generator().generateDeals(DealsGeneratorConfig
             .builder()
@@ -529,7 +547,16 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             .startTime(LocalTime.parse("10:00"))
             .pricePercentageGrowths(List.of(new PercentageGrowths(10D, 1D)))
             .build()));
-        datasetRepository().initIntradayValue(intradayValues);
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.sibn(), DefaultInstrumentSet.brf4()))
+                .historyValues(historyValues)
+                .intradayValues(intradayValues)
+                .build()
+        );
+        integrateInstruments();
+
+
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -540,7 +567,6 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .stockOvernightScale(0.015)
                 .build()
         );
-
         integrateTradingData();
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
