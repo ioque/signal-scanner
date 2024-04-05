@@ -54,11 +54,11 @@ build and push:
     - docker logout ${NEXUS_URL}
 
 deploy to stage:
+  only:
+    - master
   allow_failure: false
   timeout: 15m
   image: '$NEXUS_URL/ioque/ansible'
-  only:
-    - master
   environment: stage
   resource_group: stage
   stage: infrastructure
@@ -73,21 +73,52 @@ deploy to stage:
     - chmod 400 ${CI_PROJECT_DIR}/secret/ansible.key
     - !reference [ .ansible-deploy ]
 
-#api tests:
-#  only:
-#    - master
-#  stage: acceptance
-#
-#prepare data:
-#  needs:
-#    - api tests
-#  only:
-#    - master
-#  stage: acceptance
-#
-#ui tests:
-#  needs:
-#    - prepare data
-#  only:
-#    - master
-#  stage: acceptance
+api tests:
+  needs:
+    - deploy to stage
+  only:
+    - master
+  stage: acceptance
+  image: gradle:jdk17-focal
+  environment: stage
+  resource_group: stage
+  variables:
+    API_HOST: "192.168.0.85"
+    DATASOURCE_HOST: "192.168.0.47"
+  script:
+    - cd acceptance
+    - gradle clean api-test:test
+
+prepare data:
+  needs:
+    - api tests
+  only:
+    - master
+  stage: acceptance
+  image: gradle:jdk17-focal
+  environment: stage
+  resource_group: stage
+  variables:
+    API_HOST: "192.168.0.85"
+    DATASOURCE_HOST: "192.168.0.85"
+  script:
+    - cd acceptance
+    - gradle -p ui-seeder bootRun
+
+ui tests:
+  needs:
+    - prepare data
+  only:
+    - master
+  stage: acceptance
+  environment: stage
+  resource_group: stage
+  image: gradle:jdk17-focal
+  services:
+    - name: selenium/standalone-firefox:latest
+  variables:
+    UI_HOST: "192.168.0.85"
+    UI_PORT: "192.168.0.85"
+  script:
+    - cd selenium
+    - gradle clean test
