@@ -10,7 +10,7 @@ variables:
   ANSIBLE_SSH_KEY: "$ANSIBLE_SSH_KEY"
 
 stages:
-  - infrastructure
+  - infra
 
 deploy to stage:
   allow_failure: false
@@ -20,7 +20,7 @@ deploy to stage:
     - master
   environment: stage
   resource_group: stage
-  stage: infrastructure
+  stage: infra
   script:
     - mkdir ${CI_PROJECT_DIR}/secret
     - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key
@@ -29,22 +29,3 @@ deploy to stage:
     - export ANSIBLE_CONFIG=${CI_PROJECT_DIR}/infra/ansible/ansible.cfg
     - cd ${CI_PROJECT_DIR}/infra/ansible
     - ansible-playbook --private-key ${CI_PROJECT_DIR}/secret/ansible.key --user linux playbooks/deploy.yml -l "stage"
-
-#api tests:
-#  only:
-#    - master
-#  stage: acceptance
-#
-#prepare data:
-#  needs:
-#    - api tests
-#  only:
-#    - master
-#  stage: acceptance
-#
-#ui tests:
-#  needs:
-#    - prepare data
-#  only:
-#    - master
-#  stage: acceptance
