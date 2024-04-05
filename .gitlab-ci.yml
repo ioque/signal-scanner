@@ -6,7 +6,7 @@ variables:
   NEXUS_URL: "$NEXUS_URL"
   NEXUS_USER: "$NEXUS_USER"
   NEXUS_PASS: "$NEXUS_PASS"
-  COMMIT_TAG: "11f4cb46"
+  COMMIT_TAG: "$CI_COMMIT_SHORT_SHA"
   ANSIBLE_SSH_KEY: "$ANSIBLE_SSH_KEY"
 
 stages:
@@ -14,6 +14,44 @@ stages:
   - build
   - infrastructure
   - acceptance
+
+application test:
+  stage: test
+  image: gradle:jdk17-focal
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - cd backend/application
+    - gradle clean test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - backend/application/build/test-results/test/**/TEST-*.xml
+
+adapter tests:
+  stage: test
+  image: gradle:jdk17-focal
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - cd backend/adapters
+    - gradle clean test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - backend/adapters/build/test-results/test/**/TEST-*.xml
+
+build and push:
+  only:
+    - master
+  stage: build
+  script:
+    - docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_URL}
+    - docker compose build
+    - docker compose push
+    - docker logout ${NEXUS_URL}
 
 deploy to stage:
   allow_failure: false
@@ -32,3 +70,22 @@ deploy to stage:
     - export ANSIBLE_CONFIG=${CI_PROJECT_DIR}/infra/ansible/ansible.cfg
     - cd ${CI_PROJECT_DIR}/infra/ansible
     - ansible-playbook --private-key ${CI_PROJECT_DIR}/secret/ansible.key --user linux playbooks/deploy.yml -l "${CI_ENVIRONMENT_NAME}"
+
+#api tests:
+#  only:
+#    - master
+#  stage: acceptance
+#
+#prepare data:
+#  needs:
+#    - api tests
+#  only:
+#    - master
+#  stage: acceptance
+#
+#ui tests:
+#  needs:
+#    - prepare data
+#  only:
+#    - master
+#  stage: acceptance
