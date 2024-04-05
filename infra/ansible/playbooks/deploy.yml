@@ -1,7 +1,8 @@
 ---
 - name: deploy application
   hosts:
-    - test
+    - stage
+    - prod
   gather_facts: false
   become: true
   vars_files:
