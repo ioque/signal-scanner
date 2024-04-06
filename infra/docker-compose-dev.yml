@@ -17,7 +17,6 @@ services:
     environment:
       DB_HOST: "192.168.0.62"
       DB_PORT: "54321"
-      EXCHANGE_URL: "http://192.168.0.62:8081" # https://iss.moex.com
       SPRING_PROFILES_ACTIVE: "test"
     healthcheck:
       test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
