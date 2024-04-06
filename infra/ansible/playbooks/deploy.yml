@@ -2,6 +2,7 @@
 - name: deploy application
   hosts:
     - stage
+    - manual
   gather_facts: false
   become: true
   vars_files:

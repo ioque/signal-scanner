@@ -2,3 +2,5 @@ kvm_hosts:
   hosts:
     stage:
       ansible_host: 192.168.0.85
+#    manual:
+#      ansible_host: 192.168.0.86
