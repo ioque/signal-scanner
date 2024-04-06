@@ -57,7 +57,7 @@ public class BaseFrontendTest {
 
     private ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless");
+        options.addArguments("--headless");
         options.addArguments("disable-infobars"); // disabling infobars
         options.addArguments("--disable-extensions"); // disabling extensions
         options.addArguments("--start-maximized"); // disabling extensions
