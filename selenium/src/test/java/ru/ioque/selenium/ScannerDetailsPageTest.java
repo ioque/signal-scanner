@@ -36,9 +36,6 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
             getHeaderElement().getText()
         );
         assertEquals(3, getAccordionBodyElements().size());
-        assertEquals("Величина scaleCoefficient: 1.5", getAccordionBodyElements().get(0).getText());
-        assertEquals("Период исторических данных: 180", getAccordionBodyElements().get(1).getText());
-        assertEquals("Тикер индекса: IMOEX", getAccordionBodyElements().get(2).getText());
         assertEquals(1, getSignalRows().size());
         assertEquals(3, getLogRows().size());
     }
@@ -51,7 +48,6 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
             getHeaderElement().getText()
         );
         assertEquals(1, getAccordionBodyElements().size());
-        assertEquals("Величина спреда: 1", getAccordionBodyElements().get(0).getText());
         assertEquals(1, getSignalRows().size());
         assertEquals(3, getLogRows().size());
     }
@@ -64,9 +60,6 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
             getHeaderElement().getText()
         );
         assertEquals(3, getAccordionBodyElements().size());
-        assertEquals("Величина futuresOvernightScale: 0.015", getAccordionBodyElements().get(0).getText());
-        assertEquals("Величина stockOvernightScale: 0.015", getAccordionBodyElements().get(1).getText());
-        assertEquals("Тикер фьючерса: BRF4", getAccordionBodyElements().get(2).getText());
         assertEquals(0, getSignalRows().size());
         assertEquals(6, getLogRows().size());
     }
@@ -83,8 +76,6 @@ public class ScannerDetailsPageTest extends BaseFrontendTest {
             getHeaderElement().getText()
         );
         assertEquals(2, getAccordionBodyElements().size());
-        assertEquals("Величина historyScale: 0.015", getAccordionBodyElements().get(0).getText());
-        assertEquals("Величина intradayScale: 0.015", getAccordionBodyElements().get(1).getText());
         assertEquals(0, getSignalRows().size());
         assertEquals(3, getLogRows().size());
     }

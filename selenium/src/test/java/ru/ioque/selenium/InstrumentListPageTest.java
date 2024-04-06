@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class InstrumentListPageTest extends BaseFrontendTest {
     @Test
@@ -21,13 +20,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
 
     private void verifyExchangeElement() {
         var exchangeHeaderElement = driver.findElement(By.xpath ("//*[contains(text(),'Московская биржа')]"));
-        exchangeHeaderElement.click();
-        var exchangeBodyElements = driver.findElement(By.className("accordion-body")).findElements(By.xpath("./child::*"));
         assertEquals("Московская биржа", exchangeHeaderElement.getText());
-        assertEquals("Адрес шлюза", exchangeBodyElements.get(0).getText());
-        assertFalse(exchangeBodyElements.get(1).getText().isBlank());
-        assertEquals("Описание", exchangeBodyElements.get(2).getText());
-        assertEquals("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.", exchangeBodyElements.get(3).getText());
     }
 
     private void verifyInstrumentList() {

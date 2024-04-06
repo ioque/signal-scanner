@@ -1,9 +1,10 @@
 package ru.ioque.selenium;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -12,7 +13,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static java.time.Duration.ofSeconds;
+
 public class BaseFrontendTest {
+    public static final Duration DELAY = ofSeconds(5);
     protected String uiHost = System.getenv("UI_HOST");
     protected String uiPort = System.getenv("UI_PORT");
 
@@ -22,13 +26,14 @@ public class BaseFrontendTest {
         return uiHost + ":" + uiPort;
     }
 
+    @BeforeAll
+    static void setupClass() {
+        WebDriverManager.chromedriver().browserInDocker().setup();
+    }
+
     @BeforeEach
-    public void beforeEach() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless");
-        chromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(chromeOptions);
+    void setupTest() {
+        driver = new ChromeDriver(chromeOptions());
     }
 
     @AfterEach
@@ -40,13 +45,30 @@ public class BaseFrontendTest {
 
     protected void loadPageInstrumentList() {
         driver.get("http://" + getUiUrl() + "/instruments");
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
 
     protected void loadPageScannerList() {
         driver.get("http://" + getUiUrl() + "/scanners");
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
+    }
+
+    private ChromeOptions chromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless");
+        options.addArguments("disable-infobars"); // disabling infobars
+        options.addArguments("--disable-extensions"); // disabling extensions
+        options.addArguments("--start-maximized"); // disabling extensions
+        options.addArguments("--disable-gpu"); // applicable to windows os only
+        options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+        options.addArguments("--no-sandbox"); // Bypass OS security model
+        options.addArguments("--lang=en");
+        options.addArguments("--remote-allow-origins=*");
+        options.setPageLoadTimeout(DELAY);
+        options.setImplicitWaitTimeout(DELAY);
+        options.setScriptTimeout(DELAY);
+        return options;
     }
 }
