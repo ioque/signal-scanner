@@ -1,8 +1,6 @@
 package ru.ioque.selenium;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -28,11 +26,6 @@ public class BaseFrontendTest {
 
     protected String getUiUrl() {
         return uiHost + ":" + uiPort;
-    }
-
-    @BeforeAll
-    static void setupClass() {
-        WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
