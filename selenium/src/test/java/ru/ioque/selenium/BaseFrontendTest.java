@@ -8,9 +8,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 
 import static java.time.Duration.ofSeconds;
@@ -19,6 +22,7 @@ public class BaseFrontendTest {
     public static final Duration DELAY = ofSeconds(5);
     protected String uiHost = System.getenv("UI_HOST");
     protected String uiPort = System.getenv("UI_PORT");
+    protected String remoteWebDriverUrl = System.getenv("REMOTE_WEB_DRIVER_URL");
 
     protected WebDriver driver;
 
@@ -28,12 +32,27 @@ public class BaseFrontendTest {
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager.chromedriver().browserInDocker().setup();
+        WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
     void setupTest() {
-        driver = new ChromeDriver(chromeOptions());
+        if (remoteWebDriverUrl != null) {
+            driver = new RemoteWebDriver(
+                getRemoteWebDriverUrl(),
+                chromeOptions()
+            );
+        } else {
+            driver = new ChromeDriver(chromeOptions());
+        }
+    }
+
+    private URL getRemoteWebDriverUrl() {
+        try {
+            return new URL(remoteWebDriverUrl);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @AfterEach
