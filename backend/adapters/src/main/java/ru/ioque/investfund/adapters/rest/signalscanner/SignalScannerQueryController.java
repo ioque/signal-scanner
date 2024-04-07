@@ -39,7 +39,7 @@ public class SignalScannerQueryController {
     @GetMapping("/api/signal-scanner/{id}")
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         SignalScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
-        List<InstrumentEntity> instruments = instrumentEntityRepository.findAllById(scanner.getObjectIds());
+        List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());
         List<ScannerLogEntity> logs = scannerLogEntityRepository.findAllByScannerId(scanner.getId());
         return SignalScannerResponse.from(scanner, instruments, logs);
     }

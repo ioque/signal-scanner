@@ -16,7 +16,6 @@ import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurato
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 
 @Getter
@@ -38,7 +37,7 @@ public abstract class ScannerRequest implements Serializable {
     Integer workPeriodInMinutes;
     @NotBlank(message = "The description is required.")
     String description;
-    @NotNull(message = "The ids is required.")
-    List<UUID> ids;
+    @NotNull(message = "The tickers is required.")
+    List<String> tickers;
     public abstract AlgorithmConfigurator buildConfig();
 }

@@ -40,7 +40,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
             AnomalyVolumeScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
-                .ids(List.of(TGKN_ID, IMOEX_ID))
+                .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
                 .scaleCoefficient(1.5)
@@ -59,7 +59,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
-                .ids(List.of(TGKN_ID, IMOEX_ID))
+                .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
                 .build(),
@@ -78,7 +78,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
-                .ids(List.of(TGKN_ID, IMOEX_ID))
+                .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
                 .build(),
             List.of("The scaleCoefficient is required.", "The indexTicker is required.")
@@ -96,7 +96,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
-                .ids(List.of(TGKN_ID, IMOEX_ID))
+                .tickers(List.of("TGKN", "IMOEX"))
                 .scaleCoefficient(1.5)
                 .indexTicker("IMOEX")
                 .build(),
@@ -114,7 +114,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
             PrefSimpleScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
-                .ids(List.of(BANE_ID, BANEP_ID))
+                .tickers(List.of("BANE", "BANEP"))
                 .spreadParam(1.0)
                 .build()
         );
@@ -130,7 +130,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
             PrefSimpleScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
-                .ids(List.of(BANE_ID, BANEP_ID))
+                .tickers(List.of("BANE", "BANEP"))
                 .build(),
             List.of("The spreadParam is required.", "The description is required.")
         );
@@ -147,7 +147,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
-                .ids(List.of(TATN_ID, BANE_ID, ROSN_ID, LKOH_ID))
+                .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
                 .historyScale(0.015)
                 .intradayScale(0.012)
                 .build()
@@ -167,7 +167,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .description("desc")
                 .historyScale(0.015)
                 .build(),
-            List.of("The ids is required.", "The intradayScale is required.")
+            List.of("The tickers is required.", "The intradayScale is required.")
         );
     }
 
@@ -182,7 +182,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("")
-                .ids(List.of(TATN_ID, BANE_ID, ROSN_ID, LKOH_ID))
+                .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
                 .intradayScale(0.015)
                 .build(),
             List.of("The historyScale is required.", "The description is required.")
@@ -199,7 +199,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
             CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
-                .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
+                .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
                 .stockOvernightScale(0.015)
@@ -217,7 +217,7 @@ public class AddSignalScannerRestControllerTest extends BaseControllerTest {
             CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
-                .ids(List.of(BANE_ID, TATN_ID, LKOH_ID, ROSN_ID, BRF4_ID))
+                .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
                 .build(),
             List.of(
                 "The futuresTicker is required.",

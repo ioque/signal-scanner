@@ -75,12 +75,12 @@ public class ExchangeControllerTest extends BaseControllerTest {
         T3. Выполнение запроса по эндпоинту PATCH /api/enable-update.
         """)
     public void testCase3() {
-        List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
+        List<String> tickers = List.of("AFKS", "SBER");
         mvc
             .perform(MockMvcRequestBuilders
                 .patch("/api/enable-update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new EnableUpdateInstrumentRequest(ids)))
+                .content(objectMapper.writeValueAsString(new EnableUpdateInstrumentRequest(tickers)))
             )
             .andExpect(status().isOk());
     }
@@ -91,12 +91,12 @@ public class ExchangeControllerTest extends BaseControllerTest {
         T4. Выполнение запроса по эндпоинту PATCH /api/disable-update.
         """)
     public void testCase4() {
-        List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
+        List<String> tickers = List.of("AFKS", "SBER");
         mvc
             .perform(MockMvcRequestBuilders
                 .patch("/api/disable-update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new DisableUpdateInstrumentRequest(ids)))
+                .content(objectMapper.writeValueAsString(new DisableUpdateInstrumentRequest(tickers)))
             )
             .andExpect(status().isOk());
     }

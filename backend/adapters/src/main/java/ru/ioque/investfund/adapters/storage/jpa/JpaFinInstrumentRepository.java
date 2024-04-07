@@ -15,7 +15,6 @@ import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -26,12 +25,12 @@ public class JpaFinInstrumentRepository implements FinInstrumentRepository {
     DateTimeProvider dateTimeProvider;
 
     @Override
-    public List<FinInstrument> getBy(List<UUID> ids) {
-        return ids
+    public List<FinInstrument> getBy(List<String> tickers) {
+        return tickers
             .stream()
-            .map(id -> {
+            .map(ticker -> {
                 Instrument instrument = instrumentEntityRepository
-                    .findById(id)
+                    .findByTicker(ticker)
                     .map(entity ->
                         entity.toDomain(
                             historyValueEntityRepository

@@ -8,11 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -24,8 +23,8 @@ public class PrefSimpleScannerRequest extends ScannerRequest {
     Double spreadParam;
 
     @Builder
-    public PrefSimpleScannerRequest(Integer workPeriodInMinutes, String description, List<UUID> ids, Double spreadParam) {
-        super(workPeriodInMinutes, description, ids);
+    public PrefSimpleScannerRequest(Integer workPeriodInMinutes, String description, List<String> tickers, Double spreadParam) {
+        super(workPeriodInMinutes, description, tickers);
         this.spreadParam = spreadParam;
     }
 

@@ -29,7 +29,7 @@ public class SignaScannerCommandController {
         scannerManager
             .addNewScanner(
                 AddScannerCommand.builder()
-                    .objectIds(request.getIds())
+                    .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())
                     .algorithmConfigurator(request.buildConfig())
@@ -43,7 +43,7 @@ public class SignaScannerCommandController {
             .updateScanner(
                 UpdateScannerCommand.builder()
                     .id(id)
-                    .objectIds(request.getIds())
+                    .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())
                     .algorithmConfigurator(request.buildConfig())

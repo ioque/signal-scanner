@@ -35,14 +35,14 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         List<SignalEntity> signals,
         LocalDateTime lastWorkDateTime,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(id, workPeriodInMinutes, description, objectIds, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, tickers, lastWorkDateTime, signals);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
@@ -54,7 +54,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             .id(signalScanner.getId())
             .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
-            .objectIds(signalScanner.getTickers())
+            .tickers(signalScanner.getTickers())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
             .futuresOvernightScale(algorithm.getFuturesOvernightScale())

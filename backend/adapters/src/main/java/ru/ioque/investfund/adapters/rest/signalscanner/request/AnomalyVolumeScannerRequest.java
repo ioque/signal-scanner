@@ -9,11 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -32,12 +31,12 @@ public class AnomalyVolumeScannerRequest extends ScannerRequest {
     public AnomalyVolumeScannerRequest(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> ids,
+        List<String> tickers,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(workPeriodInMinutes, description, ids);
+        super(workPeriodInMinutes, description, tickers);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;

@@ -8,11 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -29,11 +28,11 @@ public class SectoralRetardScannerRequest extends ScannerRequest {
     public SectoralRetardScannerRequest(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> ids,
+        List<String> tickers,
         Double historyScale,
         Double intradayScale
     ) {
-        super(workPeriodInMinutes, description, ids);
+        super(workPeriodInMinutes, description, tickers);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

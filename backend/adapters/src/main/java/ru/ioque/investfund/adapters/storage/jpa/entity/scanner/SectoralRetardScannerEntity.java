@@ -34,13 +34,13 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         LocalDateTime lastWorkDateTime,
         List<SignalEntity> signals,
         Double historyScale,
         Double intradayScale
     ) {
-        super(id, workPeriodInMinutes, description, objectIds, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, tickers, lastWorkDateTime, signals);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }
@@ -51,7 +51,7 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
             .id(signalScanner.getId())
             .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
-            .objectIds(signalScanner.getTickers())
+            .tickers(signalScanner.getTickers())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
             .historyScale(config.getHistoryScale())

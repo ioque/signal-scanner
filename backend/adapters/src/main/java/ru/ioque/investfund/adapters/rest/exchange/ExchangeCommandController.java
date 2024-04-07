@@ -44,11 +44,11 @@ public class ExchangeCommandController {
 
     @PatchMapping("/api/enable-update")
     public void enableUpdate(@RequestBody EnableUpdateInstrumentRequest request) {
-        datasourceManager.enableUpdate(request.getInstrumentIds());
+        datasourceManager.enableUpdate(request.getTickers());
     }
 
     @PatchMapping("/api/disable-update")
     public void disableUpdate(@RequestBody DisableUpdateInstrumentRequest request) {
-        datasourceManager.disableUpdate(request.getInstrumentIds());
+        datasourceManager.disableUpdate(request.getTickers());
     }
 }

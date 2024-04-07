@@ -91,7 +91,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
         Mockito
             .when(
                 instrumentEntityRepository
-                    .findAllById(scanner.getObjectIds())
+                    .findAllByTickerIn(scanner.getTickers())
             )
             .thenReturn(instruments);
         Mockito
@@ -124,7 +124,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
                         .builder()
                         .workPeriodInMinutes(1)
                         .description("Описание")
-                        .ids(List.of(UUID.randomUUID()))
+                        .tickers(List.of("AFKS"))
                         .spreadParam(1.0)
                         .build()))
                     .accept(MediaType.APPLICATION_JSON)
@@ -189,7 +189,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             SIGNAL_PRODUCER_ID,
             1,
             "Описание",
-            List.of(AFKS_ID, IMOEX_ID),
+            List.of("AFKS", "IMOEX"),
             LocalDateTime.now(),
             new ArrayList<>(),
             1.5,

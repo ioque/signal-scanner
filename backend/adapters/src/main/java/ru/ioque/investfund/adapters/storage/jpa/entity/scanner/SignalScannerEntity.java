@@ -38,7 +38,7 @@ public abstract class SignalScannerEntity extends AbstractEntity {
     Integer workPeriodInMinutes;
     String description;
     @ElementCollection(fetch = FetchType.EAGER)
-    List<UUID> objectIds;
+    List<String> tickers;
     LocalDateTime lastExecutionDateTime;
     @OneToMany(mappedBy = "scanner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<SignalEntity> signals;
@@ -47,14 +47,14 @@ public abstract class SignalScannerEntity extends AbstractEntity {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         LocalDateTime lastExecutionDateTime,
         List<SignalEntity> signals
     ) {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
-        this.objectIds = objectIds;
+        this.tickers = tickers;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = new ArrayList<>(signals.stream().peek(row -> row.setScanner(this)).toList());
     }
