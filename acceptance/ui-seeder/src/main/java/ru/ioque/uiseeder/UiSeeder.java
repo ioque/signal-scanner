@@ -39,7 +39,7 @@ public class UiSeeder implements CommandLineRunner {
                     clientFacade.getExchangeRestClient()
                         .getInstruments("")
                         .stream()
-                        .map(InstrumentInListResponse::getId)
+                        .map(InstrumentInListResponse::getTicker)
                         .toList()
                 )
             );

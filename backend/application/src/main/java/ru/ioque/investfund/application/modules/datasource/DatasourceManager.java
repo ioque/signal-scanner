@@ -16,7 +16,6 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 @Component

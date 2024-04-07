@@ -87,7 +87,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         long finishMills = System.currentTimeMillis();
         long seconds = ((finishMills - startMills) / 1000);
 
-        InstrumentResponse sber = getInstrumentById(getInstrumentIds().get(0));
+        InstrumentResponse sber = getInstrumentById(getInstruments().get(0).getId());
         assertTrue(sber.getHistoryValues().size() >= 128);
         assertEquals(50000, sber.getIntradayValues().size());
         assertTrue(seconds < 60);

@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -24,11 +23,11 @@ public class SectoralRetardScannerRequest extends AddSignalScannerRequest {
     public SectoralRetardScannerRequest(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> ids,
+        List<String> tickers,
         Double historyScale,
         Double intradayScale
     ) {
-        super(workPeriodInMinutes, description, ids);
+        super(workPeriodInMinutes, description, tickers);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

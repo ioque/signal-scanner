@@ -64,10 +64,10 @@ public class BaseApiAcceptanceTest {
     protected List<SignalResponse> getSignalsBy(UUID id) {
         return signalScannerClient().getSignalScannerBy(id).getSignals();
     }
-    protected List<UUID> getInstrumentIds() {
+    protected List<String> getTickers() {
         return getInstruments()
             .stream()
-            .map(InstrumentInListResponse::getId)
+            .map(InstrumentInListResponse::getTicker)
             .toList();
     }
     protected List<SignalScannerInListResponse> getSignalScanners() {
@@ -83,7 +83,7 @@ public class BaseApiAcceptanceTest {
 
     protected void integrateInstruments() {
         exchangeClient().synchronizeWithDataSource();
-        enableUpdateInstrumentBy(getInstrumentIds());
+        enableUpdateInstrumentBy(getTickers());
     }
 
     protected void runArchiving() {
@@ -92,11 +92,11 @@ public class BaseApiAcceptanceTest {
     protected void integrateTradingData() {
         exchangeClient().integrateTradingData();
     }
-    protected void enableUpdateInstrumentBy(List<UUID> ids) {
-        exchangeClient().enableUpdateInstruments(new EnableUpdateInstrumentRequest(ids));
+    protected void enableUpdateInstrumentBy(List<String> tickers) {
+        exchangeClient().enableUpdateInstruments(new EnableUpdateInstrumentRequest(tickers));
     }
-    protected void disableUpdateInstrumentBy(List<UUID> ids) {
-        exchangeClient().disableUpdateInstruments(new DisableUpdateInstrumentRequest(ids));
+    protected void disableUpdateInstrumentBy(List<String> tickers) {
+        exchangeClient().disableUpdateInstruments(new DisableUpdateInstrumentRequest(tickers));
     }
     protected List<InstrumentInListResponse> getInstruments() {
         return exchangeClient().getInstruments("");

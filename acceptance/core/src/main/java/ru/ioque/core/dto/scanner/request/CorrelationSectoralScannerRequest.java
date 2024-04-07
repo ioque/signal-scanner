@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -25,12 +24,12 @@ public class CorrelationSectoralScannerRequest extends AddSignalScannerRequest {
     public CorrelationSectoralScannerRequest(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> ids,
+        List<String> tickers,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(workPeriodInMinutes, description, ids);
+        super(workPeriodInMinutes, description, tickers);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;

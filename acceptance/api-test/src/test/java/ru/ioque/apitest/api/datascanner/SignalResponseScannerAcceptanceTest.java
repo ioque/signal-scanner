@@ -68,7 +68,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .description("desc")
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .build()
         );
 
@@ -90,7 +90,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .workPeriodInMinutes(1)
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .description("desc")
                 .spreadParam(1.0)
                 .build()
@@ -119,7 +119,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .description("desc")
                 .historyScale(0.015)
                 .intradayScale(0.015)
@@ -150,7 +150,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .description("desc")
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
@@ -260,7 +260,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .description("desc")
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .build()
         );
         integrateTradingData();
@@ -356,7 +356,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .workPeriodInMinutes(1)
                 .spreadParam(1D)
                 .description("desc")
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .build()
         );
 
@@ -484,7 +484,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .description("desc")
                 .historyScale(0.015)
                 .intradayScale(0.015)
@@ -560,7 +560,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .ids(getInstrumentIds())
+                .tickers(getTickers())
                 .description("desc")
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)

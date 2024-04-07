@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -25,12 +24,12 @@ public class AnomalyVolumeScannerRequest extends AddSignalScannerRequest {
     public AnomalyVolumeScannerRequest(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> ids,
+        List<String> tickers,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(workPeriodInMinutes, description, ids);
+        super(workPeriodInMinutes, description, tickers);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;

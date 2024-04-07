@@ -163,15 +163,15 @@ create table if not exists signal
 alter table signal
     owner to postgres;
 
-create table if not exists signal_scanner_entity_object_ids
+create table if not exists signal_scanner_entity_tickers
 (
-    object_ids               uuid,
+    tickers               varchar,
     signal_scanner_entity_id uuid not null
         constraint fk39xvcm0wyskpyfmvbukkyrajk
             references signal_scanner
 );
 
-alter table signal_scanner_entity_object_ids
+alter table signal_scanner_entity_tickers
     owner to postgres;
 
 create or replace procedure archiving_history_values()

@@ -9,27 +9,17 @@ import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.AnomalyVolumeScannerRequest;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.CorrelationSectoralScannerRequest;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.PrefSimpleScannerRequest;
-import ru.ioque.investfund.adapters.rest.signalscanner.request.SectoralRetardScannerRequest;
 import ru.ioque.investfund.adapters.rest.signalscanner.request.ScannerRequest;
+import ru.ioque.investfund.adapters.rest.signalscanner.request.SectoralRetardScannerRequest;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("SIGNAL SCANNER REST CONTROLLER, ENDPOINT POST /signal-scanner")
 public class AddSignalScannerRestControllerTest extends BaseControllerTest {
-    private static final UUID IMOEX_ID = UUID.randomUUID();
-    private static final UUID TGKN_ID = UUID.randomUUID();
-    private static final UUID TATN_ID = UUID.randomUUID();
-    private static final UUID ROSN_ID = UUID.randomUUID();
-    private static final UUID LKOH_ID = UUID.randomUUID();
-    private static final UUID BANE_ID = UUID.randomUUID();
-    private static final UUID BANEP_ID = UUID.randomUUID();
-    private static final UUID BRF4_ID = UUID.randomUUID();
-
     @Test
     @DisplayName("""
         T1. Выполнение запроса по эндпоинту POST /api/signal-scanner на добавление сканера сигналов по алгоритму

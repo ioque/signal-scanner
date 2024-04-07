@@ -49,9 +49,7 @@ public class Exchange extends Domain {
     }
 
     public void enableUpdate(List<String> tickers) {
-        tickers.forEach(ticker -> {
-            findBy(ticker).ifPresent(Instrument::enableUpdate);
-        });
+        tickers.forEach(ticker -> findBy(ticker).ifPresent(Instrument::enableUpdate));
     }
 
     private Optional<Instrument> findBy(String ticker) {

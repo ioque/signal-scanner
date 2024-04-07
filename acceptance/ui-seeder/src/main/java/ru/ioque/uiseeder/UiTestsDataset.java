@@ -89,10 +89,10 @@ public class UiTestsDataset {
             .description("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")
             .historyPeriod(180)
             .indexTicker("IMOEX")
-            .ids(instruments
+            .tickers(instruments
                 .stream()
-                .filter(row -> List.of("TGKN", "TGKB", "IMOEX").contains(row.getTicker()))
-                .map(InstrumentInListResponse::getId)
+                .map(InstrumentInListResponse::getTicker)
+                .filter(ticker -> List.of("TGKN", "TGKB", "IMOEX").contains(ticker))
                 .toList())
             .build();
     }
@@ -100,10 +100,10 @@ public class UiTestsDataset {
     public static AddSignalScannerRequest getPrefSimpleRequest(List<InstrumentInListResponse> instruments) {
         return PrefSimpleRequest.builder()
             .workPeriodInMinutes(1)
-            .ids(instruments
+            .tickers(instruments
                 .stream()
-                .filter(row -> List.of("SBER", "SBERP").contains(row.getTicker()))
-                .map(InstrumentInListResponse::getId)
+                .map(InstrumentInListResponse::getTicker)
+                .filter(ticker -> List.of("SBER", "SBERP").contains(ticker))
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
             .spreadParam(1.0)
@@ -113,10 +113,10 @@ public class UiTestsDataset {
     public static AddSignalScannerRequest getSectoralRetardScannerRequest(List<InstrumentInListResponse> instruments) {
         return SectoralRetardScannerRequest.builder()
             .workPeriodInMinutes(60)
-            .ids(instruments
+            .tickers(instruments
                 .stream()
-                .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH").contains(row.getTicker()))
-                .map(InstrumentInListResponse::getId)
+                .map(InstrumentInListResponse::getTicker)
+                .filter(ticker -> List.of("TATN", "ROSN", "SIBN", "LKOH").contains(ticker))
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
             .historyScale(0.015)
@@ -127,10 +127,10 @@ public class UiTestsDataset {
     public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(List<InstrumentInListResponse> instruments) {
         return CorrelationSectoralScannerRequest.builder()
             .workPeriodInMinutes(24 * 60)
-            .ids(instruments
+            .tickers(instruments
                 .stream()
-                .filter(row -> List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4").contains(row.getTicker()))
-                .map(InstrumentInListResponse::getId)
+                .map(InstrumentInListResponse::getTicker)
+                .filter(ticker -> List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4").contains(ticker))
                 .toList())
             .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
             .futuresTicker("BRF4")

@@ -27,6 +27,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -341,7 +342,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData();
 
-        InstrumentResponse sber = getInstrumentById(getInstrumentIds().get(0));
+        InstrumentResponse sber = getInstrumentById(getInstruments().get(0).getId());
         assertEquals(130, sber.getHistoryValues().size());
         assertEquals(10, sber.getIntradayValues().size());
     }
@@ -387,11 +388,10 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments();
 
-        List<UUID> ids = getInstrumentIds();
-        disableUpdateInstrumentBy(ids);
+        disableUpdateInstrumentBy(getTickers());
         integrateTradingData();
 
-        InstrumentResponse sber = getInstrumentById(ids.get(0));
+        InstrumentResponse sber = getInstrumentById(getIds().toList().get(0));
         assertEquals(0, sber.getHistoryValues().size());
         assertEquals(0, sber.getIntradayValues().size());
     }
@@ -404,11 +404,14 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         initInstrumentsWithTradingData();
         fullIntegrate();
 
-        List<InstrumentResponse> instrumentResponses =
-            getInstrumentIds().stream().map(this::getInstrumentById).toList();
+        List<InstrumentResponse> instrumentResponses = getIds().map(this::getInstrumentById).toList();
 
         assertEquals(4, instrumentResponses.stream().filter(row -> !row.getHistoryValues().isEmpty()).toList().size());
         assertEquals(4, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
+    }
+
+    private Stream<UUID> getIds() {
+        return getInstruments().stream().map(InstrumentInListResponse::getId);
     }
 
     @Test
@@ -421,7 +424,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         runArchiving();
 
-        List<InstrumentResponse> instrumentResponses = getInstrumentIds().stream().map(this::getInstrumentById).toList();
+        List<InstrumentResponse> instrumentResponses = getIds().map(this::getInstrumentById).toList();
         List<IntradayValueResponse> intradayValues = getIntradayValues(0, 4);
         assertEquals(0, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
         assertEquals(4, intradayValues.size());
