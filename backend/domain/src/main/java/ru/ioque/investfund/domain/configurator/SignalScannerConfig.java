@@ -32,6 +32,7 @@ public class SignalScannerConfig extends Domain {
         this.description = description;
         this.tickers = tickers;
         this.algorithmConfig = algorithmConfig;
+        validate();
     }
 
     private void validate() {

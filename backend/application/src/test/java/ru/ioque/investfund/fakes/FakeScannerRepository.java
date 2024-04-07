@@ -1,16 +1,19 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
+import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FakeScannerRepository implements ScannerRepository {
+public class FakeScannerRepository implements ScannerRepository, ScannerConfigRepository {
     public Map<UUID, SignalScanner> scannerMap = new HashMap<>();
     FinInstrumentRepository finInstrumentRepository;
 
@@ -20,18 +23,36 @@ public class FakeScannerRepository implements ScannerRepository {
 
     @Override
     public Optional<SignalScanner> getBy(UUID id) {
-        return Optional.ofNullable(scannerMap.get(id)).map(this::map);
+        updateTradingSnapshots(id);
+        return Optional.ofNullable(scannerMap.get(id));
     }
 
-    private SignalScanner map(SignalScanner signalScanner) {
+    private void updateTradingSnapshots(UUID id) {
+        if (scannerMap.containsKey(id)) {
+            SignalScanner scanner = scannerMap.get(id);
+            scannerMap.put(id,
+                SignalScanner.builder()
+                    .id(scanner.getId())
+                    .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
+                    .algorithm(scanner.getAlgorithm())
+                    .description(scanner.getDescription())
+                    .signals(scanner.getSignals())
+                    .lastExecutionDateTime(scanner.getLastExecutionDateTime().orElse(null))
+                    .tradingSnapshots(finInstrumentRepository.getBy(scanner.getTickers()))
+                    .build()
+            );
+        }
+    }
+
+    private SignalScanner map(SignalScannerConfig config) {
         return SignalScanner.builder()
-            .id(signalScanner.getId())
-            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
-            .algorithm(signalScanner.getAlgorithm())
-            .description(signalScanner.getDescription())
-            .signals(signalScanner.getSignals())
-            .lastExecutionDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
-            .tradingSnapshots(finInstrumentRepository.getBy(signalScanner.getTickers()))
+            .id(config.getId())
+            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
+            .algorithm(config.getAlgorithmConfig().factoryAlgorithm())
+            .description(config.getDescription())
+            .signals(getBy(config.getId()).map(SignalScanner::getSignals).orElse(new ArrayList<>()))
+            .lastExecutionDateTime(getBy(config.getId()).map(SignalScanner::getLastExecutionDateTime).flatMap(r -> r).orElse(null))
+            .tradingSnapshots(finInstrumentRepository.getBy(config.getTickers()))
             .build();
     }
 
@@ -42,6 +63,12 @@ public class FakeScannerRepository implements ScannerRepository {
 
     @Override
     public List<SignalScanner> getAll() {
-        return scannerMap.values().stream().map(this::map).toList();
+        scannerMap.values().stream().map(SignalScanner::getId).forEach(this::updateTradingSnapshots);
+        return scannerMap.values().stream().toList();
+    }
+
+    @Override
+    public void save(SignalScannerConfig config) {
+        scannerMap.put(config.getId(), map(config));
     }
 }

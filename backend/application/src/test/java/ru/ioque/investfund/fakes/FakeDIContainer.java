@@ -46,7 +46,7 @@ public class FakeDIContainer {
             eventBus
         );
         scannerManager = new ScannerManager(
-            finInstrumentRepository,
+            scannerRepository,
             scannerRepository,
             scannerLogRepository,
             uuidProvider,

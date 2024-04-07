@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface InstrumentEntityRepository extends AbstractEntityRepository<InstrumentEntity>,
