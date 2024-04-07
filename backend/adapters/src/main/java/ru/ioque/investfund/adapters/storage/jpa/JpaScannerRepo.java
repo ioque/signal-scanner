@@ -5,13 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.historyvalue.HistoryValueEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSectoralScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.PrefSimpleScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
+import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
-import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
@@ -19,25 +23,32 @@ import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JpaScannerRepo implements ScannerRepository {
     SignalScannerEntityRepository signalScannerEntityRepository;
-    FinInstrumentRepository finInstrumentRepository;
+    HistoryValueEntityRepository historyValueEntityRepository;
+    IntradayValueEntityRepository intradayValueEntityRepository;
+    DateTimeProvider dateTimeProvider;
 
     @Transactional(readOnly = true)
     public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
-            .map(row -> row.toDomain(finInstrumentRepository.getBy(row.getTickers())));
+            .map(row -> row.toDomain(createSnapshots(row.getTickers())));
     }
 
     @Override
@@ -52,7 +63,57 @@ public class JpaScannerRepo implements ScannerRepository {
         return signalScannerEntityRepository
             .findAll()
             .stream()
-            .map(row -> row.toDomain(finInstrumentRepository.getBy(row.getTickers())))
+            .map(row -> row.toDomain(createSnapshots(row.getTickers())))
+            .toList();
+    }
+
+    private List<TradingSnapshot> createSnapshots(List<String> tickers) {
+        var histories = historyValueEntityRepository
+            .findAllByTickerIn(tickers)
+            .stream()
+            .collect(Collectors.groupingBy(HistoryValueEntity::getTicker));
+        var intradayValues = intradayValueEntityRepository
+            .findAllBy(tickers, dateTimeProvider.nowDate().atStartOfDay())
+            .stream()
+            .collect(Collectors.groupingBy(IntradayValueEntity::getTicker));
+        return tickers
+            .stream()
+            .map(ticker -> TradingSnapshot.builder()
+                .ticker(ticker)
+                .waPriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
+                    .toList()
+                )
+                .closePriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
+                    .toList())
+                .openPriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
+                    .toList())
+                .valueSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
+                    .toList())
+                .todayValueSeries(intradayValues.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .map(intradayValue -> new TimeSeriesValue<>(
+                        intradayValue.getValue(),
+                        intradayValue.getDateTime().toLocalTime()
+                    ))
+                    .toList()
+                )
+                .todayPriceSeries(intradayValues.getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .map(intradayValue -> new TimeSeriesValue<>(
+                        intradayValue.getPrice(),
+                        intradayValue.getDateTime().toLocalTime()
+                    ))
+                    .toList())
+                .build())
             .toList();
     }
 

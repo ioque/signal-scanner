@@ -79,7 +79,7 @@ public class InstrumentQueryRepository {
                     .map(HistoryValueEntity::toDomain)
                     .toList(),
                 intradayValueEntityRepository
-                    .findAllBy(instrumentEntity.getTicker(), today.atStartOfDay())
+                    .findAllBy(List.of(instrumentEntity.getTicker()), today.atStartOfDay())
                     .stream()
                     .map(IntradayValueEntity::toDomain)
                     .toList()

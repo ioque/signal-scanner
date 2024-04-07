@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface IntradayValueEntityRepository extends JpaRepository<IntradayValueEntity, Long> {
-    @Query("select d from IntradayValue d where d.dateTime >= :from and d.ticker = :ticker")
-    List<IntradayValueEntity> findAllBy(String ticker, LocalDateTime from);
+    @Query("select d from IntradayValue d where d.dateTime >= :from and d.ticker in :tickers")
+    List<IntradayValueEntity> findAllBy(List<String> tickers, LocalDateTime from);
 
     @Query("select d.number from IntradayValue d where d.ticker = :ticker order by d.number DESC limit 1")
     Optional<Long> lastNumberBy(String ticker);

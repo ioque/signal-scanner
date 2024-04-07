@@ -1,24 +1,31 @@
 package ru.ioque.investfund.fakes;
 
-import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 public class FakeScannerRepository implements ScannerRepository, ScannerConfigRepository {
     public Map<UUID, SignalScanner> scannerMap = new HashMap<>();
-    FinInstrumentRepository finInstrumentRepository;
+    DatasourceRepository datasourceRepository;
+    DateTimeProvider dateTimeProvider;
 
-    public FakeScannerRepository(FinInstrumentRepository finInstrumentRepository) {
-        this.finInstrumentRepository = finInstrumentRepository;
+    public FakeScannerRepository(DatasourceRepository datasourceRepository, DateTimeProvider dateTimeProvider) {
+        this.datasourceRepository = datasourceRepository;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -57,7 +64,7 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
                     .description(scanner.getDescription())
                     .signals(scanner.getSignals())
                     .lastExecutionDateTime(scanner.getLastExecutionDateTime().orElse(null))
-                    .tradingSnapshots(finInstrumentRepository.getBy(scanner.getTickers()))
+                    .tradingSnapshots(createSnapshots(scanner.getTickers()))
                     .build()
             );
         }
@@ -71,7 +78,66 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
             .description(config.getDescription())
             .signals(getBy(config.getId()).map(SignalScanner::getSignals).orElse(new ArrayList<>()))
             .lastExecutionDateTime(getBy(config.getId()).map(SignalScanner::getLastExecutionDateTime).flatMap(r -> r).orElse(null))
-            .tradingSnapshots(finInstrumentRepository.getBy(config.getTickers()))
+            .tradingSnapshots(createSnapshots(config.getTickers()))
             .build();
+    }
+
+    private List<TradingSnapshot> createSnapshots(List<String> tickers) {
+        if (tickers == null || tickers.isEmpty()) return List.of();
+        return tickers.stream().map(ticker -> {
+            Instrument instrument = datasourceRepository
+                .getBy(dateTimeProvider.nowDate())
+                .orElseThrow()
+                .getInstruments()
+                .stream()
+                .filter(row -> row.getTicker().equals(ticker))
+                .findFirst()
+                .orElseThrow();
+            return TradingSnapshot.builder()
+                .ticker(instrument.getTicker())
+                .waPriceSeries(instrument
+                    .getHistoryValues()
+                    .stream()
+                    .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
+                    .toList()
+                )
+                .todayValueSeries(
+                    instrument
+                        .getIntradayValues()
+                        .stream()
+                        .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
+                        .map(intradayValue -> new TimeSeriesValue<>(
+                            intradayValue.getValue(),
+                            intradayValue.getDateTime().toLocalTime()
+                        ))
+                        .toList()
+                )
+                .closePriceSeries(instrument
+                    .getHistoryValues()
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
+                    .toList())
+                .openPriceSeries(instrument
+                    .getHistoryValues()
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
+                    .toList())
+                .valueSeries(instrument
+                    .getHistoryValues()
+                    .stream()
+                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
+                    .toList())
+                .todayPriceSeries(instrument
+                    .getIntradayValues()
+                    .stream()
+                    .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
+                    .map(intradayValue -> new TimeSeriesValue<>(
+                        intradayValue.getPrice(),
+                        intradayValue.getDateTime().toLocalTime()
+                    ))
+                    .toList())
+                .build();
+        }).toList();
     }
 }

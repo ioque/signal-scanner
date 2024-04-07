@@ -44,7 +44,7 @@ public class BaseTest {
     }
 
     protected FakeDatasourceRepository exchangeRepository() {
-        return fakeDIContainer.getExchangeRepository();
+        return fakeDIContainer.getDatasourceRepository();
     }
 
     protected FakeDateTimeProvider dateTimeProvider() {

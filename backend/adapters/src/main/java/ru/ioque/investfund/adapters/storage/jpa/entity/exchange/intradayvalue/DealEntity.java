@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 public class DealEntity extends IntradayValueEntity {
     Boolean isBuy;
     Integer qnt;
-    Double value;
 
     @Builder
     public DealEntity(
@@ -36,10 +35,9 @@ public class DealEntity extends IntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(number, dateTime, ticker, price);
+        super(number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
-        this.value = value;
     }
 
     @Override

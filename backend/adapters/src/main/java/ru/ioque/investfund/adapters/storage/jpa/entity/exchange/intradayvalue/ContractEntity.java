@@ -30,9 +30,10 @@ public class ContractEntity extends IntradayValueEntity {
         LocalDateTime dateTime,
         String ticker,
         Double price,
+        Double value,
         Integer qnt
     ) {
-        super(number, dateTime, ticker, price);
+        super(number, dateTime, ticker, price, value);
         this.qnt = qnt;
     }
 
@@ -43,6 +44,7 @@ public class ContractEntity extends IntradayValueEntity {
             .dateTime(dateTime)
             .ticker(ticker)
             .price(price)
+            .value(value)
             .qnt(qnt)
             .build();
     }
@@ -53,6 +55,7 @@ public class ContractEntity extends IntradayValueEntity {
             .dateTime(contract.getDateTime())
             .ticker(contract.getTicker())
             .price(contract.getPrice())
+            .value(contract.getValue())
             .qnt(contract.getQnt())
             .build();
     }

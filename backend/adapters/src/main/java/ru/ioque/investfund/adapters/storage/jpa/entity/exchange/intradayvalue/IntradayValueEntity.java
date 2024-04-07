@@ -43,17 +43,21 @@ public abstract class IntradayValueEntity {
     String ticker;
     @Column(nullable = false)
     Double price;
+    @Column(nullable = false)
+    Double value;
 
     public IntradayValueEntity(
         Long number,
         LocalDateTime dateTime,
         String ticker,
-        Double price
+        Double price,
+        Double value
     ) {
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;
+        this.value = value;
     }
 
     public abstract IntradayValue toDomain();

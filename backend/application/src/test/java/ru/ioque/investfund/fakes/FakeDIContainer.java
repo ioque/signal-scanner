@@ -18,9 +18,8 @@ public class FakeDIContainer {
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
     FakeScannerLogRepository scannerLogRepository;
-    FakeFinInstrumentRepository finInstrumentRepository;
     FakeScannerRepository scannerRepository;
-    FakeDatasourceRepository exchangeRepository;
+    FakeDatasourceRepository datasourceRepository;
     LoggerFacade loggerFacade;
     ScannerConfigurator scannerConfigurator;
     ScannerManager scannerManager;
@@ -36,13 +35,12 @@ public class FakeDIContainer {
         uuidProvider = new FakeUUIDProvider();
         scannerLogRepository = new FakeScannerLogRepository();
         loggerFacade = new LoggerFacade(loggerProvider);
-        exchangeRepository = new FakeDatasourceRepository();
-        finInstrumentRepository = new FakeFinInstrumentRepository(exchangeRepository, dateTimeProvider);
-        scannerRepository = new FakeScannerRepository(finInstrumentRepository);
+        datasourceRepository = new FakeDatasourceRepository();
+        scannerRepository = new FakeScannerRepository(datasourceRepository, dateTimeProvider);
         datasourceManager = new DatasourceManager(
             dateTimeProvider,
             exchangeProvider,
-            exchangeRepository,
+            datasourceRepository,
             uuidProvider,
             loggerFacade,
             eventBus

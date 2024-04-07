@@ -50,25 +50,6 @@ public class SignalScanner extends Domain {
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
         this.tradingSnapshots = tradingSnapshots != null ? new ArrayList<>(tradingSnapshots) : new ArrayList<>();
-        validate();
-    }
-
-    private void validate() {
-        if (workPeriodInMinutes == null) {
-            throw new DomainException("Не передан период работы сканера.");
-        }
-
-        if (algorithm == null) {
-            throw new DomainException("Не передан алгоритм сканера.");
-        }
-
-        if (description == null || description.isBlank()) {
-            throw new DomainException("Не передано описание.");
-        }
-
-        if (tradingSnapshots == null || tradingSnapshots.isEmpty()) {
-            throw new DomainException("Не передан список анализируемых инструментов.");
-        }
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {

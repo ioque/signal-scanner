@@ -16,4 +16,6 @@ public interface HistoryValueEntityRepository extends JpaRepository<HistoryValue
 
     @Query("select d.tradeDate from HistoryValue d where d.ticker = :ticker order by d.tradeDate DESC limit 1")
     Optional<LocalDate> lastDateBy(String ticker);
+
+    List<HistoryValueEntity> findAllByTickerIn(List<String> tickers);
 }

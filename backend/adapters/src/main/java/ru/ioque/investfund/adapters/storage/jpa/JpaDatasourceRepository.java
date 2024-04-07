@@ -18,6 +18,7 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -68,7 +69,7 @@ public class JpaDatasourceRepository implements DatasourceRepository {
                                     .map(HistoryValueEntity::toDomain)
                                     .toList(),
                                 intradayValueEntityRepository
-                                    .findAllBy(instrumentEntity.getTicker(), today.atStartOfDay())
+                                    .findAllBy(List.of(instrumentEntity.getTicker()), today.atStartOfDay())
                                     .stream()
                                     .map(IntradayValueEntity::toDomain)
                                     .toList()

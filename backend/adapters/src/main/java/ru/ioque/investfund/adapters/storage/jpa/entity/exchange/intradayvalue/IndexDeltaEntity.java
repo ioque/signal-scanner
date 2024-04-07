@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("IndexDeltaEntity")
 public class IndexDeltaEntity extends IntradayValueEntity {
-    Double value;
 
     @Builder
     public IndexDeltaEntity(
@@ -32,8 +31,7 @@ public class IndexDeltaEntity extends IntradayValueEntity {
         Double price,
         Double value
     ) {
-        super(number, dateTime, ticker, price);
-        this.value = value;
+        super(number, dateTime, ticker, price, value);
     }
 
     @Override
