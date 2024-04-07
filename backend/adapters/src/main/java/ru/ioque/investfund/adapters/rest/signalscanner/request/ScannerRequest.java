@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 
 import java.io.Serializable;
 import java.util.List;
@@ -39,5 +39,5 @@ public abstract class ScannerRequest implements Serializable {
     String description;
     @NotNull(message = "The tickers is required.")
     List<String> tickers;
-    public abstract AlgorithmConfigurator buildConfig();
+    public abstract AlgorithmConfig buildConfig();
 }

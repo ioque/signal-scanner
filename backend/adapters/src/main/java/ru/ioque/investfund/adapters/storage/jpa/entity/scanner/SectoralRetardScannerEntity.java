@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,7 +64,7 @@ public class SectoralRetardScannerEntity extends SignalScannerEntity {
         return SignalScanner.builder()
             .id(getId())
             .algorithm(
-                SectoralRetardAlgorithmConfigurator
+                SectoralRetardAlgorithmConfig
                     .builder()
                     .historyScale(historyScale)
                     .intradayScale(intradayScale)

@@ -7,6 +7,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class AlgorithmConfigurator {
+public abstract class AlgorithmConfig {
     public abstract ScannerAlgorithm factoryAlgorithm();
 }

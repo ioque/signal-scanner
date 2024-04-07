@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,7 +68,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
         return SignalScanner.builder()
             .id(getId())
             .algorithm(
-                CorrelationSectoralAlgorithmConfigurator
+                CorrelationSectoralAlgorithmConfig
                     .builder()
                     .futuresOvernightScale(futuresOvernightScale)
                     .stockOvernightScale(stockOvernightScale)

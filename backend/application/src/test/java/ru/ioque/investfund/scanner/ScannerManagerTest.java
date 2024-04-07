@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class ScannerManagerTest extends BaseTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX")
@@ -78,7 +78,7 @@ public class ScannerManagerTest extends BaseTest {
                 1,
                 "Аномальные объемы, третий эшелон.",
                 null,
-                new AnomalyVolumeAlgorithmConfigurator(
+                new AnomalyVolumeAlgorithmConfig(
                     1.5,
                     180,
                     "IMOEX")
@@ -99,7 +99,7 @@ public class ScannerManagerTest extends BaseTest {
                 1,
                 "Аномальные объемы, третий эшелон.",
                 List.of(),
-                new AnomalyVolumeAlgorithmConfigurator(
+                new AnomalyVolumeAlgorithmConfig(
                     1.5,
                     180,
                     "IMOEX")
@@ -118,7 +118,7 @@ public class ScannerManagerTest extends BaseTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX")
@@ -148,7 +148,7 @@ public class ScannerManagerTest extends BaseTest {
                 .filter(row -> row.getClass().equals(Stock.class))
                 .map(Instrument::getTicker)
                 .toList(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX"
@@ -163,7 +163,7 @@ public class ScannerManagerTest extends BaseTest {
                     1,
                     "Старое описание",
                     getTickers(),
-                    new AnomalyVolumeAlgorithmConfigurator(
+                    new AnomalyVolumeAlgorithmConfig(
                         1.5,
                         180,
                         "IMOEX"
@@ -185,7 +185,7 @@ public class ScannerManagerTest extends BaseTest {
             1,
             "Старое описание",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX"
@@ -199,7 +199,7 @@ public class ScannerManagerTest extends BaseTest {
                     1,
                     "Новое описание",
                     getTickers(),
-                    new AnomalyVolumeAlgorithmConfigurator(
+                    new AnomalyVolumeAlgorithmConfig(
                         1.5,
                         180,
                         "IMOEX"
@@ -227,7 +227,7 @@ public class ScannerManagerTest extends BaseTest {
                         1,
                         "Новое описание",
                         getTickers(),
-                        new AnomalyVolumeAlgorithmConfigurator(
+                        new AnomalyVolumeAlgorithmConfig(
                             1.5,
                             180,
                             "IMOEX"
@@ -248,7 +248,7 @@ public class ScannerManagerTest extends BaseTest {
             1,
             "Старое описание",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX"
@@ -263,7 +263,7 @@ public class ScannerManagerTest extends BaseTest {
                         1,
                         "",
                         getTickers(),
-                        new AnomalyVolumeAlgorithmConfigurator(
+                        new AnomalyVolumeAlgorithmConfig(
                             1.5,
                             180,
                             "IMOEX"
@@ -284,7 +284,7 @@ public class ScannerManagerTest extends BaseTest {
             1,
             "Старое описание",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 "IMOEX"
@@ -299,7 +299,7 @@ public class ScannerManagerTest extends BaseTest {
                         1,
                         "Старое описание",
                         List.of(),
-                        new AnomalyVolumeAlgorithmConfigurator(
+                        new AnomalyVolumeAlgorithmConfig(
                             1.5,
                             180,
                             "IMOEX"

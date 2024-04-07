@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class UpdateScannerCommand {
     Integer workPeriodInMinutes;
     String description;
     List<String> tickers;
-    AlgorithmConfigurator algorithmConfigurator;
+    AlgorithmConfig algorithmConfig;
 
     @Builder
     public UpdateScannerCommand(
@@ -28,12 +28,12 @@ public class UpdateScannerCommand {
         Integer workPeriodInMinutes,
         String description,
         List<String> tickers,
-        AlgorithmConfigurator algorithmConfigurator
+        AlgorithmConfig algorithmConfig
     ) {
         this.id = id;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.tickers = tickers;
-        this.algorithmConfigurator = algorithmConfigurator;
+        this.algorithmConfig = algorithmConfig;
     }
 }

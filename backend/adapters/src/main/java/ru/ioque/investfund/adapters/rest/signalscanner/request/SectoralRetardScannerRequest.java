@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfig;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class SectoralRetardScannerRequest extends ScannerRequest {
     }
 
     @Override
-    public AlgorithmConfigurator buildConfig() {
-        return new SectoralRetardAlgorithmConfigurator(historyScale, intradayScale);
+    public AlgorithmConfig buildConfig() {
+        return new SectoralRetardAlgorithmConfig(historyScale, intradayScale);
     }
 }

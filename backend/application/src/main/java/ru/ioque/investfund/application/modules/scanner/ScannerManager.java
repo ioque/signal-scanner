@@ -64,7 +64,7 @@ public class ScannerManager implements SystemModule {
                 .id(id)
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
-                .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
+                .algorithm(command.getAlgorithmConfig().factoryAlgorithm())
                 .tradingSnapshots(finInstrumentRepository.getBy(command.getTickers()))
                 .build()
         );
@@ -83,7 +83,7 @@ public class ScannerManager implements SystemModule {
                 .lastExecutionDateTime(scanner.get().getLastExecutionDateTime().orElse(null))
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
-                .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
+                .algorithm(command.getAlgorithmConfig().factoryAlgorithm())
                 .tradingSnapshots(finInstrumentRepository.getBy(command.getTickers()))
                 .build()
         );

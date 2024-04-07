@@ -6,20 +6,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class CorrelationSectoralAlgorithmConfigurator extends AlgorithmConfigurator {
+public class CorrelationSectoralAlgorithmConfig extends AlgorithmConfig {
     Double futuresOvernightScale;
     Double stockOvernightScale;
     String futuresTicker;
 
     @Builder
-    public CorrelationSectoralAlgorithmConfigurator(
+    public CorrelationSectoralAlgorithmConfig(
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker

@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class AnomalyVolumeScannerRequest extends ScannerRequest {
     }
 
     @Override
-    public AlgorithmConfigurator buildConfig() {
-        return new AnomalyVolumeAlgorithmConfigurator(scaleCoefficient, historyPeriod, indexTicker);
+    public AlgorithmConfig buildConfig() {
+        return new AnomalyVolumeAlgorithmConfig(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

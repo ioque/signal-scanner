@@ -14,7 +14,7 @@ import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.Contract;
 import ru.ioque.investfund.domain.exchange.value.Delta;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventBus;
@@ -90,7 +90,7 @@ public class BaseTest {
         Integer workPeriodInMinutes,
         String description,
         List<String> tickers,
-        AlgorithmConfigurator config
+        AlgorithmConfig config
     ) {
         dataScannerManager()
             .addNewScanner(
@@ -98,7 +98,7 @@ public class BaseTest {
                     .workPeriodInMinutes(workPeriodInMinutes)
                     .description(description)
                     .tickers(tickers)
-                    .algorithmConfigurator(config)
+                    .algorithmConfig(config)
                     .build()
             );
     }

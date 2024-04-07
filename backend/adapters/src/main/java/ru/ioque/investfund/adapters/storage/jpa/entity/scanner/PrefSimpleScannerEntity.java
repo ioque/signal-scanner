@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,7 +60,7 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
         return SignalScanner.builder()
             .id(getId())
             .algorithm(
-                PrefSimpleAlgorithmConfigurator
+                PrefSimpleAlgorithmConfig
                     .builder()
                     .spreadParam(spreadParam)
                     .build()

@@ -32,7 +32,7 @@ public class SignaScannerCommandController {
                     .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())
-                    .algorithmConfigurator(request.buildConfig())
+                    .algorithmConfig(request.buildConfig())
                     .build()
             );
     }
@@ -46,7 +46,7 @@ public class SignaScannerCommandController {
                     .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())
-                    .algorithmConfigurator(request.buildConfig())
+                    .algorithmConfig(request.buildConfig())
                     .build()
             );
     }

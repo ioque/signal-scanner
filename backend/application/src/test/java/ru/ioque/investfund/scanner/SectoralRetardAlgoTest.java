@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 null,
                 intradayScale
             )
@@ -52,7 +52,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 0D,
                 intradayScale
             )
@@ -73,7 +73,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 -1D,
                 intradayScale
             )
@@ -94,7 +94,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 historyScale, null
             )
         ));
@@ -114,7 +114,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 historyScale,
                 0D
             )
@@ -135,7 +135,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getTickers(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 historyScale,
                 -1D
             )
@@ -274,7 +274,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
             1,
             "Секторальный отстающий, нефтянка.",
             getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
-            new SectoralRetardAlgorithmConfigurator(
+            new SectoralRetardAlgorithmConfig(
                 historyScale,
                 intradayScale
             )

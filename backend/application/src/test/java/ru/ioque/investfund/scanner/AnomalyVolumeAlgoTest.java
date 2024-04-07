@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 null,
                 180,
                 "IMOEX"
@@ -51,7 +51,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 null,
                 "IMOEX"
@@ -73,7 +73,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 null
@@ -95,7 +95,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
                 ""
@@ -117,7 +117,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 0D,
                 180,
                 "IMOEX"
@@ -139,7 +139,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 -1D,
                 180,
                 "IMOEX"
@@ -161,7 +161,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 0,
                 "IMOEX"
@@ -183,7 +183,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             1,
             "Аномальные объемы, третий эшелон.",
             getTickers(),
-            new AnomalyVolumeAlgorithmConfigurator(
+            new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 -180,
                 "IMOEX"
@@ -561,8 +561,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
     }
 
-    private static AnomalyVolumeAlgorithmConfigurator defaultConfiguration() {
-        return new AnomalyVolumeAlgorithmConfigurator(
+    private static AnomalyVolumeAlgorithmConfig defaultConfiguration() {
+        return new AnomalyVolumeAlgorithmConfig(
             1.5,
             180,
             "IMOEX"
@@ -675,7 +675,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         exchangeManager().enableUpdate(getTickers());
     }
 
-    private void initScanner(AlgorithmConfigurator configurator, String... tickers) {
+    private void initScanner(AlgorithmConfig configurator, String... tickers) {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",

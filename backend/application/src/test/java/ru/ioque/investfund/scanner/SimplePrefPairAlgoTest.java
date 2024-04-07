@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfig;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
@@ -29,7 +29,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             1,
             "Анализ пар преф-обычка.",
             getTickers(),
-            new PrefSimpleAlgorithmConfigurator(null)
+            new PrefSimpleAlgorithmConfig(null)
         ));
 
         assertEquals("Не передан параметр spreadParam.", error.getMessage());
@@ -47,7 +47,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             1,
             "Анализ пар преф-обычка.",
             getTickers(),
-            new PrefSimpleAlgorithmConfigurator(0D)
+            new PrefSimpleAlgorithmConfig(0D)
         ));
 
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
@@ -65,7 +65,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             1,
             "Анализ пар преф-обычка.",
             getTickers(),
-            new PrefSimpleAlgorithmConfigurator(-1D)
+            new PrefSimpleAlgorithmConfig(-1D)
         ));
 
         assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
@@ -432,7 +432,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             1,
             "Анализ пар преф-обычка.",
             getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
-            new PrefSimpleAlgorithmConfigurator(SPREAD_PARAM)
+            new PrefSimpleAlgorithmConfig(SPREAD_PARAM)
         );
     }
 

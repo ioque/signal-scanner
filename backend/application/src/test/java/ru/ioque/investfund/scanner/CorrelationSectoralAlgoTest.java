@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfig;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 null,
                 stockOvernightScale,
                 BRF4
@@ -54,7 +54,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 null,
                 BRF4
@@ -76,7 +76,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
                 null
@@ -98,7 +98,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
                 ""
@@ -120,7 +120,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 0D,
                 stockOvernightScale,
                 BRF4
@@ -142,7 +142,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 -1D,
                 stockOvernightScale,
                 BRF4
@@ -164,7 +164,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 0D,
                 BRF4
@@ -186,7 +186,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 -1D,
                 BRF4
@@ -395,7 +395,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             1,
             "Корреляция сектора с фьючерсом.",
             getTickers(),
-            new CorrelationSectoralAlgorithmConfigurator(
+            new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
                 BRF4

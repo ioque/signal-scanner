@@ -9,7 +9,7 @@ import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +50,7 @@ public class JpaScannerRepoTest extends BaseJpaTest {
             .id(SCANNER_ID)
             .workPeriodInMinutes(1)
             .description("description")
-            .algorithm(new AnomalyVolumeAlgorithmConfigurator(1.5, 180, "IMOEX").factoryAlgorithm())
+            .algorithm(new AnomalyVolumeAlgorithmConfig(1.5, 180, "IMOEX").factoryAlgorithm())
             .tradingSnapshots(finInstrumentRepository.getBy(List.of("AFKS")))
             .build());
 
