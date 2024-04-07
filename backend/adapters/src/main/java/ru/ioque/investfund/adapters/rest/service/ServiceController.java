@@ -20,7 +20,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntity
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
+import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 
 @Hidden
 @RestController
@@ -38,7 +38,7 @@ public class ServiceController {
     ArchivedHistoryValueEntityRepository archivedHistoryValueEntityRepository;
     ExchangeCache exchangeCache;
     InMemoryEventBus eventBus;
-    ExchangeManager exchangeManager;
+    DatasourceManager datasourceManager;
     DateTimeProvider dateTimeProvider;
 
     @PostMapping("/api/service/date-time")

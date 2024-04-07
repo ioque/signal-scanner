@@ -1,6 +1,6 @@
 package ru.ioque.investfund;
 
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
+import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
@@ -18,7 +18,7 @@ import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurato
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventBus;
-import ru.ioque.investfund.fakes.FakeExchangeRepository;
+import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
@@ -41,7 +41,7 @@ public class BaseTest {
         return fakeDIContainer.getExchangeDataFixture();
     }
 
-    protected FakeExchangeRepository exchangeRepository() {
+    protected FakeDatasourceRepository exchangeRepository() {
         return fakeDIContainer.getExchangeRepository();
     }
 
@@ -65,8 +65,8 @@ public class BaseTest {
         return fakeDIContainer.getLoggerProvider();
     }
 
-    protected final ExchangeManager exchangeManager() {
-        return fakeDIContainer.getExchangeManager();
+    protected final DatasourceManager exchangeManager() {
+        return fakeDIContainer.getDatasourceManager();
     }
 
     protected final FakeEventBus eventBus() {

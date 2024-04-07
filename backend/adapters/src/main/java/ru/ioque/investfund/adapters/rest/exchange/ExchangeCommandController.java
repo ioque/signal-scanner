@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.exchange.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.exchange.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.investfund.application.modules.exchange.AddDatasourceCommand;
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
+import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name="ExchangeCommandController", description="Контроллер команд к модулю \"EXCHANGE\"")
 public class ExchangeCommandController {
-    ExchangeManager exchangeManager;
+    DatasourceManager datasourceManager;
 
     @PostMapping("/api/datasource")
     public void registerDatasource(@RequestBody RegisterDatasourceRequest request) {
-        exchangeManager.registerDatasource(
+        datasourceManager.registerDatasource(
             AddDatasourceCommand.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -34,21 +34,21 @@ public class ExchangeCommandController {
 
     @PostMapping("/api/integrate")
     public void integrateInstruments() {
-        exchangeManager.integrateInstruments();
+        datasourceManager.integrateInstruments();
     }
 
     @PostMapping("/api/daily-integrate")
     public void integrateTradingData() {
-        exchangeManager.execute();
+        datasourceManager.execute();
     }
 
     @PatchMapping("/api/enable-update")
     public void enableUpdate(@RequestBody EnableUpdateInstrumentRequest request) {
-        exchangeManager.enableUpdate(request.getInstrumentIds());
+        datasourceManager.enableUpdate(request.getInstrumentIds());
     }
 
     @PatchMapping("/api/disable-update")
     public void disableUpdate(@RequestBody DisableUpdateInstrumentRequest request) {
-        exchangeManager.disableUpdate(request.getInstrumentIds());
+        datasourceManager.disableUpdate(request.getInstrumentIds());
     }
 }

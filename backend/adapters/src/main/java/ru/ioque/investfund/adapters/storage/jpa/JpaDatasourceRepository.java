@@ -14,7 +14,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityR
 import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class JpaExchangeRepository implements ExchangeRepository {
+public class JpaDatasourceRepository implements DatasourceRepository {
     ExchangeEntityRepository exchangeRepository;
     InstrumentEntityRepository instrumentEntityRepository;
     HistoryValueEntityRepository historyValueEntityRepository;

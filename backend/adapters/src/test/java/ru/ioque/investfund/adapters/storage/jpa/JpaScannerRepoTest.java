@@ -3,7 +3,7 @@ package ru.ioque.investfund.adapters.storage.jpa;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("JPA_SIGNAL_SCANNER_REPO")
 public class JpaScannerRepoTest extends BaseJpaTest {
-    ExchangeRepository exchangeRepository;
+    DatasourceRepository datasourceRepository;
     FinInstrumentRepository finInstrumentRepository;
     JpaScannerRepo dataJpaScannerRepo;
 
@@ -30,11 +30,11 @@ public class JpaScannerRepoTest extends BaseJpaTest {
     public JpaScannerRepoTest(
         @Autowired JpaScannerRepo dataJpaScannerRepo,
         @Autowired FinInstrumentRepository finInstrumentRepository,
-        @Autowired ExchangeRepository exchangeRepository
+        @Autowired DatasourceRepository datasourceRepository
     ) {
         this.dataJpaScannerRepo = dataJpaScannerRepo;
         this.finInstrumentRepository = finInstrumentRepository;
-        this.exchangeRepository = exchangeRepository;
+        this.datasourceRepository = datasourceRepository;
     }
 
     @Test
@@ -77,7 +77,7 @@ public class JpaScannerRepoTest extends BaseJpaTest {
     }
 
     private void prepareExchange() {
-        exchangeRepository.save(getExchange());
+        datasourceRepository.save(getExchange());
     }
 
     private static Stock getAfks() {

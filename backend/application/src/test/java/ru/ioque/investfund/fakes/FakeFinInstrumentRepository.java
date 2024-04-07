@@ -1,7 +1,7 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
@@ -12,11 +12,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class FakeFinInstrumentRepository implements FinInstrumentRepository {
-    ExchangeRepository exchangeRepository;
+    DatasourceRepository datasourceRepository;
     DateTimeProvider dateTimeProvider;
 
-    public FakeFinInstrumentRepository(ExchangeRepository exchangeRepository, DateTimeProvider dateTimeProvider) {
-        this.exchangeRepository = exchangeRepository;
+    public FakeFinInstrumentRepository(DatasourceRepository datasourceRepository, DateTimeProvider dateTimeProvider) {
+        this.datasourceRepository = datasourceRepository;
         this.dateTimeProvider = dateTimeProvider;
     }
 
@@ -24,7 +24,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
     public List<FinInstrument> getByIdIn(List<UUID> instrumentIds) {
         if (instrumentIds == null || instrumentIds.isEmpty()) return List.of();
         return instrumentIds.stream().map(id -> {
-            Instrument instrument = exchangeRepository
+            Instrument instrument = datasourceRepository
                 .getBy(dateTimeProvider.nowDate())
                 .orElseThrow()
                 .getInstruments()

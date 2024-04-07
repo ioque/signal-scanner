@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.exchange.AddDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.exchange.entity.Exchange;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("EXCHANGE MANAGER - INTEGRATION")
-public class ExchangeManagerTest extends BaseTest {
+public class DatasourceManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         exchangeManager().registerDatasource(

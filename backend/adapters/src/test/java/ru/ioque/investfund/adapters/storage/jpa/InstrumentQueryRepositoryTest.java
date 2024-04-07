@@ -61,7 +61,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id2).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> stocks = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().type("stock").build());
         List<Instrument> indexes = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().type("index").build());
@@ -113,7 +113,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> afks = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("AFKS").build());
         List<Instrument> imoex = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("IMOEX").build());
@@ -142,7 +142,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id2).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> instruments = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().shortName("Сбер").build());
 
@@ -169,7 +169,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> sber = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("SBER").type("stock").build());
         List<Instrument> imoex = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("IMOEX").type("index").build());
@@ -199,7 +199,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> sberp = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("SBER").shortName("Сбербанк-п").type("stock").build());
         List<Instrument> imoex = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().ticker("IMOEX").type("index").build());
@@ -229,7 +229,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
         List<Instrument> instruments1 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(1).orderField("ticker").orderDirection("ASC").build());
         List<Instrument> instruments2 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(1).pageSize(1).orderField("ticker").orderDirection("ASC").build());
         List<Instrument> instruments3 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(1).pageSize(2).orderField("ticker").orderDirection("ASC").build());
@@ -266,7 +266,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        exchangeRepository.save(exchange);
+        datasourceRepository.save(exchange);
 
         List<Instrument> instruments = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(4).orderDirection("DESC").orderField("shortName").build());
         List<Instrument> instruments2 = instrumentQueryRepository.getAll(InstrumentFilterParams.builder().pageNumber(0).pageSize(4).orderDirection("ASC").orderField("shortName").build());

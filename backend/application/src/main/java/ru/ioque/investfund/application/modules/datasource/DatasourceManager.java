@@ -1,13 +1,13 @@
-package ru.ioque.investfund.application.modules.exchange;
+package ru.ioque.investfund.application.modules.datasource;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
@@ -22,10 +22,10 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ExchangeManager implements SystemModule {
+public class DatasourceManager implements SystemModule {
     DateTimeProvider dateTimeProvider;
     ExchangeProvider exchangeProvider;
-    ExchangeRepository repository;
+    DatasourceRepository repository;
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
     EventBus eventBus;

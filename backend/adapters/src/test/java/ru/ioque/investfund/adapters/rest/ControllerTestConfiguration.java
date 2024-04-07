@@ -17,8 +17,8 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityReposit
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
-import ru.ioque.investfund.application.modules.exchange.ExchangeManager;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
 import static org.mockito.Mockito.mock;
@@ -29,8 +29,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public ExchangeManager mockAggregatorManager() {
-        return mock(ExchangeManager.class);
+    public DatasourceManager mockAggregatorManager() {
+        return mock(DatasourceManager.class);
     }
 
     @Bean
@@ -71,8 +71,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public ExchangeRepository mockExchangeRepository() {
-        return mock(ExchangeRepository.class);
+    public DatasourceRepository mockExchangeRepository() {
+        return mock(DatasourceRepository.class);
     }
 
     @Bean

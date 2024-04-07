@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.exchange;
+package ru.ioque.investfund.application.modules.datasource;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

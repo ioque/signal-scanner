@@ -8,7 +8,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepos
 import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.application.adapters.ExchangeRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.exchange.entity.Index;
 import ru.ioque.investfund.domain.exchange.entity.Stock;
@@ -25,7 +25,7 @@ public class BaseJpaTest {
     @Autowired
     protected UUIDProvider uuidProvider;
     @Autowired
-    protected ExchangeRepository exchangeRepository;
+    protected DatasourceRepository datasourceRepository;
     @Autowired
     protected ExchangeEntityRepository exchangeEntityRepository;
     @Autowired
