@@ -22,7 +22,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     private final Double historyScale;
     private final Double intradayScale;
 
-    SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
+    public SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
         super("Секторальный отстающий");
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;

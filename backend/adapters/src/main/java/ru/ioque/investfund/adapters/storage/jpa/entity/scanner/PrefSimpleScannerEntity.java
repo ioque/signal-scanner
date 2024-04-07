@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.SectoralRetardAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;

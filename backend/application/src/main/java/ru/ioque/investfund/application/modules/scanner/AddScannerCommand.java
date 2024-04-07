@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 
 import java.util.List;
 

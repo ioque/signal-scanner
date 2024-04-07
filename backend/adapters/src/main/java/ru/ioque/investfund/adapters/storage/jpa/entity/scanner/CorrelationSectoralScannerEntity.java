@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.configurator;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;

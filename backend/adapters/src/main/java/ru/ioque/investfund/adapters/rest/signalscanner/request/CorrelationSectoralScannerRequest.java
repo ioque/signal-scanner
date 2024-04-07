@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
 
 import java.util.List;
 

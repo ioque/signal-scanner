@@ -34,7 +34,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     private final String indexTicker;
     private final Integer historyPeriod;
 
-    AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
+    public AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
         super("Аномальные объемы");
         this.scaleCoefficient = scaleCoefficient;
         this.indexTicker = indexTicker;

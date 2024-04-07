@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume;
+package ru.ioque.investfund.domain.configurator;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
 
 @Getter
 @ToString(callSuper = true)

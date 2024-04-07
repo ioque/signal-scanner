@@ -1,8 +1,9 @@
-package ru.ioque.investfund.domain.scanner.entity.algorithms;
+package ru.ioque.investfund.domain.configurator;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 
 @Getter
 @ToString

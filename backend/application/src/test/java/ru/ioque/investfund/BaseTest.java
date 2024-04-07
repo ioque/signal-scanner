@@ -14,7 +14,7 @@ import ru.ioque.investfund.domain.exchange.value.Deal;
 import ru.ioque.investfund.domain.exchange.value.Contract;
 import ru.ioque.investfund.domain.exchange.value.Delta;
 import ru.ioque.investfund.domain.exchange.value.IntradayValue;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventBus;

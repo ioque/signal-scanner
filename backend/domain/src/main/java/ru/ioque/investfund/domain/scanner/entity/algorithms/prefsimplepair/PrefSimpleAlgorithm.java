@@ -22,7 +22,7 @@ import java.util.UUID;
 public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     private final Double spreadParam;
 
-    PrefSimpleAlgorithm(Double spreadParam) {
+    public PrefSimpleAlgorithm(Double spreadParam) {
         super("Дельта анализ цен пар преф-обычка");
         this.spreadParam = spreadParam;
         new PrefSimpleAlgorithmValidator(this);

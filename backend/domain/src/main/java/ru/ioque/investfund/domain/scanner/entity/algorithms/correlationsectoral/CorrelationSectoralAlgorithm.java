@@ -23,7 +23,7 @@ public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
     private final Double stockOvernightScale;
     private final String futuresTicker;
 
-    CorrelationSectoralAlgorithm(
+    public CorrelationSectoralAlgorithm(
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
