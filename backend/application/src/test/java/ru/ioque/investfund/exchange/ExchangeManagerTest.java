@@ -237,44 +237,11 @@ public class ExchangeManagerTest extends BaseTest {
     @Test
     @DisplayName("""
         T11. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
-        Запущена интеграция торговых данных инструмента AFKS.
-        В исходных данных по сделкам есть данные за предыдущий день.
-        Результат: сохранены только сделки за текущий день.
-        """)
-    void testCase11() {
-        initTodayDateTime("2023-12-08T12:00:00");
-        integrateInstruments(afks());
-        clearLogs();
-        initDealDatas(
-            buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:10:00")),
-            buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-07T11:20:00")),
-            buildDealWith(3L, "AFKS", LocalDateTime.parse("2023-12-08T10:10:00")),
-            buildDealWith(4L, "AFKS", LocalDateTime.parse("2023-12-08T11:12:00")),
-            buildDealWith(5L, "AFKS", LocalDateTime.parse("2023-12-08T11:35:00"))
-        );
-
-        exchangeManager().enableUpdate(getInstrumentsBy(List.of("AFKS")).map(Instrument::getId).toList());
-        exchangeManager().execute();
-
-        assertEquals(3, getIntradayValue("AFKS").size());
-        assertEquals(2, loggerProvider().log.size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-08T12:00. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: <_> - <_>.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-08T12:00. Текущее количество сделок 3, интервал сделок: 2023-12-08T10:10 - 2023-12-08T11:35. Текущий период исторических данных: <_> - <_>."
-                )
-        );
-    }
-
-    @Test
-    @DisplayName("""
-        T12. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         По инструменту AFKS сохранены сделки до 2023-12-07T12:00:00.
         Текущее время 2023-12-07T13:00:00. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: сохранены только новые сделки, прошедшие после 12:00:00.
         """)
-    void testCas12() {
+    void testCas11() {
         initTodayDateTime("2023-12-07T12:00:00");
         integrateInstruments(afks());
         initDealDatas(
@@ -307,12 +274,12 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T13. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T12. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         По инструменту AFKS сохранены итоги торгов по 2023-12-07.
         Текущее время 2023-12-09T13:00:00. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: добавлена история торгов за 2023-12-08.
         """)
-    void testCas13() {
+    void testCas12() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
         initTradingResults(generateTradingResultsBy("AFKS", nowMinus3Month(), nowMinus1Days()));
@@ -336,11 +303,11 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T14. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T13. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Обновление инструмента AFKS не включено. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: торговые данные не загружены.
         """)
-    void testCase14() {
+    void testCase13() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
         initDealDatas(buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
@@ -353,12 +320,12 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T15. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T14. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Данные торгов успешно проинтегрированы, обновление инструмента включено.
         Обновление инструмента выключается и запускается интеграция торговых данных.
         Результат: новые торговые данные не загружены.
         """)
-    void testCase15() {
+    void testCase14() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
@@ -385,11 +352,11 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T16. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        T15. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
         Попытка включить обновление по списку идентификаторов.
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
-    void testCase16() {
+    void testCase15() {
         exchangeManager().unregisterDatasource();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
@@ -397,11 +364,11 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T17. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        T16. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
         Попытка выключить обновление по списку идентификаторов.
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
-    void testCase17() {
+    void testCase16() {
         exchangeManager().unregisterDatasource();
         var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(List.of(UUID.randomUUID())));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
@@ -409,9 +376,9 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T18. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
+        T17. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
-    void testCase19() {
+    void testCase17() {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(afks());
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
@@ -423,9 +390,9 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T19. У сделок одинаковое время, но разные номера. Все сделки сохранены.
+        T18. У сделок одинаковое время, но разные номера. Все сделки сохранены.
         """)
-    void testCase20() {
+    void testCase18() {
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(afks());
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
@@ -442,9 +409,9 @@ public class ExchangeManagerTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T20. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
+        T19. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
         """)
-    void testCase21() {
+    void testCase19() {
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(afks());
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));

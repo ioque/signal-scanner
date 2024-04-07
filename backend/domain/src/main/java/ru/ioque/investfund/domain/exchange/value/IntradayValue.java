@@ -7,7 +7,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -34,10 +33,6 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
         this.ticker = ticker;
         this.price = price;
         this.value = value;
-    }
-
-    public boolean isSameByDate(LocalDate date) {
-        return getDateTime().toLocalDate().isEqual(date);
     }
 
     public boolean isAfter(IntradayValue intradayValue) {

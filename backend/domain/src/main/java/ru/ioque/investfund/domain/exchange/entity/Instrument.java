@@ -75,6 +75,9 @@ public abstract class Instrument extends Domain {
     public Optional<LocalDate> lastHistoryValueDate() {
         return lastDailyValue().map(HistoryValue::getTradeDate);
     }
+    public Optional<Long> lastIntradayNumber() {
+        return lastIntradayValue().map(IntradayValue::getNumber);
+    }
 
     public boolean isNeedUpdateHistory(LocalDate nowDate) {
         return lastDailyValue()
