@@ -28,7 +28,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentIds(),
+            getTickers(),
             new PrefSimpleAlgorithmConfigurator(null)
         ));
 
@@ -46,7 +46,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentIds(),
+            getTickers(),
             new PrefSimpleAlgorithmConfigurator(0D)
         ));
 
@@ -64,7 +64,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentIds(),
+            getTickers(),
             new PrefSimpleAlgorithmConfigurator(-1D)
         ));
 
@@ -431,7 +431,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getId).toList(),
+            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             new PrefSimpleAlgorithmConfigurator(SPREAD_PARAM)
         );
     }
@@ -442,7 +442,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sberP()
         );
         exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getInstrumentIds());
+        exchangeManager().enableUpdate(getTickers());
     }
 
     private void initSberAndSberpHistory() {

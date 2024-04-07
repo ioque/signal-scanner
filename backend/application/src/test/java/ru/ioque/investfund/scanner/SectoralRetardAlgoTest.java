@@ -30,7 +30,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 null,
                 intradayScale
@@ -51,7 +51,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 0D,
                 intradayScale
@@ -72,7 +72,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 -1D,
                 intradayScale
@@ -93,7 +93,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 historyScale, null
             )
@@ -113,7 +113,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 historyScale,
                 0D
@@ -134,7 +134,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentIds(),
+            getTickers(),
             new SectoralRetardAlgorithmConfigurator(
                 historyScale,
                 -1D
@@ -273,7 +273,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getId).toList(),
+            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             new SectoralRetardAlgorithmConfigurator(
                 historyScale,
                 intradayScale
@@ -292,7 +292,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                 )
             );
         exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getInstrumentIds());
+        exchangeManager().enableUpdate(getTickers());
     }
 
 

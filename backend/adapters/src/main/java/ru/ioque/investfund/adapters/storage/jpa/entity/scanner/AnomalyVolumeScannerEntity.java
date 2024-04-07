@@ -54,7 +54,7 @@ public class AnomalyVolumeScannerEntity extends SignalScannerEntity {
             .id(signalScanner.getId())
             .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
-            .objectIds(signalScanner.getObjectIds())
+            .objectIds(signalScanner.getTickers())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
             .scaleCoefficient(algorithm.getScaleCoefficient())

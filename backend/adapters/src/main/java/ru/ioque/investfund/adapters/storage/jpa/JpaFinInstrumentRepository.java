@@ -26,7 +26,7 @@ public class JpaFinInstrumentRepository implements FinInstrumentRepository {
     DateTimeProvider dateTimeProvider;
 
     @Override
-    public List<FinInstrument> getByIdIn(List<UUID> ids) {
+    public List<FinInstrument> getBy(List<UUID> ids) {
         return ids
             .stream()
             .map(id -> {

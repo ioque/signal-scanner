@@ -8,14 +8,10 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-//урлы для обновления данных, клиенты к биржам выносятся как отдельные сервисы-адаптеры для получения данных.
-//добавил клиент (хоть на питоне, похер, главное чтоб контракт выполнялся), указал название биржи, описание и погнали.
-//дальше система сама начинает работать с биржей, настраиваются сканеры
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -24,7 +20,8 @@ public class Exchange extends Domain {
     String name;
     String url;
     String description;
-    Map<UUID, Instrument> instruments;
+    @Getter
+    List<Instrument> instruments;
 
     @Builder
     public Exchange(
@@ -38,46 +35,30 @@ public class Exchange extends Domain {
         this.name = name;
         this.url = url;
         this.description = description;
-        this.instruments = new HashMap<>();
-        if (instruments != null) {
-            instruments.forEach(instrument -> this.instruments.put(instrument.getId(), instrument));
-        }
-    }
-
-    public List<Instrument> getInstruments() {
-        return instruments
-            .values()
-            .stream()
-            .toList();
+        this.instruments = instruments;
     }
 
     public void saveInstrument(Instrument instrument) {
-        if (!instrumentExists(instrument)) {
-            instruments.put(instrument.getId(), instrument);
+        if (findBy(instrument.getTicker()).isEmpty()) {
+            instruments.add(instrument);
         }
     }
 
     public List<Instrument> getUpdatableInstruments() {
-        return instruments.values().stream().filter(Instrument::isUpdatable).toList();
+        return instruments.stream().filter(Instrument::isUpdatable).toList();
     }
 
-    public void enableUpdate(List<UUID> ids) {
-        ids.forEach(id -> {
-            if (instruments.get(id) != null) {
-                instruments.get(id).enableUpdate();
-            }
+    public void enableUpdate(List<String> tickers) {
+        tickers.forEach(ticker -> {
+            findBy(ticker).ifPresent(Instrument::enableUpdate);
         });
     }
 
-    public void disableUpdate(List<UUID> ids) {
-        ids.forEach(id -> {
-            if (instruments.get(id) != null) {
-                instruments.get(id).disableUpdate();
-            }
-        });
+    private Optional<Instrument> findBy(String ticker) {
+        return instruments.stream().filter(row -> row.getTicker().equals(ticker)).findFirst();
     }
 
-    private boolean instrumentExists(Instrument instrument) {
-        return instruments.values().stream().anyMatch(row -> row.getTicker().equals(instrument.getTicker()));
+    public void disableUpdate(List<String> tickers) {
+        tickers.forEach(ticker -> findBy(ticker).ifPresent(Instrument::disableUpdate));
     }
 }

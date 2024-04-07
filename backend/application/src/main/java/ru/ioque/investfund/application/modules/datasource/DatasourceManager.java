@@ -45,15 +45,15 @@ public class DatasourceManager implements SystemModule {
         repository.delete();
     }
 
-    public synchronized void enableUpdate(List<UUID> ids) {
+    public synchronized void enableUpdate(List<String> tickers) {
         final Exchange exchange = getExchangeFromRepo();
-        exchange.enableUpdate(ids);
+        exchange.enableUpdate(tickers);
         repository.save(exchange);
     }
 
-    public synchronized void disableUpdate(List<UUID> ids) {
+    public synchronized void disableUpdate(List<String> tickers) {
         final Exchange exchange = getExchangeFromRepo();
-        exchange.disableUpdate(ids);
+        exchange.disableUpdate(tickers);
         repository.save(exchange);
     }
 

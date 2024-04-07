@@ -31,7 +31,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 null,
                 stockOvernightScale,
@@ -53,7 +53,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 null,
@@ -75,7 +75,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -97,7 +97,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -119,7 +119,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 0D,
                 stockOvernightScale,
@@ -141,7 +141,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 -1D,
                 stockOvernightScale,
@@ -163,7 +163,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 0D,
@@ -185,7 +185,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 -1D,
@@ -394,7 +394,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getInstrumentIds(),
+            getTickers(),
             new CorrelationSectoralAlgorithmConfigurator(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -452,6 +452,6 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                 )
             );
         exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
+        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getTicker).toList());
     }
 }

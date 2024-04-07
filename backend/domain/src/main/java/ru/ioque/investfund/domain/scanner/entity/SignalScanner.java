@@ -121,8 +121,8 @@ public class SignalScanner extends Domain {
         return List.copyOf(finInstruments);
     }
 
-    public List<UUID> getObjectIds() {
-        return List.copyOf(finInstruments.stream().map(FinInstrument::getId).toList());
+    public List<String> getTickers() {
+        return List.copyOf(finInstruments.stream().map(FinInstrument::getTicker).toList());
     }
 
     public List<Signal> getSignals() {

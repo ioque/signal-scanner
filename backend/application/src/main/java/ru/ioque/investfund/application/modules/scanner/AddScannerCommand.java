@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -18,19 +17,19 @@ import java.util.UUID;
 public class AddScannerCommand {
     Integer workPeriodInMinutes;
     String description;
-    List<UUID> objectIds;
+    List<String> tickers;
     AlgorithmConfigurator algorithmConfigurator;
 
     @Builder
     public AddScannerCommand(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         AlgorithmConfigurator algorithmConfigurator
     ) {
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
-        this.objectIds = objectIds;
+        this.tickers = tickers;
         this.algorithmConfigurator = algorithmConfigurator;
     }
 }

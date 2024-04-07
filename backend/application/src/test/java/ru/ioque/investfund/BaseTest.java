@@ -89,7 +89,7 @@ public class BaseTest {
     protected void addScanner(
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         AlgorithmConfigurator config
     ) {
         dataScannerManager()
@@ -97,7 +97,7 @@ public class BaseTest {
                 AddScannerCommand.builder()
                     .workPeriodInMinutes(workPeriodInMinutes)
                     .description(description)
-                    .objectIds(objectIds)
+                    .tickers(tickers)
                     .algorithmConfigurator(config)
                     .build()
             );
@@ -168,8 +168,8 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected List<UUID> getInstrumentIds() {
-        return getInstruments().stream().map(Instrument::getId).toList();
+    protected List<String> getTickers() {
+        return getInstruments().stream().map(Instrument::getTicker).toList();
     }
 
     protected Deal buildBuyDealBy(Long number, String ticker, String localTime, Double price, Double value, Integer qnt) {

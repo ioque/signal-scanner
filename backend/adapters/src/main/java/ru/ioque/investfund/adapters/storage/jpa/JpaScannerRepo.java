@@ -38,7 +38,7 @@ public class JpaScannerRepo implements ScannerRepository {
     public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
-            .map(row -> row.toDomain(finInstrumentRepository.getByIdIn(row.getObjectIds())));
+            .map(row -> row.toDomain(finInstrumentRepository.getBy(row.getObjectIds())));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class JpaScannerRepo implements ScannerRepository {
         return signalScannerEntityRepository
             .findAll()
             .stream()
-            .map(row -> row.toDomain(finInstrumentRepository.getByIdIn(row.getObjectIds())))
+            .map(row -> row.toDomain(finInstrumentRepository.getBy(row.getObjectIds())))
             .toList();
     }
 

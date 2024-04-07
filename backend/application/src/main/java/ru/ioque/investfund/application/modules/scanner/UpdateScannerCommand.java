@@ -19,7 +19,7 @@ public class UpdateScannerCommand {
     UUID id;
     Integer workPeriodInMinutes;
     String description;
-    List<UUID> objectIds;
+    List<String> tickers;
     AlgorithmConfigurator algorithmConfigurator;
 
     @Builder
@@ -27,13 +27,13 @@ public class UpdateScannerCommand {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        List<UUID> objectIds,
+        List<String> tickers,
         AlgorithmConfigurator algorithmConfigurator
     ) {
         this.id = id;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
-        this.objectIds = objectIds;
+        this.tickers = tickers;
         this.algorithmConfigurator = algorithmConfigurator;
     }
 }

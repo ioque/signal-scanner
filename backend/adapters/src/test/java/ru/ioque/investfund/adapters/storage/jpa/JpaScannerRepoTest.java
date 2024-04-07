@@ -51,7 +51,7 @@ public class JpaScannerRepoTest extends BaseJpaTest {
             .workPeriodInMinutes(1)
             .description("description")
             .algorithm(new AnomalyVolumeAlgorithmConfigurator(1.5, 180, "IMOEX").factoryAlgorithm())
-            .finInstruments(finInstrumentRepository.getByIdIn(List.of(AFKS_ID)))
+            .finInstruments(finInstrumentRepository.getBy(List.of(AFKS_ID)))
             .build());
 
         assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).isPresent());
