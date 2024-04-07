@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

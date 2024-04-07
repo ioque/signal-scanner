@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.io.Serializable;
 import java.util.UUID;

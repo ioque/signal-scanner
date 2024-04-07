@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.util.UUID;
 

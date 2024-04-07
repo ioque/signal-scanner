@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.entity;
+package ru.ioque.investfund.domain.datasource.entity;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -7,8 +7,8 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

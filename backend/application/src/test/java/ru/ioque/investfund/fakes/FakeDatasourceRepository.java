@@ -3,7 +3,7 @@ package ru.ioque.investfund.fakes;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.time.LocalDate;
 import java.util.Optional;

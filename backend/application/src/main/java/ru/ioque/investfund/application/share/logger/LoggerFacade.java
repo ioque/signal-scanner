@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;

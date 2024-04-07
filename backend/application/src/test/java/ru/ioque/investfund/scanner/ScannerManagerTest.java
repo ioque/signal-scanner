@@ -8,8 +8,8 @@ import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Stock;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;

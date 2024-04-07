@@ -2,13 +2,13 @@ package ru.ioque.investfund.fixture;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import ru.ioque.investfund.domain.exchange.entity.CurrencyPair;
-import ru.ioque.investfund.domain.exchange.entity.Futures;
-import ru.ioque.investfund.domain.exchange.entity.Index;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
+import ru.ioque.investfund.domain.datasource.entity.Futures;
+import ru.ioque.investfund.domain.datasource.entity.Index;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.ArrayList;
 import java.util.List;

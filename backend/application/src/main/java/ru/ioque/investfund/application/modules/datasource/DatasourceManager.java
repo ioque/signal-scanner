@@ -12,8 +12,8 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
-import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 
 import java.util.List;
 import java.util.function.Supplier;

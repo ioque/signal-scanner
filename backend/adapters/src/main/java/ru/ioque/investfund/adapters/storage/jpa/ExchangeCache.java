@@ -2,7 +2,7 @@ package ru.ioque.investfund.adapters.storage.jpa;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.util.Optional;
 

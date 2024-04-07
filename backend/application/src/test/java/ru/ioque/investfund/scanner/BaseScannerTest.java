@@ -3,7 +3,7 @@ package ru.ioque.investfund.scanner;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
-import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.Signal;

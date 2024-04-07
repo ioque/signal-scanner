@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.util.ArrayList;
 import java.util.UUID;

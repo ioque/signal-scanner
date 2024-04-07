@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.entity;
+package ru.ioque.investfund.domain.datasource.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,24 +16,30 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CurrencyPair extends Instrument {
+public class Stock extends Instrument {
     Integer lotSize;
-    String faceUnit;
+    String isin;
+    String regNumber;
+    Integer listLevel;
 
     @Builder
-    public CurrencyPair(
+    public Stock(
         UUID id,
         String ticker,
         String shortName,
         String name,
         Boolean updatable,
         Integer lotSize,
-        String faceUnit,
+        String isin,
+        String regNumber,
+        Integer listLevel,
         List<IntradayValue> intradayValues,
         List<HistoryValue> historyValues
     ) {
         super(id, ticker, shortName, name, updatable, intradayValues, historyValues);
         this.lotSize = lotSize;
-        this.faceUnit = faceUnit;
+        this.isin = isin;
+        this.regNumber = regNumber;
+        this.listLevel = listLevel;
     }
 }

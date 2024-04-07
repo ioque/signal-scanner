@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.event;
+package ru.ioque.investfund.domain.datasource.event;
 
 import ru.ioque.investfund.domain.core.DomainEvent;
 

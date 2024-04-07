@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
 

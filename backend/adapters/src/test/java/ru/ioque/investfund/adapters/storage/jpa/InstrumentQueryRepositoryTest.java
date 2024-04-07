@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.util.List;
 import java.util.UUID;

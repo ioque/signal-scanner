@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
 

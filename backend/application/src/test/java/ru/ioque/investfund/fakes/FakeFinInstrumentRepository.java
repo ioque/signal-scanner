@@ -3,7 +3,7 @@ package ru.ioque.investfund.fakes;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 

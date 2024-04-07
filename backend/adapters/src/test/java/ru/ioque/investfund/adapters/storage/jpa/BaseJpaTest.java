@@ -10,11 +10,11 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.exchange.entity.Index;
-import ru.ioque.investfund.domain.exchange.entity.Stock;
-import ru.ioque.investfund.domain.exchange.value.Deal;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.entity.Index;
+import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.value.Deal;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

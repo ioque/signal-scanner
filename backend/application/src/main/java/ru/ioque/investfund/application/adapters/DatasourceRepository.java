@@ -1,6 +1,6 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.time.LocalDate;
 import java.util.Optional;

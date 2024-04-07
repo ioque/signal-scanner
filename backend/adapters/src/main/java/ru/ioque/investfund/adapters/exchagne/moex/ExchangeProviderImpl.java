@@ -10,9 +10,9 @@ import ru.ioque.investfund.adapters.exchagne.moex.client.dto.history.HistoryValu
 import ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.application.adapters.ExchangeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
 import java.util.List;

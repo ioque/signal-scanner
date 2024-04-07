@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.entity;
+package ru.ioque.investfund.domain.datasource.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;

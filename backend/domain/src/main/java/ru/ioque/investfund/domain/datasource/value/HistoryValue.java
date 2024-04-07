@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.exchange.value;
+package ru.ioque.investfund.domain.datasource.value;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -13,7 +13,7 @@ import ru.ioque.investfund.adapters.storage.jpa.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.time.LocalDate;
 import java.util.List;

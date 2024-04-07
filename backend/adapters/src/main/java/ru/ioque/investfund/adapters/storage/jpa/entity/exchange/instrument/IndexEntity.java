@@ -12,10 +12,10 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.ExchangeEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.domain.exchange.entity.Index;
-import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.entity.Index;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.List;
 import java.util.UUID;

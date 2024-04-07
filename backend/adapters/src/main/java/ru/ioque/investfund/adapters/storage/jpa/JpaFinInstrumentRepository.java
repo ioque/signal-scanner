@@ -9,8 +9,8 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
-import ru.ioque.investfund.domain.exchange.value.HistoryValue;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 

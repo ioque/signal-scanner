@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.exchange.value.Contract;
-import ru.ioque.investfund.domain.exchange.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Contract;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
 

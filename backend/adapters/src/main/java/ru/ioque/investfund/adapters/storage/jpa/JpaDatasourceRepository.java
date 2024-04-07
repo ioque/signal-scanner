@@ -15,7 +15,7 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepos
 import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
-import ru.ioque.investfund.domain.exchange.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 
 import java.time.LocalDate;
 import java.util.Optional;
