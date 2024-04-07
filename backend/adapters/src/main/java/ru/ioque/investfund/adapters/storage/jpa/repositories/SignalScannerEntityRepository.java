@@ -1,8 +1,8 @@
 package ru.ioque.investfund.adapters.storage.jpa.repositories;
 
 import org.springframework.stereotype.Repository;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
 
 @Repository
-public interface SignalScannerEntityRepository extends AbstractEntityRepository<SignalScannerEntity> {
+public interface SignalScannerEntityRepository extends AbstractEntityRepository<ScannerEntity> {
 }

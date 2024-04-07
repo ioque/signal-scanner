@@ -152,9 +152,8 @@ create table if not exists signal
 (
     is_buy        boolean not null,
     date_time     timestamp(6),
-    id            bigserial
-        primary key,
-    instrument_id uuid,
+    id            bigserial primary key,
+    ticker varchar not null,
     scanner_id    uuid    not null
         constraint fk8d7bbd3drg5o11f0nu4x8rp3w
             references signal_scanner

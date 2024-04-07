@@ -10,7 +10,9 @@ import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRep
 import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.domain.datasource.entity.Exchange;
 import ru.ioque.investfund.domain.datasource.entity.Index;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
@@ -18,10 +20,14 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Transactional
 @SpringBootTest
 public class BaseJpaTest {
+    protected static final UUID EXCHANGE_ID = UUID.randomUUID();
+
     @Autowired
     protected UUIDProvider uuidProvider;
     @Autowired
@@ -41,6 +47,20 @@ public class BaseJpaTest {
         instrumentEntityRepository.deleteAll();
         intradayValueEntityRepository.deleteAll();
         historyValueEntityRepository.deleteAll();
+    }
+
+    protected void prepareExchange(List<Instrument> instruments) {
+        datasourceRepository.save(createExchange(instruments));
+    }
+
+    private Exchange createExchange(List<Instrument> instruments) {
+        return new Exchange(
+            EXCHANGE_ID,
+            "Московская биржа",
+            "https://moex.com",
+            "description",
+            instruments
+        );
     }
 
     protected Stock.StockBuilder buildAfks() {

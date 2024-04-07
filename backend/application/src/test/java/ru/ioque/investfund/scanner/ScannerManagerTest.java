@@ -156,8 +156,7 @@ public class ScannerManagerTest extends BaseTest {
         );
         int qnt = fakeDataScannerStorage().getAll().get(0).getTickers().size();
 
-        dataScannerManager()
-            .updateScanner(
+        updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
@@ -192,8 +191,7 @@ public class ScannerManagerTest extends BaseTest {
             )
         );
 
-        dataScannerManager()
-            .updateScanner(
+        updateScanner(
                 new UpdateScannerCommand(
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
@@ -220,8 +218,7 @@ public class ScannerManagerTest extends BaseTest {
         UUID id = UUID.randomUUID();
         var error = assertThrows(
             ApplicationException.class,
-            () -> dataScannerManager()
-                .updateScanner(
+            () -> updateScanner(
                     new UpdateScannerCommand(
                         id,
                         1,
@@ -256,8 +253,7 @@ public class ScannerManagerTest extends BaseTest {
         );
         var error = assertThrows(
             DomainException.class,
-            () -> dataScannerManager()
-                .updateScanner(
+            () -> updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         1,
@@ -292,8 +288,7 @@ public class ScannerManagerTest extends BaseTest {
         );
         var error = assertThrows(
             DomainException.class,
-            () -> dataScannerManager()
-                .updateScanner(
+            () -> updateScanner(
                     new UpdateScannerCommand(
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         1,

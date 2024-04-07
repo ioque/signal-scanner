@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
 import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("CorrelationSectoralScannerEntity")
-public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
+public class CorrelationSectoralScannerEntity extends ScannerEntity {
     Double futuresOvernightScale;
     Double stockOvernightScale;
     String futuresTicker;
@@ -48,7 +50,22 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
         this.futuresTicker = futuresTicker;
     }
 
-    public static SignalScannerEntity from(SignalScanner signalScanner) {
+    public static ScannerEntity from(SignalScannerConfig config) {
+        CorrelationSectoralAlgorithmConfig algorithmConfig = (CorrelationSectoralAlgorithmConfig) config.getAlgorithmConfig();
+        return CorrelationSectoralScannerEntity.builder()
+            .id(config.getId())
+            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
+            .description(config.getDescription())
+            .tickers(config.getTickers())
+            .lastWorkDateTime(null)
+            .signals(new ArrayList<>())
+            .futuresOvernightScale(algorithmConfig.getFuturesOvernightScale())
+            .stockOvernightScale(algorithmConfig.getStockOvernightScale())
+            .futuresTicker(algorithmConfig.getFuturesTicker())
+            .build();
+    }
+
+    public static ScannerEntity from(SignalScanner signalScanner) {
         CorrelationSectoralAlgorithm algorithm = (CorrelationSectoralAlgorithm) signalScanner.getAlgorithm();
         return CorrelationSectoralScannerEntity.builder()
             .id(signalScanner.getId())
@@ -82,5 +99,13 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
             .build();
+    }
+
+    @Override
+    public void updateConfig(SignalScannerConfig config) {
+        CorrelationSectoralAlgorithmConfig algorithmConfig = (CorrelationSectoralAlgorithmConfig) config.getAlgorithmConfig();
+        this.futuresOvernightScale = algorithmConfig.getFuturesOvernightScale();
+        this.stockOvernightScale = algorithmConfig.getStockOvernightScale();
+        this.futuresTicker = algorithmConfig.getFuturesTicker();
     }
 }

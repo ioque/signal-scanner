@@ -34,7 +34,7 @@ public class SignalEntity {
     Long id;
     @ManyToOne
     @JoinColumn(name="scanner_id", nullable=false)
-    SignalScannerEntity scanner;
+    ScannerEntity scanner;
     String ticker;
     boolean isBuy;
     LocalDateTime dateTime;

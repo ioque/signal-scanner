@@ -1,8 +1,10 @@
 package ru.ioque.investfund;
 
+import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
+import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Exchange;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
@@ -69,6 +71,10 @@ public class BaseTest {
         return fakeDIContainer.getDatasourceManager();
     }
 
+    protected final ScannerConfigurator scannerConfigurator() {
+        return fakeDIContainer.getScannerConfigurator();
+    }
+
     protected final FakeEventBus eventBus() {
         return fakeDIContainer.getEventBus();
     }
@@ -92,8 +98,8 @@ public class BaseTest {
         List<String> tickers,
         AlgorithmConfig config
     ) {
-        dataScannerManager()
-            .addNewScanner(
+        scannerConfigurator()
+            .addNewConfig(
                 AddScannerCommand.builder()
                     .workPeriodInMinutes(workPeriodInMinutes)
                     .description(description)
@@ -101,6 +107,10 @@ public class BaseTest {
                     .algorithmConfig(config)
                     .build()
             );
+    }
+
+    protected void updateScanner(UpdateScannerCommand command) {
+        scannerConfigurator().updateConfig(command);
     }
 
     protected List<Instrument> getInstruments() {

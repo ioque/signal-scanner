@@ -3,6 +3,7 @@ package ru.ioque.investfund.fakes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
@@ -21,6 +22,7 @@ public class FakeDIContainer {
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository exchangeRepository;
     LoggerFacade loggerFacade;
+    ScannerConfigurator scannerConfigurator;
     ScannerManager scannerManager;
     DatasourceManager datasourceManager;
     FakeEventBus eventBus;
@@ -45,11 +47,12 @@ public class FakeDIContainer {
             loggerFacade,
             eventBus
         );
+        scannerConfigurator = new ScannerConfigurator(
+            scannerRepository, uuidProvider, loggerFacade
+        );
         scannerManager = new ScannerManager(
             scannerRepository,
-            scannerRepository,
             scannerLogRepository,
-            uuidProvider,
             dateTimeProvider,
             loggerFacade
         );

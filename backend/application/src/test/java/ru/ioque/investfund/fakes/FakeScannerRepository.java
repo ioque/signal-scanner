@@ -22,8 +22,27 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
     }
 
     @Override
-    public Optional<SignalScanner> getBy(UUID id) {
-        updateTradingSnapshots(id);
+    public void save(SignalScanner dataScanner) {
+        this.scannerMap.put(dataScanner.getId(), dataScanner);
+    }
+
+    @Override
+    public List<SignalScanner> getAll() {
+        scannerMap.values().stream().map(SignalScanner::getId).forEach(this::updateTradingSnapshots);
+        return scannerMap.values().stream().toList();
+    }
+
+    @Override
+    public void save(SignalScannerConfig config) {
+        scannerMap.put(config.getId(), map(config));
+    }
+
+    @Override
+    public boolean existsBy(UUID id) {
+        return scannerMap.containsKey(id);
+    }
+
+    private Optional<SignalScanner> getBy(UUID id) {
         return Optional.ofNullable(scannerMap.get(id));
     }
 
@@ -54,21 +73,5 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
             .lastExecutionDateTime(getBy(config.getId()).map(SignalScanner::getLastExecutionDateTime).flatMap(r -> r).orElse(null))
             .tradingSnapshots(finInstrumentRepository.getBy(config.getTickers()))
             .build();
-    }
-
-    @Override
-    public void save(SignalScanner dataScanner) {
-        this.scannerMap.put(dataScanner.getId(), dataScanner);
-    }
-
-    @Override
-    public List<SignalScanner> getAll() {
-        scannerMap.values().stream().map(SignalScanner::getId).forEach(this::updateTradingSnapshots);
-        return scannerMap.values().stream().toList();
-    }
-
-    @Override
-    public void save(SignalScannerConfig config) {
-        scannerMap.put(config.getId(), map(config));
     }
 }

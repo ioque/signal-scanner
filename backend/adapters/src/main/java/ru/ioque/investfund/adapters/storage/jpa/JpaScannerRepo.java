@@ -9,16 +9,16 @@ import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.AnomalyVolumeScan
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSectoralScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SectoralRetardScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalScannerEntity;
+import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard.SectoralRetardAlgorithm;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,6 @@ public class JpaScannerRepo implements ScannerRepository {
     SignalScannerEntityRepository signalScannerEntityRepository;
     FinInstrumentRepository finInstrumentRepository;
 
-    @Override
     @Transactional(readOnly = true)
     public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
@@ -57,11 +56,11 @@ public class JpaScannerRepo implements ScannerRepository {
             .toList();
     }
 
-    private SignalScannerEntity toEntity(SignalScanner dataScanner) {
+    private ScannerEntity toEntity(SignalScanner dataScanner) {
         return mappers.get(dataScanner.getAlgorithm().getClass()).apply(dataScanner);
     }
 
-    Map<Class<? extends ScannerAlgorithm>, Function<SignalScanner, SignalScannerEntity>> mappers = Map.of(
+    Map<Class<? extends ScannerAlgorithm>, Function<SignalScanner, ScannerEntity>> mappers = Map.of(
         AnomalyVolumeAlgorithm.class, AnomalyVolumeScannerEntity::from,
         SectoralRetardAlgorithm.class, SectoralRetardScannerEntity::from,
         CorrelationSectoralAlgorithm.class, CorrelationSectoralScannerEntity::from,

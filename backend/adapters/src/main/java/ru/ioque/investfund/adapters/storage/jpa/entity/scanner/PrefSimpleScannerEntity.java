@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.prefsimplepair.PrefSimpleAlgorithm;
 import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("PrefSimpleScannerEntity")
-public class PrefSimpleScannerEntity extends SignalScannerEntity {
+public class PrefSimpleScannerEntity extends ScannerEntity {
     Double spreadParam;
 
     @Builder
@@ -42,7 +44,20 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
         this.spreadParam = spreadParam;
     }
 
-    public static SignalScannerEntity from(SignalScanner signalScanner) {
+    public static ScannerEntity from(SignalScannerConfig config) {
+        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config.getAlgorithmConfig();
+        return PrefSimpleScannerEntity.builder()
+            .id(config.getId())
+            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
+            .description(config.getDescription())
+            .tickers(config.getTickers())
+            .lastWorkDateTime(null)
+            .signals(new ArrayList<>())
+            .spreadParam(algorithmConfig.getSpreadParam())
+            .build();
+    }
+
+    public static ScannerEntity from(SignalScanner signalScanner) {
         PrefSimpleAlgorithm algorithm = (PrefSimpleAlgorithm) signalScanner.getAlgorithm();
         return PrefSimpleScannerEntity.builder()
             .id(signalScanner.getId())
@@ -72,5 +87,11 @@ public class PrefSimpleScannerEntity extends SignalScannerEntity {
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
             .build();
+    }
+
+    @Override
+    public void updateConfig(SignalScannerConfig config) {
+        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config.getAlgorithmConfig();
+        this.spreadParam = algorithmConfig.getSpreadParam();
     }
 }

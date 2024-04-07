@@ -5,27 +5,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
-import ru.ioque.investfund.domain.datasource.entity.Exchange;
-import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithm;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.value.Signal;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("JPA_SIGNAL_SCANNER_REPO")
+@DisplayName("SCANNER REPOSITORY")
 public class JpaScannerRepoTest extends BaseJpaTest {
     DatasourceRepository datasourceRepository;
     FinInstrumentRepository finInstrumentRepository;
     JpaScannerRepo dataJpaScannerRepo;
 
     private static final UUID SCANNER_ID = UUID.randomUUID();
-    private static final UUID EXCHANGE_ID = UUID.randomUUID();
-    private static final UUID AFKS_ID = UUID.randomUUID();
 
     public JpaScannerRepoTest(
         @Autowired JpaScannerRepo dataJpaScannerRepo,
@@ -39,59 +38,48 @@ public class JpaScannerRepoTest extends BaseJpaTest {
 
     @Test
     @DisplayName("""
-        T1. Сохранение сканера сигналов в постоянное хранилище через JPA.
+        T1. Сохранение сканера сигналов в постоянное хранилище.
         В постоянном хранилище инструментов есть данные по инструменту.
         """)
     void test1() {
-        prepareExchange();
+        prepareExchange(List.of(buildAfks().build()));
+        LocalDateTime now = LocalDateTime.now();
 
         dataJpaScannerRepo.save(SignalScanner
             .builder()
             .id(SCANNER_ID)
             .workPeriodInMinutes(1)
             .description("description")
+            .signals(List.of(new Signal(now, "AFKS", true)))
+            .lastExecutionDateTime(now)
             .algorithm(new AnomalyVolumeAlgorithmConfig(1.5, 180, "IMOEX").factoryAlgorithm())
             .tradingSnapshots(finInstrumentRepository.getBy(List.of("AFKS")))
             .build());
 
-        assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).isPresent());
-        assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).get().getSignals().isEmpty());
-        assertEquals(1, dataJpaScannerRepo.getBy(SCANNER_ID).get().getTradingSnapshots().size());
-        assertEquals("AFKS", dataJpaScannerRepo.getBy(SCANNER_ID).get().getTradingSnapshots().get(0).getTicker());
+        Optional<SignalScanner> scanner = dataJpaScannerRepo.getBy(SCANNER_ID);
+        assertTrue(scanner.isPresent());
+        assertEquals(1, scanner.get().getSignals().size());
+        assertEquals(now, scanner.get().getSignals().get(0).getDateTime());
+        assertEquals("AFKS", scanner.get().getSignals().get(0).getTicker());
+        assertTrue(scanner.get().getLastExecutionDateTime().isPresent());
+        assertEquals(now, scanner.get().getLastExecutionDateTime().get());
+        assertEquals(1, scanner.get().getTradingSnapshots().size());
+        assertEquals("AFKS", scanner.get().getTradingSnapshots().get(0).getTicker());
         assertEquals(
             AnomalyVolumeAlgorithm.class,
-            dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm().getClass()
+            scanner.get().getAlgorithm().getClass()
         );
         assertEquals(
             180,
-            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getHistoryPeriod()
+            ((AnomalyVolumeAlgorithm) scanner.get().getAlgorithm()).getHistoryPeriod()
         );
         assertEquals(
             "IMOEX",
-            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getIndexTicker()
+            ((AnomalyVolumeAlgorithm) scanner.get().getAlgorithm()).getIndexTicker()
         );
         assertEquals(
             1.5,
-            ((AnomalyVolumeAlgorithm) dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm()).getScaleCoefficient()
+            ((AnomalyVolumeAlgorithm) scanner.get().getAlgorithm()).getScaleCoefficient()
         );
-    }
-
-    private void prepareExchange() {
-        datasourceRepository.save(getExchange());
-    }
-
-    private static Stock getAfks() {
-        return Stock
-            .builder()
-            .id(AFKS_ID)
-            .ticker("AFKS")
-            .name("АФК «Система»")
-            .shortName("ао Система")
-            .listLevel(1)
-            .build();
-    }
-
-    private Exchange getExchange() {
-        return new Exchange(EXCHANGE_ID, "Московская биржа", "https://moex.com", "description", List.of(getAfks()));
     }
 }
