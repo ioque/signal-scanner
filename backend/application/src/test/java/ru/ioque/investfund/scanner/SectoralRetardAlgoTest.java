@@ -291,7 +291,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         exchangeManager().enableUpdate(getInstrumentIds());
     }
 

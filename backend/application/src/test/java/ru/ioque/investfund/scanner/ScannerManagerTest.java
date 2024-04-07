@@ -32,7 +32,7 @@ public class ScannerManagerTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
     }
 
     @Test

@@ -48,7 +48,7 @@ public class ExchangeManagerTest extends BaseTest {
             afks()
         );
 
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         final Optional<Exchange> exchange = exchangeRepository().getBy(dateTimeProvider().nowDate());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
@@ -74,11 +74,11 @@ public class ExchangeManagerTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         clearLogs();
 
         final var id = exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId();
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         assertEquals(10, getInstruments().size());
         assertEquals(id, exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId());
     }
@@ -92,10 +92,10 @@ public class ExchangeManagerTest extends BaseTest {
     void testCase3() {
         initInstruments(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         clearLogs();
         initInstruments(afks(), imoex(), brf4(), lkoh(), rosn(), sibn());
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         assertEquals(6, getInstruments().size());
     }
 
@@ -118,7 +118,7 @@ public class ExchangeManagerTest extends BaseTest {
                 .lotSize(10000)
                 .build()
         ));
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         assertEquals(1, getInstruments().size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(loggerProvider().logContainsMessageParts(
@@ -137,7 +137,7 @@ public class ExchangeManagerTest extends BaseTest {
     void testCase5() {
         exchangeDataFixture().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         clearLogs();
         initDealDatas(
                 buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),

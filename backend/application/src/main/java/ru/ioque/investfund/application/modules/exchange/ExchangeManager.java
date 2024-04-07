@@ -58,7 +58,7 @@ public class ExchangeManager implements SystemModule {
         repository.save(exchange);
     }
 
-    public synchronized void integrateWithDataSource() {
+    public synchronized void integrateInstruments() {
         final Exchange exchange = getExchangeFromRepo();
         loggerFacade.logRunSynchronizeWithDataSource(exchange.getName(), dateTimeProvider.nowDateTime());
         exchangeProvider.fetchInstruments(exchange.getUrl()).forEach(exchange::saveInstrument);

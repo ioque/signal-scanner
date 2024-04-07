@@ -34,7 +34,7 @@ public class ExchangeCommandController {
 
     @PostMapping("/api/integrate")
     public void integrateInstruments() {
-        exchangeManager.integrateWithDataSource();
+        exchangeManager.integrateInstruments();
     }
 
     @PostMapping("/api/daily-integrate")

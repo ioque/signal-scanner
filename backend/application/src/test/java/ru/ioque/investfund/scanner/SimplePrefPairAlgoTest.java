@@ -441,7 +441,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sber(),
             sberP()
         );
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         exchangeManager().enableUpdate(getInstrumentIds());
     }
 

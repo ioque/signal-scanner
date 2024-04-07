@@ -451,7 +451,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getId).toList());
     }
 }

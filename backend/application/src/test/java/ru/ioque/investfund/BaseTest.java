@@ -136,7 +136,7 @@ public class BaseTest {
 
     protected void integrateInstruments(Instrument... instruments) {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
     }
 
     protected void initInstruments(Instrument... instruments) {

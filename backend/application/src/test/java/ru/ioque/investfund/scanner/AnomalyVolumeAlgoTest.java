@@ -671,7 +671,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        exchangeManager().integrateWithDataSource();
+        exchangeManager().integrateInstruments();
         exchangeManager().enableUpdate(getInstrumentIds());
     }
 
