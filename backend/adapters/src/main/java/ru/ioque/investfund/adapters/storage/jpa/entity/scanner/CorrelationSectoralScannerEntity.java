@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.correlationsectoral.CorrelationSectoralAlgorithmConfigurator;
@@ -64,7 +64,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
     }
 
     @Override
-    public SignalScanner toDomain(List<FinInstrument> instruments) {
+    public SignalScanner toDomain(List<TradingSnapshot> tradingSnapshots) {
         return SignalScanner.builder()
             .id(getId())
             .algorithm(
@@ -78,7 +78,7 @@ public class CorrelationSectoralScannerEntity extends SignalScannerEntity {
             )
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .finInstruments(instruments)
+            .tradingSnapshots(tradingSnapshots)
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
             .build();

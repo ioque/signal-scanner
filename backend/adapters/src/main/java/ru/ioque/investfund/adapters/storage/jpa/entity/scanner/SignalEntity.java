@@ -18,7 +18,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -36,14 +35,14 @@ public class SignalEntity {
     @ManyToOne
     @JoinColumn(name="scanner_id", nullable=false)
     SignalScannerEntity scanner;
-    UUID instrumentId;
+    String ticker;
     boolean isBuy;
     LocalDateTime dateTime;
 
     public Signal toDomain() {
         return Signal.builder()
             .dateTime(dateTime)
-            .instrumentId(instrumentId)
+            .ticker(ticker)
             .isBuy(isBuy)
             .build();
     }
@@ -51,7 +50,7 @@ public class SignalEntity {
     public static SignalEntity from(Signal signal) {
         return SignalEntity.builder()
             .dateTime(signal.getDateTime())
-            .instrumentId(signal.getInstrumentId())
+            .ticker(signal.getTicker())
             .isBuy(signal.isBuy())
             .build();
     }

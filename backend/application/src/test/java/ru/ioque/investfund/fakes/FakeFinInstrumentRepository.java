@@ -4,7 +4,7 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.FinInstrumentRepository;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
     }
 
     @Override
-    public List<FinInstrument> getBy(List<String> tickers) {
+    public List<TradingSnapshot> getBy(List<String> tickers) {
         if (tickers == null || tickers.isEmpty()) return List.of();
         return tickers.stream().map(ticker -> {
             Instrument instrument = datasourceRepository
@@ -31,8 +31,7 @@ public class FakeFinInstrumentRepository implements FinInstrumentRepository {
                 .filter(row -> row.getTicker().equals(ticker))
                 .findFirst()
                 .orElseThrow();
-            return FinInstrument.builder()
-                .instrumentId(instrument.getId())
+            return TradingSnapshot.builder()
                 .ticker(instrument.getTicker())
                 .waPriceSeries(instrument
                     .getHistoryValues()

@@ -2,7 +2,7 @@ package ru.ioque.investfund.domain.scanner.value;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class PrefSimplePair {
-    FinInstrument pref;
-    FinInstrument simple;
+    TradingSnapshot pref;
+    TradingSnapshot simple;
 
     public Double getCurrentDelta() {
         var simplePrice = simple.getTodayLastPrice();

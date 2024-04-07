@@ -1,10 +1,11 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.core.Domain;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.time.DayOfWeek;
@@ -12,13 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-@Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class FinInstrument extends Domain {
+@Builder
+@ToString
+@AllArgsConstructor
+@Getter(AccessLevel.PUBLIC)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class TradingSnapshot {
     String ticker;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
@@ -26,28 +29,6 @@ public class FinInstrument extends Domain {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
-
-
-    @Builder
-    public FinInstrument(
-        UUID instrumentId,
-        String ticker,
-        List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
-        List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
-        List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
-        List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries,
-        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
-        List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
-    ) {
-        super(instrumentId);
-        this.ticker = ticker;
-        this.closePriceSeries = closePriceSeries;
-        this.openPriceSeries = openPriceSeries;
-        this.valueSeries = valueSeries;
-        this.waPriceSeries = waPriceSeries;
-        this.todayPriceSeries = todayPriceSeries;
-        this.todayValueSeries = todayValueSeries;
-    }
 
     public Optional<Double> getHistoryMedianValue() {
         if (valueSeries.size() == 1) return Optional.of(valueSeries.get(0).getValue());
@@ -135,7 +116,20 @@ public class FinInstrument extends Domain {
         return ticker.length() == 5;
     }
 
-    public boolean isSimplePair(FinInstrument finInstrument) {
-        return ticker.substring(0, ticker.length() - 1).equals(finInstrument.getTicker());
+    public boolean isSimplePair(TradingSnapshot tradingSnapshot) {
+        return ticker.substring(0, ticker.length() - 1).equals(tradingSnapshot.getTicker());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        TradingSnapshot that = (TradingSnapshot) object;
+        return Objects.equals(ticker, that.ticker);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticker);
     }
 }

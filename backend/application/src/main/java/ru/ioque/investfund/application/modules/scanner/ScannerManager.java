@@ -65,7 +65,7 @@ public class ScannerManager implements SystemModule {
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
                 .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
-                .finInstruments(finInstrumentRepository.getBy(command.getTickers()))
+                .tradingSnapshots(finInstrumentRepository.getBy(command.getTickers()))
                 .build()
         );
         loggerFacade.logSaveNewDataScanner(id);
@@ -84,7 +84,7 @@ public class ScannerManager implements SystemModule {
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
                 .algorithm(command.getAlgorithmConfigurator().factoryAlgorithm())
-                .finInstruments(finInstrumentRepository.getBy(command.getTickers()))
+                .tradingSnapshots(finInstrumentRepository.getBy(command.getTickers()))
                 .build()
         );
         loggerFacade.logUpdateSignalScanner(command);

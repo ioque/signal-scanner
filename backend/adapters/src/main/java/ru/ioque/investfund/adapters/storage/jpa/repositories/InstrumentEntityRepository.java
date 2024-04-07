@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface InstrumentEntityRepository extends AbstractEntityRepository<InstrumentEntity>,
     JpaSpecificationExecutor<InstrumentEntity> {
 
-    Optional<InstrumentEntity> findByTicker(String ticker);
     List<InstrumentEntity> findAllByTickerIn(List<String> tickers);
 }

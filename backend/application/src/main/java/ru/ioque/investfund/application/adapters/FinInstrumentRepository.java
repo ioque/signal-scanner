@@ -1,9 +1,9 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 
 import java.util.List;
 
 public interface FinInstrumentRepository {
-    List<FinInstrument> getBy(List<String> tickers);
+    List<TradingSnapshot> getBy(List<String> tickers);
 }

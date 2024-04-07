@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -29,17 +29,17 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
-        findAllPrefAndSimplePairs(finInstruments).forEach(pair -> {
+        findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
             logs.add(parametersMessage(pair, currentDelta, historyDelta, multiplier));
             if (multiplier > spreadParam) {
-                signals.add(new Signal(dateTimeNow, pair.getPref().getId(), true));
+                signals.add(new Signal(dateTimeNow, pair.getPref().getTicker(), true));
             }
         });
         logs.add(finishWorkMessage(signals));
@@ -50,23 +50,23 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
             .build();
     }
 
-    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<FinInstrument> finInstruments) {
-        return finInstruments
+    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<TradingSnapshot> tradingSnapshots) {
+        return tradingSnapshots
             .stream()
-            .filter(FinInstrument::isPref)
-            .map(pref -> new PrefSimplePair(pref, findSimplePair(finInstruments, pref)))
+            .filter(TradingSnapshot::isPref)
+            .map(pref -> new PrefSimplePair(pref, findSimplePair(tradingSnapshots, pref)))
             .toList();
     }
 
-    private FinInstrument findSimplePair(
-        List<FinInstrument> finInstruments,
-        FinInstrument finInstrument
+    private TradingSnapshot findSimplePair(
+        List<TradingSnapshot> tradingSnapshots,
+        TradingSnapshot tradingSnapshot
     ) {
-        return finInstruments
+        return tradingSnapshots
             .stream()
-            .filter(finInstrument::isSimplePair)
+            .filter(tradingSnapshot::isSimplePair)
             .findFirst()
-            .orElseThrow(() -> new DomainException("Для привилегированной акции " + finInstrument.getTicker() + " не найдена обычная акция."));
+            .orElseThrow(() -> new DomainException("Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
     }
 
     private ScannerLog runWorkMessage() {

@@ -31,7 +31,7 @@ public class FakeScannerRepository implements ScannerRepository {
             .description(signalScanner.getDescription())
             .signals(signalScanner.getSignals())
             .lastExecutionDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
-            .finInstruments(finInstrumentRepository.getBy(signalScanner.getTickers()))
+            .tradingSnapshots(finInstrumentRepository.getBy(signalScanner.getTickers()))
             .build();
     }
 

@@ -3,7 +3,7 @@ package ru.ioque.investfund.domain.scanner.entity.algorithms.sectoralretard;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -30,15 +30,15 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
         logs.add(runWorkMessage());
-        List<FinInstrument> riseInstruments = getRiseInstruments(finInstruments);
-        List<FinInstrument> otherInstruments = getSectoralRetards(finInstruments, riseInstruments);
+        List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
+        List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
         logs.add(parametersMessage(riseInstruments, otherInstruments));
-        if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / finInstruments.size() * 100) >= 70) {
-            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getId(), true)));
+        if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
+            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getTicker(), true)));
         }
         logs.add(finishWorkMessage(signals));
         return ScanningResult
@@ -49,29 +49,29 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             .build();
     }
 
-    private static List<FinInstrument> getSectoralRetards(
-        List<FinInstrument> finInstruments,
-        List<FinInstrument> riseInstruments
+    private static List<TradingSnapshot> getSectoralRetards(
+        List<TradingSnapshot> tradingSnapshots,
+        List<TradingSnapshot> riseInstruments
     ) {
-        return finInstruments
+        return tradingSnapshots
             .stream()
             .filter(row -> !riseInstruments.contains(row))
             .toList();
     }
 
-    private List<FinInstrument> getRiseInstruments(List<FinInstrument> finInstruments) {
-        return finInstruments
+    private List<TradingSnapshot> getRiseInstruments(List<TradingSnapshot> tradingSnapshots) {
+        return tradingSnapshots
             .stream()
             .filter(row -> row.isRiseInLastTwoDay(historyScale, intradayScale))
             .toList();
     }
 
-    private ScannerLog parametersMessage(List<FinInstrument> riseInstruments, List<FinInstrument> otherInstruments) {
+    private ScannerLog parametersMessage(List<TradingSnapshot> riseInstruments, List<TradingSnapshot> otherInstruments) {
         return new ScannerLog(
             String.format(
                 "Растущие инструменты сектора: %s, секторальные отстающий(е): %s.",
-                riseInstruments.stream().map(FinInstrument::getTicker).toList(),
-                otherInstruments.stream().map(FinInstrument::getTicker).toList()
+                riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
+                otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
             ),
             LocalDateTime.now()
         );

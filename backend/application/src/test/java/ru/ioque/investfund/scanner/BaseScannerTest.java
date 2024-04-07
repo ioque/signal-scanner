@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.domain.exchange.event.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.Signal;
 
@@ -57,48 +57,48 @@ public class BaseScannerTest extends BaseTest {
             .toList();
     }
 
-    protected FinInstrument getImoex() {
+    protected TradingSnapshot getImoex() {
         return getFinInstrumentByTicker(IMOEX);
     }
 
-    protected FinInstrument getTgkb() {
+    protected TradingSnapshot getTgkb() {
         return getFinInstrumentByTicker(TGKB);
     }
 
-    protected FinInstrument getTgkn() {
+    protected TradingSnapshot getTgkn() {
         return getFinInstrumentByTicker(TGKN);
     }
 
-    protected FinInstrument getTatn() {
+    protected TradingSnapshot getTatn() {
         return getFinInstrumentByTicker(TATN);
     }
 
-    protected FinInstrument getBrf4() {
+    protected TradingSnapshot getBrf4() {
         return getFinInstrumentByTicker(BRF4);
     }
-    protected FinInstrument getRosn() {
+    protected TradingSnapshot getRosn() {
         return getFinInstrumentByTicker(ROSN);
     }
-    protected FinInstrument getLkoh() {
+    protected TradingSnapshot getLkoh() {
         return getFinInstrumentByTicker(LKOH);
     }
-    protected FinInstrument getSibn() {
+    protected TradingSnapshot getSibn() {
         return getFinInstrumentByTicker(SIBN);
     }
 
-    protected FinInstrument getSber() {
+    protected TradingSnapshot getSber() {
         return getFinInstrumentByTicker(SBER);
     }
 
-    protected FinInstrument getSberp() {
+    protected TradingSnapshot getSberp() {
         return getFinInstrumentByTicker(SBERP);
     }
 
-    protected FinInstrument getFinInstrumentByTicker(String ticker) {
+    protected TradingSnapshot getFinInstrumentByTicker(String ticker) {
         return fakeDataScannerStorage()
             .getAll()
             .stream()
-            .map(SignalScanner::getFinInstruments)
+            .map(SignalScanner::getTradingSnapshots)
             .flatMap(Collection::stream)
             .filter(row -> row.getTicker().equals(ticker))
             .findFirst()

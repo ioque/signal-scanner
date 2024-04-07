@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -19,14 +18,11 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Signal {
     LocalDateTime dateTime;
-    UUID instrumentId;
+    String ticker;
     boolean isBuy;
 
-    public boolean sameByInstrumentId(Signal signal) {
-        return signal.getInstrumentId().equals(instrumentId);
+    public boolean sameByTicker(Signal signal) {
+        return signal.getTicker().equals(ticker);
     }
 
-    public boolean sameByIsBuy(Signal signal) {
-        return signal.isBuy == this.isBuy;
-    }
 }

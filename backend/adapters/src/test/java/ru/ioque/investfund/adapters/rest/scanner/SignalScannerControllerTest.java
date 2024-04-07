@@ -196,7 +196,7 @@ public class SignalScannerControllerTest extends BaseControllerTest {
             180,
             "IMOEX"
         );
-        scanner.getSignals().add(new SignalEntity(1L, scanner, AFKS_ID, true, LocalDateTime.now()));
+        scanner.getSignals().add(new SignalEntity(1L, scanner, "AFKS", true, LocalDateTime.now()));
         return List.of(scanner);
     }
 }

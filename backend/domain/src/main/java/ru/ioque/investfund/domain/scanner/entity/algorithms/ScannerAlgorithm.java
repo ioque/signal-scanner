@@ -2,7 +2,7 @@ package ru.ioque.investfund.domain.scanner.entity.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 
 import java.time.LocalDateTime;
@@ -16,5 +16,5 @@ public abstract class ScannerAlgorithm {
     public ScannerAlgorithm(String name) {
         this.name = name;
     }
-    public abstract ScanningResult run(UUID scannerId, List<FinInstrument> finInstruments, LocalDateTime dateTimeNow);
+    public abstract ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow);
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.exchange.entity.Instrument;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.AlgorithmConfigurator;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.anomalyvolume.AnomalyVolumeAlgorithmConfigurator;
 
@@ -570,7 +570,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     }
 
     public void assertFinInstrument(
-        FinInstrument finInstrument,
+        TradingSnapshot tradingSnapshot,
         Double openPrice,
         Double lastPrice,
         Double todayValue,
@@ -579,13 +579,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Double prevPrevClosePrice,
         Boolean isRiseToday
     ) {
-        assertEquals(openPrice, finInstrument.getTodayOpenPrice().orElse(null));
-        assertEquals(lastPrice, finInstrument.getTodayLastPrice().orElse(null));
-        assertEquals(todayValue, finInstrument.getTodayValue().orElse(null));
-        assertEquals(historyMedianValue, finInstrument.getHistoryMedianValue().orElse(null));
-        assertEquals(prevClosePrice, finInstrument.getPrevClosePrice().orElse(null));
-        assertEquals(prevPrevClosePrice, finInstrument.getPrevPrevClosePrice().orElse(null));
-        assertEquals(isRiseToday, finInstrument.isRiseToday().orElse(null));
+        assertEquals(openPrice, tradingSnapshot.getTodayOpenPrice().orElse(null));
+        assertEquals(lastPrice, tradingSnapshot.getTodayLastPrice().orElse(null));
+        assertEquals(todayValue, tradingSnapshot.getTodayValue().orElse(null));
+        assertEquals(historyMedianValue, tradingSnapshot.getHistoryMedianValue().orElse(null));
+        assertEquals(prevClosePrice, tradingSnapshot.getPrevClosePrice().orElse(null));
+        assertEquals(prevPrevClosePrice, tradingSnapshot.getPrevPrevClosePrice().orElse(null));
+        assertEquals(isRiseToday, tradingSnapshot.isRiseToday().orElse(null));
     }
 
     private void initTgknBuySignalDataset() {

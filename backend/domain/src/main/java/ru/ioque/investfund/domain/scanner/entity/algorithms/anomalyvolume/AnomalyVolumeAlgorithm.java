@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.FinInstrument;
+import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -43,22 +43,23 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, final List<FinInstrument> finInstruments, LocalDateTime dateTimeNow) {
+    public ScanningResult run(UUID scannerId, final List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
         List<ScannerLog> logs = new ArrayList<>();
-        final Optional<Boolean> indexIsRiseToday = getMarketIndex(finInstruments).isRiseToday();
+        final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         logs.add(runWorkMessage(indexIsRiseToday.orElse(null)));
-        for (final FinInstrument finInstrument : getAnalyzeStatistics(finInstruments)) {
-            final Optional<Double> medianHistoryValue = finInstrument.getHistoryMedianValue();
-            final Optional<Double> value = finInstrument.getTodayValue();
-            if (medianHistoryValue.isEmpty() || value.isEmpty() || indexIsRiseToday.isEmpty() || finInstrument.isRiseToday().isEmpty()) continue;
+        for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
+            final Optional<Double> medianHistoryValue = tradingSnapshot.getHistoryMedianValue();
+            final Optional<Double> value = tradingSnapshot.getTodayValue();
+            if (medianHistoryValue.isEmpty() || value.isEmpty() || indexIsRiseToday.isEmpty() || tradingSnapshot
+                .isRiseToday().isEmpty()) continue;
             final double multiplier = value.get() / medianHistoryValue.get();
-            logs.add(parametersMessage(finInstrument, value.get(), medianHistoryValue.get(), multiplier));
-            if (multiplier > scaleCoefficient && indexIsRiseToday.get() && finInstrument.isRiseToday().get()) {
-                signals.add(new Signal(dateTimeNow, finInstrument.getId(), true));
+            logs.add(parametersMessage(tradingSnapshot, value.get(), medianHistoryValue.get(), multiplier));
+            if (multiplier > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
+                signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), true));
             }
-            if (multiplier > scaleCoefficient && !finInstrument.isRiseToday().get()) {
-                signals.add(new Signal(dateTimeNow, finInstrument.getId(), false));
+            if (multiplier > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
+                signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), false));
             }
         }
         logs.add(finishWorkMessage(signals));
@@ -69,12 +70,12 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             .build();
     }
 
-    private List<FinInstrument> getAnalyzeStatistics(List<FinInstrument> finInstruments) {
-        return finInstruments.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
+    private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {
+        return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
     }
 
-    private FinInstrument getMarketIndex(final List<FinInstrument> finInstruments) {
-        return finInstruments
+    private TradingSnapshot getMarketIndex(final List<TradingSnapshot> tradingSnapshots) {
+        return tradingSnapshots
             .stream()
             .filter(row -> row.getTicker().equals(indexTicker))
             .findFirst()
@@ -82,7 +83,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     private ScannerLog parametersMessage(
-        FinInstrument finInstrument,
+        TradingSnapshot tradingSnapshot,
         double value,
         double waHistoryValue,
         double multiplier
@@ -90,7 +91,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         return new ScannerLog(
             String.format(
                 "Инструмент %s, текущий объем торгов внутри дня: %s, средневзвешенный исторический объем: %s, отношение текущего объема к историческому: %s.",
-                finInstrument.getTicker(),
+                tradingSnapshot.getTicker(),
                 value,
                 waHistoryValue,
                 multiplier

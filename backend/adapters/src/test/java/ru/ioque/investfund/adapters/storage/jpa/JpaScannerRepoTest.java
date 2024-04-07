@@ -51,13 +51,13 @@ public class JpaScannerRepoTest extends BaseJpaTest {
             .workPeriodInMinutes(1)
             .description("description")
             .algorithm(new AnomalyVolumeAlgorithmConfigurator(1.5, 180, "IMOEX").factoryAlgorithm())
-            .finInstruments(finInstrumentRepository.getBy(List.of("AFKS")))
+            .tradingSnapshots(finInstrumentRepository.getBy(List.of("AFKS")))
             .build());
 
         assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).isPresent());
         assertTrue(dataJpaScannerRepo.getBy(SCANNER_ID).get().getSignals().isEmpty());
-        assertEquals(1, dataJpaScannerRepo.getBy(SCANNER_ID).get().getFinInstruments().size());
-        assertEquals("AFKS", dataJpaScannerRepo.getBy(SCANNER_ID).get().getFinInstruments().get(0).getTicker());
+        assertEquals(1, dataJpaScannerRepo.getBy(SCANNER_ID).get().getTradingSnapshots().size());
+        assertEquals("AFKS", dataJpaScannerRepo.getBy(SCANNER_ID).get().getTradingSnapshots().get(0).getTicker());
         assertEquals(
             AnomalyVolumeAlgorithm.class,
             dataJpaScannerRepo.getBy(SCANNER_ID).get().getAlgorithm().getClass()

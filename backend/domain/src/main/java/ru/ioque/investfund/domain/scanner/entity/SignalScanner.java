@@ -32,7 +32,7 @@ public class SignalScanner extends Domain {
     @NonFinal
     LocalDateTime lastExecutionDateTime;
     List<Signal> signals;
-    List<FinInstrument> finInstruments;
+    List<TradingSnapshot> tradingSnapshots;
 
     @Builder
     public SignalScanner(
@@ -41,7 +41,7 @@ public class SignalScanner extends Domain {
         String description,
         ScannerAlgorithm algorithm,
         LocalDateTime lastExecutionDateTime,
-        List<FinInstrument> finInstruments,
+        List<TradingSnapshot> tradingSnapshots,
         List<Signal> signals
     ) {
         super(id);
@@ -50,7 +50,7 @@ public class SignalScanner extends Domain {
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
-        this.finInstruments = finInstruments != null ? new ArrayList<>(finInstruments) : new ArrayList<>();
+        this.tradingSnapshots = tradingSnapshots != null ? new ArrayList<>(tradingSnapshots) : new ArrayList<>();
         validate();
     }
 
@@ -67,7 +67,7 @@ public class SignalScanner extends Domain {
             throw new DomainException("Не передано описание.");
         }
 
-        if (finInstruments == null || finInstruments.isEmpty()) {
+        if (tradingSnapshots == null || tradingSnapshots.isEmpty()) {
             throw new DomainException("Не передан список анализируемых инструментов.");
         }
     }
@@ -77,10 +77,10 @@ public class SignalScanner extends Domain {
     }
 
     public List<ScannerLog> scanning(LocalDateTime dateTimeNow) {
-        if (finInstruments.isEmpty()) {
+        if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
-        return processResult(algorithm.run(getId(), finInstruments, dateTimeNow));
+        return processResult(algorithm.run(getId(), tradingSnapshots, dateTimeNow));
     }
 
     private List<ScannerLog> processResult(ScanningResult scanningResult) {
@@ -91,14 +91,14 @@ public class SignalScanner extends Domain {
             .stream()
             .filter(newSignal -> !newSignal.isBuy())
             .forEach(newSignal -> {
-                    if (oldSignals.stream().anyMatch(oldSignal -> newSignal.sameByInstrumentId(oldSignal)
+                    if (oldSignals.stream().anyMatch(oldSignal -> newSignal.sameByTicker(oldSignal)
                         && oldSignal.isBuy())) {
                         finalSignalList.add(newSignal);
                     }
                 }
             );
         oldSignals.forEach(oldSignal -> {
-            if (newSignals.stream().noneMatch(newSignal -> newSignal.sameByInstrumentId(oldSignal))) {
+            if (newSignals.stream().noneMatch(newSignal -> newSignal.sameByTicker(oldSignal))) {
                 finalSignalList.add(oldSignal);
             }
         });
@@ -117,12 +117,12 @@ public class SignalScanner extends Domain {
         return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
-    public List<FinInstrument> getFinInstruments() {
-        return List.copyOf(finInstruments);
+    public List<TradingSnapshot> getTradingSnapshots() {
+        return List.copyOf(tradingSnapshots);
     }
 
     public List<String> getTickers() {
-        return List.copyOf(finInstruments.stream().map(FinInstrument::getTicker).toList());
+        return List.copyOf(tradingSnapshots.stream().map(TradingSnapshot::getTicker).toList());
     }
 
     public List<Signal> getSignals() {
