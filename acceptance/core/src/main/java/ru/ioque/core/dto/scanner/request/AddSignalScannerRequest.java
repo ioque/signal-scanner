@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.List;
-
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -33,5 +33,6 @@ import java.util.List;
 public abstract class AddSignalScannerRequest implements Serializable {
     Integer workPeriodInMinutes;
     String description;
+    UUID datasourceId;
     List<String> tickers;
 }

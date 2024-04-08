@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.SectoralRetardAlgorithmConfig;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -28,11 +29,12 @@ public class SectoralRetardScannerRequest extends ScannerRequest {
     public SectoralRetardScannerRequest(
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         Double historyScale,
         Double intradayScale
     ) {
-        super(workPeriodInMinutes, description, tickers);
+        super(workPeriodInMinutes, description, datasourceId, tickers);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

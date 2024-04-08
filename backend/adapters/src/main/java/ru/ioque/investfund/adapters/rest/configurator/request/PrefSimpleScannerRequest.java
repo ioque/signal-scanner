@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -23,11 +24,16 @@ public class PrefSimpleScannerRequest extends ScannerRequest {
     Double spreadParam;
 
     @Builder
-    public PrefSimpleScannerRequest(Integer workPeriodInMinutes, String description, List<String> tickers, Double spreadParam) {
-        super(workPeriodInMinutes, description, tickers);
+    public PrefSimpleScannerRequest(
+        Integer workPeriodInMinutes,
+        String description,
+        UUID datasourceId,
+        List<String> tickers,
+        Double spreadParam
+    ) {
+        super(workPeriodInMinutes, description, datasourceId, tickers);
         this.spreadParam = spreadParam;
     }
-
 
     @Override
     public AlgorithmConfig buildConfig() {

@@ -68,6 +68,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .workPeriodInMinutes(1)
                 .scaleCoefficient(1.5)
                 .description("desc")
+                .datasourceId(datasourceId)
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
                 .tickers(getTickers(datasourceId))
@@ -93,6 +94,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
                 .spreadParam(1.0)
@@ -123,6 +125,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
                 .historyScale(0.015)
@@ -155,6 +158,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
                 .futuresTicker("BRF4")
@@ -263,6 +267,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
             AnomalyVolumeScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .scaleCoefficient(1.5)
+                .datasourceId(datasourceId)
                 .description("desc")
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
@@ -363,6 +368,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .workPeriodInMinutes(1)
                 .spreadParam(1D)
                 .description("desc")
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .build()
         );
@@ -492,6 +498,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
                 .historyScale(0.015)
@@ -569,6 +576,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
                 .futuresTicker("BRF4")

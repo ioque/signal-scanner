@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -31,12 +32,13 @@ public class AnomalyVolumeScannerRequest extends ScannerRequest {
     public AnomalyVolumeScannerRequest(
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(workPeriodInMinutes, description, tickers);
+        super(workPeriodInMinutes, description, datasourceId, tickers);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;

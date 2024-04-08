@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -22,9 +23,11 @@ public class PrefSimpleRequest extends AddSignalScannerRequest {
     public PrefSimpleRequest(
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
-        Double spreadParam) {
-        super(workPeriodInMinutes, description, tickers);
+        Double spreadParam
+    ) {
+        super(workPeriodInMinutes, description, datasourceId, tickers);
         this.spreadParam = spreadParam;
     }
 }
