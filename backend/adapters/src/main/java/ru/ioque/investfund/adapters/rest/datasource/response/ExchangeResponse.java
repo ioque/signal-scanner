@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -18,12 +19,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ExchangeResponse implements Serializable {
+    UUID id;
     String name;
     String url;
     String description;
 
     public static ExchangeResponse fromEntity(DatasourceEntity exchange) {
         return ExchangeResponse.builder()
+            .id(exchange.getId())
             .name(exchange.getName())
             .url(exchange.getUrl())
             .description(exchange.getDescription())

@@ -14,7 +14,7 @@ public class ArchiveCommandController {
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
 
-    @PostMapping("/api/archiving")
+    @PostMapping("/api/archive")
     public void archiving() {
         jpaArchivedIntradayValueRepository.archivingIntradayValues();
         jpaIntradayValueRepository.deleteAll();

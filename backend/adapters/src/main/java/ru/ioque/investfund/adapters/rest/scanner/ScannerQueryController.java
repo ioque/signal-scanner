@@ -23,11 +23,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name="ScannerController", description="Контроллер запросов к модулю \"SIGNAL-SCANNER\"")
-public class ScannerController {
+public class ScannerQueryController {
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaInstrumentRepository instrumentEntityRepository;
     JpaScannerLogRepository jpaScannerLogRepository;
-    @GetMapping("/api/signal-scanner")
+    @GetMapping("/api/scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerEntityRepository
             .findAll()
@@ -36,7 +36,7 @@ public class ScannerController {
             .toList();
     }
 
-    @GetMapping("/api/signal-scanner/{id}")
+    @GetMapping("/api/scanner/{id}")
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());

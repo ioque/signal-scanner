@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("SIGNAL SCANNER REST CONTROLLER")
-public class ScannerControllerTest extends BaseControllerTest {
+public class ScannerQueryControllerTest extends BaseControllerTest {
     @Autowired
     ScannerManager scannerManager;
     @Autowired
@@ -41,14 +41,14 @@ public class ScannerControllerTest extends BaseControllerTest {
     @Autowired
     JpaScannerLogRepository jpaScannerLogRepository;
 
-    private static final UUID SIGNAL_PRODUCER_ID = UUID.randomUUID();
+    private static final UUID SIGNAL_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
     private static final UUID IMOEX_ID = UUID.randomUUID();
 
     @Test
     @SneakyThrows
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту GET /api/signal-scanner.
+        T1. Выполнение запроса по эндпоинту GET /api/scanner.
         """)
     public void testCase1() {
         var signalProducers = getSignalScanners();
@@ -58,7 +58,7 @@ public class ScannerControllerTest extends BaseControllerTest {
             .thenReturn(signalProducers);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/signal-scanner"))
+            .perform(MockMvcRequestBuilders.get("/api/scanner"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -77,7 +77,7 @@ public class ScannerControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T2. Выполнение запроса по эндпоинту GET /api/signal-scanner/{id}.
+        T2. Выполнение запроса по эндпоинту GET /api/scanner/{scannerId}.
         """)
     public void testCase2() {
         final ScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
@@ -93,10 +93,10 @@ public class ScannerControllerTest extends BaseControllerTest {
             )
             .thenReturn(instruments);
         Mockito
-            .when(jpaScannerLogRepository.findAllByScannerId(SIGNAL_PRODUCER_ID))
+            .when(jpaScannerLogRepository.findAllByScannerId(SIGNAL_ID))
             .thenReturn(logs);
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/signal-scanner/" + SIGNAL_PRODUCER_ID))
+            .perform(MockMvcRequestBuilders.get("/api/scanner/" + SIGNAL_ID))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -138,14 +138,14 @@ public class ScannerControllerTest extends BaseControllerTest {
                 .id(1L)
                 .dateTime(LocalDateTime.now())
                 .message("msg")
-                .scannerId(SIGNAL_PRODUCER_ID)
+                .scannerId(SIGNAL_ID)
                 .build()
         );
     }
 
     private List<ScannerEntity> getSignalScanners() {
         var scanner = new AnomalyVolumeScannerEntity(
-            SIGNAL_PRODUCER_ID,
+            SIGNAL_ID,
             1,
             "Описание",
             List.of("AFKS", "IMOEX"),

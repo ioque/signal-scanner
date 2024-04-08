@@ -24,10 +24,10 @@ import java.util.UUID;
 public class ScannerConfiguratorController {
     ScannerConfigurator scannerConfigurator;
 
-    @PostMapping("/api/signal-scanner")
-    public void addNewSignalScanner(@Valid @RequestBody ScannerRequest request) {
+    @PostMapping("/api/scanner")
+    public void addNewScanner(@Valid @RequestBody ScannerRequest request) {
         scannerConfigurator
-            .addNewConfig(
+            .addNewScanner(
                 AddScannerCommand.builder()
                     .tickers(request.getTickers())
                     .description(request.getDescription())
@@ -37,12 +37,12 @@ public class ScannerConfiguratorController {
             );
     }
 
-    @PatchMapping("/api/signal-scanner/{id}")
-    public void updateSignalScannerInfo(@PathVariable("id") UUID id, @Valid @RequestBody ScannerRequest request) {
+    @PatchMapping("/api/scanner/{scannerId}")
+    public void updateScanner(@PathVariable UUID scannerId, @Valid @RequestBody ScannerRequest request) {
         scannerConfigurator
-            .updateConfig(
+            .updateScanner(
                 UpdateScannerCommand.builder()
-                    .id(id)
+                    .id(scannerId)
                     .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())

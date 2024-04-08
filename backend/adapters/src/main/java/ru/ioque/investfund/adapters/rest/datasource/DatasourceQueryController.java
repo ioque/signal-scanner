@@ -26,14 +26,14 @@ public class DatasourceQueryController {
     DatasourceQueryService datasourceQueryService;
     DateTimeProvider dateTimeProvider;
 
-    @GetMapping("/api/datasource")
-    public ExchangeResponse getExchange() {
+    @GetMapping("/api/datasource/{datasourceId}")
+    public ExchangeResponse getExchange(@PathVariable UUID datasourceId) {
         return ExchangeResponse.fromEntity(datasourceQueryService.findDatasource());
     }
 
-    @GetMapping("/api/instruments/{id}")
-    public InstrumentResponse getInstrument(@PathVariable UUID id) {
-        InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(id);
+    @GetMapping("/api/datasource/{datasourceId}/instruments/{instrumentId}")
+    public InstrumentResponse getInstrument(@PathVariable UUID datasourceId, @PathVariable UUID instrumentId) {
+        InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(instrumentId);
         List<HistoryValueEntity> history = datasourceQueryService.findHistory(
             instrument,
             dateTimeProvider.nowDate().minusMonths(6)
@@ -45,8 +45,9 @@ public class DatasourceQueryController {
         return InstrumentResponse.from(instrument, history, intraday);
     }
 
-    @GetMapping("/api/instruments")
+    @GetMapping("/api/datasource/{datasourceId}/instruments")
     public List<InstrumentInListResponse> getInstruments(
+        @PathVariable UUID datasourceId,
         @RequestParam(required = false) String ticker,
         @RequestParam(required = false) String type,
         @RequestParam(required = false) String shortname,

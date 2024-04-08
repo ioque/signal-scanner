@@ -99,7 +99,7 @@ public class BaseTest {
         AlgorithmConfig config
     ) {
         scannerConfigurator()
-            .addNewConfig(
+            .addNewScanner(
                 AddScannerCommand.builder()
                     .workPeriodInMinutes(workPeriodInMinutes)
                     .description(description)
@@ -110,7 +110,7 @@ public class BaseTest {
     }
 
     protected void updateScanner(UpdateScannerCommand command) {
-        scannerConfigurator().updateConfig(command);
+        scannerConfigurator().updateScanner(command);
     }
 
     protected List<Instrument> getInstruments() {

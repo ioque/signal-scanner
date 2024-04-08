@@ -17,7 +17,7 @@ import java.util.List;
 public class ArchiveQueryController {
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
 
-    @GetMapping("/api/intraday-values")
+    @GetMapping("/api/archive/intraday")
     public List<IntradayValueResponse> getIntradayValues(
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize

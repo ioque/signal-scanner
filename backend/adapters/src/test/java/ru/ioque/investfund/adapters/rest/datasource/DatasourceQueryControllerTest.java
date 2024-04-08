@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
@@ -21,9 +20,6 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.DatasourceQueryService;
-import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
-import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.investfund.adapters.rest.datasource.request.RegisterDatasourceRequest;
 import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -38,75 +34,21 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("EXCHANGE REST CONTROLLER")
-public class DatasourceControllerTest extends BaseControllerTest {
+@DisplayName("DATASOURCE QUERY CONTROLLER TEST")
+public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Autowired
     DatasourceQueryService datasourceQueryService;
     @Autowired
     DateTimeProvider dateTimeProvider;
-
+    private static final UUID DATASOURCE_ID = UUID.randomUUID();
     @Test
     @SneakyThrows
     @DisplayName("""
-        T1. Выполнение запроса по эндпоинту POST /api/integrate.
-        """)
-    public void testCase1() {
-        mvc
-            .perform(MockMvcRequestBuilders.post("/api/integrate"))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @SneakyThrows
-    @DisplayName("""
-        T2. Выполнение запроса по эндпоинту POST /api/daily-integrate.
-        """)
-    public void testCase2() {
-        mvc
-            .perform(MockMvcRequestBuilders.post("/api/daily-integrate"))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @SneakyThrows
-    @DisplayName("""
-        T3. Выполнение запроса по эндпоинту PATCH /api/enable-update.
-        """)
-    public void testCase3() {
-        List<String> tickers = List.of("AFKS", "SBER");
-        mvc
-            .perform(MockMvcRequestBuilders
-                .patch("/api/enable-update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new EnableUpdateInstrumentRequest(tickers)))
-            )
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @SneakyThrows
-    @DisplayName("""
-        T4. Выполнение запроса по эндпоинту PATCH /api/disable-update.
-        """)
-    public void testCase4() {
-        List<String> tickers = List.of("AFKS", "SBER");
-        mvc
-            .perform(MockMvcRequestBuilders
-                .patch("/api/disable-update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new DisableUpdateInstrumentRequest(tickers)))
-            )
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @SneakyThrows
-    @DisplayName("""
-        T5. Выполнение запроса по эндпоинту GET /api/datasource.
+        T5. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}.
         """)
     public void testCase5() {
         final DatasourceEntity datasource = DatasourceEntity.builder()
-            .id(UUID.randomUUID())
+            .id(DATASOURCE_ID)
             .name("EXCHANGE")
             .url("http://datasource.ru")
             .description("desc")
@@ -116,7 +58,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
             .when(datasourceQueryService.findDatasource())
             .thenReturn(datasource);
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/datasource"))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -124,6 +66,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
                         objectMapper
                             .writeValueAsString(
                                 ExchangeResponse.builder()
+                                    .id(DATASOURCE_ID)
                                     .name("EXCHANGE")
                                     .url("http://datasource.ru")
                                     .description("desc")
@@ -136,7 +79,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T6. Выполнение запроса по эндпоинту GET /api/instruments.
+        T6. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments.
         """)
     public void testCase6() {
         List<InstrumentEntity> instrumentInLists = getInstruments();
@@ -154,7 +97,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
             .thenReturn(instrumentInLists);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/instruments"))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -173,7 +116,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T7. Выполнение запроса по эндпоинту GET /api/instruments/{id}
+        T7. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments/{instrumentId}.
         """)
     public void testCase7() {
         LocalDate date = LocalDate.parse("2024-01-12");
@@ -183,8 +126,14 @@ public class DatasourceControllerTest extends BaseControllerTest {
             .filter(row -> row.getTicker().equals("TEST_STOCK"))
             .findFirst()
             .orElseThrow();
-        List<HistoryValueEntity> history = getHistoryValues().stream().filter(row -> row.getTicker().equals("TEST_STOCK")).toList();
-        List<IntradayValueEntity> intraday = getIntradayValues().stream().filter(row -> row.getTicker().equals("TEST_STOCK")).toList();
+        List<HistoryValueEntity> history = getHistoryValues()
+            .stream()
+            .filter(row -> row.getTicker().equals("TEST_STOCK"))
+            .toList();
+        List<IntradayValueEntity> intraday = getIntradayValues()
+            .stream()
+            .filter(row -> row.getTicker().equals("TEST_STOCK"))
+            .toList();
 
         Mockito
             .when(dateTimeProvider.nowDate())
@@ -193,14 +142,14 @@ public class DatasourceControllerTest extends BaseControllerTest {
             .when(datasourceQueryService.findInstrumentBy(stock.getId()))
             .thenReturn(stock);
         Mockito
-            .when(datasourceQueryService.findHistory(stock, date))
+            .when(datasourceQueryService.findHistory(stock, date.minusMonths(6)))
             .thenReturn(history);
         Mockito
             .when(datasourceQueryService.findIntraday(stock, dateTime))
             .thenReturn(intraday);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/instruments/" + stock.getId()))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments/" + stock.getId()))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -213,28 +162,7 @@ public class DatasourceControllerTest extends BaseControllerTest {
             );
     }
 
-     @Test
-     @SneakyThrows
-     @DisplayName("""
-         T8. Выполнение запроса по эндпоинту POST /api/datasource
-         """)
-     public void testCase8() {
-         mvc
-             .perform(MockMvcRequestBuilders
-                 .post("/api/datasource")
-                 .contentType(MediaType.APPLICATION_JSON)
-                 .content(objectMapper.writeValueAsString(
-                     RegisterDatasourceRequest.builder()
-                         .name("Московская биржа")
-                         .url("http://localhost:8080")
-                         .description("Московская биржа")
-                         .build()
-                 ))
-             )
-             .andExpect(status().isOk());
-     }
-
-     private List<IntradayValueEntity> getIntradayValues() {
+    private List<IntradayValueEntity> getIntradayValues() {
         return List.of(
             DealEntity.builder()
                 .ticker("TEST_STOCK")
@@ -266,53 +194,53 @@ public class DatasourceControllerTest extends BaseControllerTest {
                 .isBuy(true)
                 .build()
         );
-     }
+    }
 
-     private List<HistoryValueEntity> getHistoryValues() {
-         return List.of(
-             HistoryValueEntity
-                 .builder()
-                 .ticker("TEST_STOCK")
-                 .tradeDate(LocalDate.now())
-                 .highPrice(1D)
-                 .lowPrice(1D)
-                 .openPrice(1D)
-                 .closePrice(1D)
-                 .value(1D)
-                 .waPrice(1D)
-                 .build(),
-             HistoryValueEntity.builder()
-                 .tradeDate(LocalDate.now())
-                 .ticker("TEST_FUTURES")
-                 .openPrice(1D)
-                 .closePrice(1D)
-                 .lowPrice(1D)
-                 .highPrice(1D)
-                 .value(1D)
-                 .build(),
-             HistoryValueEntity
-                 .builder()
-                 .ticker("TEST_CURRENCY_PAIR")
-                 .tradeDate(LocalDate.now())
-                 .highPrice(1D)
-                 .lowPrice(1D)
-                 .openPrice(1D)
-                 .closePrice(1D)
-                 .value(1D)
-                 .waPrice(1D)
-                 .build(),
-             HistoryValueEntity
-                 .builder()
-                 .ticker("TEST_INDEX")
-                 .tradeDate(LocalDate.now())
-                 .openPrice(1D)
-                 .closePrice(1D)
-                 .lowPrice(1D)
-                 .highPrice(1D)
-                 .value(1D)
-                 .build()
-         );
-     }
+    private List<HistoryValueEntity> getHistoryValues() {
+        return List.of(
+            HistoryValueEntity
+                .builder()
+                .ticker("TEST_STOCK")
+                .tradeDate(LocalDate.now())
+                .highPrice(1D)
+                .lowPrice(1D)
+                .openPrice(1D)
+                .closePrice(1D)
+                .value(1D)
+                .waPrice(1D)
+                .build(),
+            HistoryValueEntity.builder()
+                .tradeDate(LocalDate.now())
+                .ticker("TEST_FUTURES")
+                .openPrice(1D)
+                .closePrice(1D)
+                .lowPrice(1D)
+                .highPrice(1D)
+                .value(1D)
+                .build(),
+            HistoryValueEntity
+                .builder()
+                .ticker("TEST_CURRENCY_PAIR")
+                .tradeDate(LocalDate.now())
+                .highPrice(1D)
+                .lowPrice(1D)
+                .openPrice(1D)
+                .closePrice(1D)
+                .value(1D)
+                .waPrice(1D)
+                .build(),
+            HistoryValueEntity
+                .builder()
+                .ticker("TEST_INDEX")
+                .tradeDate(LocalDate.now())
+                .openPrice(1D)
+                .closePrice(1D)
+                .lowPrice(1D)
+                .highPrice(1D)
+                .value(1D)
+                .build()
+        );
+    }
 
     protected List<InstrumentEntity> getInstruments() {
         return List.of(
