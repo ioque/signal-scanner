@@ -66,6 +66,7 @@ public class DatasourceQueryController {
         return datasourceQueryService
             .findInstruments(
                 InstrumentFilterParams.builder()
+                    .datasourceId(datasourceId)
                     .ticker(ticker)
                     .type(type)
                     .shortName(shortname)

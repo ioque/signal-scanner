@@ -86,6 +86,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
 
         Mockito
             .when(datasourceQueryService.findInstruments(new InstrumentFilterParams(
+                DATASOURCE_ID,
                 null,
                 null,
                 null,

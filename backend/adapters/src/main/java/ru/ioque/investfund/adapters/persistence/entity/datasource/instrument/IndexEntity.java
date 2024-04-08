@@ -33,7 +33,7 @@ public class IndexEntity extends InstrumentEntity {
     @Builder
     public IndexEntity(
         UUID id,
-        DatasourceEntity exchange,
+        DatasourceEntity datasource,
         String ticker,
         String shortName,
         String name,
@@ -45,7 +45,7 @@ public class IndexEntity extends InstrumentEntity {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasource, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
     }

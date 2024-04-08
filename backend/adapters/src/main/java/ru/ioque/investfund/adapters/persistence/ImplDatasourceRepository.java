@@ -49,7 +49,7 @@ public class ImplDatasourceRepository implements DatasourceRepository {
     @Override
     @Transactional
     public void saveDatasource(Datasource datasource) {
-        exchangeRepository.save(DatasourceEntity.fromDomain(datasource));
+        exchangeRepository.save(DatasourceEntity.from(datasource));
     }
 
     @Override

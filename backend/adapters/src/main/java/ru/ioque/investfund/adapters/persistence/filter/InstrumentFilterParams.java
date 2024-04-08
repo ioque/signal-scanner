@@ -14,11 +14,13 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @ToString
 @EqualsAndHashCode
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InstrumentFilterParams {
+    UUID datasourceId;
     String ticker;
     String type;
     String shortName;
@@ -29,6 +31,7 @@ public class InstrumentFilterParams {
 
     @Builder
     public InstrumentFilterParams(
+        UUID datasourceId,
         String ticker,
         String type,
         String shortName,
@@ -37,6 +40,7 @@ public class InstrumentFilterParams {
         String orderDirection,
         String orderField
     ) {
+        this.datasourceId = datasourceId;
         this.ticker = ticker;
         this.type = type;
         this.shortName = shortName;
@@ -60,6 +64,7 @@ public class InstrumentFilterParams {
 
     private List<Specification<InstrumentEntity>> specifications() {
         List<Specification<InstrumentEntity>> specifications = new ArrayList<>();
+        Optional.ofNullable(datasourceId).ifPresent(value -> specifications.add(Specifications.datasourceIdEqual(value)));
         Optional.ofNullable(ticker).ifPresent(value -> specifications.add(Specifications.tickerLike(value)));
         Optional.ofNullable(type).ifPresent(value -> specifications.add(Specifications.typeEqual(value)));
         Optional.ofNullable(shortName).ifPresent(value -> specifications.add(Specifications.shortNameLike(value)));

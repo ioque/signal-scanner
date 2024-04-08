@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
@@ -32,6 +33,7 @@ public class FuturesEntity extends InstrumentEntity {
     @Builder
     public FuturesEntity(
         UUID id,
+        DatasourceEntity datasource,
         String ticker,
         String shortName,
         String name,
@@ -44,7 +46,7 @@ public class FuturesEntity extends InstrumentEntity {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasource, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         this.lotVolume = lotVolume;
         this.initialMargin = initialMargin;
         this.highLimit = highLimit;

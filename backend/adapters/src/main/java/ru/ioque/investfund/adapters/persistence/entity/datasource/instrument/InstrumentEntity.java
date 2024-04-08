@@ -6,12 +6,15 @@ import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
@@ -32,6 +35,9 @@ import java.util.function.Function;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="INSTRUMENT_TYPE", discriminatorType= DiscriminatorType.STRING, columnDefinition = "varchar(255)")
 public abstract class InstrumentEntity extends AbstractEntity {
+    @ManyToOne
+    @JoinColumn(name = "datasource_id")
+    DatasourceEntity datasource;
     @Column(nullable = false)
     String ticker;
     @Column(nullable = false)
@@ -44,6 +50,7 @@ public abstract class InstrumentEntity extends AbstractEntity {
 
     public InstrumentEntity(
         UUID id,
+        DatasourceEntity datasource,
         String ticker,
         String shortName,
         String name,
@@ -52,6 +59,7 @@ public abstract class InstrumentEntity extends AbstractEntity {
         Long lastTradingNumber
     ) {
         super(id);
+        this.datasource = datasource;
         this.ticker = ticker;
         this.shortName = shortName;
         this.name = name;

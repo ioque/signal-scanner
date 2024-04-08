@@ -14,12 +14,14 @@ import ru.ioque.investfund.adapters.rest.configurator.request.SectoralRetardScan
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("SCANNER CONFIGURATOR CONTROLLER TEST")
 public class ScannerConfiguratorControllerTest extends BaseControllerTest {
+    private static final UUID DATASOURCE_ID = UUID.randomUUID();
     @Test
     @DisplayName("""
         T1. Выполнение запроса по эндпоинту POST /api/scanner на добавление сканера сигналов по алгоритму
@@ -30,6 +32,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             AnomalyVolumeScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
@@ -48,6 +51,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             AnomalyVolumeScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
                 .description("desc")
                 .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
@@ -68,6 +72,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
                 .historyPeriod(180)
                 .build(),
@@ -86,6 +91,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
                 .scaleCoefficient(1.5)
                 .indexTicker("IMOEX")
@@ -104,6 +110,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             PrefSimpleScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("BANE", "BANEP"))
                 .spreadParam(1.0)
                 .build()
@@ -120,6 +127,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             PrefSimpleScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("BANE", "BANEP"))
                 .build(),
             List.of("The spreadParam is required.", "The description is required.")
@@ -137,6 +145,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
                 .historyScale(0.015)
                 .intradayScale(0.012)
@@ -155,6 +164,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
+                .datasourceId(DATASOURCE_ID)
                 .historyScale(0.015)
                 .build(),
             List.of("The tickers is required.", "The intradayScale is required.")
@@ -172,6 +182,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("")
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
                 .intradayScale(0.015)
                 .build(),
@@ -189,6 +200,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
@@ -207,6 +219,7 @@ public class ScannerConfiguratorControllerTest extends BaseControllerTest {
             CorrelationSectoralScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
                 .build(),
             List.of(

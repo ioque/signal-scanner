@@ -2,7 +2,6 @@ package ru.ioque.investfund.adapters.persistence.entity.datasource;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -32,8 +31,7 @@ public class DatasourceEntity extends AbstractEntity {
     String url;
     String description;
     @ToString.Exclude
-    @JoinColumn(name = "datasource_id")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "datasource")
     Set<InstrumentEntity> instruments;
 
     @Builder
@@ -65,18 +63,20 @@ public class DatasourceEntity extends AbstractEntity {
             .build();
     }
 
-    public static DatasourceEntity fromDomain(Datasource datasource) {
-        return DatasourceEntity.builder()
+    public static DatasourceEntity from(Datasource datasource) {
+        final DatasourceEntity datasourceEntity = DatasourceEntity.builder()
             .id(datasource.getId())
             .name(datasource.getName())
             .url(datasource.getUrl())
             .description(datasource.getDescription())
-            .instruments(datasource
-                .getInstruments()
-                .stream()
-                .map(InstrumentEntity::from)
-                .collect(Collectors.toSet())
-            )
             .build();
+        final Set<InstrumentEntity> instruments = datasource
+            .getInstruments()
+            .stream()
+            .map(InstrumentEntity::from)
+            .peek(row -> row.setDatasource(datasourceEntity))
+            .collect(Collectors.toSet());
+        datasourceEntity.setInstruments(instruments);
+        return datasourceEntity;
     }
 }

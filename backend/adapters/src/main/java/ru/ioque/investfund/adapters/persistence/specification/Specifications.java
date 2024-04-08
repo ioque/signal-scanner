@@ -8,6 +8,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class Specifications {
     public static Specification<InstrumentEntity> typeEqual(String type) {
@@ -33,5 +34,10 @@ public class Specifications {
     public static Specification<InstrumentEntity> tickerLike(String ticker) {
         if (ticker == null || ticker.isEmpty()) throw new RuntimeException();
         return (instrument, cq, cb) -> cb.like(instrument.get("ticker"), "%" + ticker + "%");
+    }
+
+    public static Specification<InstrumentEntity> datasourceIdEqual(UUID datasourceId) {
+        if (datasourceId == null) throw new RuntimeException();
+        return (instrument, cq, cb) -> cb.equal(instrument.get("datasource").get("id"), datasourceId);
     }
 }
