@@ -3,6 +3,8 @@ package ru.ioque.investfund.adapters.storage.jpa;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.ioque.investfund.adapters.persistence.ImplScannerConfigRepository;
+import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
 import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
@@ -17,15 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("SCANNER CONFIG REPOSITORY")
 public class JpaScannerConfigRepoTest extends BaseJpaTest {
     private static final UUID SCANNER_ID = UUID.randomUUID();
-    JpaScannerConfigRepository scannerConfigRepository;
-    JpaScannerRepo dataJpaScannerRepo;
+    ImplScannerConfigRepository scannerConfigRepository;
+    ImplScannerRepository dataImplScannerRepository;
 
     public JpaScannerConfigRepoTest(
-        @Autowired JpaScannerConfigRepository scannerConfigRepository,
-        @Autowired JpaScannerRepo dataJpaScannerRepo
+        @Autowired ImplScannerConfigRepository scannerConfigRepository,
+        @Autowired ImplScannerRepository dataImplScannerRepository
     ) {
         this.scannerConfigRepository = scannerConfigRepository;
-        this.dataJpaScannerRepo = dataJpaScannerRepo;
+        this.dataImplScannerRepository = dataImplScannerRepository;
     }
 
     @Test
@@ -36,7 +38,7 @@ public class JpaScannerConfigRepoTest extends BaseJpaTest {
         prepareExchange(List.of(buildAfks().build()));
         scannerConfigRepository.save(createConfig(createAlgorithmConfig(1.5, 180, "IMOEX")));
 
-        var scanner = dataJpaScannerRepo.getBy(SCANNER_ID);
+        var scanner = dataImplScannerRepository.getBy(SCANNER_ID);
         assertTrue(scannerConfigRepository.existsBy(SCANNER_ID));
         assertTrue(scanner.isPresent());
         assertTrue(scanner.get().getSignals().isEmpty());
@@ -69,7 +71,7 @@ public class JpaScannerConfigRepoTest extends BaseJpaTest {
         scannerConfigRepository.save(createConfig(createAlgorithmConfig(1.5, 180, "IMOEX")));
         scannerConfigRepository.save(createConfig(createAlgorithmConfig(1.6, 182, "IMOEX")));
 
-        var scanner = dataJpaScannerRepo.getBy(SCANNER_ID);
+        var scanner = dataImplScannerRepository.getBy(SCANNER_ID);
         assertTrue(scanner.isPresent());
         assertTrue(scanner.get().getSignals().isEmpty());
         assertEquals(

@@ -14,7 +14,7 @@ import ru.ioque.investfund.fixture.ExchangeDataFixture;
 public class FakeDIContainer {
     ExchangeDataFixture exchangeDataFixture;
     FakeDateTimeProvider dateTimeProvider;
-    FakeExchangeProvider exchangeProvider;
+    FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
     FakeScannerLogRepository scannerLogRepository;
@@ -56,8 +56,8 @@ public class FakeDIContainer {
         );
     }
 
-    private FakeExchangeProvider getFakeExchangeProvider() {
-        FakeExchangeProvider fakeExchangeProvider = new FakeExchangeProvider(dateTimeProvider);
+    private FakeDatasourceProvider getFakeExchangeProvider() {
+        FakeDatasourceProvider fakeExchangeProvider = new FakeDatasourceProvider(dateTimeProvider);
         fakeExchangeProvider.setExchangeDataFixture(exchangeDataFixture);
         return fakeExchangeProvider;
     }

@@ -18,7 +18,7 @@
       - lang, принимает значения ru или en, по дефолту ru
 
 ### Таблица инструментов торговой сессии по рынку в целом
-      GET /engines/[engine]/markets/[exchange]/securities.[format]
+      GET /engines/[engine]/markets/[datasource]/securities.[format]
       Например https://iss.moex.com/iss/engines/stock/markets/shares/securities.xml вернет список инструментов рынка акций.
       Параметры
       - primary_board
@@ -55,7 +55,7 @@
       - lang, принимает значения ru или en, по дефолту ru
 
 ### Данные по конкретному инструменту рынка
-      GET /engines/[engine]/markets/[exchange]/securities/[instrumentInList].[format]
+      GET /engines/[engine]/markets/[datasource]/securities/[instrumentInList].[format]
       Параметры повторяются из предыдущего эндпоинта (это странно немного)
 
 ### Список бумаг, торгуемых на бирже
@@ -67,7 +67,7 @@
          Слова длиной менее трёх букв игнорируются. Если параметром передано два слова через пробел. То каждое должно быть длиной не менее трёх букв.
       - engine
       - is_trading
-      - exchange
+      - datasource
       - group_by - Группировать выводимый результат по полю. Доступны значения group и type.
       - limit - Количество выводимых инструментов (5, 10, 20,100)
       - group_by_filter - Фильтровать по типам group или type. Зависит от значения фильтра group_by

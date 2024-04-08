@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;

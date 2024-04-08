@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,9 +24,9 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name="ScannerController", description="Контроллер запросов к модулю \"SIGNAL-SCANNER\"")
 public class ScannerController {
-    SignalScannerEntityRepository signalScannerEntityRepository;
-    InstrumentEntityRepository instrumentEntityRepository;
-    ScannerLogEntityRepository scannerLogEntityRepository;
+    JpaSignalScannerRepository signalScannerEntityRepository;
+    JpaInstrumentRepository instrumentEntityRepository;
+    JpaScannerLogRepository jpaScannerLogRepository;
     @GetMapping("/api/signal-scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerEntityRepository
@@ -40,7 +40,7 @@ public class ScannerController {
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());
-        List<ScannerLogEntity> logs = scannerLogEntityRepository.findAllByScannerId(scanner.getId());
+        List<ScannerLogEntity> logs = jpaScannerLogRepository.findAllByScannerId(scanner.getId());
         return SignalScannerResponse.from(scanner, instruments, logs);
     }
 }

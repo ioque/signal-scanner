@@ -4,19 +4,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 
 @RestController
 @AllArgsConstructor
 @Tag(name = "ArchiveCommandController", description = "Контроллер команд к модулю \"Архив\"")
 public class ArchiveCommandController {
-    ArchivedIntradayValueEntityRepository archivedIntradayValueEntityRepository;
-    IntradayValueEntityRepository intradayValueEntityRepository;
+    JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
+    JpaIntradayValueRepository jpaIntradayValueRepository;
 
     @PostMapping("/api/archiving")
     public void archiving() {
-        archivedIntradayValueEntityRepository.archivingIntradayValues();
-        intradayValueEntityRepository.deleteAll();
+        jpaArchivedIntradayValueRepository.archivingIntradayValues();
+        jpaIntradayValueRepository.deleteAll();
     }
 }

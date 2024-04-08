@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
@@ -38,8 +37,6 @@ public class IndexDto extends InstrumentDto {
             .name(getName())
             .annualHigh(annualHigh)
             .annualLow(annualLow)
-            .historyValues(new ArrayList<>())
-            .intradayValues(new ArrayList<>())
             .build();
     }
 }

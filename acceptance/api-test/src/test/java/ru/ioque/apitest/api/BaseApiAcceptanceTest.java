@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
 import ru.ioque.apitest.DatasetManager;
-import ru.ioque.core.client.exchange.ExchangeRestClient;
+import ru.ioque.core.client.datasource.DatasourceRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
@@ -42,8 +42,8 @@ public class BaseApiAcceptanceTest {
     void beforeEach() {
         serviceClient().clearState();
     }
-    private ExchangeRestClient exchangeClient() {
-        return clientFacade.getExchangeRestClient();
+    private DatasourceRestClient exchangeClient() {
+        return clientFacade.getDatasourceRestClient();
     }
     private SignalScannerRestClient signalScannerClient() {
         return clientFacade.getSignalScannerRestClient();

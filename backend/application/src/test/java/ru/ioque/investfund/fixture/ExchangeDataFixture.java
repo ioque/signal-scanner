@@ -27,8 +27,6 @@ public class ExchangeDataFixture {
         .listLevel(1)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NAUK = Stock
         .builder()
@@ -40,8 +38,6 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NAUK_positive = Stock
         .builder()
@@ -53,8 +49,6 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static Stock NSVZ = Stock
         .builder()
@@ -66,8 +60,6 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static Stock SBER = Stock
         .builder()
@@ -79,8 +71,6 @@ public class ExchangeDataFixture {
         .listLevel(1)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static Stock UNAC = Stock
         .builder()
@@ -92,8 +82,6 @@ public class ExchangeDataFixture {
         .listLevel(3)
         .isin("isin")
         .regNumber("regNumber")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     //фьючерс на нефть
     public final static Futures BRF4 = Futures
@@ -107,8 +95,6 @@ public class ExchangeDataFixture {
         .highLimit(100D)
         .lowLimit(100D)
         .assetCode("BR")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     //индекс мосбиржи
     public final static Index IMOEX = Index
@@ -119,8 +105,6 @@ public class ExchangeDataFixture {
         .name("Индекс МосБиржи")
         .annualHigh(100D)
         .annualLow(100D)
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     //фьючерс на курс доллара
     public final static Futures SiZ3 = Futures
@@ -134,8 +118,6 @@ public class ExchangeDataFixture {
         .highLimit(100D)
         .lowLimit(100D)
         .assetCode("Si")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
     public final static CurrencyPair USD000UTSTOM = CurrencyPair
         .builder()
@@ -145,8 +127,6 @@ public class ExchangeDataFixture {
         .ticker("USD000UTSTOM")
         .lotSize(1)
         .faceUnit("RUB")
-        .historyValues(new ArrayList<>())
-        .intradayValues(new ArrayList<>())
         .build();
 
     @Getter
@@ -203,8 +183,6 @@ public class ExchangeDataFixture {
             .lowLimit(futures.getLowLimit())
             .highLimit(futures.getHighLimit())
             .lotVolume(futures.getLotVolume())
-            .historyValues(futures.getHistoryValues().stream().toList())
-            .intradayValues(futures.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -217,8 +195,6 @@ public class ExchangeDataFixture {
             .shortName(index.getShortName())
             .annualHigh(index.getAnnualHigh())
             .annualLow(index.getAnnualLow())
-            .historyValues(index.getHistoryValues().stream().toList())
-            .intradayValues(index.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -231,8 +207,6 @@ public class ExchangeDataFixture {
             .shortName(currencyPair.getShortName())
             .lotSize(currencyPair.getLotSize())
             .faceUnit(currencyPair.getFaceUnit())
-            .historyValues(currencyPair.getHistoryValues().stream().toList())
-            .intradayValues(currencyPair.getIntradayValues().stream().toList())
             .build();
     }
 
@@ -246,8 +220,6 @@ public class ExchangeDataFixture {
             .isin(stock.getIsin())
             .regNumber(stock.getRegNumber())
             .listLevel(stock.getListLevel())
-            .historyValues(stock.getHistoryValues().stream().toList())
-            .intradayValues(stock.getIntradayValues().stream().toList())
             .build();
     }
 }

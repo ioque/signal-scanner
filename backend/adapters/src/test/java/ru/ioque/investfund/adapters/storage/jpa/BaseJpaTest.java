@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.datasource.entity.Exchange;
+import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
@@ -33,28 +33,28 @@ public class BaseJpaTest {
     @Autowired
     protected DatasourceRepository datasourceRepository;
     @Autowired
-    protected ExchangeEntityRepository exchangeEntityRepository;
+    protected JpaDatasourceRepository exchangeEntityRepository;
     @Autowired
-    protected InstrumentEntityRepository instrumentEntityRepository;
+    protected JpaInstrumentRepository instrumentEntityRepository;
     @Autowired
-    protected HistoryValueEntityRepository historyValueEntityRepository;
+    protected JpaHistoryValueRepository jpaHistoryValueRepository;
     @Autowired
-    protected IntradayValueEntityRepository intradayValueEntityRepository;
+    protected JpaIntradayValueRepository jpaIntradayValueRepository;
 
     @BeforeEach
     void beforeEach() {
         exchangeEntityRepository.deleteAll();
         instrumentEntityRepository.deleteAll();
-        intradayValueEntityRepository.deleteAll();
-        historyValueEntityRepository.deleteAll();
+        jpaIntradayValueRepository.deleteAll();
+        jpaHistoryValueRepository.deleteAll();
     }
 
     protected void prepareExchange(List<Instrument> instruments) {
-        datasourceRepository.save(createExchange(instruments));
+        datasourceRepository.saveDatasource(createExchange(instruments));
     }
 
-    private Exchange createExchange(List<Instrument> instruments) {
-        return new Exchange(
+    private Datasource createExchange(List<Instrument> instruments) {
+        return new Datasource(
             EXCHANGE_ID,
             "Московская биржа",
             "https://moex.com",

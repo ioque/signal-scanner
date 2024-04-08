@@ -6,10 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
@@ -35,10 +33,10 @@ public class Futures extends Instrument {
         Double highLimit,
         Double lowLimit,
         String assetCode,
-        List<IntradayValue> intradayValues,
-        List<HistoryValue> historyValues
+        LocalDate lastHistoryDate,
+        Long lastTradingNumber
     ) {
-        super(id, ticker, shortName, name, updatable, intradayValues, historyValues);
+        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         this.lotVolume = lotVolume;
         this.highLimit = highLimit;
         this.lowLimit = lowLimit;

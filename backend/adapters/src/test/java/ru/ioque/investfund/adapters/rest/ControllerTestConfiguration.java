@@ -4,20 +4,18 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.storage.jpa.InstrumentQueryRepository;
-import ru.ioque.investfund.adapters.storage.jpa.JpaScannerRepo;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedHistoryValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ArchivedIntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.HistoryValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ExchangeEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.IntradayValueEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
+import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
@@ -41,32 +39,32 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public JpaScannerRepo signalProducerRepo() {
-        return mock(JpaScannerRepo.class);
+    public ImplScannerRepository signalProducerRepo() {
+        return mock(ImplScannerRepository.class);
     }
 
     @Bean
     @Primary
-    public SignalScannerEntityRepository mockSignalScannerRepository() {
-        return mock(SignalScannerEntityRepository.class);
+    public JpaSignalScannerRepository mockSignalScannerRepository() {
+        return mock(JpaSignalScannerRepository.class);
     }
 
     @Bean
     @Primary
-    public IntradayValueEntityRepository mockDealDataRepository() {
-        return mock(IntradayValueEntityRepository.class);
+    public JpaIntradayValueRepository mockDealDataRepository() {
+        return mock(JpaIntradayValueRepository.class);
     }
 
     @Bean
     @Primary
-    public HistoryValueEntityRepository mockHistoryTradeDataRepository() {
-        return mock(HistoryValueEntityRepository.class);
+    public JpaHistoryValueRepository mockHistoryTradeDataRepository() {
+        return mock(JpaHistoryValueRepository.class);
     }
 
     @Bean
     @Primary
-    public InstrumentEntityRepository mockInstrumentEntityRepository() {
-        return mock(InstrumentEntityRepository.class);
+    public JpaInstrumentRepository mockInstrumentEntityRepository() {
+        return mock(JpaInstrumentRepository.class);
     }
 
     @Bean
@@ -77,38 +75,32 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public InstrumentQueryRepository mockInstrumentRepository() {
-        return mock(InstrumentQueryRepository.class);
+    public DatasourceQueryService mockDatasourceQueryService() {
+        return mock(DatasourceQueryService.class);
     }
 
     @Bean
     @Primary
-    public ExchangeEntityRepository mockExchangeEntityRepository() {
-        return mock(ExchangeEntityRepository.class);
+    public JpaDatasourceRepository mockExchangeEntityRepository() {
+        return mock(JpaDatasourceRepository.class);
     }
 
     @Bean
     @Primary
-    public ScannerLogEntityRepository mockScannerLogEntityRepository() {
-        return mock(ScannerLogEntityRepository.class);
+    public JpaScannerLogRepository mockScannerLogEntityRepository() {
+        return mock(JpaScannerLogRepository.class);
     }
 
     @Bean
     @Primary
-    public ArchivedIntradayValueEntityRepository mockArchivedIntradayValueEntityRepository() {
-        return mock(ArchivedIntradayValueEntityRepository.class);
+    public JpaArchivedIntradayValueRepository mockArchivedIntradayValueEntityRepository() {
+        return mock(JpaArchivedIntradayValueRepository.class);
     }
 
     @Bean
     @Primary
-    public ArchivedHistoryValueEntityRepository mockArchivedDailyValueEntityRepository() {
-        return mock(ArchivedHistoryValueEntityRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public SignalEntityRepository mockSignalEntityRepository() {
-        return mock(SignalEntityRepository.class);
+    public JpaSignalRepository mockSignalEntityRepository() {
+        return mock(JpaSignalRepository.class);
     }
 
     @Bean

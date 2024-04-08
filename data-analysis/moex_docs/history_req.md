@@ -1,7 +1,7 @@
 ## Историческая информация
 
 ### Сделки по инструменту
-        GET /engines/[engine]/markets/[exchange]/securities/[instrumentInList]/trades.[format]
+        GET /engines/[engine]/markets/[datasource]/securities/[instrumentInList]/trades.[format]
         Например https://iss.moex.com/iss/engines/stock/markets/shares/securities/AFLT/trades.xml
         Параметры
         - tradeno
@@ -28,7 +28,7 @@
             Тип доходности. Возможные значения: MBS, MATDATE, OFFERDATE
 
 ### История по всем бумагам на рынке за одну дату
-        GET /history/engines/[engine]/markets/[exchange]/sessions/[session]/securities
+        GET /history/engines/[engine]/markets/[datasource]/sessions/[session]/securities
         Например: https://iss.moex.com/iss/history/engines/stock/markets/index/securities.xml?date=2010-11-22
         Например: https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/AFKS.xml?date=2010-11-22
         - sort_order

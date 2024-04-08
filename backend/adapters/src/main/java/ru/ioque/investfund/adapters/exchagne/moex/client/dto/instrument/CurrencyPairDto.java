@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
@@ -38,8 +37,6 @@ public class CurrencyPairDto extends InstrumentDto {
             .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())
-            .historyValues(new ArrayList<>())
-            .intradayValues(new ArrayList<>())
             .build();
     }
 }

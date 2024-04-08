@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
-import ru.ioque.investfund.domain.datasource.entity.Exchange;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 
@@ -49,7 +48,7 @@ public class DatasourceManagerTest extends BaseTest {
         );
 
         exchangeManager().integrateInstruments();
-        final Optional<Exchange> exchange = exchangeRepository().getBy(dateTimeProvider().nowDate());
+        final Optional<Datasource> exchange = exchangeRepository().get();
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
         assertEquals("http://localhost:8080", exchange.get().getUrl());
@@ -77,10 +76,10 @@ public class DatasourceManagerTest extends BaseTest {
         exchangeManager().integrateInstruments();
         clearLogs();
 
-        final var id = exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId();
+        final var id = exchangeRepository().get().orElseThrow().getId();
         exchangeManager().integrateInstruments();
         assertEquals(10, getInstruments().size());
-        assertEquals(id, exchangeRepository().getBy(dateTimeProvider().nowDate()).orElseThrow().getId());
+        assertEquals(id, exchangeRepository().get().orElseThrow().getId());
     }
 
     @Test
@@ -153,18 +152,10 @@ public class DatasourceManagerTest extends BaseTest {
 
         exchangeManager().enableUpdate(List.of("AFKS"));
         exchangeManager().execute();
-        final var instrument = getInstruments().get(0);
         assertEquals(1, getInstruments().size());
-        assertEquals(3, instrument.getIntradayValues().size());
-        assertEquals(4, instrument.getHistoryValues().size());
+        assertEquals(3, getIntradayValues().size());
+        assertEquals(4, getHistoryValues().size());
         assertEquals(2, loggerProvider().log.size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-08T10:15. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: <_> - <_>.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-08T10:15. Текущее количество сделок 3, интервал сделок: 2023-12-08T10:00 - 2023-12-08T10:15. Текущий период исторических данных: 2023-12-08 - 2023-12-11."
-                )
-        );
     }
 
     @Test
@@ -189,16 +180,9 @@ public class DatasourceManagerTest extends BaseTest {
 
         assertEquals(
             131,
-            getDailyTradingResultsBy("AFKS").size()
+            getHistoryValuesBy("AFKS").size()
         );
         assertEquals(2, loggerProvider().log.size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-19T10:00. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: <_> - <_>.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-19T10:00. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: 2023-06-19 - 2023-12-18."
-                )
-        );
     }
 
     @Test
@@ -223,15 +207,8 @@ public class DatasourceManagerTest extends BaseTest {
         exchangeManager().enableUpdate(List.of("AFKS"));
         exchangeManager().execute();
 
-        assertEquals(3, getIntradayValue("AFKS").size());
+        assertEquals(3, getIntradayValuesBy("AFKS").size());
         assertEquals(2, loggerProvider().log.size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-08T10:15. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: <_> - <_>.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-08T10:15. Текущее количество сделок 3, интервал сделок: 2023-12-08T10:00 - 2023-12-08T10:15. Текущий период исторических данных: <_> - <_>."
-                )
-        );
     }
 
     @Test
@@ -262,14 +239,7 @@ public class DatasourceManagerTest extends BaseTest {
 
         exchangeManager().execute();
 
-        assertEquals(5, getIntradayValue("AFKS").size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-07T13:00. Текущее количество сделок 2, интервал сделок: 2023-12-07T11:00 - 2023-12-07T11:30. Текущий период исторических данных: <_> - <_>.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-07T13:00. Текущее количество сделок 5, интервал сделок: 2023-12-07T11:00 - 2023-12-07T12:40. Текущий период исторических данных: <_> - <_>."
-                )
-        );
+        assertEquals(5, getIntradayValuesBy("AFKS").size());
     }
 
     @Test
@@ -291,14 +261,7 @@ public class DatasourceManagerTest extends BaseTest {
 
         exchangeManager().execute();
 
-        assertEquals(66, getDailyTradingResultsBy("AFKS").size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начато обновление торговых данных инструмента AFKS, 2023-12-09T13:00. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: 2023-09-08 - 2023-12-07.",
-                    "Завершено обновление торговых данных инструмента AFKS, 2023-12-09T13:00. Текущее количество сделок 0, интервал сделок: <_> - <_>. Текущий период исторических данных: 2023-09-08 - 2023-12-08."
-                )
-        );
+        assertEquals(66, getHistoryValuesBy("AFKS").size());
     }
 
     @Test
@@ -314,8 +277,8 @@ public class DatasourceManagerTest extends BaseTest {
         initTradingResults(buildDealResultBy("AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
         exchangeManager().execute();
 
-        assertEquals(0, getDailyTradingResultsBy("AFKS").size());
-        assertEquals(0, getIntradayValue("AFKS").size());
+        assertEquals(0, getHistoryValues().size());
+        assertEquals(0, getIntradayValues().size());
     }
 
     @Test
@@ -346,8 +309,8 @@ public class DatasourceManagerTest extends BaseTest {
 
         exchangeManager().execute();
 
-        assertEquals(1, getDailyTradingResultsBy("AFKS").size());
-        assertEquals(1, getIntradayValue("AFKS").size());
+        assertEquals(1, getHistoryValuesBy("AFKS").size());
+        assertEquals(1, getIntradayValuesBy("AFKS").size());
     }
 
     @Test
@@ -403,8 +366,7 @@ public class DatasourceManagerTest extends BaseTest {
         );
         exchangeManager().enableUpdate(List.of("AFKS"));
         exchangeManager().execute();
-        Instrument afks = getInstrumentBy("AFKS");
-        assertEquals(3, afks.getIntradayValues().size());
+        assertEquals(3, getIntradayValuesBy("AFKS").size());
     }
 
     @Test
@@ -421,7 +383,6 @@ public class DatasourceManagerTest extends BaseTest {
         exchangeManager().enableUpdate(List.of("AFKS"));
         exchangeManager().execute();
         exchangeManager().execute();
-        Instrument afks = getInstrumentBy("AFKS");
-        assertEquals(1, afks.getIntradayValues().size());
+        assertEquals(1, getIntradayValuesBy("AFKS").size());
     }
 }

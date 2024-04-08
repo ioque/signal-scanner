@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
@@ -56,8 +55,6 @@ public class FuturesDto extends InstrumentDto {
             .highLimit(highLimit)
             .lowLimit(lowLimit)
             .assetCode(assetCode)
-            .historyValues(new ArrayList<>())
-            .intradayValues(new ArrayList<>())
             .build();
     }
 }

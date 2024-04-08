@@ -58,43 +58,43 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected TradingSnapshot getImoex() {
-        return getFinInstrumentByTicker(IMOEX);
+        return getSnapshotBy(IMOEX);
     }
 
     protected TradingSnapshot getTgkb() {
-        return getFinInstrumentByTicker(TGKB);
+        return getSnapshotBy(TGKB);
     }
 
     protected TradingSnapshot getTgkn() {
-        return getFinInstrumentByTicker(TGKN);
+        return getSnapshotBy(TGKN);
     }
 
     protected TradingSnapshot getTatn() {
-        return getFinInstrumentByTicker(TATN);
+        return getSnapshotBy(TATN);
     }
 
     protected TradingSnapshot getBrf4() {
-        return getFinInstrumentByTicker(BRF4);
+        return getSnapshotBy(BRF4);
     }
     protected TradingSnapshot getRosn() {
-        return getFinInstrumentByTicker(ROSN);
+        return getSnapshotBy(ROSN);
     }
     protected TradingSnapshot getLkoh() {
-        return getFinInstrumentByTicker(LKOH);
+        return getSnapshotBy(LKOH);
     }
     protected TradingSnapshot getSibn() {
-        return getFinInstrumentByTicker(SIBN);
+        return getSnapshotBy(SIBN);
     }
 
     protected TradingSnapshot getSber() {
-        return getFinInstrumentByTicker(SBER);
+        return getSnapshotBy(SBER);
     }
 
     protected TradingSnapshot getSberp() {
-        return getFinInstrumentByTicker(SBERP);
+        return getSnapshotBy(SBERP);
     }
 
-    protected TradingSnapshot getFinInstrumentByTicker(String ticker) {
+    protected TradingSnapshot getSnapshotBy(String ticker) {
         return fakeDataScannerStorage()
             .getAll()
             .stream()

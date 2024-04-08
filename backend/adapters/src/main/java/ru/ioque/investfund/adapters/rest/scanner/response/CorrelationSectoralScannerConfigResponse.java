@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.CorrelationSectoralScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.CorrelationSectoralScannerEntity;
 
 @Getter
 @NoArgsConstructor

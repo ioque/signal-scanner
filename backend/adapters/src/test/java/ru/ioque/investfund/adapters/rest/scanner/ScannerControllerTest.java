@@ -9,16 +9,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.IndexEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.exchange.instrument.StockEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.AnomalyVolumeScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.ScannerLogEntity;
-import ru.ioque.investfund.adapters.storage.jpa.entity.scanner.SignalEntity;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.InstrumentEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.ScannerLogEntityRepository;
-import ru.ioque.investfund.adapters.storage.jpa.repositories.SignalScannerEntityRepository;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.IndexEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
 import java.time.LocalDateTime;
@@ -35,11 +35,11 @@ public class ScannerControllerTest extends BaseControllerTest {
     @Autowired
     ScannerManager scannerManager;
     @Autowired
-    SignalScannerEntityRepository signalScannerEntityRepository;
+    JpaSignalScannerRepository signalScannerEntityRepository;
     @Autowired
-    InstrumentEntityRepository instrumentEntityRepository;
+    JpaInstrumentRepository instrumentEntityRepository;
     @Autowired
-    ScannerLogEntityRepository scannerLogEntityRepository;
+    JpaScannerLogRepository jpaScannerLogRepository;
 
     private static final UUID SIGNAL_PRODUCER_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
@@ -93,7 +93,7 @@ public class ScannerControllerTest extends BaseControllerTest {
             )
             .thenReturn(instruments);
         Mockito
-            .when(scannerLogEntityRepository.findAllByScannerId(SIGNAL_PRODUCER_ID))
+            .when(jpaScannerLogRepository.findAllByScannerId(SIGNAL_PRODUCER_ID))
             .thenReturn(logs);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/signal-scanner/" + SIGNAL_PRODUCER_ID))

@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
@@ -52,8 +51,6 @@ public class StockDto extends InstrumentDto {
             .isin(isin)
             .regNumber(regNumber)
             .listLevel(listLevel)
-            .historyValues(new ArrayList<>())
-            .intradayValues(new ArrayList<>())
             .build();
     }
 }

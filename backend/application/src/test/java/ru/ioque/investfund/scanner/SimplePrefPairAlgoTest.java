@@ -167,9 +167,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy("SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy("SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
@@ -195,9 +195,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp();
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy("SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
             buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy("SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
             buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(

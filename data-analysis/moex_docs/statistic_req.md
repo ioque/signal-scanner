@@ -16,7 +16,7 @@
       - lang
 
 ### Текущее значение оборота по рынку
-      GET /engines/[engine]/markets/[exchange]/turnovers
+      GET /engines/[engine]/markets/[datasource]/turnovers
       Параметры:
       - lang
 

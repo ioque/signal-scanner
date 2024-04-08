@@ -1,11 +1,9 @@
 package ru.ioque.investfund.fakes;
 
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
@@ -20,10 +18,10 @@ import java.util.UUID;
 
 public class FakeScannerRepository implements ScannerRepository, ScannerConfigRepository {
     public Map<UUID, SignalScanner> scannerMap = new HashMap<>();
-    DatasourceRepository datasourceRepository;
+    FakeDatasourceRepository datasourceRepository;
     DateTimeProvider dateTimeProvider;
 
-    public FakeScannerRepository(DatasourceRepository datasourceRepository, DateTimeProvider dateTimeProvider) {
+    public FakeScannerRepository(FakeDatasourceRepository datasourceRepository, DateTimeProvider dateTimeProvider) {
         this.datasourceRepository = datasourceRepository;
         this.dateTimeProvider = dateTimeProvider;
     }
@@ -56,7 +54,8 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
     private void updateTradingSnapshots(UUID id) {
         if (scannerMap.containsKey(id)) {
             SignalScanner scanner = scannerMap.get(id);
-            scannerMap.put(id,
+            scannerMap.put(
+                id,
                 SignalScanner.builder()
                     .id(scanner.getId())
                     .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
@@ -77,59 +76,60 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
             .algorithm(config.getAlgorithmConfig().factoryAlgorithm())
             .description(config.getDescription())
             .signals(getBy(config.getId()).map(SignalScanner::getSignals).orElse(new ArrayList<>()))
-            .lastExecutionDateTime(getBy(config.getId()).map(SignalScanner::getLastExecutionDateTime).flatMap(r -> r).orElse(null))
+            .lastExecutionDateTime(getBy(config.getId())
+                .map(SignalScanner::getLastExecutionDateTime)
+                .flatMap(r -> r)
+                .orElse(null))
             .tradingSnapshots(createSnapshots(config.getTickers()))
             .build();
     }
 
     private List<TradingSnapshot> createSnapshots(List<String> tickers) {
         if (tickers == null || tickers.isEmpty()) return List.of();
-        return tickers.stream().map(ticker -> {
-            Instrument instrument = datasourceRepository
-                .getBy(dateTimeProvider.nowDate())
-                .orElseThrow()
-                .getInstruments()
-                .stream()
-                .filter(row -> row.getTicker().equals(ticker))
-                .findFirst()
-                .orElseThrow();
-            return TradingSnapshot.builder()
-                .ticker(instrument.getTicker())
-                .waPriceSeries(instrument
+        return tickers
+            .stream()
+            .map(ticker -> TradingSnapshot.builder()
+                .ticker(ticker)
+                .waPriceSeries(datasourceRepository
                     .getHistoryValues()
+                    .getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                     .toList()
                 )
-                .todayValueSeries(
-                    instrument
-                        .getIntradayValues()
-                        .stream()
-                        .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
-                        .map(intradayValue -> new TimeSeriesValue<>(
-                            intradayValue.getValue(),
-                            intradayValue.getDateTime().toLocalTime()
-                        ))
-                        .toList()
+                .todayValueSeries(datasourceRepository
+                    .getIntradayValues()
+                    .getOrDefault(ticker, new ArrayList<>())
+                    .stream()
+                    .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
+                    .map(intradayValue -> new TimeSeriesValue<>(
+                        intradayValue.getValue(),
+                        intradayValue.getDateTime().toLocalTime()
+                    ))
+                    .toList()
                 )
-                .closePriceSeries(instrument
+                .closePriceSeries(datasourceRepository
                     .getHistoryValues()
+                    .getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
                     .toList())
-                .openPriceSeries(instrument
+                .openPriceSeries(datasourceRepository
                     .getHistoryValues()
+                    .getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
                     .toList())
-                .valueSeries(instrument
+                .valueSeries(datasourceRepository
                     .getHistoryValues()
+                    .getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                     .toList())
-                .todayPriceSeries(instrument
+                .todayPriceSeries(datasourceRepository
                     .getIntradayValues()
+                    .getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
@@ -137,7 +137,6 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
                         intradayValue.getDateTime().toLocalTime()
                     ))
                     .toList())
-                .build();
-        }).toList();
+                .build()).toList();
     }
 }
