@@ -21,6 +21,7 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Getter
@@ -36,6 +37,8 @@ public abstract class IntradayValueEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(nullable = false)
+    UUID datasourceId;
+    @Column(nullable = false)
     Long number;
     @Column(nullable = false)
     LocalDateTime dateTime;
@@ -47,12 +50,14 @@ public abstract class IntradayValueEntity {
     Double value;
 
     public IntradayValueEntity(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
+        this.datasourceId = datasourceId;
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;

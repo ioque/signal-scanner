@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday;
+package ru.ioque.investfund.adapters.datasource.client.dto.intraday;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,45 +7,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.Deal;
+import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DealDto extends IntradayValueDto {
-    Integer qnt;
-    Boolean isBuy;
-
+public class DeltaDto extends IntradayValueDto {
     @Builder
-    public DealDto(
-        Long number,
-        LocalDateTime dateTime,
-        String ticker,
-        Double value,
-        Double price,
-        Integer qnt,
-        Boolean isBuy
-    ) {
+    public DeltaDto(Long number, LocalDateTime dateTime, String ticker, Double value, Double price) {
         super(number, dateTime, ticker, value, price);
-        this.qnt = qnt;
-        this.isBuy = isBuy;
     }
 
     @Override
-    public IntradayValue toDomain() {
-        return Deal.builder()
+    public IntradayValue toDomain(UUID datasourceId) {
+        return Delta.builder()
+            .datasourceId(datasourceId)
             .number(getNumber())
             .ticker(getTicker())
             .dateTime(getDateTime())
             .value(getValue())
             .price(getPrice())
-            .qnt(qnt)
-            .isBuy(isBuy)
             .build();
     }
 }

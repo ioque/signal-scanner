@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -14,12 +15,13 @@ import java.time.LocalDateTime;
 public class Delta extends IntradayValue {
     @Builder
     public Delta(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
-        super(number, dateTime, ticker, price, value);
+        super(datasourceId, number, dateTime, ticker, price, value);
     }
 }

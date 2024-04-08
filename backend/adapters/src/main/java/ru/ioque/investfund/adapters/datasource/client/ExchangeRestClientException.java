@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client;
+package ru.ioque.investfund.adapters.datasource.client;
 
 
 public class ExchangeRestClientException extends RuntimeException {

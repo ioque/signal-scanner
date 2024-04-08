@@ -20,6 +20,7 @@ public class CurrencyPair extends Instrument {
 
     @Builder
     public CurrencyPair(
+        UUID datasourceId,
         UUID id,
         String ticker,
         String shortName,

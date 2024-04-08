@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday;
+package ru.ioque.investfund.adapters.datasource.client.dto.intraday;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -27,8 +28,9 @@ public class ContractDto extends IntradayValueDto {
     }
 
     @Override
-    public IntradayValue toDomain() {
+    public IntradayValue toDomain(UUID datasourceId) {
         return Contract.builder()
+            .datasourceId(datasourceId)
             .number(getNumber())
             .ticker(getTicker())
             .dateTime(getDateTime())

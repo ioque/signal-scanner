@@ -19,6 +19,7 @@ public class AddDatasourceCommand {
     String name;
     String url;
     String description;
+
     public Datasource factory(UUID id) {
         return Datasource
             .builder()

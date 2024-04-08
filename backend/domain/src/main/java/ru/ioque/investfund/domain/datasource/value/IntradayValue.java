@@ -9,12 +9,14 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @ToString
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable, Comparable<IntradayValue> {
+    UUID datasourceId;
     Long number;
     LocalDateTime dateTime;
     String ticker;
@@ -22,21 +24,19 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
     Double value;
 
     public IntradayValue(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
+        this.datasourceId = datasourceId;
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.price = price;
         this.value = value;
-    }
-
-    public boolean isAfter(IntradayValue intradayValue) {
-        return getNumber() > intradayValue.getNumber();
     }
 
     @Override

@@ -62,7 +62,7 @@ public abstract class InstrumentEntity extends AbstractEntity {
 
     public abstract Instrument toDomain();
 
-    public static InstrumentEntity fromDomain(Instrument instrument) {
+    public static InstrumentEntity from(Instrument instrument) {
         return instrumentMappers.get(instrument.getClass()).apply(instrument);
     }
 

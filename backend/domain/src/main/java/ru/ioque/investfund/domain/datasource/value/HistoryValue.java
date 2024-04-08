@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Builder
 @ToString
@@ -19,6 +20,7 @@ import java.util.Objects;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class HistoryValue implements Comparable<HistoryValue>, Serializable {
+    UUID datasourceId;
     LocalDate tradeDate;
     String ticker;
     Double openPrice;
@@ -31,9 +33,5 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     @Override
     public int compareTo(HistoryValue historyValue) {
         return Objects.compare(getTradeDate(), historyValue.getTradeDate(), LocalDate::compareTo);
-    }
-
-    public boolean isAfter(HistoryValue historyValue) {
-        return getTradeDate().isAfter(historyValue.getTradeDate());
     }
 }

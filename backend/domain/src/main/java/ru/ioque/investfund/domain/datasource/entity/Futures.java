@@ -23,6 +23,7 @@ public class Futures extends Instrument {
 
     @Builder
     public Futures(
+        UUID datasourceId,
         UUID id,
         String ticker,
         String shortName,

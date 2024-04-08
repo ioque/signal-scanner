@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.history;
+package ru.ioque.investfund.adapters.datasource.client.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -31,8 +32,9 @@ public class HistoryValueDto {
     Double waPrice;
     Double value;
 
-    public HistoryValue toDomain() {
+    public HistoryValue toDomain(UUID datasourceId) {
         return HistoryValue.builder()
+            .datasourceId(datasourceId)
             .tradeDate(tradeDate)
             .ticker(ticker)
             .openPrice(openPrice)

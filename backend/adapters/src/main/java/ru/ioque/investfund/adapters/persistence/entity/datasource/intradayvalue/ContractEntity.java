@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -26,6 +27,7 @@ public class ContractEntity extends IntradayValueEntity {
 
     @Builder
     public ContractEntity(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -33,13 +35,14 @@ public class ContractEntity extends IntradayValueEntity {
         Double value,
         Integer qnt
     ) {
-        super(number, dateTime, ticker, price, value);
+        super(datasourceId, number, dateTime, ticker, price, value);
         this.qnt = qnt;
     }
 
     @Override
     public IntradayValue toDomain() {
         return Contract.builder()
+            .datasourceId(datasourceId)
             .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
@@ -51,6 +54,7 @@ public class ContractEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Contract contract) {
         return ContractEntity.builder()
+            .datasourceId(contract.getDatasourceId())
             .number(contract.getNumber())
             .dateTime(contract.getDateTime())
             .ticker(contract.getTicker())

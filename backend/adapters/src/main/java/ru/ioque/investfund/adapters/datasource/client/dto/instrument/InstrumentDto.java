@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.instrument;
+package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

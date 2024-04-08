@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
@@ -19,6 +20,7 @@ public class Deal extends IntradayValue {
 
     @Builder
     public Deal(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -27,7 +29,7 @@ public class Deal extends IntradayValue {
         Integer qnt,
         Double value
     ) {
-        super(number, dateTime, ticker, price, value);
+        super(datasourceId, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }

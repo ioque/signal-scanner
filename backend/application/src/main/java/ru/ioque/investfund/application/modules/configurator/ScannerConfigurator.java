@@ -22,7 +22,7 @@ public class ScannerConfigurator {
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
 
-    public synchronized void addNewScanner(AddScannerCommand command) {
+    public synchronized void addNewScanner(final AddScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
         scannerConfigRepository.save(
@@ -37,7 +37,7 @@ public class ScannerConfigurator {
         loggerFacade.logSaveNewDataScanner(id);
     }
 
-    public synchronized void updateScanner(UpdateScannerCommand command) {
+    public synchronized void updateScanner(final UpdateScannerCommand command) {
         if (!scannerConfigRepository.existsBy(command.getId())) {
             throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
         }

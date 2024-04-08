@@ -26,7 +26,6 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ImplDatasourceRepository implements DatasourceRepository {
     JpaDatasourceRepository exchangeRepository;
-    JpaInstrumentRepository instrumentEntityRepository;
     JpaHistoryValueRepository jpaHistoryValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
 

@@ -41,7 +41,7 @@ public class ScannerManager implements SystemModule {
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
-    private void runScanner(SignalScanner scanner) {
+    private void runScanner(final SignalScanner scanner) {
         loggerFacade.logRunWorkScanner(scanner);
         scannerLogRepository.saveAll(scanner.getId(), scanner.scanning(dateTimeProvider.nowDateTime()));
         scannerRepository.save(scanner);

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client;
+package ru.ioque.investfund.adapters.datasource.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.history.HistoryValueDto;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.adapters.datasource.client.dto.history.HistoryValueDto;
+import ru.ioque.investfund.adapters.datasource.client.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
 
 import java.time.LocalDate;
 import java.util.List;

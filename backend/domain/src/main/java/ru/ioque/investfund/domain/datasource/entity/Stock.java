@@ -22,6 +22,7 @@ public class Stock extends Instrument {
 
     @Builder
     public Stock(
+        UUID datasourceId,
         UUID id,
         String ticker,
         String shortName,

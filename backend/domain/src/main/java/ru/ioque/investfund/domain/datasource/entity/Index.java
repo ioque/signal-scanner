@@ -20,6 +20,7 @@ public class Index extends Instrument {
 
     @Builder
     public Index(
+        UUID datasourceId,
         UUID id,
         String ticker,
         String shortName,

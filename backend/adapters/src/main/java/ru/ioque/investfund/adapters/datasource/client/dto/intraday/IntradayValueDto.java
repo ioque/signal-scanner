@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday;
+package ru.ioque.investfund.adapters.datasource.client.dto.intraday;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -30,5 +31,5 @@ public abstract class IntradayValueDto {
     Double value;
     Double price;
 
-    public abstract IntradayValue toDomain();
+    public abstract IntradayValue toDomain(UUID datasourceId);
 }

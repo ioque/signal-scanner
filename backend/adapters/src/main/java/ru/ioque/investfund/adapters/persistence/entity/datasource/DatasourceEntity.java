@@ -74,7 +74,7 @@ public class DatasourceEntity extends AbstractEntity {
             .instruments(datasource
                 .getInstruments()
                 .stream()
-                .map(InstrumentEntity::fromDomain)
+                .map(InstrumentEntity::from)
                 .collect(Collectors.toSet())
             )
             .build();

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.exchagne.moex.client.dto.instrument;
+package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.Stock;
 
 import java.util.UUID;
 
@@ -17,40 +17,26 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StockDto extends InstrumentDto {
+public class CurrencyPairDto extends InstrumentDto {
     Integer lotSize;
-    String isin;
-    String regNumber;
-    Integer listLevel;
+    String faceUnit;
 
     @Builder
-    public StockDto(
-        String ticker,
-        String shortName,
-        String name,
-        Integer lotSize,
-        String isin,
-        String regNumber,
-        Integer listLevel
-    ) {
+    public CurrencyPairDto(String ticker, String shortName, String name, Integer lotSize, String faceUnit) {
         super(ticker, shortName, name);
         this.lotSize = lotSize;
-        this.isin = isin;
-        this.regNumber = regNumber;
-        this.listLevel = listLevel;
+        this.faceUnit = faceUnit;
     }
 
     @Override
     public Instrument toDomain(UUID id) {
-        return Stock.builder()
+        return CurrencyPair.builder()
             .id(id)
+            .faceUnit(faceUnit)
+            .lotSize(lotSize)
             .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())
-            .lotSize(lotSize)
-            .isin(isin)
-            .regNumber(regNumber)
-            .listLevel(listLevel)
             .build();
     }
 }

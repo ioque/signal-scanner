@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -27,6 +28,7 @@ public class DealEntity extends IntradayValueEntity {
 
     @Builder
     public DealEntity(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -35,7 +37,7 @@ public class DealEntity extends IntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(number, dateTime, ticker, price, value);
+        super(datasourceId, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }
@@ -43,6 +45,7 @@ public class DealEntity extends IntradayValueEntity {
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
+            .datasourceId(datasourceId)
             .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
@@ -55,6 +58,7 @@ public class DealEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Deal deal) {
         return DealEntity.builder()
+            .datasourceId(deal.getDatasourceId())
             .number(deal.getNumber())
             .dateTime(deal.getDateTime())
             .ticker(deal.getTicker())

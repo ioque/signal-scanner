@@ -1,15 +1,13 @@
-package ru.ioque.investfund.adapters.exchagne.moex;
+package ru.ioque.investfund.adapters.datasource;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.exchagne.moex.client.ExchangeRestClient;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.history.HistoryValueDto;
-import ru.ioque.investfund.adapters.exchagne.moex.client.dto.intraday.IntradayValueDto;
-import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.adapters.datasource.client.ExchangeRestClient;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
@@ -39,10 +37,7 @@ public class DatasourceProviderImpl implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<HistoryValue> fetchHistoryBy(
-        Datasource datasource,
-        Instrument instrument
-    ) {
+    public List<HistoryValue> fetchHistoryBy(Datasource datasource, Instrument instrument) {
         return moexClient
             .fetchHistory(
                 datasource.getUrl(),
@@ -51,17 +46,14 @@ public class DatasourceProviderImpl implements DatasourceProvider {
                 instrument.historyRightBound(dateTimeProvider.nowDate())
             )
             .stream()
-            .map(HistoryValueDto::toDomain)
+            .map(row -> row.toDomain(datasource.getId()))
             .distinct()
             .toList();
     }
 
     @Override
     @SneakyThrows
-    public List<IntradayValue> fetchIntradayValuesBy(
-        Datasource datasource,
-        Instrument instrument
-    ) {
+    public List<IntradayValue> fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return moexClient
             .fetchIntradayValues(
                 datasource.getUrl(),
@@ -69,7 +61,7 @@ public class DatasourceProviderImpl implements DatasourceProvider {
                 instrument.getLastTradingNumber()
             )
             .stream()
-            .map(IntradayValueDto::toDomain)
+            .map(row -> row.toDomain(datasource.getId()))
             .distinct()
             .toList();
     }

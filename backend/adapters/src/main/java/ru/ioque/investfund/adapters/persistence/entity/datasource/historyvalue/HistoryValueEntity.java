@@ -15,6 +15,7 @@ import lombok.ToString;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -28,6 +29,8 @@ public class HistoryValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false)
+    UUID datasourceId;
     @Column(nullable = false)
     LocalDate tradeDate;
     @Column(nullable = false)
@@ -44,6 +47,7 @@ public class HistoryValueEntity {
 
     public HistoryValue toDomain() {
         return HistoryValue.builder()
+            .datasourceId(datasourceId)
             .ticker(ticker)
             .tradeDate(tradeDate)
             .openPrice(openPrice)
@@ -57,6 +61,7 @@ public class HistoryValueEntity {
 
     public static HistoryValueEntity fromDomain(HistoryValue historyValue) {
         return HistoryValueEntity.builder()
+            .datasourceId(historyValue.getDatasourceId())
             .ticker(historyValue.getTicker())
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())

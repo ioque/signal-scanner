@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -25,18 +26,20 @@ public class DeltaEntity extends IntradayValueEntity {
 
     @Builder
     public DeltaEntity(
+        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
-        super(number, dateTime, ticker, price, value);
+        super(datasourceId, number, dateTime, ticker, price, value);
     }
 
     @Override
     public IntradayValue toDomain() {
         return Delta.builder()
+            .datasourceId(datasourceId)
             .number(number)
             .dateTime(dateTime)
             .ticker(ticker)
@@ -45,13 +48,14 @@ public class DeltaEntity extends IntradayValueEntity {
             .build();
     }
 
-    public static IntradayValueEntity from(Delta domain) {
+    public static IntradayValueEntity from(Delta delta) {
         return DeltaEntity.builder()
-            .number(domain.getNumber())
-            .dateTime(domain.getDateTime())
-            .ticker(domain.getTicker())
-            .price(domain.getPrice())
-            .value(domain.getValue())
+            .datasourceId(delta.getDatasourceId())
+            .number(delta.getNumber())
+            .dateTime(delta.getDateTime())
+            .ticker(delta.getTicker())
+            .price(delta.getPrice())
+            .value(delta.getValue())
             .build();
     }
 }
