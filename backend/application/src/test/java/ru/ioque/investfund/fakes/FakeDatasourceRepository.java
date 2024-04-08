@@ -26,8 +26,13 @@ public class FakeDatasourceRepository implements DatasourceRepository {
     final Map<String, List<HistoryValue>> historyValues = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<Datasource> get() {
-        return exchanges.values().stream().findFirst();
+    public List<Datasource> getAll() {
+        return exchanges.values().stream().toList();
+    }
+
+    @Override
+    public Optional<Datasource> getBy(UUID datasourceId) {
+        return Optional.ofNullable(exchanges.get(datasourceId));
     }
 
     @Override
@@ -64,7 +69,7 @@ public class FakeDatasourceRepository implements DatasourceRepository {
     }
 
     @Override
-    public void deleteDatasource() {
-        exchanges.clear();
+    public void deleteDatasource(UUID datasourceId) {
+        exchanges.remove(datasourceId);
     }
 }

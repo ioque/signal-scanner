@@ -6,11 +6,13 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface DatasourceRepository {
-    Optional<Datasource> get();
+    List<Datasource> getAll();
+    Optional<Datasource> getBy(UUID datasourceId);
     void saveDatasource(Datasource datasource);
     void saveIntradayValues(List<IntradayValue> intradayValues);
     void saveHistoryValues(List<HistoryValue> historyValues);
-    void deleteDatasource();
+    void deleteDatasource(UUID datasourceId);
 }

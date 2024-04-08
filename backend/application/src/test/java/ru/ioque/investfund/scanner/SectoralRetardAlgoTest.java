@@ -30,7 +30,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 null,
                 intradayScale
@@ -51,7 +51,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 0D,
                 intradayScale
@@ -72,7 +72,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 -1D,
                 intradayScale
@@ -93,7 +93,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 historyScale, null
             )
@@ -113,7 +113,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 0D
@@ -134,7 +134,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 -1D
@@ -273,7 +273,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
+            getInstrumentsBy(getDatasourceId(), Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 intradayScale
@@ -291,8 +291,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getTickers());
+        exchangeManager().integrateInstruments(getDatasourceId());
+        exchangeManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
     }
 
 
@@ -319,8 +319,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         exchangeDataFixture().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 80D, 10D, 1),
+                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 80D, 10D),
                 //ROSN
                 buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
                 buildDealResultBy("ROSN", "2023-12-21", 250D, 255D, 1D, 1D),
@@ -341,8 +341,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         exchangeDataFixture().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy("BRF4", "2023-12-21", 74D, 74D, 10D, 1),
+                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy("BRF4", "2023-12-21", 74D, 74D, 10D),
                 //ROSN
                 buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
                 buildDealResultBy("ROSN", "2023-12-21", 250D, 251D, 1D, 1D),

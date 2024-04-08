@@ -37,21 +37,21 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instruments")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateInstruments();
+        datasourceManager.integrateInstruments(datasourceId);
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateTradingData();
+        datasourceManager.integrateTradingData(datasourceId);
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
-        datasourceManager.enableUpdate(request.getTickers());
+        datasourceManager.enableUpdate(datasourceId, request.getTickers());
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/disable-update")
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
-        datasourceManager.disableUpdate(request.getTickers());
+        datasourceManager.disableUpdate(datasourceId, request.getTickers());
     }
 }

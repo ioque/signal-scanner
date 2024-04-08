@@ -28,7 +28,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 null,
                 180,
@@ -50,7 +50,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 null,
@@ -72,7 +72,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -94,7 +94,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -116,7 +116,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 0D,
                 180,
@@ -138,7 +138,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 -1D,
                 180,
@@ -160,7 +160,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 0,
@@ -182,7 +182,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 -180,
@@ -671,15 +671,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getTickers());
+        exchangeManager().integrateInstruments(getDatasourceId());
+        exchangeManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
     }
 
     private void initScanner(AlgorithmConfig configurator, String... tickers) {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
+            getInstrumentsBy(getDatasourceId(), Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             configurator
         );
     }

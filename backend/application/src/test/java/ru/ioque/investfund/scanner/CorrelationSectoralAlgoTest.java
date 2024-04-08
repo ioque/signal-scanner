@@ -2,9 +2,8 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.core.DomainException;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 null,
                 stockOvernightScale,
@@ -53,7 +52,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 null,
@@ -75,7 +74,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -97,7 +96,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -119,7 +118,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 0D,
                 stockOvernightScale,
@@ -141,7 +140,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 -1D,
                 stockOvernightScale,
@@ -163,7 +162,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 0D,
@@ -185,7 +184,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 -1D,
@@ -285,7 +284,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         initPositiveDeals();
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
             buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
             buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
@@ -331,8 +330,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         initPositiveDeals();
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1)
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D)
         );
         initScanner();
 
@@ -377,8 +376,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments();
         initPositiveDeals();
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
             buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner();
@@ -394,7 +393,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -406,8 +405,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initPositiveDealResults() {
         exchangeDataFixture().initTradingResults(
             List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D, 1),
+                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
                 buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
                 buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
             )
@@ -416,8 +415,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     private void initNegativeDealResults() {
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D, 1),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 74D, 10D, 1),
+            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 74D, 10D),
             buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
             buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
@@ -451,7 +450,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        exchangeManager().integrateInstruments();
-        exchangeManager().enableUpdate(getInstrumentsBy(tickers).map(Instrument::getTicker).toList());
+        exchangeManager().integrateInstruments(getDatasourceId());
+        exchangeManager().enableUpdate(getDatasourceId(), tickers);
     }
 }

@@ -32,6 +32,11 @@ public class DatasourceManagerTest extends BaseTest {
                 .build()
         );
     }
+
+    private UUID getDatasourceId() {
+        return exchangeRepository().getAll().get(0).getId();
+    }
+
     @Test
     @DisplayName("""
         T1. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
@@ -47,14 +52,14 @@ public class DatasourceManagerTest extends BaseTest {
             afks()
         );
 
-        exchangeManager().integrateInstruments();
-        final Optional<Datasource> exchange = exchangeRepository().get();
+        exchangeManager().integrateInstruments(getDatasourceId());
+        final Optional<Datasource> exchange = exchangeRepository().getBy(getDatasourceId());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
         assertEquals("http://localhost:8080", exchange.get().getUrl());
         assertEquals("Московская биржа", exchange.get().getDescription());
         assertEquals(2, exchange.get().getInstruments().size());
-        assertEquals(2, getInstruments().size());
+        assertEquals(2, getInstruments(getDatasourceId()).size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(
             loggerProvider()
@@ -73,13 +78,13 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateInstruments();
+        exchangeManager().integrateInstruments(getDatasourceId());
         clearLogs();
 
-        final var id = exchangeRepository().get().orElseThrow().getId();
-        exchangeManager().integrateInstruments();
-        assertEquals(10, getInstruments().size());
-        assertEquals(id, exchangeRepository().get().orElseThrow().getId());
+        final var id = exchangeRepository().getBy(getDatasourceId()).orElseThrow().getId();
+        exchangeManager().integrateInstruments(getDatasourceId());
+        assertEquals(10, getInstruments(getDatasourceId()).size());
+        assertEquals(id, exchangeRepository().getBy(getDatasourceId()).orElseThrow().getId());
     }
 
     @Test
@@ -91,11 +96,11 @@ public class DatasourceManagerTest extends BaseTest {
     void testCase3() {
         initInstruments(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateInstruments();
+        exchangeManager().integrateInstruments(getDatasourceId());
         clearLogs();
         initInstruments(afks(), imoex(), brf4(), lkoh(), rosn(), sibn());
-        exchangeManager().integrateInstruments();
-        assertEquals(6, getInstruments().size());
+        exchangeManager().integrateInstruments(getDatasourceId());
+        assertEquals(6, getInstruments(getDatasourceId()).size());
     }
 
     @Test
@@ -117,8 +122,8 @@ public class DatasourceManagerTest extends BaseTest {
                 .lotSize(10000)
                 .build()
         ));
-        exchangeManager().integrateInstruments();
-        assertEquals(1, getInstruments().size());
+        exchangeManager().integrateInstruments(getDatasourceId());
+        assertEquals(1, getInstruments(getDatasourceId()).size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(loggerProvider().logContainsMessageParts(
             "Начата синхронизация с источником данных \"Московская биржа\". Текущее время: 2023-12-12T10:00.",
@@ -136,7 +141,7 @@ public class DatasourceManagerTest extends BaseTest {
     void testCase5() {
         exchangeDataFixture().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
-        exchangeManager().integrateInstruments();
+        exchangeManager().integrateInstruments(getDatasourceId());
         clearLogs();
         initDealDatas(
                 buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
@@ -150,9 +155,9 @@ public class DatasourceManagerTest extends BaseTest {
                 buildTradingResultWith("AFKS", LocalDate.parse("2023-12-11")).build()
         );
 
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
-        assertEquals(1, getInstruments().size());
+        assertEquals(1, getInstruments(getDatasourceId()).size());
         assertEquals(3, getIntradayValues().size());
         assertEquals(4, getHistoryValues().size());
         assertEquals(2, loggerProvider().log.size());
@@ -167,7 +172,7 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase9() {
         initTodayDateTime("2023-12-19T10:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         clearLogs();
         initTradingResults(generateTradingResultsBy(
             "AFKS",
@@ -175,7 +180,7 @@ public class DatasourceManagerTest extends BaseTest {
             dateTimeProvider().daysAgo(1)
         ));
 
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
 
         assertEquals(
@@ -194,7 +199,7 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase10() {
         initTodayDateTime("2023-12-08T10:15:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         clearLogs();
         initDealDatas(
             buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
@@ -204,7 +209,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(5L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
 
         assertEquals(3, getIntradayValuesBy("AFKS").size());
@@ -220,12 +225,12 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCas11() {
         initTodayDateTime("2023-12-07T12:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initDealDatas(
             buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
             buildDealWith(2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
@@ -251,9 +256,9 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCas12() {
         initTodayDateTime("2023-12-08T12:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initTradingResults(generateTradingResultsBy("AFKS", nowMinus3Month(), nowMinus1Days()));
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
@@ -272,7 +277,7 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase13() {
         initTodayDateTime("2023-12-08T12:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initDealDatas(buildDealWith(1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy("AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
         exchangeManager().execute();
@@ -290,14 +295,14 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase14() {
         initTodayDateTime("2023-12-08T12:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         clearLogs();
 
-        exchangeManager().disableUpdate(List.of("AFKS"));
+        exchangeManager().disableUpdate(getDatasourceId(), List.of("AFKS"));
         initDealDatas(
             buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
             buildBuyDealBy(1L,"AFKS", "11:00:00", 10D, 10D, 1)
@@ -320,8 +325,9 @@ public class DatasourceManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase15() {
-        exchangeManager().unregisterDatasource();
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(List.of("AFKS")));
+        UUID datasourceId = getDatasourceId();
+        exchangeManager().unregisterDatasource(datasourceId);
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(datasourceId, List.of("AFKS")));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 
@@ -332,8 +338,9 @@ public class DatasourceManagerTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase16() {
-        exchangeManager().unregisterDatasource();
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(List.of("AFKS")));
+        UUID datasourceId = getDatasourceId();
+        exchangeManager().unregisterDatasource(datasourceId);
+        var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(datasourceId, List.of("AFKS")));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 
@@ -343,10 +350,10 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase17() {
         initTodayDateTime("2023-12-08T12:00:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initDealDatas(buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
     }
@@ -357,14 +364,14 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase18() {
         initTodayDateTime("2023-12-08T10:15:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(
             buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1),
             buildBuyDealBy(2L,"AFKS", "10:00:00", 11D, 10D, 1),
             buildBuyDealBy(3L,"AFKS", "10:00:00", 11D, 10D, 2)
         );
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         assertEquals(3, getIntradayValuesBy("AFKS").size());
     }
@@ -375,12 +382,12 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase19() {
         initTodayDateTime("2023-12-08T10:15:00");
-        integrateInstruments(afks());
+        integrateInstruments(getDatasourceId(), afks());
         initTradingResults(buildDealResultBy("AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(
             buildBuyDealBy(1L,"AFKS", "10:00:00", 10D, 10D, 1)
         );
-        exchangeManager().enableUpdate(List.of("AFKS"));
+        exchangeManager().enableUpdate(getDatasourceId(), List.of("AFKS"));
         exchangeManager().execute();
         exchangeManager().execute();
         assertEquals(1, getIntradayValuesBy("AFKS").size());

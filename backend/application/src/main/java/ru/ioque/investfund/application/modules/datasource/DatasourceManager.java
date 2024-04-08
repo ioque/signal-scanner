@@ -18,6 +18,7 @@ import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @Component
@@ -33,49 +34,47 @@ public class DatasourceManager implements SystemModule {
 
     @Override
     public synchronized void execute() {
-        if (repository.get().isPresent()) {
-            integrateTradingData();
-        }
+        repository.getAll().stream().map(Datasource::getId).forEach(this::integrateTradingData);
     }
 
-    public synchronized void registerDatasource(AddDatasourceCommand command) {
+    public synchronized void registerDatasource(final AddDatasourceCommand command) {
         repository.saveDatasource(command.factory(uuidProvider.generate()));
     }
 
-    public synchronized void unregisterDatasource() {
-        repository.deleteDatasource();
+    public synchronized void unregisterDatasource(final UUID datasourceId) {
+        repository.deleteDatasource(datasourceId);
     }
 
-    public synchronized void enableUpdate(List<String> tickers) {
-        final Datasource datasource = getExchangeFromRepo();
+    public synchronized void enableUpdate(final UUID datasourceId, final List<String> tickers) {
+        final Datasource datasource = getExchangeFromRepo(datasourceId);
         datasource.enableUpdate(tickers);
         repository.saveDatasource(datasource);
     }
 
-    public synchronized void disableUpdate(List<String> tickers) {
-        final Datasource datasource = getExchangeFromRepo();
+    public synchronized void disableUpdate(final UUID datasourceId, final List<String> tickers) {
+        final Datasource datasource = getExchangeFromRepo(datasourceId);
         datasource.disableUpdate(tickers);
         repository.saveDatasource(datasource);
     }
 
-    public synchronized void integrateInstruments() {
-        final Datasource datasource = getExchangeFromRepo();
+    public synchronized void integrateInstruments(final UUID datasourceId) {
+        final Datasource datasource = getExchangeFromRepo(datasourceId);
         loggerFacade.logRunSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
         datasourceProvider.fetchInstruments(datasource).forEach(datasource::saveInstrument);
         repository.saveDatasource(datasource);
         loggerFacade.logFinishSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
     }
 
-    public synchronized void integrateTradingData() {
-        Datasource datasource = getExchangeFromRepo();
+    public synchronized void integrateTradingData(final UUID datasourceId) {
+        final Datasource datasource = getExchangeFromRepo(datasourceId);
         datasource.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
-            List<HistoryValue> history = datasourceProvider
+            final List<HistoryValue> history = datasourceProvider
                 .fetchHistoryBy(datasource, instrument)
                 .stream()
                 .distinct()
                 .toList();
-            List<IntradayValue> intraday = datasourceProvider
+            final List<IntradayValue> intraday = datasourceProvider
                 .fetchIntradayValuesBy(datasource, instrument)
                 .stream()
                 .distinct()
@@ -87,11 +86,15 @@ public class DatasourceManager implements SystemModule {
             loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
         });
         repository.saveDatasource(datasource);
-        eventBus.publish(new TradingDataUpdatedEvent(uuidProvider.generate(), dateTimeProvider.nowDateTime()));
+        eventBus.publish(TradingDataUpdatedEvent.builder()
+            .id(uuidProvider.generate())
+            .dateTime(dateTimeProvider.nowDateTime())
+            .datasourceId(datasource.getId())
+            .build());
     }
 
-    private Datasource getExchangeFromRepo() {
-        return repository.get().orElseThrow(exchangeNotFound());
+    private Datasource getExchangeFromRepo(final UUID datasourceId) {
+        return repository.getBy(datasourceId).orElseThrow(exchangeNotFound());
     }
 
     private Supplier<ApplicationException> exchangeNotFound() {

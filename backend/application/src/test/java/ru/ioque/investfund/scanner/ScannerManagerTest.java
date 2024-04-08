@@ -3,14 +3,13 @@ package ru.ioque.investfund.scanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
+import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SIGNAL SCANNER MANAGER - CREATE SIGNAL SCANNER")
-public class ScannerManagerTest extends BaseTest {
+public class ScannerManagerTest extends BaseScannerTest {
     @BeforeEach
     void initRepo() {
         exchangeManager().registerDatasource(
@@ -32,7 +31,7 @@ public class ScannerManagerTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        exchangeManager().integrateInstruments();
+        exchangeManager().integrateInstruments(getDatasourceId());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -117,7 +116,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -143,7 +142,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Старое описание",
-            getInstruments()
+            getInstruments(getDatasourceId())
                 .stream()
                 .filter(row -> row.getClass().equals(Stock.class))
                 .map(Instrument::getTicker)
@@ -161,7 +160,7 @@ public class ScannerManagerTest extends BaseTest {
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
                     "Старое описание",
-                    getTickers(),
+                    getTickers(getDatasourceId()),
                     new AnomalyVolumeAlgorithmConfig(
                         1.5,
                         180,
@@ -171,7 +170,7 @@ public class ScannerManagerTest extends BaseTest {
             );
 
         assertNotEquals(qnt, fakeDataScannerStorage().getAll().get(0).getTickers().size());
-        assertEquals(getInstruments().size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
+        assertEquals(getInstruments(getDatasourceId()).size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
     }
 
     @Test
@@ -183,7 +182,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Старое описание",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -196,7 +195,7 @@ public class ScannerManagerTest extends BaseTest {
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
                     "Новое описание",
-                    getTickers(),
+                    getTickers(getDatasourceId()),
                     new AnomalyVolumeAlgorithmConfig(
                         1.5,
                         180,
@@ -206,7 +205,7 @@ public class ScannerManagerTest extends BaseTest {
             );
 
         assertEquals("Новое описание", fakeDataScannerStorage().getAll().get(0).getDescription());
-        assertEquals(getInstruments().size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
+        assertEquals(getInstruments(getDatasourceId()).size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
     }
 
     @Test
@@ -223,7 +222,7 @@ public class ScannerManagerTest extends BaseTest {
                         id,
                         1,
                         "Новое описание",
-                        getTickers(),
+                        getTickers(getDatasourceId()),
                         new AnomalyVolumeAlgorithmConfig(
                             1.5,
                             180,
@@ -244,7 +243,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Старое описание",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -258,7 +257,7 @@ public class ScannerManagerTest extends BaseTest {
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         1,
                         "",
-                        getTickers(),
+                        getTickers(getDatasourceId()),
                         new AnomalyVolumeAlgorithmConfig(
                             1.5,
                             180,
@@ -279,7 +278,7 @@ public class ScannerManagerTest extends BaseTest {
         addScanner(
             1,
             "Старое описание",
-            getTickers(),
+            getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,

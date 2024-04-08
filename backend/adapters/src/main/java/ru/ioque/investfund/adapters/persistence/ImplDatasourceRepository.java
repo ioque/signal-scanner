@@ -19,6 +19,7 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -30,12 +31,19 @@ public class ImplDatasourceRepository implements DatasourceRepository {
     JpaIntradayValueRepository jpaIntradayValueRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Datasource> get() {
+    public List<Datasource> getAll() {
         return exchangeRepository
             .findAll()
             .stream()
-            .findFirst()
+            .map(DatasourceEntity::toDomain)
+            .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Datasource> getBy(UUID datasourceId) {
+        return exchangeRepository
+            .findById(datasourceId)
             .map(DatasourceEntity::toDomain);
     }
 
@@ -57,10 +65,9 @@ public class ImplDatasourceRepository implements DatasourceRepository {
 
     @Override
     @Transactional
-    public void deleteDatasource() {
+    public void deleteDatasource(UUID datasourceId) {
         jpaIntradayValueRepository.deleteAll();
         jpaHistoryValueRepository.deleteAll();
-        instrumentEntityRepository.deleteAll();
-        exchangeRepository.deleteAll();
+        exchangeRepository.deleteById(datasourceId);
     }
 }

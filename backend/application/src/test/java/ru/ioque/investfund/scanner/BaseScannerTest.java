@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.scanner.value.Signal;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,6 +36,10 @@ public class BaseScannerTest extends BaseTest {
         );
         eventBus().subscribe(TradingDataUpdatedEvent.class, dataScannerManager());
         loggerProvider().clearLogs();
+    }
+
+    protected UUID getDatasourceId() {
+        return exchangeRepository().getAll().get(0).getId();
     }
 
     protected void runWorkPipelineAndClearLogs() {

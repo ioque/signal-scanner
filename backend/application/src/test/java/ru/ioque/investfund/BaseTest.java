@@ -113,9 +113,9 @@ public class BaseTest {
         scannerConfigurator().updateScanner(command);
     }
 
-    protected List<Instrument> getInstruments() {
+    protected List<Instrument> getInstruments(UUID datasourceId) {
         return exchangeRepository()
-            .get()
+            .getBy(datasourceId)
             .map(Datasource::getInstruments)
             .orElse(new ArrayList<>());
     }
@@ -124,8 +124,8 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-    protected Stream<Instrument> getInstrumentsBy(List<String> tickers) {
-        return getInstruments().stream().filter(row -> tickers.contains(row.getTicker()));
+    protected Stream<Instrument> getInstrumentsBy(UUID datasourceId, List<String> tickers) {
+        return getInstruments(datasourceId).stream().filter(row -> tickers.contains(row.getTicker()));
     }
 
     protected List<HistoryValue> generateTradingResultsBy(String ticker, LocalDate start, LocalDate stop) {
@@ -140,9 +140,9 @@ public class BaseTest {
         return historyValues;
     }
 
-    protected void integrateInstruments(Instrument... instruments) {
+    protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
-        exchangeManager().integrateInstruments();
+        exchangeManager().integrateInstruments(datasourceId);
     }
 
     protected void initInstruments(Instrument... instruments) {
@@ -181,8 +181,8 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected List<String> getTickers() {
-        return getInstruments().stream().map(Instrument::getTicker).toList();
+    protected List<String> getTickers(UUID datasourceId) {
+        return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
     }
 
     protected Deal buildBuyDealBy(
@@ -256,13 +256,12 @@ public class BaseTest {
         String tradeDate,
         Double openPrice,
         Double closePrice,
-        Double value,
-        Integer volume
+        Double value
     ) {
         return HistoryValue.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
-            .openPrice(1D)
+            .openPrice(openPrice)
             .closePrice(closePrice)
             .highPrice(1D)
             .lowPrice(1D)
