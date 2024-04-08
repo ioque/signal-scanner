@@ -35,7 +35,7 @@ public class DatasourceCommandController {
         );
     }
 
-    @PostMapping("/api/datasource/{datasourceId}/instruments")
+    @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
         datasourceManager.integrateInstruments(datasourceId);
     }

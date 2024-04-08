@@ -47,7 +47,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
         """)
     public void testCase1() {
         mvc
-            .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/instruments"))
+            .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/instrument"))
             .andExpect(status().isOk());
     }
 

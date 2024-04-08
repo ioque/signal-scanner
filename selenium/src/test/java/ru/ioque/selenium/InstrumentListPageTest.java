@@ -13,14 +13,23 @@ public class InstrumentListPageTest extends BaseFrontendTest {
         Тестирование взаимодействия с основными элементами страницы.
         """)
     public void verifyPage() {
-        loadPageInstrumentList();
+        loadPageDatasourceList();
+        final String datasourceId = driver
+            .findElement(By.className("table"))
+            .findElements(By.xpath("./child::*"))
+            .get(1)
+            .findElements(By.xpath("./child::*"))
+            .stream().map(row -> row.findElements((By.xpath("./child::*"))).get(0).getText())
+            .toList()
+            .get(0);
+        loadPageInstrumentList(datasourceId);
         verifyExchangeElement();
         verifyInstrumentList();
     }
 
     private void verifyExchangeElement() {
-        var exchangeHeaderElement = driver.findElement(By.xpath ("//*[contains(text(),'Московская биржа')]"));
-        assertEquals("Московская биржа", exchangeHeaderElement.getText());
+        var exchangeHeaderElement = driver.findElement(By.xpath ("//*[contains(text(),'Конфигурируемый источник данных')]"));
+        assertEquals("Конфигурируемый источник данных", exchangeHeaderElement.getText());
     }
 
     private void verifyInstrumentList() {
@@ -44,7 +53,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
 
     private void assertTableRow(WebElement webElement, String ticker, String shortName) {
         var columns = webElement.findElements((By.xpath("./child::*")));
-        assertEquals(ticker, columns.get(1).getText());
-        assertEquals(shortName, columns.get(2).getText());
+        assertEquals(ticker, columns.get(0).getText());
+        assertEquals(shortName, columns.get(1).getText());
     }
 }

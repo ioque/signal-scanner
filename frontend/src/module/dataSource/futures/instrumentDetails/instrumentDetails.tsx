@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Instrument} from "../../entities/Exchange";
+import {Instrument} from "../../entities/Datasource";
 import {fetchInstrumentDetails} from "../../api/dataSourceRestClient";
 import {Accordion, Spinner} from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 
 export type InstrumentDetailsParams = {
-    id: string
+    datasourceId: string,
+    instrumentId: string,
 }
 
 export default function InstrumentDetails(params: InstrumentDetailsParams) {
     const [instrument, setInstrument] = useState<Instrument>();
     useEffect(() => {
-        fetchInstrumentDetails(params.id).then((data) => setInstrument(data));
-    }, [params.id]);
+        fetchInstrumentDetails(params.datasourceId, params.instrumentId).then((data) => setInstrument(data));
+    }, [params.datasourceId, params.instrumentId]);
 
     if (!instrument) {
         return <Spinner animation="border" role="status">

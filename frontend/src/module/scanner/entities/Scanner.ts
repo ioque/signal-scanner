@@ -1,4 +1,4 @@
-import {InstrumentInList} from "../../dataSource/entities/Exchange";
+import {InstrumentInList} from "../../dataSource/entities/Datasource";
 
 export type Scanner = {
     id: string;

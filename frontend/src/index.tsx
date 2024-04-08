@@ -9,6 +9,7 @@ import ScannersPage from "./pages/ScannersPage";
 import InstrumentDetailsPage from "./pages/InstrumentDetailsPage";
 import ScannerDetailsPage from "./pages/ScannerDetailsPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DatasourceListPage from "./pages/DatasourceListPage";
 
 const router = createBrowserRouter([
     {
@@ -17,19 +18,23 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: "instruments",
+                path: "datasource",
+                element: <DatasourceListPage />,
+            },
+            {
+                path: "datasource/:datasourceId/instrument",
                 element: <InstrumentsPage />,
             },
             {
-                path: "instruments/:id",
+                path: "datasource/:datasourceId/instrument/:instrumentId",
                 element: <InstrumentDetailsPage />
             },
             {
-                path: "scanners",
+                path: "scanner",
                 element: <ScannersPage />,
             },
             {
-                path: "scanners/:id",
+                path: "scanner/:id",
                 element: <ScannerDetailsPage />
             },
         ],

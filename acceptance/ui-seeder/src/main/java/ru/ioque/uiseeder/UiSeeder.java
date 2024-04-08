@@ -27,13 +27,11 @@ public class UiSeeder implements CommandLineRunner {
         Dataset uiTestsDataset = UiTestsDataset.getUiTestsDataset();
         clientFacade.getDatasourceProviderClient().initDataset(uiTestsDataset);
         clientFacade.getServiceClient().clearState();
-        clientFacade.getServiceClient().initDateTime(UiTestsDataset
-            .getLastWorkDay()
-            .atTime(LocalTime.parse("10:00:00")));
+        clientFacade.getServiceClient().initDateTime(UiTestsDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
         clientFacade.getDatasourceRestClient().registerDatasource(
             RegisterDatasourceRequest.builder()
-                .name("Московская биржа")
-                .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
+                .name("Конфигурируемый источник данных")
+                .description("Конфигурируемый источник данных, использовать для тестирования алгоритмов.")
                 .url(datasourceUrl)
                 .build()
         );
@@ -48,12 +46,12 @@ public class UiSeeder implements CommandLineRunner {
                     .map(Instrument::getTicker)
                     .toList())
             );
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getAnomalyVolumeSignalRequest());
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getPrefSimpleRequest());
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getAnomalyVolumeSignalRequest(datasourceID));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getPrefSimpleRequest(datasourceID));
         clientFacade
             .getSignalScannerRestClient()
-            .saveDataScannerConfig(UiTestsDataset.getCorrelationSectoralScannerRequest());
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getSectoralRetardScannerRequest());
+            .saveDataScannerConfig(UiTestsDataset.getCorrelationSectoralScannerRequest(datasourceID));
+        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getSectoralRetardScannerRequest(datasourceID));
         clientFacade.getDatasourceRestClient().integrateTradingData(datasourceID);
         log.info("UiTestStartup finish");
     }

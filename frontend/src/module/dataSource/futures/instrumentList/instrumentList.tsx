@@ -1,30 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Exchange, InstrumentInList} from "../../entities/Exchange";
-import {fetchExchange, fetchInstruments} from "../../api/dataSourceRestClient";
+import {Datasource, InstrumentInList} from "../../entities/Datasource";
+import {fetchDatasource, fetchInstrumentList} from "../../api/dataSourceRestClient";
 import Table from 'react-bootstrap/Table';
 import {Accordion, Spinner} from "react-bootstrap";
 
-export default function InstrumentList() {
+export type InstrumentListParams = {
+    datasourceId: string,
+}
+
+export default function InstrumentList(params: InstrumentListParams) {
     const navigate = useNavigate();
     const handleClick = (id: string) => navigate(`${id}`);
-    const [exchange, setExchange] = useState<Exchange>();
+    const [datasource, setDatasource] = useState<Datasource>();
     const [instruments, setInstruments] = useState<Array<InstrumentInList>>([]);
 
     useEffect(() => {
-        fetchExchange().then((data) => setExchange(data));
-        fetchInstruments().then((data) => setInstruments(data));
+        fetchDatasource(params.datasourceId).then((data) => setDatasource(data));
+        fetchInstrumentList(params.datasourceId).then((data) => setInstruments(data));
     }, []);
 
     const listItems = instruments.map(instrument =>
-        <tr key={instrument.id} onClick={() => handleClick(instrument.id)}>
-            <td>{instrument.id}</td>
+        <tr key={instrument.id} onClick={() => handleClick(instrument.ticker)}>
             <td>{instrument.ticker}</td>
             <td>{instrument.shortName}</td>
         </tr>
     );
 
-    if (!exchange || !instruments || instruments.length === 0) {
+    if (!datasource || !instruments || instruments.length === 0) {
         return <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
         </Spinner>
@@ -33,12 +36,12 @@ export default function InstrumentList() {
     const exchangeItem =
         <Accordion defaultActiveKey="1">
             <Accordion.Item eventKey="0">
-                <Accordion.Header id="exchangeHeader">{exchange.name}</Accordion.Header>
+                <Accordion.Header id="exchangeHeader">{datasource.name}</Accordion.Header>
                 <Accordion.Body>
                     <h5>Адрес шлюза</h5>
-                    <p>{exchange.url}</p>
+                    <p>{datasource.url}</p>
                     <h5>Описание</h5>
-                    <p>{exchange.description}</p>
+                    <p>{datasource.description}</p>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>;
@@ -49,7 +52,6 @@ export default function InstrumentList() {
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Тикер</th>
                     <th>Краткое наименование</th>
                 </tr>

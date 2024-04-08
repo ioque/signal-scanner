@@ -55,14 +55,20 @@ public class BaseFrontendTest {
         }
     }
 
-    protected void loadPageInstrumentList() {
-        driver.get("http://" + getUiUrl() + "/instruments");
+    protected void loadPageDatasourceList() {
+        driver.get("http://" + getUiUrl() + "/datasource");
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
+    }
+
+    protected void loadPageInstrumentList(String datasourceId) {
+        driver.get("http://" + getUiUrl() + "/datasource/" + datasourceId + "/instrument");
         new WebDriverWait(driver, ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
 
     protected void loadPageScannerList() {
-        driver.get("http://" + getUiUrl() + "/scanners");
+        driver.get("http://" + getUiUrl() + "/scanner");
         new WebDriverWait(driver, ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
     }
@@ -70,12 +76,12 @@ public class BaseFrontendTest {
     private ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
-        options.addArguments("disable-infobars"); // disabling infobars
-        options.addArguments("--disable-extensions"); // disabling extensions
-        options.addArguments("--start-maximized"); // disabling extensions
-        options.addArguments("--disable-gpu"); // applicable to windows os only
-        options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
-        options.addArguments("--no-sandbox"); // Bypass OS security model
+        options.addArguments("disable-infobars");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--start-maximized");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
         options.addArguments("--lang=en");
         options.addArguments("--remote-allow-origins=*");
         options.setPageLoadTimeout(DELAY);

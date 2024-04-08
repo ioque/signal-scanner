@@ -14,8 +14,8 @@ export default function Root() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href={`/instruments`}>Финансовые инструменты</Nav.Link>
-                            <Nav.Link href={`/scanners`}>Сканеры</Nav.Link>
+                            <Nav.Link href={`/datasource`}>Источники данных</Nav.Link>
+                            <Nav.Link href={`/scanner`}>Сканеры</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

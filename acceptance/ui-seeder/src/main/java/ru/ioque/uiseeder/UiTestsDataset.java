@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class UiTestsDataset {
@@ -81,8 +82,9 @@ public class UiTestsDataset {
         return dailyResults;
     }
 
-    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest() {
+    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(UUID datasourceId) {
         return AnomalyVolumeScannerRequest.builder()
+            .datasourceId(datasourceId)
             .workPeriodInMinutes(1)
             .scaleCoefficient(1.5)
             .description("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")
@@ -92,8 +94,9 @@ public class UiTestsDataset {
             .build();
     }
 
-    public static AddSignalScannerRequest getPrefSimpleRequest() {
+    public static AddSignalScannerRequest getPrefSimpleRequest(UUID datasourceId) {
         return PrefSimpleRequest.builder()
+            .datasourceId(datasourceId)
             .workPeriodInMinutes(1)
             .tickers(List.of("SBER", "SBERP"))
             .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
@@ -101,8 +104,9 @@ public class UiTestsDataset {
             .build();
     }
 
-    public static AddSignalScannerRequest getSectoralRetardScannerRequest() {
+    public static AddSignalScannerRequest getSectoralRetardScannerRequest(UUID datasourceId) {
         return SectoralRetardScannerRequest.builder()
+            .datasourceId(datasourceId)
             .workPeriodInMinutes(60)
             .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH"))
             .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
@@ -111,8 +115,9 @@ public class UiTestsDataset {
             .build();
     }
 
-    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest() {
+    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(UUID datasourceId) {
         return CorrelationSectoralScannerRequest.builder()
+            .datasourceId(datasourceId)
             .workPeriodInMinutes(24 * 60)
             .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4"))
             .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")

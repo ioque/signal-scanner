@@ -98,7 +98,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .thenReturn(instrumentInLists);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments"))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instrument"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -117,7 +117,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T7. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments/{instrumentId}.
+        T7. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instrument/{instrumentId}.
         """)
     public void testCase7() {
         LocalDate date = LocalDate.parse("2024-01-12");
@@ -150,7 +150,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .thenReturn(intraday);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments/TEST_STOCK"))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instrument/TEST_STOCK"))
             .andExpect(status().isOk())
             .andExpect(
                 content()

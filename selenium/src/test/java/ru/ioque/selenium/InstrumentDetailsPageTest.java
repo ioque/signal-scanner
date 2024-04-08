@@ -14,7 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class InstrumentDetailsPageTest extends BaseFrontendTest {
     @Test
     public void verifyPage() {
-        loadPageInstrumentList();
+        loadPageDatasourceList();
+        final String datasourceId = driver
+            .findElement(By.className("table"))
+            .findElements(By.xpath("./child::*"))
+            .get(1)
+            .findElements(By.xpath("./child::*"))
+            .stream().map(row -> row.findElements((By.xpath("./child::*"))).get(0).getText())
+            .toList()
+            .get(0);
+        loadPageInstrumentList(datasourceId);
         var ids = driver
             .findElement(By.className("table"))
             .findElements(By.xpath("./child::*"))
@@ -22,14 +31,14 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
             .findElements(By.xpath("./child::*"))
             .stream().map(row -> row.findElements((By.xpath("./child::*"))).get(0).getText())
             .toList();
-        verifyDetailsPage(ids.get(0), "BR-1.24 (BRF4)", 128, 1000);
-        verifyDetailsPage(ids.get(1), "USDRUB_TOM (USD000UTSTOM)", 0, 0);
-        verifyDetailsPage(ids.get(2), "Газпромнефть (SIBN)", 123, 999);
-        verifyDetailsPage(ids.get(3), "Индекс фондового рынка мосбиржи (IMOEX)", 128, 1000);
+        verifyDetailsPage(datasourceId, ids.get(0), "BR-1.24 (BRF4)", 128, 1000);
+        verifyDetailsPage(datasourceId, ids.get(1), "USDRUB_TOM (USD000UTSTOM)", 0, 0);
+        verifyDetailsPage(datasourceId, ids.get(2), "Газпромнефть (SIBN)", 123, 1000);
+        verifyDetailsPage(datasourceId, ids.get(3), "Индекс фондового рынка мосбиржи (IMOEX)", 128, 1000);
     }
 
-    private void verifyDetailsPage(String id, String name, int dailyValueQnt, int intradayValueQnt) {
-        loadPageDetails(id);
+    private void verifyDetailsPage(String datasourceId, String instrumentId, String name, int dailyValueQnt, int intradayValueQnt) {
+        loadPageDetails(datasourceId, instrumentId);
         assertEquals(name, getHeaderElement().getText());
         assertEquals(dailyValueQnt, getDailyValueRows().size());
         assertEquals(intradayValueQnt, getIntradayValueRows().size());
@@ -55,8 +64,8 @@ public class InstrumentDetailsPageTest extends BaseFrontendTest {
             .findElements(By.xpath("./child::*"));
     }
 
-    private void loadPageDetails(String id) {
-        driver.get("http://" + getUiUrl() + "/instruments/" + id);
+    private void loadPageDetails(String datasourceId, String ticker) {
+        driver.get("http://" + getUiUrl() + "/datasource/" + datasourceId + "/instrument/" + ticker);
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.visibilityOfElementLocated(By.className("accordion-button")));
     }

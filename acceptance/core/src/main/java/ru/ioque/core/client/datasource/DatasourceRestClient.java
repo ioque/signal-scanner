@@ -25,7 +25,7 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
 
     @SneakyThrows
     public void integrateInstruments(UUID datasourceId) {
-        post("/api/datasource/" + datasourceId + "/instruments");
+        post("/api/datasource/" + datasourceId + "/instrument");
     }
 
     @SneakyThrows
@@ -45,7 +45,7 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
 
     @SneakyThrows
     public List<InstrumentInListResponse> getInstruments(UUID datasourceId, String params) {
-        String path = "/api/datasource/" + datasourceId + "/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
+        String path = "/api/datasource/" + datasourceId + "/instrument" + (params == null || params.isEmpty() ? "" : ("?" + params));
         return objectMapper.readValue(get(path), new TypeReference<>(){});
     }
 
@@ -61,7 +61,7 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
 
     @SneakyThrows
     public InstrumentResponse getInstrumentBy(UUID datasourceId, String ticker) {
-        return objectMapper.readValue(get("/api/datasource/" + datasourceId + "/instruments/" + ticker), InstrumentResponse.class);
+        return objectMapper.readValue(get("/api/datasource/" + datasourceId + "/instrument/" + ticker), InstrumentResponse.class);
     }
 
     @SneakyThrows

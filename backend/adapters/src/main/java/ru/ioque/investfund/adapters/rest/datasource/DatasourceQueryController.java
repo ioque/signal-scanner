@@ -36,7 +36,7 @@ public class DatasourceQueryController {
         return ExchangeResponse.from(datasourceQueryService.findDatasourceBy(datasourceId));
     }
 
-    @GetMapping("/api/datasource/{datasourceId}/instruments/{ticker}")
+    @GetMapping("/api/datasource/{datasourceId}/instrument/{ticker}")
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
         InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(ticker);
         List<HistoryValueEntity> history = datasourceQueryService.findHistory(
@@ -52,7 +52,7 @@ public class DatasourceQueryController {
         return InstrumentResponse.from(instrument, history, intraday);
     }
 
-    @GetMapping("/api/datasource/{datasourceId}/instruments")
+    @GetMapping("/api/datasource/{datasourceId}/instrument")
     public List<InstrumentInListResponse> findInstruments(
         @PathVariable UUID datasourceId,
         @RequestParam(required = false) String ticker,

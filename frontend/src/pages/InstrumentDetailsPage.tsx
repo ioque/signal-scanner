@@ -7,6 +7,6 @@ import ErrorPage from "./ErrorPage";
 
 export default function InstrumentDetailsPage() {
     const params = useParams<InstrumentDetailsParams>()
-    if (!params.id) return <ErrorPage />;
-    return <InstrumentDetails id={params.id} />
+    if (!params.instrumentId || !params.datasourceId) return <ErrorPage />;
+    return <InstrumentDetails instrumentId={params.instrumentId} datasourceId={params.datasourceId} />
 }

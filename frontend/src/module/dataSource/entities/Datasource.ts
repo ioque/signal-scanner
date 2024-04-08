@@ -1,4 +1,4 @@
-export type Exchange = {
+export type Datasource = {
     id: string;
     name: string;
     url: string;
