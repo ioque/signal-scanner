@@ -17,16 +17,16 @@ public class SignalScannerRestClient extends JsonApplicationHttpClient {
 
     @SneakyThrows
     public List<SignalScannerInListResponse> getDataScanners() {
-        return objectMapper.readValue(get("/api/signal-scanner"), new TypeReference<>(){});
+        return objectMapper.readValue(get("/api/scanner"), new TypeReference<>(){});
     }
 
     @SneakyThrows
     public SignalScannerResponse getSignalScannerBy(UUID id) {
-        return objectMapper.readValue(get("/api/signal-scanner/" + id), SignalScannerResponse.class);
+        return objectMapper.readValue(get("/api/scanner/" + id), SignalScannerResponse.class);
     }
 
     @SneakyThrows
     public void saveDataScannerConfig(AddSignalScannerRequest request) {
-        post("/api/signal-scanner", objectMapper.writeValueAsString(request));
+        post("/api/scanner", objectMapper.writeValueAsString(request));
     }
 }

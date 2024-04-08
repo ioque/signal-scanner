@@ -26,14 +26,19 @@ public class DatasourceQueryController {
     DatasourceQueryService datasourceQueryService;
     DateTimeProvider dateTimeProvider;
 
+    @GetMapping("/api/datasource")
+    public List<ExchangeResponse> getAllDatasource() {
+        return List.of(ExchangeResponse.fromEntity(datasourceQueryService.findDatasource()));
+    }
+
     @GetMapping("/api/datasource/{datasourceId}")
-    public ExchangeResponse getExchange(@PathVariable UUID datasourceId) {
+    public ExchangeResponse getDatasourceBy(@PathVariable UUID datasourceId) {
         return ExchangeResponse.fromEntity(datasourceQueryService.findDatasource());
     }
 
-    @GetMapping("/api/datasource/{datasourceId}/instruments/{instrumentId}")
-    public InstrumentResponse getInstrument(@PathVariable UUID datasourceId, @PathVariable UUID instrumentId) {
-        InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(instrumentId);
+    @GetMapping("/api/datasource/{datasourceId}/instruments/{ticker}")
+    public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
+        InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(ticker);
         List<HistoryValueEntity> history = datasourceQueryService.findHistory(
             instrument,
             dateTimeProvider.nowDate().minusMonths(6)
@@ -46,7 +51,7 @@ public class DatasourceQueryController {
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instruments")
-    public List<InstrumentInListResponse> getInstruments(
+    public List<InstrumentInListResponse> findInstruments(
         @PathVariable UUID datasourceId,
         @RequestParam(required = false) String ticker,
         @RequestParam(required = false) String type,

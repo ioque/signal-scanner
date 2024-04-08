@@ -38,16 +38,20 @@ public class BaseApiAcceptanceTest {
     @Autowired
     private DatasetManager datasetManager;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
+
     @BeforeEach
     void beforeEach() {
         serviceClient().clearState();
     }
+
     private DatasourceRestClient exchangeClient() {
         return clientFacade.getDatasourceRestClient();
     }
+
     private SignalScannerRestClient signalScannerClient() {
         return clientFacade.getSignalScannerRestClient();
     }
+
     private ServiceClient serviceClient() {
         return clientFacade.getServiceClient();
     }
@@ -55,67 +59,88 @@ public class BaseApiAcceptanceTest {
     protected void initDateTime(LocalDateTime dateTime) {
         serviceClient().initDateTime(dateTime);
     }
+
+    protected List<ExchangeResponse> getAllDatasource() {
+        return exchangeClient().getExchanges();
+    }
+
     protected void registerDatasource(RegisterDatasourceRequest request) {
         exchangeClient().registerDatasource(request);
     }
+
     protected void addSignalScanner(AddSignalScannerRequest request) {
         signalScannerClient().saveDataScannerConfig(request);
     }
+
     protected List<SignalResponse> getSignalsBy(UUID id) {
         return signalScannerClient().getSignalScannerBy(id).getSignals();
     }
-    protected List<String> getTickers() {
-        return getInstruments()
+
+    protected List<String> getTickers(UUID datasourceId) {
+        return getInstruments(datasourceId)
             .stream()
             .map(InstrumentInListResponse::getTicker)
             .toList();
     }
+
     protected List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerClient().getDataScanners();
     }
-    protected ExchangeResponse getExchange() {
-        return exchangeClient().getExchange();
-    }
-    protected void fullIntegrate() {
-        integrateInstruments();
-        integrateTradingData();
+
+    protected ExchangeResponse getExchangeBy(UUID exchangeId) {
+        return exchangeClient().getExchangeBy(exchangeId);
     }
 
-    protected void integrateInstruments() {
-        exchangeClient().synchronizeWithDataSource();
-        enableUpdateInstrumentBy(getTickers());
+    protected void fullIntegrate(UUID datasourceId) {
+        integrateInstruments(datasourceId);
+        integrateTradingData(datasourceId);
+    }
+
+    protected void integrateInstruments(UUID datasourceId) {
+        exchangeClient().integrateInstruments(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
     }
 
     protected void runArchiving() {
         exchangeClient().runArchiving();
     }
-    protected void integrateTradingData() {
-        exchangeClient().integrateTradingData();
+
+    protected void integrateTradingData(UUID datasourceId) {
+        exchangeClient().integrateTradingData(datasourceId);
     }
-    protected void enableUpdateInstrumentBy(List<String> tickers) {
-        exchangeClient().enableUpdateInstruments(new EnableUpdateInstrumentRequest(tickers));
+
+    protected void enableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
+        exchangeClient().enableUpdateInstruments(exchangeId, new EnableUpdateInstrumentRequest(tickers));
     }
-    protected void disableUpdateInstrumentBy(List<String> tickers) {
-        exchangeClient().disableUpdateInstruments(new DisableUpdateInstrumentRequest(tickers));
+
+    protected void disableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
+        exchangeClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
     }
-    protected List<InstrumentInListResponse> getInstruments() {
-        return exchangeClient().getInstruments("");
+
+    protected List<InstrumentInListResponse> getInstruments(UUID exchangeId) {
+        return exchangeClient().getInstruments(exchangeId, "");
     }
-    protected List<InstrumentInListResponse> getInstruments(Map<String, String> params) {
+
+    protected List<InstrumentInListResponse> getInstruments(UUID exchangeId, Map<String, String> params) {
         return exchangeClient()
-            .getInstruments(params
-                .entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"))
+            .getInstruments(
+                exchangeId,
+                params
+                    .entrySet()
+                    .stream()
+                    .map(entry -> entry.getKey() + "=" + entry.getValue())
+                    .collect(Collectors.joining("&"))
             );
     }
-    protected InstrumentResponse getInstrumentById(UUID id) {
-        return exchangeClient().getInstrumentBy(id);
+
+    protected InstrumentResponse getInstrumentBy(UUID exchangeId, String ticker) {
+        return exchangeClient().getInstrumentBy(exchangeId, ticker);
     }
+
     protected List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
         return clientFacade.getArchiveRestClient().getIntradayValues(pageNumber, pageSize);
     }
+
     protected TradingDataGeneratorFacade generator() {
         return generator;
     }

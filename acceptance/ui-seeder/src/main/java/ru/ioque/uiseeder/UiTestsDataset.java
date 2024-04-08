@@ -21,7 +21,6 @@ import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
 import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
 import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
@@ -82,56 +81,40 @@ public class UiTestsDataset {
         return dailyResults;
     }
 
-    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(List<InstrumentInListResponse> instruments) {
+    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest() {
         return AnomalyVolumeScannerRequest.builder()
             .workPeriodInMinutes(1)
             .scaleCoefficient(1.5)
             .description("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")
             .historyPeriod(180)
             .indexTicker("IMOEX")
-            .tickers(instruments
-                .stream()
-                .map(InstrumentInListResponse::getTicker)
-                .filter(ticker -> List.of("TGKN", "TGKB", "IMOEX").contains(ticker))
-                .toList())
+            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .build();
     }
 
-    public static AddSignalScannerRequest getPrefSimpleRequest(List<InstrumentInListResponse> instruments) {
+    public static AddSignalScannerRequest getPrefSimpleRequest() {
         return PrefSimpleRequest.builder()
             .workPeriodInMinutes(1)
-            .tickers(instruments
-                .stream()
-                .map(InstrumentInListResponse::getTicker)
-                .filter(ticker -> List.of("SBER", "SBERP").contains(ticker))
-                .toList())
+            .tickers(List.of("SBER", "SBERP"))
             .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
             .spreadParam(1.0)
             .build();
     }
 
-    public static AddSignalScannerRequest getSectoralRetardScannerRequest(List<InstrumentInListResponse> instruments) {
+    public static AddSignalScannerRequest getSectoralRetardScannerRequest() {
         return SectoralRetardScannerRequest.builder()
             .workPeriodInMinutes(60)
-            .tickers(instruments
-                .stream()
-                .map(InstrumentInListResponse::getTicker)
-                .filter(ticker -> List.of("TATN", "ROSN", "SIBN", "LKOH").contains(ticker))
-                .toList())
+            .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH"))
             .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
             .historyScale(0.015)
             .intradayScale(0.015)
             .build();
     }
 
-    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(List<InstrumentInListResponse> instruments) {
+    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest() {
         return CorrelationSectoralScannerRequest.builder()
             .workPeriodInMinutes(24 * 60)
-            .tickers(instruments
-                .stream()
-                .map(InstrumentInListResponse::getTicker)
-                .filter(ticker -> List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4").contains(ticker))
-                .toList())
+            .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4"))
             .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
             .futuresTicker("BRF4")
             .futuresOvernightScale(0.015)

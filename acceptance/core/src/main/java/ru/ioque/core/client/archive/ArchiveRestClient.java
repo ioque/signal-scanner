@@ -14,7 +14,7 @@ public class ArchiveRestClient extends JsonApplicationHttpClient {
 
     @SneakyThrows
     public List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
-        String path = "/api/intraday-values?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+        String path = "/api/archive/intraday?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
         return objectMapper.readValue(get(path), new TypeReference<>(){});
     }
 }

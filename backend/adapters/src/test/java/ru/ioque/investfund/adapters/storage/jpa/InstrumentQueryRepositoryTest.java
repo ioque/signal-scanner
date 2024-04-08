@@ -33,7 +33,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
         T1. Получение списка всех инструментов
         """)
     void testCase1() {
-        saveExchangeWithStocks(UUID.randomUUID(), UUID.randomUUID());
+        saveExchangeWithStocks();
         var list = datasourceQueryService.getAllInstruments();
         assertEquals(2, list.size());
         assertTrue(list.stream().map(InstrumentEntity::getTicker).toList().containsAll(List.of("AFKS", "SBER")));
@@ -41,25 +41,23 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
 
     @Test
     @DisplayName("""
-        T2. Получение инструмента по его идентификатору
+        T2. Получение инструмента по его тикеру
         """)
     void testCase2() {
-        final UUID id1 = UUID.randomUUID();
-        final UUID id2 = UUID.randomUUID();
-        saveExchangeWithStocks(id1, id2);
-        assertEquals("AFKS", datasourceQueryService.findInstrumentBy(id1).getTicker());
-        assertEquals("SBER", datasourceQueryService.findInstrumentBy(id2).getTicker());
+        saveExchangeWithStocks();
+        assertEquals("AFKS", datasourceQueryService.findInstrumentBy("AFKS").getTicker());
+        assertEquals("SBER", datasourceQueryService.findInstrumentBy("SBER").getTicker());
     }
 
-    private void saveExchangeWithStocks(UUID id1, UUID id2) {
+    private void saveExchangeWithStocks() {
         Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build()
+                buildAfks().id(UUID.randomUUID()).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildAfks().id(UUID.randomUUID()).ticker("SBER").name("SBER").shortName("SBER").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);

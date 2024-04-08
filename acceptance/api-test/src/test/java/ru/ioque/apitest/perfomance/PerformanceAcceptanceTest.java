@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,6 +42,7 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         T1. Загрузка 50к сделок по торгам внутри дня
         """)
     void testCase1() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         LocalDateTime time = LocalDateTime.now();
         LocalDate startDate = time.toLocalDate().minusMonths(6);
         initDataset(
@@ -83,11 +85,11 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
         );
 
         long startMills = System.currentTimeMillis();
-        fullIntegrate();
+        fullIntegrate(datasourceId);
         long finishMills = System.currentTimeMillis();
         long seconds = ((finishMills - startMills) / 1000);
 
-        InstrumentResponse sber = getInstrumentById(getInstruments().get(0).getId());
+        InstrumentResponse sber = getInstrumentBy(datasourceId, "SBER");
         assertTrue(sber.getHistoryValues().size() >= 128);
         assertEquals(50000, sber.getIntradayValues().size());
         assertTrue(seconds < 60);

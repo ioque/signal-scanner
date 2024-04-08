@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,12 +55,13 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T1. Создание сканера сигналов с алгоритмом "Аномальные объемы".
         """)
     void testCase1() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         initDataset(
             Dataset.builder()
                 .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
@@ -68,7 +70,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .description("desc")
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .build()
         );
 
@@ -80,17 +82,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T2. Создание сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка".
         """)
     void testCase2() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         initDataset(
             Dataset.builder()
                 .instruments(List.of(DefaultInstrumentSet.sber(), DefaultInstrumentSet.sberp()))
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .workPeriodInMinutes(1)
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .description("desc")
                 .spreadParam(1.0)
                 .build()
@@ -104,6 +107,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T3. Создание сканера сигналов с алгоритмом "Секторальный отстающий".
         """)
     void testCase3() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         initDataset(
             Dataset.builder()
                 .instruments(List.of(
@@ -114,12 +118,12 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 ))
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .description("desc")
                 .historyScale(0.015)
                 .intradayScale(0.015)
@@ -134,6 +138,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T4. Создание сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора".
         """)
     void testCase4() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         initDataset(
             Dataset.builder()
                 .instruments(List.of(
@@ -145,12 +150,12 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 ))
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .description("desc")
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
@@ -166,6 +171,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T5. Запуск сканера сигналов с алгоритмом "Аномальные объемы", в торговых данных есть сигнал к покупке.
         """)
     void testCase5() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         initDataset(
@@ -251,7 +257,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 )
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             AnomalyVolumeScannerRequest.builder()
@@ -260,10 +266,10 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .description("desc")
                 .historyPeriod(180)
                 .indexTicker("IMOEX")
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .build()
         );
-        integrateTradingData();
+        integrateTradingData(datasourceId);
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -273,6 +279,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T6. Запуск сканера сигналов с алгоритмом "Дельта анализ пар преф-обычка", в торговых данных есть сигнал к покупке.
         """)
     void testCase6() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         LocalDateTime now = getDateTimeNow();
         LocalDate startDate = now.toLocalDate().minusMonths(1);
         initDataset(
@@ -349,18 +356,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 )
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             PrefSimpleRequest.builder()
                 .workPeriodInMinutes(1)
                 .spreadParam(1D)
                 .description("desc")
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .build()
         );
 
-        integrateTradingData();
+        integrateTradingData(datasourceId);
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -370,6 +377,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T7. Запуск сканера сигналов с алгоритмом "Секторальный отстающий", в торговых данных есть сигнал к покупке.
         """)
     void testCase7() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         LocalDateTime now = getDateTimeNow();
         List<HistoryValue> historyValues = new ArrayList<>();
         historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
@@ -479,18 +487,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .historyValues(historyValues)
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
         addSignalScanner(
             SectoralRetardScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .description("desc")
                 .historyScale(0.015)
                 .intradayScale(0.015)
                 .build()
         );
-        integrateTradingData();
+        integrateTradingData(datasourceId);
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
@@ -500,6 +508,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         T8. Запуск сканера сигналов с алгоритмом "Корреляция сектора с фьючерсом на товар сектора", в торговых данных есть сигнал к покупке.
         """)
     void testCase8() {
+        UUID datasourceId = getAllDatasource().get(0).getId();
         LocalDateTime now = getDateTimeNow();
         List<HistoryValue> historyValues = new ArrayList<>();
         historyValues.addAll(generator().generateHistory(HistoryGeneratorConfig
@@ -554,20 +563,20 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .intradayValues(intradayValues)
                 .build()
         );
-        integrateInstruments();
+        integrateInstruments(datasourceId);
 
 
         addSignalScanner(
             CorrelationSectoralScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .tickers(getTickers())
+                .tickers(getTickers(datasourceId))
                 .description("desc")
                 .futuresTicker("BRF4")
                 .futuresOvernightScale(0.015)
                 .stockOvernightScale(0.015)
                 .build()
         );
-        integrateTradingData();
+        integrateTradingData(datasourceId);
 
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }

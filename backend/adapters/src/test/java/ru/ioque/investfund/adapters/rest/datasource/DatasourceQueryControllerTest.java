@@ -82,7 +82,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         T6. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments.
         """)
     public void testCase6() {
-        List<InstrumentEntity> instrumentInLists = getInstruments();
+        List<InstrumentEntity> instrumentInLists = findInstrumentsBy();
 
         Mockito
             .when(datasourceQueryService.findInstruments(new InstrumentFilterParams(
@@ -121,7 +121,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     public void testCase7() {
         LocalDate date = LocalDate.parse("2024-01-12");
         LocalDateTime dateTime = date.atStartOfDay();
-        InstrumentEntity stock = getInstruments()
+        InstrumentEntity stock = findInstrumentsBy()
             .stream()
             .filter(row -> row.getTicker().equals("TEST_STOCK"))
             .findFirst()
@@ -139,7 +139,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .when(dateTimeProvider.nowDate())
             .thenReturn(date);
         Mockito
-            .when(datasourceQueryService.findInstrumentBy(stock.getId()))
+            .when(datasourceQueryService.findInstrumentBy("TEST_STOCK"))
             .thenReturn(stock);
         Mockito
             .when(datasourceQueryService.findHistory(stock, date.minusMonths(6)))
@@ -149,7 +149,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .thenReturn(intraday);
 
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments/" + stock.getId()))
+            .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instruments/TEST_STOCK"))
             .andExpect(status().isOk())
             .andExpect(
                 content()
@@ -242,7 +242,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         );
     }
 
-    protected List<InstrumentEntity> getInstruments() {
+    protected List<InstrumentEntity> findInstrumentsBy() {
         return List.of(
             StockEntity.builder()
                 .id(UUID.randomUUID())

@@ -24,43 +24,48 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
     }
 
     @SneakyThrows
-    public void synchronizeWithDataSource() {
-        post("/api/integrate");
+    public void integrateInstruments(UUID datasourceId) {
+        post("/api/datasource/" + datasourceId + "/instruments");
     }
 
     @SneakyThrows
-    public void integrateTradingData() {
-        post("/api/daily-integrate");
+    public void integrateTradingData(UUID datasourceId) {
+        post("/api/datasource/" + datasourceId + "/trading-data");
     }
 
     @SneakyThrows
-    public ExchangeResponse getExchange() {
-        return objectMapper.readValue(get("/api/datasource"), ExchangeResponse.class);
+    public List<ExchangeResponse> getExchanges() {
+        return objectMapper.readValue(get("/api/datasource"), new TypeReference<>(){});
     }
 
     @SneakyThrows
-    public List<InstrumentInListResponse> getInstruments(String params) {
-        String path = "/api/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
+    public ExchangeResponse getExchangeBy(UUID datasourceId) {
+        return objectMapper.readValue(get("/api/datasource/" + datasourceId), ExchangeResponse.class);
+    }
+
+    @SneakyThrows
+    public List<InstrumentInListResponse> getInstruments(UUID datasourceId, String params) {
+        String path = "/api/datasource/" + datasourceId + "/instruments" + (params == null || params.isEmpty() ? "" : ("?" + params));
         return objectMapper.readValue(get(path), new TypeReference<>(){});
     }
 
     @SneakyThrows
-    public void enableUpdateInstruments(EnableUpdateInstrumentRequest request) {
-        patch("/api/enable-update", objectMapper.writeValueAsString(request));
+    public void enableUpdateInstruments(UUID datasourceId, EnableUpdateInstrumentRequest request) {
+        patch("/api/datasource/" + datasourceId + "/enable-update", objectMapper.writeValueAsString(request));
     }
 
     @SneakyThrows
-    public void disableUpdateInstruments(DisableUpdateInstrumentRequest request) {
-        patch("/api/disable-update", objectMapper.writeValueAsString(request));
+    public void disableUpdateInstruments(UUID datasourceId, DisableUpdateInstrumentRequest request) {
+        patch("/api/datasource/" + datasourceId + "/disable-update", objectMapper.writeValueAsString(request));
     }
 
     @SneakyThrows
-    public InstrumentResponse getInstrumentBy(UUID id) {
-        return objectMapper.readValue(get("/api/instruments/" + id), InstrumentResponse.class);
+    public InstrumentResponse getInstrumentBy(UUID datasourceId, String ticker) {
+        return objectMapper.readValue(get("/api/datasource/" + datasourceId + "/instruments/" + ticker), InstrumentResponse.class);
     }
 
     @SneakyThrows
     public void runArchiving() {
-        post("/api/archiving");
+        post("/api/archive");
     }
 }

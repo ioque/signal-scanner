@@ -17,7 +17,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 @Component
@@ -36,9 +35,9 @@ public class DatasourceQueryService {
             .orElseThrow(notFoundException(notFoundDatasourceMsg()));
     }
 
-    public InstrumentEntity findInstrumentBy(UUID id) {
+    public InstrumentEntity findInstrumentBy(String ticker) {
         return instrumentRepository
-            .findById(id)
+            .findByTicker(ticker)
             .orElseThrow(notFoundException(instrumentNotFoundMsg()));
     }
 
