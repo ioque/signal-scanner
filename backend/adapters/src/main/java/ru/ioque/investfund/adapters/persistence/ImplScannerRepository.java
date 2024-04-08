@@ -48,13 +48,7 @@ public class ImplScannerRepository implements ScannerRepository {
     public Optional<SignalScanner> getBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
-            .map(row -> row.toDomain(createSnapshots(row.getTickers())));
-    }
-
-    @Override
-    @Transactional
-    public void save(SignalScanner dataScanner) {
-        signalScannerEntityRepository.save(toEntity(dataScanner));
+            .map(row -> row.toDomain(createSnapshots(row.getDatasourceId(), row.getTickers())));
     }
 
     @Override
@@ -63,17 +57,23 @@ public class ImplScannerRepository implements ScannerRepository {
         return signalScannerEntityRepository
             .findAll()
             .stream()
-            .map(row -> row.toDomain(createSnapshots(row.getTickers())))
+            .map(row -> row.toDomain(createSnapshots(row.getDatasourceId(), row.getTickers())))
             .toList();
     }
 
-    private List<TradingSnapshot> createSnapshots(List<String> tickers) {
+    @Override
+    @Transactional
+    public void save(SignalScanner dataScanner) {
+        signalScannerEntityRepository.save(toEntity(dataScanner));
+    }
+
+    private List<TradingSnapshot> createSnapshots(UUID datasourceId, List<String> tickers) {
         var histories = jpaHistoryValueRepository
-            .findAllByTickerIn(tickers)
+            .findAllByDatasourceIdAndTickerIn(datasourceId, tickers)
             .stream()
             .collect(Collectors.groupingBy(HistoryValueEntity::getTicker));
         var intradayValues = jpaIntradayValueRepository
-            .findAllBy(tickers, dateTimeProvider.nowDate().atStartOfDay())
+            .findAllBy(datasourceId, tickers, dateTimeProvider.nowDate().atStartOfDay())
             .stream()
             .collect(Collectors.groupingBy(IntradayValueEntity::getTicker));
         return tickers

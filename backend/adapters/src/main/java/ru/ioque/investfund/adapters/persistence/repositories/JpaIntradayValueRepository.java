@@ -7,12 +7,13 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface JpaIntradayValueRepository extends JpaRepository<IntradayValueEntity, Long> {
-    @Query("select d from IntradayValue d where d.dateTime >= :from and d.ticker in :tickers")
-    List<IntradayValueEntity> findAllBy(List<String> tickers, LocalDateTime from);
+    @Query("select d from IntradayValue d where d.datasourceId = :datasourceId and d.ticker in :tickers and d.dateTime >= :from")
+    List<IntradayValueEntity> findAllBy(UUID datasourceId, List<String> tickers, LocalDateTime from);
 
-    @Query("select d from IntradayValue d where d.dateTime >= :from and d.ticker = :ticker")
-    List<IntradayValueEntity> findAllBy(String ticker, LocalDateTime from);
+    @Query("select d from IntradayValue d where d.datasourceId = :datasourceId and d.ticker = :ticker and d.dateTime >= :from")
+    List<IntradayValueEntity> findAllBy(UUID datasourceId, String ticker, LocalDateTime from);
 }

@@ -38,6 +38,7 @@ import java.util.UUID;
 public abstract class ScannerEntity extends AbstractEntity {
     Integer workPeriodInMinutes;
     String description;
+    UUID datasourceId;
     @ElementCollection(fetch = FetchType.EAGER)
     List<String> tickers;
     LocalDateTime lastExecutionDateTime;
@@ -48,6 +49,7 @@ public abstract class ScannerEntity extends AbstractEntity {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         LocalDateTime lastExecutionDateTime,
         List<SignalEntity> signals
@@ -55,6 +57,7 @@ public abstract class ScannerEntity extends AbstractEntity {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
+        this.datasourceId = datasourceId;
         this.tickers = tickers;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = new ArrayList<>(signals.stream().peek(row -> row.setScanner(this)).toList());

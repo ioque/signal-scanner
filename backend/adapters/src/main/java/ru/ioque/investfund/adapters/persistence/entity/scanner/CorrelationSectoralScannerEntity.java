@@ -37,6 +37,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         List<SignalEntity> signals,
         LocalDateTime lastWorkDateTime,
@@ -44,7 +45,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(id, workPeriodInMinutes, description, tickers, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, datasourceId, tickers, lastWorkDateTime, signals);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
@@ -56,6 +57,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
             .id(config.getId())
             .workPeriodInMinutes(config.getWorkPeriodInMinutes())
             .description(config.getDescription())
+            .datasourceId(config.getDatasourceId())
             .tickers(config.getTickers())
             .lastWorkDateTime(null)
             .signals(new ArrayList<>())
@@ -71,6 +73,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
             .id(signalScanner.getId())
             .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
             .description(signalScanner.getDescription())
+            .datasourceId(signalScanner.getDatasourceId())
             .tickers(signalScanner.getTickers())
             .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
             .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
@@ -93,6 +96,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
                     .build()
                     .factoryAlgorithm()
             )
+            .datasourceId(getDatasourceId())
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
             .tradingSnapshots(tradingSnapshots)

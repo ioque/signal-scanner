@@ -6,6 +6,7 @@ import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfi
 import ru.ioque.investfund.domain.core.DomainException;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,12 +26,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр futuresOvernightScale."
         """)
     void testCase1() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 null,
                 stockOvernightScale,
@@ -47,12 +50,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр stockOvernightScale."
         """)
     void testCase2() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 null,
@@ -69,12 +74,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
         """)
     void testCase3() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -91,12 +98,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
         """)
     void testCase4() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -113,12 +122,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
         """)
     void testCase5() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 0D,
                 stockOvernightScale,
@@ -135,12 +146,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
         """)
     void testCase6() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 -1D,
                 stockOvernightScale,
@@ -157,12 +170,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
         """)
     void testCase7() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 0D,
@@ -179,12 +194,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
         """)
     void testCase8() {
-        initInstruments();
+        final UUID datasourceId = getDatasourceId();
+        initInstruments(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 -1D,
@@ -201,11 +218,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Сигнал зафиксирован.
         """)
     void testCase9() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
-        initPositiveDealResults();
-        initScanner();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
+        initPositiveDealResults(datasourceId);
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -219,12 +237,13 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T10. TATN росла вчера, BRF4 падал вчера.
         Сигнал не зафиксирован.
         """)
-    void testCase27() {
+    void testCase10() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initNegativeDeals();
-        initNegativeDealResults();
-        initScanner();
+        initInstruments(datasourceId);
+        initNegativeDeals(datasourceId);
+        initNegativeDealResults(datasourceId);
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -238,11 +257,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T11. С последнего запуска прошло меньше 24 часов, сканер не запущен.
         """)
     void testCase11() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
-        initPositiveDealResults();
-        initScanner();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
+        initPositiveDealResults(datasourceId);
+        initScanner(datasourceId);
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T18:00:00");
 
@@ -258,11 +278,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T12. С последнего запуска прошло 24 часа, сканер запущен.
         """)
     void testCase12() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
-        initPositiveDealResults();
-        initScanner();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
+        initPositiveDealResults(datasourceId);
+        initScanner(datasourceId);
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-23T13:00:00");
 
@@ -280,15 +301,16 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигнал зафиксирован.
         """)
     void testCase13() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
-        initScanner();
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -302,15 +324,16 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDealResults();
+        initInstruments(datasourceId);
+        initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
-        initScanner();
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -326,14 +349,15 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D)
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D)
         );
-        initScanner();
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -349,14 +373,15 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDealResults();
+        initInstruments(datasourceId);
+        initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildContractBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(2L, BRF4, "12:00:00", 96D, 96000D, 1)
+            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
+            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1)
         );
-        initScanner();
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -372,15 +397,16 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase17() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
-        initInstruments();
-        initPositiveDeals();
+        initInstruments(datasourceId);
+        initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
-        initScanner();
+        initScanner(datasourceId);
 
         exchangeManager().execute();
 
@@ -389,11 +415,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
     }
 
-    private void initScanner() {
+    private void initScanner(UUID datasourceId) {
         addScanner(
             1,
             "Корреляция сектора с фьючерсом.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new CorrelationSectoralAlgorithmConfig(
                 futuresOvernightScale,
                 stockOvernightScale,
@@ -402,47 +429,47 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initPositiveDealResults() {
+    private void initPositiveDealResults(UUID datasourceId) {
         exchangeDataFixture().initTradingResults(
             List.of(
-                buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 80D, 10D),
-                buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-                buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+                buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
+                buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
+                buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
             )
         );
     }
 
-    private void initNegativeDealResults() {
+    private void initNegativeDealResults(UUID datasourceId) {
         initTradingResults(
-            buildFuturesDealResultBy(BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(BRF4, "2023-12-21", 80D, 74D, 10D),
-            buildDealResultBy(TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 74D, 10D),
+            buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
         );
     }
 
-    private void initNegativeDeals() {
+    private void initNegativeDeals(UUID datasourceId) {
         initDealDatas(
-            buildContractBy(1L, BRF4, "10:00:00", 73D, 73000D, 1),
-            buildContractBy(2L, BRF4, "12:00:00", 72D, 73000D, 1),
-            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 73D, 73000D, 1),
+            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 72D, 73000D, 1),
+            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 
-    private void initPositiveDeals() {
+    private void initPositiveDeals(UUID datasourceId) {
         initDealDatas(
-            buildContractBy(1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(2L, BRF4, "12:00:00", 96D, 96000D, 1),
-            buildBuyDealBy(1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
+            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1),
+            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 
-    private void initInstruments() {
+    private void initInstruments(UUID datasourceId) {
         exchangeDataFixture()
             .initInstruments(
                 List.of(
@@ -450,7 +477,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        exchangeManager().integrateInstruments(getDatasourceId());
-        exchangeManager().enableUpdate(getDatasourceId(), tickers);
+        exchangeManager().integrateInstruments(datasourceId);
+        exchangeManager().enableUpdate(datasourceId, tickers);
     }
 }

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.scanner;
+package ru.ioque.investfund.application.modules.configurator;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +19,7 @@ public class UpdateScannerCommand {
     UUID id;
     Integer workPeriodInMinutes;
     String description;
+    UUID datasourceId;
     List<String> tickers;
     AlgorithmConfig algorithmConfig;
 
@@ -27,12 +28,14 @@ public class UpdateScannerCommand {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         AlgorithmConfig algorithmConfig
     ) {
         this.id = id;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
+        this.datasourceId = datasourceId;
         this.tickers = tickers;
         this.algorithmConfig = algorithmConfig;
     }

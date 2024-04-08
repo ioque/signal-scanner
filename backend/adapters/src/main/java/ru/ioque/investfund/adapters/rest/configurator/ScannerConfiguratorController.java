@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.configurator.request.ScannerRequest;
 import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
-import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
+import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
 
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class ScannerConfiguratorController {
     public void addNewScanner(@Valid @RequestBody ScannerRequest request) {
         scannerConfigurator
             .addNewScanner(
-                AddScannerCommand.builder()
+                AddNewScannerCommand.builder()
                     .tickers(request.getTickers())
                     .description(request.getDescription())
                     .workPeriodInMinutes(request.getWorkPeriodInMinutes())

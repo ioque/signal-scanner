@@ -3,8 +3,8 @@ package ru.ioque.investfund.application.share.logger;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
+import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
@@ -28,7 +28,7 @@ public class LoggerFacade {
         );
     }
 
-    public void logRunCreateSignalScanner(AddScannerCommand command) {
+    public void logRunCreateSignalScanner(AddNewScannerCommand command) {
         log(
             new InfoLog(
                 String

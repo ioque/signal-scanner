@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,12 +24,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр scaleCoefficient."
         """)
     void testCase1() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 null,
                 180,
@@ -45,12 +48,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр historyPeriod."
         """)
     void testCase2() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 null,
@@ -67,12 +72,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
         """)
     void testCase3() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -89,12 +96,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
         """)
     void testCase4() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 180,
@@ -111,12 +120,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
         """)
     void testCase5() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 0D,
                 180,
@@ -133,12 +144,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
         """)
     void testCase6() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 -1D,
                 180,
@@ -155,12 +168,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
         """)
     void testCase7() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 0,
@@ -177,12 +192,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
         """)
     void testCase8() {
-        initTgknAndTgkbAndImoex();
+        final UUID datasourceId = getDatasourceId();
+        initTgknAndTgkbAndImoex(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
                 -180,
@@ -202,11 +219,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: зарегистрировано два сигнала.
         """)
     void testCase9() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
-        initTgknAndTgkbAndImoexHistoryTradingData();
-        initTgknAndTgkbAndImoexIntradayData();
+        initTgknAndTgkbAndImoex(datasourceId);
+        initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
+        initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "TGKB", "IMOEX"
         );
@@ -224,11 +243,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T10. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
     void testCase10() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
-        initTgknAndTgkbAndImoexHistoryTradingData();
-        initTgknAndTgkbAndImoexIntradayData();
+        initTgknAndTgkbAndImoex(datasourceId);
+        initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
+        initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "TGKB", "IMOEX"
         );
@@ -249,11 +270,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T11. С последнего запуска прошла минута, сканер запущен.
         """)
     void testCase11() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
-        initTgknAndTgkbAndImoexHistoryTradingData();
-        initTgknAndTgkbAndImoexIntradayData();
+        initTgknAndTgkbAndImoex(datasourceId);
+        initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
+        initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "TGKB", "IMOEX"
         );
@@ -277,16 +300,18 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Результат: зарегистрирован сигнал к продаже. Сигнал к покупке закрыт.
         """)
     void testCase12() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
-        initTgknBuySignalDataset();
+        initTgknAndTgkbAndImoex(datasourceId);
+        initTgknBuySignalDataset(datasourceId);
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-24T12:00:00");
-        initTgknSellSignalDataset();
+        initTgknSellSignalDataset(datasourceId);
 
         exchangeManager().execute();
 
@@ -303,21 +328,23 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase13() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 99.D, 3000.0, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 99.D, 2900.0, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 100.D, 3000.0, 1_500_000.0)
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 99.D, 3000.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 99.D, 2900.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 100.D, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -337,18 +364,20 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 3000.0, 3000.0, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 3000.0, 3000.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -368,22 +397,24 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 2900.0, 2900.0, 1_500_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000D)
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 469D, 1)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
+            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 469D, 1)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -403,19 +434,21 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 2900.D, 2900.D, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2900.D, 2900.D, 1_500_000.0),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
+            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -436,20 +469,21 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         """)
     void testCase17() {
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(getDatasourceId());
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
+            buildDeltaBy(getDatasourceId(),1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(getDatasourceId(),2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(getDatasourceId(),1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(getDatasourceId(),2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(getDatasourceId(),3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
         initScanner(
+            getDatasourceId(),
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -469,18 +503,20 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase18() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -501,22 +537,24 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигнал есть.
         """)
     void testCase19() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-10", 2800D, 2800D, 1_000_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2800D, 2800D, 1_000_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 103D, 6000D, 1)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -536,20 +574,22 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase20() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex();
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy("IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 6000D, 1)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
         initScanner(
+            datasourceId,
             defaultConfiguration(),
             "TGKN", "IMOEX"
         );
@@ -588,82 +628,82 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertEquals(isRiseToday, tradingSnapshot.isRiseToday().orElse(null));
     }
 
-    private void initTgknBuySignalDataset() {
+    private void initTgknBuySignalDataset(UUID datasourceId) {
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 99D, 2000D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 100D, 1400D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-20", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-21", 100.D, 100.D, 100D, 1400D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-10", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-20", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 100D),
-            buildDeltaBy(2L, "IMOEX", "12:00:00", 3200D, 200D),
-            buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 5000D, 1),
-            buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(3L, "TGKN", "11:00:00", 100D, 1000D, 1),
-            buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 5000D, 1)
+            buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 2800D, 100D),
+            buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 3200D, 200D),
+            buildBuyDealBy(datasourceId, 1L, "TGKN", "10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(datasourceId, 2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, 3L, "TGKN", "11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(datasourceId, 4L, "TGKN", "11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(datasourceId, 5L, "TGKN", "11:45:00", 102D, 5000D, 1)
         );
     }
 
-    private void initTgknSellSignalDataset() {
+    private void initTgknSellSignalDataset(UUID datasourceId) {
         initTradingResults(
-            buildDealResultBy("TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
-            buildDealResultBy("TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildDealResultBy("TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
-            buildDeltaResultBy("IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(3L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(4L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(6L, "TGKN", "10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(7L, "TGKN", "10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(8L, "TGKN", "11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(9L, "TGKN", "11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(10L, "TGKN", "11:45:00", 96D, 5000D, 1)
+            buildDeltaBy(datasourceId, 3L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(datasourceId, 4L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(datasourceId, 6L, "TGKN", "10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(datasourceId, 7L, "TGKN", "10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, 8L, "TGKN", "11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(datasourceId, 9L, "TGKN", "11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, 10L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
     }
 
-    private void initTgknAndTgkbAndImoexHistoryTradingData() {
+    private void initTgknAndTgkbAndImoexHistoryTradingData(UUID datasourceId) {
         initTradingResults(
-            buildDealResultBy("TGKB", "2023-12-19", 99.D, 99.D, 1D, 2000D),
-            buildDealResultBy("TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy("TGKB", "2023-12-21", 100.D, 100.D, 1D, 1500D),
-            buildDealResultBy("TGKN", "2023-12-19", 99.D, 99.D, 1D, 3000D),
-            buildDealResultBy("TGKN", "2023-12-20", 99.D, 99.D, 1D, 1150D),
-            buildDealResultBy("TGKN", "2023-12-21", 100.D, 100.D, 1D, 1100D),
-            buildDeltaResultBy("IMOEX", "2023-12-10", 2800D, 2900D, 1_000_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-20", 2800D, 2900D, 1_500_000D),
-            buildDeltaResultBy("IMOEX", "2023-12-21", 2900D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, "TGKB", "2023-12-19", 99.D, 99.D, 1D, 2000D),
+            buildDealResultBy(datasourceId, "TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy(datasourceId, "TGKB", "2023-12-21", 100.D, 100.D, 1D, 1500D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-19", 99.D, 99.D, 1D, 3000D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-20", 99.D, 99.D, 1D, 1150D),
+            buildDealResultBy(datasourceId, "TGKN", "2023-12-21", 100.D, 100.D, 1D, 1100D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-10", 2800D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-20", 2800D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-21", 2900D, 3000D, 2_000_000D)
         );
     }
 
-    private void initTgknAndTgkbAndImoexIntradayData() {
+    private void initTgknAndTgkbAndImoexIntradayData(UUID datasourceId) {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildDeltaBy(1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
-                buildDeltaBy(2L, "IMOEX", "12:00:00", 3100D, 1_200_000D),
+                buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
+                buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 3100D, 1_200_000D),
                 //TGKB
-                buildBuyDealBy(1L, "TGKB", "10:00:00", 100D, 6000D, 1),
-                buildBuyDealBy(2L, "TGKB", "10:16:00", 100D, 1000D, 1),
-                buildBuyDealBy(3L, "TGKB", "11:00:00", 100D, 1000D, 1),
-                buildBuyDealBy(4L, "TGKB", "11:10:00", 100D, 1000D, 1),
-                buildBuyDealBy(5L, "TGKB", "11:50:00", 102D, 6000D, 1),
+                buildBuyDealBy(datasourceId, 1L, "TGKB", "10:00:00", 100D, 6000D, 1),
+                buildBuyDealBy(datasourceId, 2L, "TGKB", "10:16:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 3L, "TGKB", "11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 4L, "TGKB", "11:10:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 5L, "TGKB", "11:50:00", 102D, 6000D, 1),
                 //TGKN
-                buildBuyDealBy(1L, "TGKN", "10:00:00", 100D, 5000D, 1),
-                buildBuyDealBy(2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-                buildBuyDealBy(3L, "TGKN", "11:00:00", 100D, 1000D, 1),
-                buildBuyDealBy(4L, "TGKN", "11:01:00", 100D, 1000D, 1),
-                buildBuyDealBy(5L, "TGKN", "11:45:00", 102D, 5000D, 1)
+                buildBuyDealBy(datasourceId, 1L, "TGKN", "10:00:00", 100D, 5000D, 1),
+                buildBuyDealBy(datasourceId, 2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 3L, "TGKN", "11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 4L, "TGKN", "11:01:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, 5L, "TGKN", "11:45:00", 102D, 5000D, 1)
             )
         );
     }
 
-    private void initTgknAndTgkbAndImoex() {
+    private void initTgknAndTgkbAndImoex(UUID datasourceId) {
         exchangeDataFixture().initInstruments(
             List.of(
                 imoex(),
@@ -671,15 +711,16 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        exchangeManager().integrateInstruments(getDatasourceId());
-        exchangeManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
+        exchangeManager().integrateInstruments(datasourceId);
+        exchangeManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
-    private void initScanner(AlgorithmConfig configurator, String... tickers) {
+    private void initScanner(UUID datasourceId, AlgorithmConfig configurator, String... tickers) {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
-            getInstrumentsBy(getDatasourceId(), Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
+            datasourceId,
+            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             configurator
         );
     }

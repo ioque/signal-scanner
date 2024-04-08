@@ -17,6 +17,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @Component
@@ -27,11 +28,13 @@ public class DatasourceQueryService {
     JpaHistoryValueRepository historyValueRepository;
     JpaIntradayValueRepository intradayValueRepository;
 
-    public DatasourceEntity findDatasource() {
+    public List<DatasourceEntity> getAllDatasource() {
+        return exchangeRepository.findAll();
+    }
+
+    public DatasourceEntity findDatasourceBy(UUID datasourceId) {
         return exchangeRepository
-            .findAll()
-            .stream()
-            .findFirst()
+            .findById(datasourceId)
             .orElseThrow(notFoundException(notFoundDatasourceMsg()));
     }
 
@@ -41,15 +44,20 @@ public class DatasourceQueryService {
             .orElseThrow(notFoundException(instrumentNotFoundMsg()));
     }
 
-    public List<HistoryValueEntity> findHistory(InstrumentEntity instrument, LocalDate date) {
+    public List<HistoryValueEntity> findHistory(UUID datasourceId, InstrumentEntity instrument, LocalDate date) {
         return historyValueRepository.findAllBy(
+            datasourceId,
             instrument.getTicker(),
             date
         );
     }
 
-    public List<IntradayValueEntity> findIntraday(InstrumentEntity instrument, LocalDateTime dateTime) {
-        return intradayValueRepository.findAllBy(instrument.getTicker(), dateTime);
+    public List<IntradayValueEntity> findIntraday(
+        UUID datasourceId,
+        InstrumentEntity instrument,
+        LocalDateTime dateTime
+    ) {
+        return intradayValueRepository.findAllBy(datasourceId, instrument.getTicker(), dateTime);
     }
 
     public List<InstrumentEntity> findInstruments(InstrumentFilterParams filterParams) {
@@ -59,11 +67,11 @@ public class DatasourceQueryService {
         return instrumentRepository.findAll(filterParams.specification(), filterParams.pageRequest()).toList();
     }
 
-    private List<InstrumentEntity> findInstruments(Specification<InstrumentEntity> specification) {
+    public List<InstrumentEntity> findInstruments(Specification<InstrumentEntity> specification) {
         return instrumentRepository.findAll(specification);
     }
 
-    private List<InstrumentEntity> findInstruments(PageRequest pageRequest) {
+    public List<InstrumentEntity> findInstruments(PageRequest pageRequest) {
         return instrumentRepository.findAll(pageRequest).toList();
     }
 

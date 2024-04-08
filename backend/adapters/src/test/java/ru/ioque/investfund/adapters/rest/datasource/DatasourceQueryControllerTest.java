@@ -55,7 +55,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .instruments(Set.of())
             .build();
         Mockito
-            .when(datasourceQueryService.findDatasource())
+            .when(datasourceQueryService.findDatasourceBy(DATASOURCE_ID))
             .thenReturn(datasource);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID))
@@ -142,10 +142,10 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .when(datasourceQueryService.findInstrumentBy("TEST_STOCK"))
             .thenReturn(stock);
         Mockito
-            .when(datasourceQueryService.findHistory(stock, date.minusMonths(6)))
+            .when(datasourceQueryService.findHistory(DATASOURCE_ID, stock, date.minusMonths(6)))
             .thenReturn(history);
         Mockito
-            .when(datasourceQueryService.findIntraday(stock, dateTime))
+            .when(datasourceQueryService.findIntraday(DATASOURCE_ID, stock, dateTime))
             .thenReturn(intraday);
 
         mvc

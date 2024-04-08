@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,12 +24,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр spreadParam."
         """)
     void testCase1() {
-        initSberSberp();
+        final UUID datasourceId = getDatasourceId();
+        initSberSberp(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new PrefSimpleAlgorithmConfig(null)
         ));
 
@@ -41,12 +44,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
         """)
     void testCase2() {
-        initSberSberp();
+        final UUID datasourceId = getDatasourceId();
+        initSberSberp(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new PrefSimpleAlgorithmConfig(0D)
         ));
 
@@ -59,12 +64,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
         """)
     void testCase3() {
-        initSberSberp();
+        final UUID datasourceId = getDatasourceId();
+        initSberSberp(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new PrefSimpleAlgorithmConfig(-1D)
         ));
 
@@ -77,11 +84,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигнал есть.
         """)
     void testCase4() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
-        initSberAndSberpHistory();
-        initPositiveDeals();
-        initScanner("SBER", "SBERP");
+        initSberSberp(datasourceId);
+        initSberAndSberpHistory(datasourceId);
+        initPositiveDeals(datasourceId);
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -101,11 +109,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигналов нет.
         """)
     void testCase5() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
-        initSberAndSberpHistory();
-        initNegativeDeals();
-        initScanner("SBER", "SBERP");
+        initSberSberp(datasourceId);
+        initSberAndSberpHistory(datasourceId);
+        initNegativeDeals(datasourceId);
+        initScanner(datasourceId, "SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -119,11 +128,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         T6. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
     void testCase6() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
-        initSberAndSberpHistory();
-        initPositiveDeals();
-        initScanner("SBER", "SBERP");
+        initSberSberp(datasourceId);
+        initSberAndSberpHistory(datasourceId);
+        initPositiveDeals(datasourceId);
+        initScanner(datasourceId,"SBER", "SBERP");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-21T11:00:30");
 
@@ -140,11 +150,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         T7. С последнего запуска прошла минута, сканер запущен.
         """)
     void testCase7() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
-        initSberAndSberpHistory();
-        initNegativeDeals();
-        initScanner("SBER", "SBERP");
+        initSberSberp(datasourceId);
+        initSberAndSberpHistory(datasourceId);
+        initNegativeDeals(datasourceId);
+        initScanner(datasourceId,"SBER", "SBERP");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-21T11:01:00");
 
@@ -164,18 +175,19 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase8() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(datasourceId,"SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -192,18 +204,19 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(datasourceId,"SBER", "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 252.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -220,17 +233,18 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase10() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, 1L, "SBER", "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -247,17 +261,18 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase11() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 251.2, 1D),
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -274,16 +289,17 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase12() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -300,16 +316,17 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase13() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -326,13 +343,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -349,12 +367,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -371,13 +390,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -394,12 +414,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase17() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
+        initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-        initScanner("SBER", "SBERP");
+        initScanner(datasourceId,"SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -416,9 +437,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase18() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp();
-        initScanner("SBER", "SBERP");
+        initSberSberp(datasourceId);
+        initScanner(datasourceId, "SBER", "SBERP");
 
         exchangeManager().execute();
 
@@ -427,54 +449,55 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
-    private void initScanner(String... tickers) {
+    private void initScanner(UUID datasourceId, String... tickers) {
         addScanner(
             1,
             "Анализ пар преф-обычка.",
-            getInstrumentsBy(getDatasourceId(), Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
+            datasourceId,
+            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             new PrefSimpleAlgorithmConfig(SPREAD_PARAM)
         );
     }
 
-    private void initSberSberp() {
+    private void initSberSberp(UUID datasourceId) {
         initInstruments(
             sber(),
             sberP()
         );
-        exchangeManager().integrateInstruments(getDatasourceId());
-        exchangeManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
+        exchangeManager().integrateInstruments(datasourceId);
+        exchangeManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
-    private void initSberAndSberpHistory() {
+    private void initSberAndSberpHistory(UUID datasourceId) {
         initTradingResults(
-            buildDealResultBy("SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy("SBER", "2023-12-16", 1D, 1D, 260.58, 1D),
-            buildDealResultBy("SBER", "2023-12-17", 1D, 1D, 263.49, 1D),
-            buildDealResultBy("SBER", "2023-12-18", 1D, 1D, 268.47, 1D),
-            buildDealResultBy("SBER", "2023-12-19", 1D, 1D, 267.19, 1D),
-            buildDealResultBy("SBER", "2023-12-20", 1D, 1D, 267.89, 1D),
-            buildDealResultBy("SBER", "2023-12-21", 1D, 1D, 265.09, 1D),
-            buildDealResultBy("SBERP", "2023-12-15", 1D, 1D, 258.95, 1D),
-            buildDealResultBy("SBERP", "2023-12-16", 1D, 1D, 260.27, 1D),
-            buildDealResultBy("SBERP", "2023-12-17", 1D, 1D, 263.05, 1D),
-            buildDealResultBy("SBERP", "2023-12-18", 1D, 1D, 268.13, 1D),
-            buildDealResultBy("SBERP", "2023-12-19", 1D, 1D, 267.02, 1D),
-            buildDealResultBy("SBERP", "2023-12-20", 1D, 1D, 267.63, 1D),
-            buildDealResultBy("SBERP", "2023-12-21", 1D, 1D, 264.87, 1D)
+            buildDealResultBy(datasourceId, "SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-16", 1D, 1D, 260.58, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-17", 1D, 1D, 263.49, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-18", 1D, 1D, 268.47, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-19", 1D, 1D, 267.19, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-20", 1D, 1D, 267.89, 1D),
+            buildDealResultBy(datasourceId, "SBER", "2023-12-21", 1D, 1D, 265.09, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-15", 1D, 1D, 258.95, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-16", 1D, 1D, 260.27, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-17", 1D, 1D, 263.05, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-18", 1D, 1D, 268.13, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-19", 1D, 1D, 267.02, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-20", 1D, 1D, 267.63, 1D),
+            buildDealResultBy(datasourceId, "SBERP", "2023-12-21", 1D, 1D, 264.87, 1D)
         );
     }
 
-    private void initNegativeDeals() {
+    private void initNegativeDeals(UUID datasourceId) {
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:55:00", 250.1D, 136926D, 1),
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 250.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
     }
 
-    private void initPositiveDeals() {
+    private void initPositiveDeals(UUID datasourceId) {
         initDealDatas(
-            buildBuyDealBy(1L, "SBER", "10:55:00", 251D, 136926D, 1),
-            buildBuyDealBy(1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 251D, 136926D, 1),
+            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
     }
 

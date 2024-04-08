@@ -16,6 +16,7 @@ import java.util.UUID;
 public class SignalScannerConfig extends Domain {
     Integer workPeriodInMinutes;
     String description;
+    UUID datasourceId;
     List<String> tickers;
     AlgorithmConfig algorithmConfig;
 
@@ -24,12 +25,14 @@ public class SignalScannerConfig extends Domain {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         List<String> tickers,
         AlgorithmConfig algorithmConfig
     ) {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
+        this.datasourceId = datasourceId;
         this.tickers = tickers;
         this.algorithmConfig = algorithmConfig;
         validate();

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 import ru.ioque.investfund.domain.core.DomainException;
@@ -43,6 +43,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
+            getDatasourceId(),
             getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
@@ -76,6 +77,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             () -> addScanner(
                 1,
                 "Аномальные объемы, третий эшелон.",
+                getDatasourceId(),
                 null,
                 new AnomalyVolumeAlgorithmConfig(
                     1.5,
@@ -97,6 +99,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             () -> addScanner(
                 1,
                 "Аномальные объемы, третий эшелон.",
+                getDatasourceId(),
                 List.of(),
                 new AnomalyVolumeAlgorithmConfig(
                     1.5,
@@ -116,6 +119,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Аномальные объемы, третий эшелон.",
+            getDatasourceId(),
             getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
@@ -142,6 +146,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Старое описание",
+            getDatasourceId(),
             getInstruments(getDatasourceId())
                 .stream()
                 .filter(row -> row.getClass().equals(Stock.class))
@@ -160,6 +165,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
                     "Старое описание",
+                    getDatasourceId(),
                     getTickers(getDatasourceId()),
                     new AnomalyVolumeAlgorithmConfig(
                         1.5,
@@ -182,6 +188,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Старое описание",
+            getDatasourceId(),
             getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
@@ -195,6 +202,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                     fakeDataScannerStorage().getAll().get(0).getId(),
                     1,
                     "Новое описание",
+                    getDatasourceId(),
                     getTickers(getDatasourceId()),
                     new AnomalyVolumeAlgorithmConfig(
                         1.5,
@@ -222,6 +230,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                         id,
                         1,
                         "Новое описание",
+                        getDatasourceId(),
                         getTickers(getDatasourceId()),
                         new AnomalyVolumeAlgorithmConfig(
                             1.5,
@@ -243,6 +252,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Старое описание",
+            getDatasourceId(),
             getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
@@ -257,6 +267,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         1,
                         "",
+                        getDatasourceId(),
                         getTickers(getDatasourceId()),
                         new AnomalyVolumeAlgorithmConfig(
                             1.5,
@@ -278,6 +289,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         addScanner(
             1,
             "Старое описание",
+            getDatasourceId(),
             getTickers(getDatasourceId()),
             new AnomalyVolumeAlgorithmConfig(
                 1.5,
@@ -292,6 +304,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                         fakeDataScannerStorage().getAll().get(0).getId(),
                         1,
                         "Старое описание",
+                        getDatasourceId(),
                         List.of(),
                         new AnomalyVolumeAlgorithmConfig(
                             1.5,

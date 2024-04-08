@@ -24,7 +24,7 @@ public class ExchangeResponse implements Serializable {
     String url;
     String description;
 
-    public static ExchangeResponse fromEntity(DatasourceEntity exchange) {
+    public static ExchangeResponse from(DatasourceEntity exchange) {
         return ExchangeResponse.builder()
             .id(exchange.getId())
             .name(exchange.getName())

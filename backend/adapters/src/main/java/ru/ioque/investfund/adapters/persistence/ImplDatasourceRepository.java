@@ -10,7 +10,6 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.H
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
@@ -30,6 +29,7 @@ public class ImplDatasourceRepository implements DatasourceRepository {
     JpaIntradayValueRepository jpaIntradayValueRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Datasource> getAll() {
         return exchangeRepository
             .findAll()

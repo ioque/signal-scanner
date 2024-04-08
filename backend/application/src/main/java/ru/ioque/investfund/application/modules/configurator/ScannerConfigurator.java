@@ -6,8 +6,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.scanner.AddScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
@@ -22,12 +20,13 @@ public class ScannerConfigurator {
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
 
-    public synchronized void addNewScanner(final AddScannerCommand command) {
+    public synchronized void addNewScanner(final AddNewScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
         scannerConfigRepository.save(
             SignalScannerConfig.builder()
                 .id(id)
+                .datasourceId(command.getDatasourceId())
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
                 .algorithmConfig(command.getAlgorithmConfig())
@@ -44,6 +43,7 @@ public class ScannerConfigurator {
         scannerConfigRepository.save(
             SignalScannerConfig.builder()
                 .id(command.getId())
+                .datasourceId(command.getDatasourceId())
                 .workPeriodInMinutes(command.getWorkPeriodInMinutes())
                 .description(command.getDescription())
                 .algorithmConfig(command.getAlgorithmConfig())

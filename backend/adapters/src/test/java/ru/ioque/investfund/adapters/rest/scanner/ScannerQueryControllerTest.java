@@ -41,6 +41,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     @Autowired
     JpaScannerLogRepository jpaScannerLogRepository;
 
+    private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final UUID SIGNAL_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
     private static final UUID IMOEX_ID = UUID.randomUUID();
@@ -148,6 +149,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             SIGNAL_ID,
             1,
             "Описание",
+            DATASOURCE_ID,
             List.of("AFKS", "IMOEX"),
             LocalDateTime.now(),
             new ArrayList<>(),

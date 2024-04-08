@@ -28,22 +28,24 @@ public class DatasourceQueryController {
 
     @GetMapping("/api/datasource")
     public List<ExchangeResponse> getAllDatasource() {
-        return List.of(ExchangeResponse.fromEntity(datasourceQueryService.findDatasource()));
+        return datasourceQueryService.getAllDatasource().stream().map(ExchangeResponse::from).toList();
     }
 
     @GetMapping("/api/datasource/{datasourceId}")
     public ExchangeResponse getDatasourceBy(@PathVariable UUID datasourceId) {
-        return ExchangeResponse.fromEntity(datasourceQueryService.findDatasource());
+        return ExchangeResponse.from(datasourceQueryService.findDatasourceBy(datasourceId));
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instruments/{ticker}")
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
         InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(ticker);
         List<HistoryValueEntity> history = datasourceQueryService.findHistory(
+            datasourceId,
             instrument,
             dateTimeProvider.nowDate().minusMonths(6)
         );
         List<IntradayValueEntity> intraday = datasourceQueryService.findIntraday(
+            datasourceId,
             instrument,
             dateTimeProvider.nowDate().atStartOfDay()
         );

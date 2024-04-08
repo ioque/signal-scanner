@@ -8,6 +8,7 @@ import ru.ioque.investfund.domain.configurator.SectoralRetardAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,12 +26,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр historyScale."
         """)
     void testCase1() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 null,
                 intradayScale
@@ -46,12 +49,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
         """)
     void testCase2() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 0D,
                 intradayScale
@@ -67,12 +72,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
         """)
     void testCase3() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 -1D,
                 intradayScale
@@ -88,12 +95,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Не передан параметр intradayScale."
         """)
     void testCase4() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 historyScale, null
             )
@@ -108,12 +117,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
         """)
     void testCase5() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 0D
@@ -129,12 +140,14 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
         """)
     void testCase6() {
-        initOilCompanyData();
+        final UUID datasourceId = getDatasourceId();
+        initOilCompanyData(datasourceId);
 
         var error = assertThrows(DomainException.class, () -> addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getTickers(getDatasourceId()),
+            datasourceId,
+            getTickers(datasourceId),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 -1D
@@ -150,11 +163,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         3 из 4 позиций не росли в последние дни, сигнала нет.
         """)
     void testCase7() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase1();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "LKOH", "SIBN", "TATN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase1(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
 
         exchangeManager().execute();
 
@@ -171,11 +185,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         TATN росла вчера, сегодня падает.
         """)
     void testCase8() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "LKOH", "SIBN", "TATN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase2(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
 
         exchangeManager().execute();
 
@@ -191,11 +206,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T9. С последнего запуска прошло меньше 1 часа, сканер не запущен.
         """)
     void testCase9() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "LKOH", "SIBN", "TATN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase2(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:30:00");
 
@@ -213,11 +229,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T10. С последнего запуска прошел 1 час, сканер запущен.
         """)
     void testCase10() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "LKOH", "SIBN", "TATN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase2(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T14:00:00");
 
@@ -236,11 +253,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase11() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "TATN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase2(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "TATN");
 
         exchangeManager().execute();
 
@@ -255,11 +273,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase12() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData();
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner("ROSN", "TATN", "SIBN");
+        initOilCompanyData(datasourceId);
+        initTradingResultsForTestCase2(datasourceId);
+        initDealsTatnFallOtherRise(datasourceId);
+        initScanner(datasourceId,"ROSN", "TATN", "SIBN");
 
         exchangeManager().execute();
 
@@ -269,11 +288,12 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
-    private void initScanner(String... tickers) {
+    private void initScanner(UUID datasourceId, String... tickers) {
         addScanner(
             1,
             "Секторальный отстающий, нефтянка.",
-            getInstrumentsBy(getDatasourceId(), Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
+            datasourceId,
+            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
             new SectoralRetardAlgorithmConfig(
                 historyScale,
                 intradayScale
@@ -281,7 +301,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initOilCompanyData() {
+    private void initOilCompanyData(UUID datasourceId) {
         exchangeDataFixture()
             .initInstruments(
                 List.of(
@@ -291,70 +311,70 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        exchangeManager().integrateInstruments(getDatasourceId());
-        exchangeManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
+        exchangeManager().integrateInstruments(datasourceId);
+        exchangeManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
 
 
-    private void initDealsTatnFallOtherRise() {
+    private void initDealsTatnFallOtherRise(UUID datasourceId) {
         exchangeDataFixture().initDealDatas(
             List.of(
-                buildContractBy(1L, "BRF4", "10:00:00", 78D, 78000D, 1),
-                buildContractBy(1L, "BRF4", "12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(1L, "ROSN", "10:00:00", 250.1D, 136926D, 1),
-                buildBuyDealBy(2L, "ROSN", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(1L, "LKOH", "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(2L, "LKOH", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(1L, "SIBN", "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(2L, "SIBN", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
+                buildContractBy(datasourceId, 1L, "BRF4", "10:00:00", 78D, 78000D, 1),
+                buildContractBy(datasourceId,1L, "BRF4", "12:00:00", 96D, 96000D, 1),
+                buildBuyDealBy(datasourceId,1L, "ROSN", "10:00:00", 250.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "ROSN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "LKOH", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "LKOH", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "SIBN", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "SIBN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
 
-    private void initTradingResultsForTestCase2() {
+    private void initTradingResultsForTestCase2(UUID datasourceId) {
         exchangeDataFixture().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy("BRF4", "2023-12-21", 80D, 80D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-21", 80D, 80D, 10D),
                 //ROSN
-                buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("ROSN", "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //LKOH
-                buildDealResultBy("LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("LKOH", "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-21", 250D, 255D, 1D, 1D),
                 //SIBN
-                buildDealResultBy("SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("SIBN", "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //TATN
-                buildDealResultBy("TATN", "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy("TATN", "2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(datasourceId,"TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(datasourceId,"TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
 
-    private void initTradingResultsForTestCase1() {
+    private void initTradingResultsForTestCase1(UUID datasourceId) {
         exchangeDataFixture().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy("BRF4", "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy("BRF4", "2023-12-21", 74D, 74D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-21", 74D, 74D, 10D),
                 //ROSN
-                buildDealResultBy("ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("ROSN", "2023-12-21", 250D, 251D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-21", 250D, 251D, 1D, 1D),
                 //LKOH
-                buildDealResultBy("LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("LKOH", "2023-12-21", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-21", 250D, 250D, 1D, 1D),
                 //SIBN
-                buildDealResultBy("SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy("SIBN", "2023-12-21", 250D, 249D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-21", 250D, 249D, 1D, 1D),
                 //TATN
-                buildDealResultBy("TATN", "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy("TATN", "2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(datasourceId,"TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(datasourceId,"TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }

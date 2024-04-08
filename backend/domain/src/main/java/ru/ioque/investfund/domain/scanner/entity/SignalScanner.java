@@ -27,6 +27,7 @@ import java.util.UUID;
 public class SignalScanner extends Domain {
     Integer workPeriodInMinutes;
     String description;
+    UUID datasourceId;
     ScannerAlgorithm algorithm;
     @NonFinal
     LocalDateTime lastExecutionDateTime;
@@ -38,6 +39,7 @@ public class SignalScanner extends Domain {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
+        UUID datasourceId,
         ScannerAlgorithm algorithm,
         LocalDateTime lastExecutionDateTime,
         List<TradingSnapshot> tradingSnapshots,
@@ -46,6 +48,7 @@ public class SignalScanner extends Domain {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.algorithm = algorithm;
+        this.datasourceId = datasourceId;
         this.description = description;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
