@@ -22,11 +22,12 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@Tag(name="ScannerController", description="Контроллер запросов к модулю \"SIGNAL-SCANNER\"")
+@Tag(name="ScannerQueryController", description="Контроллер запросов к модулю \"SCANNER\"")
 public class ScannerQueryController {
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaInstrumentRepository instrumentEntityRepository;
     JpaScannerLogRepository jpaScannerLogRepository;
+
     @GetMapping("/api/scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerEntityRepository

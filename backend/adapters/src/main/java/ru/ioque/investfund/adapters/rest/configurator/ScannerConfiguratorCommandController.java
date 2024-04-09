@@ -20,8 +20,8 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@Tag(name="SignaScannerCommandController", description="Контроллер команд к модулю \"SIGNAL-SCANNER\"")
-public class ScannerConfiguratorController {
+@Tag(name="ScannerConfiguratorCommandController", description="Контроллер команд к модулю \"SCANNER CONFIGURATOR\"")
+public class ScannerConfiguratorCommandController {
     ScannerConfigurator scannerConfigurator;
 
     @PostMapping("/api/scanner")

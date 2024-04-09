@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
@@ -19,6 +20,7 @@ public class ImplScannerLogRepository implements ScannerLogRepository {
     JpaScannerLogRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScannerLog> getAllBy(UUID scannerId) {
         return repository
             .findAllByScannerId(scannerId)
@@ -29,6 +31,7 @@ public class ImplScannerLogRepository implements ScannerLogRepository {
     }
 
     @Override
+    @Transactional
     public void saveAll(UUID scannerId, List<ScannerLog> logs) {
         repository.saveAll(
             logs.stream().map(log -> ScannerLogEntity.builder()

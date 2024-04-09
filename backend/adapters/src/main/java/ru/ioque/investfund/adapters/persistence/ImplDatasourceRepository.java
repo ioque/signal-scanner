@@ -53,11 +53,13 @@ public class ImplDatasourceRepository implements DatasourceRepository {
     }
 
     @Override
+    @Transactional
     public void saveIntradayValues(List<IntradayValue> intradayValues) {
         jpaIntradayValueRepository.saveAll(intradayValues.stream().map(IntradayValueEntity::fromDomain).toList());
     }
 
     @Override
+    @Transactional
     public void saveHistoryValues(List<HistoryValue> historyValues) {
         jpaHistoryValueRepository.saveAll(historyValues.stream().map(HistoryValueEntity::fromDomain).toList());
     }

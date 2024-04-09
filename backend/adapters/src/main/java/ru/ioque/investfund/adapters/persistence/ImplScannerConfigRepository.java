@@ -2,6 +2,7 @@ package ru.ioque.investfund.adapters.persistence;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.CorrelationSectoralScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
@@ -29,6 +30,7 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
     JpaInstrumentRepository instruments;
 
     @Override
+    @Transactional
     public void save(SignalScannerConfig config) {
         Optional<ScannerEntity> scanner = repository.findById(config.getId());
         if (scanner.isPresent()) {
@@ -39,6 +41,7 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
     }
 
     @Override
+    @Transactional
     public boolean existsBy(UUID id) {
         return repository.existsById(id);
     }

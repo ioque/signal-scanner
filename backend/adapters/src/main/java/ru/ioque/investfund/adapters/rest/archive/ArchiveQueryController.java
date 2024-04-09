@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@Tag(name = "TestingSystemQueryController", description = "Контроллер запросов к модулю \"Система тестирования\"")
+@Tag(name = "ArchiveQueryController", description = "Контроллер запросов к модулю \"Архив\"")
 public class ArchiveQueryController {
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
 

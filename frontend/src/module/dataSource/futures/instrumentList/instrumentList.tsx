@@ -18,7 +18,7 @@ export default function InstrumentList(params: InstrumentListParams) {
     useEffect(() => {
         fetchDatasource(params.datasourceId).then((data) => setDatasource(data));
         fetchInstrumentList(params.datasourceId).then((data) => setInstruments(data));
-    }, []);
+    }, [params.datasourceId]);
 
     const listItems = instruments.map(instrument =>
         <tr key={instrument.id} onClick={() => handleClick(instrument.ticker)}>

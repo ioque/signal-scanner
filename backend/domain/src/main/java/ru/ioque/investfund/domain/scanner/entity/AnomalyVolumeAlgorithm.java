@@ -48,8 +48,12 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianHistoryValue = tradingSnapshot.getHistoryMedianValue();
             final Optional<Double> value = tradingSnapshot.getTodayValue();
-            if (medianHistoryValue.isEmpty() || value.isEmpty() || indexIsRiseToday.isEmpty() || tradingSnapshot
-                .isRiseToday().isEmpty()) continue;
+            if (medianHistoryValue.isEmpty() ||
+                value.isEmpty() ||
+                indexIsRiseToday.isEmpty() ||
+                tradingSnapshot.isRiseToday().isEmpty()) {
+                continue;
+            }
             final double multiplier = value.get() / medianHistoryValue.get();
             logs.add(parametersMessage(tradingSnapshot, value.get(), medianHistoryValue.get(), multiplier));
             if (multiplier > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
@@ -107,7 +111,9 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                     historyPeriod,
                     indexTicker
                 )
-                .concat(indexIsRiseToday == null ? "Данных по индексу нет." : (indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день.")),
+                .concat(indexIsRiseToday == null ?
+                    "Данных по индексу нет." :
+                    (indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день.")),
             LocalDateTime.now()
         );
     }
