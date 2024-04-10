@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 
@@ -38,6 +40,28 @@ public class ScannerConfig extends Domain {
         setDatasourceId(datasourceId);
         setTickers(tickers);
         setAlgorithmConfig(algorithmConfig);
+    }
+
+    public static ScannerConfig from(UUID id, AddNewScannerCommand command) {
+        return ScannerConfig.builder()
+            .id(id)
+            .datasourceId(command.getDatasourceId())
+            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
+            .description(command.getDescription())
+            .algorithmConfig(command.getAlgorithmConfig())
+            .tickers(command.getTickers())
+            .build();
+    }
+
+    public static ScannerConfig from(UpdateScannerCommand command) {
+        return ScannerConfig.builder()
+            .id(command.getId())
+            .datasourceId(command.getDatasourceId())
+            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
+            .description(command.getDescription())
+            .algorithmConfig(command.getAlgorithmConfig())
+            .tickers(command.getTickers())
+            .build();
     }
 
     private void setWorkPeriodInMinutes(Integer workPeriodInMinutes) {

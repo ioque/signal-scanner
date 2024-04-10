@@ -14,7 +14,6 @@ import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.configurator.validator.ScannerConfigValidator;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.util.UUID;
 
@@ -30,19 +29,8 @@ public class ScannerConfigurator {
     public synchronized void addNewScanner(final AddNewScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
         Datasource datasource = getDatasource(command.getDatasourceId());
-        ScannerConfig scannerConfig = ScannerConfig.builder()
-            .id(uuidProvider.generate())
-            .datasourceId(command.getDatasourceId())
-            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
-            .description(command.getDescription())
-            .algorithmConfig(command.getAlgorithmConfig())
-            .tickers(command.getTickers())
-            .build();
-        ScannerConfigValidator validator = new ScannerConfigValidator(
-            datasource.getInstruments().stream().map(Instrument::getTicker).toList(),
-            scannerConfig
-        );
-        validator.validate();
+        ScannerConfig scannerConfig = ScannerConfig.from(uuidProvider.generate(), command);
+        new ScannerConfigValidator(datasource.getTickers(), scannerConfig).validate();
         scannerConfigRepository.save(scannerConfig);
         loggerFacade.logSaveNewDataScanner(scannerConfig.getId());
     }
@@ -52,19 +40,8 @@ public class ScannerConfigurator {
             throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
         }
         Datasource datasource = getDatasource(command.getDatasourceId());
-        ScannerConfig scannerConfig = ScannerConfig.builder()
-            .id(command.getId())
-            .datasourceId(command.getDatasourceId())
-            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
-            .description(command.getDescription())
-            .algorithmConfig(command.getAlgorithmConfig())
-            .tickers(command.getTickers())
-            .build();
-        ScannerConfigValidator validator = new ScannerConfigValidator(
-            datasource.getInstruments().stream().map(Instrument::getTicker).toList(),
-            scannerConfig
-        );
-        validator.validate();
+        ScannerConfig scannerConfig = ScannerConfig.from(command);
+        new ScannerConfigValidator(datasource.getTickers(), scannerConfig).validate();
         scannerConfigRepository.save(scannerConfig);
         loggerFacade.logUpdateSignalScanner(command);
     }

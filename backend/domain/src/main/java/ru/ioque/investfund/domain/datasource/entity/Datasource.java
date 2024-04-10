@@ -60,4 +60,8 @@ public class Datasource extends Domain {
     public void disableUpdate(List<String> tickers) {
         tickers.forEach(ticker -> findBy(ticker).ifPresent(Instrument::disableUpdate));
     }
+
+    public List<String> getTickers() {
+        return getInstruments().stream().map(Instrument::getTicker).toList();
+    }
 }
