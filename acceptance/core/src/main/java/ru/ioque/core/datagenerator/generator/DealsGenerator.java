@@ -13,12 +13,14 @@ import java.util.List;
 public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig> {
     public List<Deal> generateIntradayValues(DealsGeneratorConfig config) {
         List<Deal> stockTrades = new ArrayList<>();
+        long currentNumbers = 0L;
         for (int i = 0; i < config.getValue().getPercentageGrowths().size(); i++) {
             String ticker = config.getTicker();
             Double startValue = getStartValue(config, stockTrades);
             Double startPrice = getStartPrice(config, stockTrades);
-            long number = getTradeNumber(stockTrades);
+            long number = currentNumbers + 1L;
             long numTrades = (long) (config.getNumTrades() * config.getValue().getPercentageGrowths().get(i).getWeight());
+            currentNumbers = currentNumbers + numTrades;
             LocalDate nowDate = config.getDate();
             LocalTime startTime = getStartTime(config, stockTrades);
             stockTrades.addAll(

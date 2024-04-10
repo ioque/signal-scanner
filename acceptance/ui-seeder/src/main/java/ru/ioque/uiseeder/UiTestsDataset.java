@@ -54,6 +54,7 @@ public class UiTestsDataset {
                 DefaultInstrumentSet.sberp(),
                 DefaultInstrumentSet.tatn(),
                 DefaultInstrumentSet.tgkn(),
+                DefaultInstrumentSet.tgkb(),
                 DefaultInstrumentSet.lkoh(),
                 DefaultInstrumentSet.rosn(),
                 DefaultInstrumentSet.sibn(),

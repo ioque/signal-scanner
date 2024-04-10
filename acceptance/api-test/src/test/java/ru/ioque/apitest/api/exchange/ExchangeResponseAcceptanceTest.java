@@ -500,7 +500,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
                             .build(),
                         Deal
                             .builder()
-                            .number(1L)
+                            .number(2L)
                             .ticker("SBER")
                             .price(12.1)
                             .value(12.3)
@@ -510,7 +510,7 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
                             .build(),
                         Deal
                             .builder()
-                            .number(1L)
+                            .number(3L)
                             .ticker("SBER")
                             .price(12.1)
                             .value(12.3)

@@ -38,7 +38,7 @@ public class InstrumentListPageTest extends BaseFrontendTest {
             .findElements(By.xpath("./child::*"))
             .get(1)
             .findElements(By.xpath("./child::*"));
-        assertEquals(10, tableRows.size());
+        assertEquals(11, tableRows.size());
         assertTableRow(tableRows.get(0), "BRF4", "BR-1.24");
         assertTableRow(tableRows.get(1), "USD000UTSTOM", "USDRUB_TOM");
         assertTableRow(tableRows.get(2), "SIBN", "Газпромнефть");
@@ -48,7 +48,8 @@ public class InstrumentListPageTest extends BaseFrontendTest {
         assertTableRow(tableRows.get(6), "SBER", "Сбербанк");
         assertTableRow(tableRows.get(7), "SBERP", "Сбербанк-п");
         assertTableRow(tableRows.get(8), "TATN", "Татнефть");
-        assertTableRow(tableRows.get(9), "TGKN", "ТГК-14");
+        assertTableRow(tableRows.get(9), "TGKB", "ТГК-11");
+        assertTableRow(tableRows.get(10), "TGKN", "ТГК-14");
     }
 
     private void assertTableRow(WebElement webElement, String ticker, String shortName) {

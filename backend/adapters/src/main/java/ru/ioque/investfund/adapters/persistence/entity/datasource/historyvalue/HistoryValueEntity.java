@@ -25,7 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "HistoryValue")
-@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasourceId", "ticker", "tradeDate" }) })
+@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasource_id", "ticker", "trade_date" }) })
 public class HistoryValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

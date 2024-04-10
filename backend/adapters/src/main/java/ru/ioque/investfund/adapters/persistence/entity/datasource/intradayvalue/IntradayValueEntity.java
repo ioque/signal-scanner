@@ -30,7 +30,7 @@ import java.util.function.Function;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Table(name = "intraday_value", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"datasourceId", "number", "ticker"})})
+    @UniqueConstraint(columnNames = {"datasource_id", "number", "ticker"})})
 @Entity(name = "IntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "INTRADAY_VALUE_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")

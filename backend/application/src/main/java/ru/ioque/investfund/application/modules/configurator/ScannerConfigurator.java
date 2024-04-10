@@ -44,6 +44,9 @@ public class ScannerConfigurator {
     }
 
     private void validate(UUID command, ScannerConfig scannerConfig) {
+        if (scannerConfig.getDescription().equals("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")) {
+            System.out.println("LOH");
+        }
         Datasource datasource = datasourceRepository
             .getBy(command)
             .orElseThrow(() -> new ApplicationException("Источник данных не найден."));

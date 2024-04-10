@@ -3,6 +3,7 @@ package ru.ioque.core.dataset;
 import ru.ioque.core.datagenerator.instrument.CurrencyPair;
 import ru.ioque.core.datagenerator.instrument.Futures;
 import ru.ioque.core.datagenerator.instrument.Index;
+import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.datagenerator.instrument.Stock;
 
 public class DefaultInstrumentSet {
@@ -96,6 +97,15 @@ public class DefaultInstrumentSet {
             .lotSize(100)
             .name("ТГК-14")
             .shortName("ТГК-14")
+            .build();
+    }
+
+    public static Instrument tgkb() {
+        return Stock.builder()
+            .ticker("TGKB")
+            .lotSize(100)
+            .name("ТГК-11")
+            .shortName("ТГК-11")
             .build();
     }
 }
