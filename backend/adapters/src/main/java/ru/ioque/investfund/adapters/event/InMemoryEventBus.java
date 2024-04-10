@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.other;
+package ru.ioque.investfund.adapters.event;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;

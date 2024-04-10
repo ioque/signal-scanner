@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.rest.DatasourceQueryService;
+import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import java.util.List;
@@ -15,16 +15,16 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("DATASOURCE QUERY SERVICE TEST")
+@DisplayName("DATASOURCE QUERY REPOSITORY TEST")
 public class InstrumentQueryRepositoryTest extends BaseJpaTest {
-    DatasourceQueryService datasourceQueryService;
+    DatasourceQueryRepository datasourceQueryRepository;
     JpaInstrumentRepository instrumentEntityRepository;
 
     public InstrumentQueryRepositoryTest(
-        @Autowired DatasourceQueryService datasourceQueryService,
+        @Autowired DatasourceQueryRepository datasourceQueryRepository,
         @Autowired JpaInstrumentRepository instrumentEntityRepository
     ) {
-        this.datasourceQueryService = datasourceQueryService;
+        this.datasourceQueryRepository = datasourceQueryRepository;
         this.instrumentEntityRepository = instrumentEntityRepository;
     }
 
@@ -34,7 +34,7 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
         """)
     void testCase1() {
         saveExchangeWithStocks();
-        var list = datasourceQueryService.getAllInstruments();
+        var list = datasourceQueryRepository.getAllInstruments();
         assertEquals(2, list.size());
         assertTrue(list.stream().map(InstrumentEntity::getTicker).toList().containsAll(List.of("AFKS", "SBER")));
     }
@@ -45,8 +45,8 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
         """)
     void testCase2() {
         saveExchangeWithStocks();
-        assertEquals("AFKS", datasourceQueryService.findInstrumentBy("AFKS").getTicker());
-        assertEquals("SBER", datasourceQueryService.findInstrumentBy("SBER").getTicker());
+        assertEquals("AFKS", datasourceQueryRepository.findInstrumentBy("AFKS").getTicker());
+        assertEquals("SBER", datasourceQueryRepository.findInstrumentBy("SBER").getTicker());
     }
 
     private void saveExchangeWithStocks() {
@@ -56,8 +56,8 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(UUID.randomUUID()).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(UUID.randomUUID()).ticker("SBER").name("SBER").shortName("SBER").build()
+                buildStockWith().id(UUID.randomUUID()).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(UUID.randomUUID()).ticker("SBER").name("SBER").shortName("SBER").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
@@ -77,17 +77,17 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
                 buildIndexWith().id(id2).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> stocks = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> stocks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .type("stock")
             .build());
-        List<InstrumentEntity> indexes = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> indexes = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .type("index")
             .build());
@@ -112,23 +112,23 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
-                buildAfks().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
+                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildStockWith().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> afks = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> afks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("AFKS")
             .build());
-        List<InstrumentEntity> imoex = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("IMOEX")
             .build());
-        List<InstrumentEntity> sbers = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> sbers = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("SBER")
             .build());
@@ -152,13 +152,13 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
+                buildStockWith().id(id1).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
                 buildIndexWith().id(id2).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> instruments = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .shortName("Сбер")
             .build());
@@ -181,16 +181,16 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> sber = datasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> sber = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").type("stock").build());
-        List<InstrumentEntity> imoex = datasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "IMOEX").type("index").build());
 
         assertEquals(1, sber.size());
@@ -213,16 +213,16 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("SBER").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(id2).ticker("SBERP").name("SBER").shortName("Сбербанк-п").build(),
+                buildStockWith().id(id1).ticker("SBER").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id2).ticker("SBERP").name("SBER").shortName("Сбербанк-п").build(),
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> sberp = datasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> sberp = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").shortName("Сбербанк-п").type("stock").build());
-        List<InstrumentEntity> imoex = datasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "IMOEX").type("index").build());
 
         assertEquals(1, sberp.size());
@@ -244,35 +244,35 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
-                buildAfks().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
-                buildAfks().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
+                buildStockWith().id(id1).ticker("AFKS").name("AFKS").shortName("AFKS").build(),
+                buildStockWith().id(id2).ticker("SBER").name("SBER").shortName("SBER").build(),
+                buildStockWith().id(id3).ticker("SBERP").name("SBERP").shortName("SBERP").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
-        List<InstrumentEntity> instruments1 = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments1 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(1)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments2 = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments2 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(1)
             .pageSize(1)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments3 = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments3 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(1)
             .pageSize(2)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments4 = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments4 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(3)
@@ -313,22 +313,22 @@ public class InstrumentQueryRepositoryTest extends BaseJpaTest {
             "test",
             "test",
             List.of(
-                buildAfks().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
-                buildAfks().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
-                buildAfks().id(id3).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
+                buildStockWith().id(id1).ticker("AFKS").name("АФК Система").shortName("ао Система").build(),
+                buildStockWith().id(id2).ticker("SBER").name("ПАО Сбербанк").shortName("Сбербанк").build(),
+                buildStockWith().id(id3).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
         datasourceRepository.saveDatasource(datasource);
 
-        List<InstrumentEntity> instruments = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(4)
             .orderDirection("DESC")
             .orderField("shortName")
             .build());
-        List<InstrumentEntity> instruments2 = datasourceQueryService.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments2 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(4)

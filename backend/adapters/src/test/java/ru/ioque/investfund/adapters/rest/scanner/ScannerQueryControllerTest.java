@@ -30,7 +30,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("SIGNAL SCANNER REST CONTROLLER")
+@DisplayName("SCANNER QUERY REST CONTROLLER")
 public class ScannerQueryControllerTest extends BaseControllerTest {
     @Autowired
     ScannerManager scannerManager;

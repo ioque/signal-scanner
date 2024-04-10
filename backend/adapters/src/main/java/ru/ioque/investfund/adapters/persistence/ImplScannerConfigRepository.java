@@ -34,7 +34,8 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
     public void save(SignalScannerConfig config) {
         Optional<ScannerEntity> scanner = repository.findById(config.getId());
         if (scanner.isPresent()) {
-            repository.save(updateConfig(scanner.get(), config));
+            scanner.get().updateConfig(config);
+            repository.save(scanner.get());
             return;
         }
         repository.save(factories.get(config.getAlgorithmConfig().getClass()).apply(config));

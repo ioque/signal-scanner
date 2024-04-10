@@ -61,6 +61,7 @@ public class ExchangeRestClient {
         LocalDate to
     ) {
         try {
+            if (from.isEqual(to)) return List.of();
             return objectMapper
                 .readValue(
                     defaultClient

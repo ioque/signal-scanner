@@ -10,7 +10,8 @@ create table if not exists archived_history_value
     id            bigserial
         primary key,
     ticker        varchar(255)     not null,
-    datasource_id uuid             not null
+    datasource_id uuid             not null,
+    unique(datasource_id, trade_date, ticker)
 );
 
 alter table archived_history_value
@@ -28,7 +29,8 @@ create table if not exists archived_intraday_value
     number              bigint           not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null,
-    datasource_id       uuid             not null
+    datasource_id       uuid             not null,
+    unique(number, datasource_id, ticker)
 );
 
 alter table archived_intraday_value
@@ -58,7 +60,8 @@ create table if not exists history_value
     id            bigserial
         primary key,
     ticker        varchar(255)     not null,
-    datasource_id uuid             not null
+    datasource_id uuid             not null,
+    unique(datasource_id, trade_date, ticker)
 );
 
 alter table history_value
@@ -88,7 +91,8 @@ create table if not exists instrument
     name                varchar(255) not null,
     reg_number          varchar(255),
     short_name          varchar(255) not null,
-    ticker              varchar(255) not null
+    ticker              varchar(255) not null,
+    unique(ticker, datasource_id)
 );
 
 alter table instrument
@@ -102,10 +106,11 @@ create table if not exists intraday_value
     value               double precision not null,
     date_time           timestamp(6)     not null,
     id                  bigserial primary key,
-    number              bigint           not null,
+    number              bigint    not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null,
-    datasource_id       uuid             not null
+    datasource_id       uuid             not null,
+    unique(number, datasource_id, ticker)
 );
 
 alter table intraday_value

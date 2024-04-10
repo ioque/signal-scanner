@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("SCANNER CONFIGURATOR CONTROLLER TEST")
+@DisplayName("SCANNER CONFIGURATOR COMMAND CONTROLLER TEST")
 public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     @Test

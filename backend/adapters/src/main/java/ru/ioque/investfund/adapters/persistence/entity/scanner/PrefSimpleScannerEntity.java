@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
@@ -59,18 +60,25 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
             .build();
     }
 
-    public static ScannerEntity from(SignalScanner signalScanner) {
-        PrefSimpleAlgorithm algorithm = (PrefSimpleAlgorithm) signalScanner.getAlgorithm();
-        return PrefSimpleScannerEntity.builder()
-            .id(signalScanner.getId())
-            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
-            .description(signalScanner.getDescription())
-            .datasourceId(signalScanner.getDatasourceId())
-            .tickers(signalScanner.getTickers())
-            .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
-            .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
+    public static ScannerEntity from(SignalScanner scannerDomain) {
+        PrefSimpleAlgorithm algorithm = (PrefSimpleAlgorithm) scannerDomain.getAlgorithm();
+        PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
+            .id(scannerDomain.getId())
+            .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
+            .description(scannerDomain.getDescription())
+            .datasourceId(scannerDomain.getDatasourceId())
+            .tickers(scannerDomain.getTickers())
+            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .spreadParam(algorithm.getSpreadParam())
             .build();
+        List<SignalEntity> signals = scannerDomain
+            .getSignals()
+            .stream()
+            .map(SignalEntity::from)
+            .peek(row -> row.setScanner(scannerEntity))
+            .toList();
+        scannerEntity.setSignals(signals);
+        return scannerEntity;
     }
 
     @Override
@@ -94,8 +102,8 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     }
 
     @Override
-    public void updateConfig(SignalScannerConfig config) {
-        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config.getAlgorithmConfig();
+    public void updateAlgorithmConfig(AlgorithmConfig config) {
+        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config;
         this.spreadParam = algorithmConfig.getSpreadParam();
     }
 }

@@ -62,6 +62,7 @@ public class DatasourceProviderImpl implements DatasourceProvider {
             )
             .stream()
             .map(row -> row.toDomain(datasource.getId()))
+            .filter(row -> row.getNumber() > instrument.getLastTradingNumber())
             .distinct()
             .toList();
     }

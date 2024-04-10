@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "HistoryValue")
-@Table(name = "history_value")
+@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasourceId", "ticker", "tradeDate" }) })
 public class HistoryValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

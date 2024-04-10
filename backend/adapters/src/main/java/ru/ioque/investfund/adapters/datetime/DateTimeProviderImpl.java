@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.other;
+package ru.ioque.investfund.adapters.datetime;
 
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;

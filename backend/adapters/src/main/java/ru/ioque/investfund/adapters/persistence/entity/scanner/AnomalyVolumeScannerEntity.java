@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
@@ -67,20 +68,27 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
             .build();
     }
 
-    public static ScannerEntity from(SignalScanner signalScanner) {
-        AnomalyVolumeAlgorithm algorithm = (AnomalyVolumeAlgorithm) signalScanner.getAlgorithm();
-        return AnomalyVolumeScannerEntity.builder()
-            .id(signalScanner.getId())
-            .workPeriodInMinutes(signalScanner.getWorkPeriodInMinutes())
-            .description(signalScanner.getDescription())
-            .datasourceId(signalScanner.getDatasourceId())
-            .tickers(signalScanner.getTickers())
-            .lastWorkDateTime(signalScanner.getLastExecutionDateTime().orElse(null))
-            .signals(signalScanner.getSignals().stream().map(SignalEntity::from).toList())
+    public static ScannerEntity from(SignalScanner scannerDomain) {
+        AnomalyVolumeAlgorithm algorithm = (AnomalyVolumeAlgorithm) scannerDomain.getAlgorithm();
+        AnomalyVolumeScannerEntity scannerEntity = AnomalyVolumeScannerEntity.builder()
+            .id(scannerDomain.getId())
+            .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
+            .description(scannerDomain.getDescription())
+            .datasourceId(scannerDomain.getDatasourceId())
+            .tickers(scannerDomain.getTickers())
+            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .scaleCoefficient(algorithm.getScaleCoefficient())
             .historyPeriod(algorithm.getHistoryPeriod())
             .indexTicker(algorithm.getIndexTicker())
             .build();
+        List<SignalEntity> signals = scannerDomain
+                .getSignals()
+                .stream()
+                .map(SignalEntity::from)
+                .peek(row -> row.setScanner(scannerEntity))
+                .toList();
+        scannerEntity.setSignals(signals);
+        return scannerEntity;
     }
 
     @Override
@@ -106,8 +114,8 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
     }
 
     @Override
-    public void updateConfig(SignalScannerConfig config) {
-        AnomalyVolumeAlgorithmConfig algorithmConfig = (AnomalyVolumeAlgorithmConfig) config.getAlgorithmConfig();
+    public void updateAlgorithmConfig(AlgorithmConfig config) {
+        AnomalyVolumeAlgorithmConfig algorithmConfig = (AnomalyVolumeAlgorithmConfig) config;
         this.scaleCoefficient = algorithmConfig.getScaleCoefficient();
         this.indexTicker = algorithmConfig.getIndexTicker();
         this.historyPeriod = algorithmConfig.getHistoryPeriod();

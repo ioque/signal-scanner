@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,12 +27,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "ArchivedHistoryValue")
-@Table(name = "archived_history_value")
+@Table(name = "archived_history_value", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"datasourceId", "ticker", "tradeDate"})})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ArchivedHistoryValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false)
+    UUID datasourceId;
     @Column(nullable = false)
     LocalDate tradeDate;
     @Column(nullable = false)

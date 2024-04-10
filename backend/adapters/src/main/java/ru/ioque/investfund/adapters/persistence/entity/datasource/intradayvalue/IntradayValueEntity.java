@@ -10,12 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Contract;
+import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
@@ -28,10 +29,11 @@ import java.util.function.Function;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-@Table(name = "intraday_value")
+@Table(name = "intraday_value", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"datasourceId", "number", "ticker"})})
 @Entity(name = "IntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="INTRADAY_VALUE_TYPE", discriminatorType= DiscriminatorType.STRING, columnDefinition = "varchar(255)")
+@DiscriminatorColumn(name = "INTRADAY_VALUE_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
 public abstract class IntradayValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

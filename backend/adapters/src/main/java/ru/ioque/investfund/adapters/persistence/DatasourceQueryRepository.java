@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest;
+package ru.ioque.investfund.adapters.persistence;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 
 @Component
 @AllArgsConstructor
-public class DatasourceQueryService {
+public class DatasourceQueryRepository {
     JpaDatasourceRepository exchangeRepository;
     JpaInstrumentRepository instrumentRepository;
     JpaHistoryValueRepository historyValueRepository;

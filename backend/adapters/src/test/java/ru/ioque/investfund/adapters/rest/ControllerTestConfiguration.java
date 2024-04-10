@@ -4,6 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
+import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
 import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
@@ -75,8 +76,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public DatasourceQueryService mockDatasourceQueryService() {
-        return mock(DatasourceQueryService.class);
+    public DatasourceQueryRepository mockDatasourceQueryService() {
+        return mock(DatasourceQueryRepository.class);
     }
 
     @Bean

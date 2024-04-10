@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.other;
+package ru.ioque.investfund.adapters.scheduler;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

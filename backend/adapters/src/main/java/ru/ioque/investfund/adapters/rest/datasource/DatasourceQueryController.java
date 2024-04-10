@@ -10,7 +10,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.H
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
-import ru.ioque.investfund.adapters.rest.DatasourceQueryService;
+import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
 import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -23,28 +23,28 @@ import java.util.UUID;
 @AllArgsConstructor
 @Tag(name = "DatasourceQueryController", description = "Контроллер запросов к модулю \"DATASOURCE\"")
 public class DatasourceQueryController {
-    DatasourceQueryService datasourceQueryService;
+    DatasourceQueryRepository datasourceQueryRepository;
     DateTimeProvider dateTimeProvider;
 
     @GetMapping("/api/datasource")
     public List<ExchangeResponse> getAllDatasource() {
-        return datasourceQueryService.getAllDatasource().stream().map(ExchangeResponse::from).toList();
+        return datasourceQueryRepository.getAllDatasource().stream().map(ExchangeResponse::from).toList();
     }
 
     @GetMapping("/api/datasource/{datasourceId}")
     public ExchangeResponse getDatasourceBy(@PathVariable UUID datasourceId) {
-        return ExchangeResponse.from(datasourceQueryService.findDatasourceBy(datasourceId));
+        return ExchangeResponse.from(datasourceQueryRepository.findDatasourceBy(datasourceId));
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument/{ticker}")
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
-        InstrumentEntity instrument = datasourceQueryService.findInstrumentBy(ticker);
-        List<HistoryValueEntity> history = datasourceQueryService.findHistory(
+        InstrumentEntity instrument = datasourceQueryRepository.findInstrumentBy(ticker);
+        List<HistoryValueEntity> history = datasourceQueryRepository.findHistory(
             datasourceId,
             instrument,
             dateTimeProvider.nowDate().minusMonths(6)
         );
-        List<IntradayValueEntity> intraday = datasourceQueryService.findIntraday(
+        List<IntradayValueEntity> intraday = datasourceQueryRepository.findIntraday(
             datasourceId,
             instrument,
             dateTimeProvider.nowDate().atStartOfDay()
@@ -63,7 +63,7 @@ public class DatasourceQueryController {
         @RequestParam(defaultValue = "ASC") String orderValue,
         @RequestParam(defaultValue = "shortName") String orderField
     ) {
-        return datasourceQueryService
+        return datasourceQueryRepository
             .findInstruments(
                 InstrumentFilterParams.builder()
                     .datasourceId(datasourceId)

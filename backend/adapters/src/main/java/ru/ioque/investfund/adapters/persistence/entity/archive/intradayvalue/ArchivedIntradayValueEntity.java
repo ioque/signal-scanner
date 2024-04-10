@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,13 +22,15 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-@Table(name = "archived_intraday_value")
+@Table(name = "archived_intraday_value", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"datasourceId", "number", "ticker"})})
 @Entity(name = "ArchivedIntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="INTRADAY_VALUE_TYPE", discriminatorType= DiscriminatorType.STRING, columnDefinition = "varchar(255)")
@@ -35,6 +38,8 @@ public abstract class ArchivedIntradayValueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false)
+    UUID datasourceId;
     @Column(nullable = false)
     Long number;
     @Column(nullable = false)

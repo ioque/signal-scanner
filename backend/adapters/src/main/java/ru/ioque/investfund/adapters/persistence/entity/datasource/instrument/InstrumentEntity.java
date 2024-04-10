@@ -9,6 +9,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,7 @@ import java.util.function.Function;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-@Table(name = "instrument")
+@Table(name = "instrument", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasource_id", "ticker" }) })
 @Entity(name = "Instrument")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="INSTRUMENT_TYPE", discriminatorType= DiscriminatorType.STRING, columnDefinition = "varchar(255)")

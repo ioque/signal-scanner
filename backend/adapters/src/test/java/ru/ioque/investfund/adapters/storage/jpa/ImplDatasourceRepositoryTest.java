@@ -43,7 +43,7 @@ public class ImplDatasourceRepositoryTest extends BaseJpaTest {
     @Test
     @DisplayName("Т2. Сохранение данных о бирже с инструментами")
     void testCase2() {
-        final Instrument instrument = buildAfks().build();
+        final Instrument instrument = createTgkn();
         final UUID datasourceId = UUID.randomUUID();
         final Datasource datasource = new Datasource(
             datasourceId,

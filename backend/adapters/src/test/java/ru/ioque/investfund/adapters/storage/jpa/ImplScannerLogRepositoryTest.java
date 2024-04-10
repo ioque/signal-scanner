@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("JPA_REPORT_REPO")
+@DisplayName("REPORT REPOSITORY TEST")
 public class ImplScannerLogRepositoryTest extends BaseJpaTest {
     ScannerLogRepository scannerLogRepository;
 

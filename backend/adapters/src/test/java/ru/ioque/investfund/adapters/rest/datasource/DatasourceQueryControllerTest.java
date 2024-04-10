@@ -19,7 +19,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.DatasourceQueryService;
+import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
 import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("DATASOURCE QUERY CONTROLLER TEST")
 public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Autowired
-    DatasourceQueryService datasourceQueryService;
+    DatasourceQueryRepository datasourceQueryRepository;
     @Autowired
     DateTimeProvider dateTimeProvider;
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
@@ -55,7 +55,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .instruments(Set.of())
             .build();
         Mockito
-            .when(datasourceQueryService.findDatasourceBy(DATASOURCE_ID))
+            .when(datasourceQueryRepository.findDatasourceBy(DATASOURCE_ID))
             .thenReturn(datasource);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID))
@@ -85,7 +85,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         List<InstrumentEntity> instrumentInLists = findInstrumentsBy();
 
         Mockito
-            .when(datasourceQueryService.findInstruments(new InstrumentFilterParams(
+            .when(datasourceQueryRepository.findInstruments(new InstrumentFilterParams(
                 DATASOURCE_ID,
                 null,
                 null,
@@ -140,13 +140,13 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .when(dateTimeProvider.nowDate())
             .thenReturn(date);
         Mockito
-            .when(datasourceQueryService.findInstrumentBy("TEST_STOCK"))
+            .when(datasourceQueryRepository.findInstrumentBy("TEST_STOCK"))
             .thenReturn(stock);
         Mockito
-            .when(datasourceQueryService.findHistory(DATASOURCE_ID, stock, date.minusMonths(6)))
+            .when(datasourceQueryRepository.findHistory(DATASOURCE_ID, stock, date.minusMonths(6)))
             .thenReturn(history);
         Mockito
-            .when(datasourceQueryService.findIntraday(DATASOURCE_ID, stock, dateTime))
+            .when(datasourceQueryRepository.findIntraday(DATASOURCE_ID, stock, dateTime))
             .thenReturn(intraday);
 
         mvc
