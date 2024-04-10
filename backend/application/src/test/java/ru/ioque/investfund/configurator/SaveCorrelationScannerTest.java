@@ -3,6 +3,7 @@ package ru.ioque.investfund.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("SCANNER CONFIGURATOR TEST - SAVE SECTORAL CORRELATION SCANNER")
 public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
     @Test
     @DisplayName("""
@@ -10,7 +11,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase1() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(null).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(null).build(),
             futuresOvernightScaleIsEmpty()
         );
     }
@@ -21,7 +22,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase2() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(null).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(null).build(),
             stockOvernightScaleIsEmpty()
         );
     }
@@ -32,7 +33,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase3() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().futuresTicker(null).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresTicker(null).build(),
             futuresTickerIsEmpty()
         );
     }
@@ -43,7 +44,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase4() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().futuresTicker("").build(),
+            buildSaveSectoralCorrelationScannerWith().futuresTicker("").build(),
             futuresTickerIsEmpty()
         );
     }
@@ -54,7 +55,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase5() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(0D).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(0D).build(),
             futuresOvernightScaleIsNegative()
         );
     }
@@ -65,7 +66,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase6() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(-1D).build(),
             futuresOvernightScaleIsNegative()
         );
     }
@@ -76,7 +77,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase7() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(-1D).build(),
             stockOvernightScaleIsNegative()
         );
     }
@@ -87,7 +88,7 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         """)
     void testCase8() {
         testAddNewScannerError(
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(-1D).build(),
             stockOvernightScaleIsNegative()
         );
     }
@@ -97,10 +98,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T9. В команду на обновление CorrelationSectoralScanner не передан параметр futuresOvernightScale.
         """)
     void testCase9() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(null).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(null).build(),
             futuresOvernightScaleIsEmpty()
         );
     }
@@ -110,10 +111,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T10. В команду на обновление CorrelationSectoralScanner не передан параметр stockOvernightScale.
         """)
     void testCase10() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(null).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(null).build(),
             stockOvernightScaleIsEmpty()
         );
     }
@@ -123,10 +124,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T11. В команду на обновление CorrelationSectoralScanner не передан параметр futuresTicker.
         """)
     void testCase11() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().futuresTicker(null).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresTicker(null).build(),
             futuresTickerIsEmpty()
         );
     }
@@ -136,10 +137,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T12. В команду на обновление CorrelationSectoralScanner параметр futuresTicker передан как пустая строка.
         """)
     void testCase12() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().futuresTicker("").build(),
+            buildSaveSectoralCorrelationScannerWith().futuresTicker("").build(),
             futuresTickerIsEmpty()
         );
     }
@@ -149,10 +150,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T13. В команду на обновление CorrelationSectoralScanner параметр futuresOvernightScale передан со значением = 0.
         """)
     void testCase13() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(0D).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(0D).build(),
             futuresOvernightScaleIsNegative()
         );
     }
@@ -162,10 +163,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T14. В команду на обновление CorrelationSectoralScanner параметр futuresOvernightScale передан со значением < 0.
         """)
     void testCase14() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().futuresOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().futuresOvernightScale(-1D).build(),
             futuresOvernightScaleIsNegative()
         );
     }
@@ -175,10 +176,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T15. В команду на обновление CorrelationSectoralScanner параметр stockOvernightScale передан со значением = 0.
         """)
     void testCase15() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(-1D).build(),
             stockOvernightScaleIsNegative()
         );
     }
@@ -188,10 +189,10 @@ public class SaveCorrelationScannerTest extends BaseScannerConfiguratorTest {
         T16. В команду на обновление CorrelationSectoralScanner параметр stockOvernightScale передан со значением < 0.
         """)
     void testCase16() {
-        scannerConfigurator().addNewScanner(buildSaveCorrelationSectoralScannerWith().build());
+        scannerConfigurator().addNewScanner(buildSaveSectoralCorrelationScannerWith().build());
         testUpdateScannerError(
             getScannerId(),
-            buildSaveCorrelationSectoralScannerWith().stockOvernightScale(-1D).build(),
+            buildSaveSectoralCorrelationScannerWith().stockOvernightScale(-1D).build(),
             stockOvernightScaleIsNegative()
         );
     }

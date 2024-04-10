@@ -101,6 +101,8 @@ public class HistoryGenerator extends AbstractGenerator {
             .tradeDate(date)
             .openPrice(open)
             .closePrice(close)
+            .highPrice((open + close)/2 * 1.5)
+            .lowPrice((open + close)/2 * 0.9)
             .value(value)
             .build();
     }

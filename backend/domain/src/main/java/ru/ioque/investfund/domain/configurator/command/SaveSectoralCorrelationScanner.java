@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.SectoralCorrelationAlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,13 +16,13 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class SaveCorrelationSectoralScanner extends SaveScannerCommand {
+public class SaveSectoralCorrelationScanner extends SaveScannerCommand {
     Double futuresOvernightScale;
     Double stockOvernightScale;
     String futuresTicker;
 
     @Builder
-    public SaveCorrelationSectoralScanner(
+    public SaveSectoralCorrelationScanner(
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
@@ -39,7 +39,7 @@ public class SaveCorrelationSectoralScanner extends SaveScannerCommand {
 
     @Override
     public AlgorithmConfig buildConfig() {
-        return CorrelationSectoralAlgorithmConfig.builder()
+        return SectoralCorrelationAlgorithmConfig.builder()
             .futuresOvernightScale(futuresOvernightScale)
             .stockOvernightScale(stockOvernightScale)
             .futuresTicker(futuresTicker)

@@ -3,6 +3,7 @@ package ru.ioque.investfund.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("SCANNER CONFIGURATOR TEST - SAVE SIMPLE PREF SCANNER")
 public class SaveSimplePrefScannerTest extends BaseScannerConfiguratorTest {
     @Test
     @DisplayName("""

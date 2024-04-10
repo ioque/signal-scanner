@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.command.SaveCorrelationSectoralScanner;
+import ru.ioque.investfund.domain.configurator.command.SaveSectoralCorrelationScanner;
 import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class CorrelationSectoralScannerRequest extends ScannerRequest {
 
     @Override
     public SaveScannerCommand toCommand() {
-        return SaveCorrelationSectoralScanner.builder()
+        return SaveSectoralCorrelationScanner.builder()
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
             .datasourceId(getDatasourceId())

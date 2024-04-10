@@ -91,7 +91,7 @@ public class DealsGenerator extends IntradayGenerator<Deal, DealsGeneratorConfig
                     .dateTime(nowDate.atTime(startTime.plusSeconds(i)))
                     .value(value)
                     .price(price)
-                    .qnt(Double.valueOf(value/price).intValue())
+                    .qnt(1)
                     .isBuy(isBuy)
                     .build()
             );

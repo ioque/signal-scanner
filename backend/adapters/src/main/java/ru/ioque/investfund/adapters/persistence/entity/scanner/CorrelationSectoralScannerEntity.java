@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.SectoralCorrelationAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -53,7 +53,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
     }
 
     public static ScannerEntity from(ScannerConfig config) {
-        CorrelationSectoralAlgorithmConfig algorithmConfig = (CorrelationSectoralAlgorithmConfig) config.getAlgorithmConfig();
+        SectoralCorrelationAlgorithmConfig algorithmConfig = (SectoralCorrelationAlgorithmConfig) config.getAlgorithmConfig();
         return CorrelationSectoralScannerEntity.builder()
             .id(config.getId())
             .workPeriodInMinutes(config.getWorkPeriodInMinutes())
@@ -96,7 +96,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
         return SignalScanner.builder()
             .id(getId())
             .algorithm(
-                CorrelationSectoralAlgorithmConfig
+                SectoralCorrelationAlgorithmConfig
                     .builder()
                     .futuresOvernightScale(futuresOvernightScale)
                     .stockOvernightScale(stockOvernightScale)
@@ -115,7 +115,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
 
     @Override
     public void updateAlgorithmConfig(AlgorithmConfig config) {
-        CorrelationSectoralAlgorithmConfig algorithmConfig = (CorrelationSectoralAlgorithmConfig) config;
+        SectoralCorrelationAlgorithmConfig algorithmConfig = (SectoralCorrelationAlgorithmConfig) config;
         this.futuresOvernightScale = algorithmConfig.getFuturesOvernightScale();
         this.stockOvernightScale = algorithmConfig.getStockOvernightScale();
         this.futuresTicker = algorithmConfig.getFuturesTicker();

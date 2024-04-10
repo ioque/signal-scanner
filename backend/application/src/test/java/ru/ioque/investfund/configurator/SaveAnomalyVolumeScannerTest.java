@@ -3,6 +3,7 @@ package ru.ioque.investfund.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("SCANNER CONFIGURATOR TEST - SAVE ANOMALY VOLUME SCANNER")
 public class SaveAnomalyVolumeScannerTest extends BaseScannerConfiguratorTest {
     @Test
     @DisplayName("""

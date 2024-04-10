@@ -13,7 +13,7 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScanner
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.SectoralCorrelationAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.SectoralRetardAlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
@@ -47,14 +47,9 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
         return repository.existsById(id);
     }
 
-    private ScannerEntity updateConfig(ScannerEntity scannerEntity, ScannerConfig config) {
-        scannerEntity.updateConfig(config);
-        return scannerEntity;
-    }
-
     static Map<Class<? extends AlgorithmConfig>, Function<ScannerConfig, ScannerEntity>> factories = Map.of(
         AnomalyVolumeAlgorithmConfig.class, AnomalyVolumeScannerEntity::from,
-        CorrelationSectoralAlgorithmConfig.class, CorrelationSectoralScannerEntity::from,
+        SectoralCorrelationAlgorithmConfig.class, CorrelationSectoralScannerEntity::from,
         SectoralRetardAlgorithmConfig.class, SectoralRetardScannerEntity::from,
         PrefSimpleAlgorithmConfig.class, PrefSimpleScannerEntity::from
     );

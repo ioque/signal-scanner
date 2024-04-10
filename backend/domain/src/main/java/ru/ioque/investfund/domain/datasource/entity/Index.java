@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Index extends Instrument {
     Double annualHigh;
     Double annualLow;
@@ -32,7 +32,15 @@ public class Index extends Instrument {
         Long lastTradingNumber
     ) {
         super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        setAnnualHigh(annualHigh);
+        setAnnualLow(annualLow);
+    }
+
+    private void setAnnualHigh(Double annualHigh) {
         this.annualHigh = annualHigh;
+    }
+
+    private void setAnnualLow(Double annualLow) {
         this.annualLow = annualLow;
     }
 }

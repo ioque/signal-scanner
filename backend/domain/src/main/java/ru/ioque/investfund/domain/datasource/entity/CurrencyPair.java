@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CurrencyPair extends Instrument {
     Integer lotSize;
     String faceUnit;
@@ -32,7 +32,15 @@ public class CurrencyPair extends Instrument {
         Long lastTradingNumber
     ) {
         super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        setFaceUnit(faceUnit);
+        setLotSize(lotSize);
+    }
+
+    private void setLotSize(Integer lotSize) {
         this.lotSize = lotSize;
+    }
+
+    private void setFaceUnit(String faceUnit) {
         this.faceUnit = faceUnit;
     }
 }

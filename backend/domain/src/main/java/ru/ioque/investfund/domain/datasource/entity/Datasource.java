@@ -103,6 +103,6 @@ public class Datasource extends Domain {
         if (instruments == null) {
             throw new DomainException("Не передан список инструментов источника данных.");
         }
-        this.instruments = instruments;
+        this.instruments = new ArrayList<>(instruments);
     }
 }

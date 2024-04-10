@@ -23,7 +23,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain {
     Integer workPeriodInMinutes;
     String description;
@@ -46,13 +46,13 @@ public class SignalScanner extends Domain {
         List<Signal> signals
     ) {
         super(id);
-        this.workPeriodInMinutes = workPeriodInMinutes;
-        this.algorithm = algorithm;
-        this.datasourceId = datasourceId;
-        this.description = description;
-        this.lastExecutionDateTime = lastExecutionDateTime;
-        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
-        this.tradingSnapshots = tradingSnapshots != null ? new ArrayList<>(tradingSnapshots) : new ArrayList<>();
+        setWorkPeriodInMinutes(workPeriodInMinutes);
+        setDescription(description);
+        setDatasourceId(datasourceId);
+        setAlgorithm(algorithm);
+        setLastExecutionDateTime(lastExecutionDateTime);
+        setTradingSnapshots(tradingSnapshots);
+        setSignals(signals);
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {
@@ -110,5 +110,51 @@ public class SignalScanner extends Domain {
 
     public List<Signal> getSignals() {
         return List.copyOf(signals);
+    }
+
+    private void setWorkPeriodInMinutes(Integer workPeriodInMinutes) {
+        if(workPeriodInMinutes == null) {
+            throw new DomainException("Не передан период работы сканера.");
+        }
+        if(workPeriodInMinutes <= 0) {
+            throw new DomainException("Период работы сканера должен быть целым положительным числом.");
+        }
+        this.workPeriodInMinutes = workPeriodInMinutes;
+    }
+
+    private void setDescription(String description) {
+        if(description == null || description.isEmpty()) {
+            throw new DomainException("Не передано описание сканера.");
+        }
+        this.description = description;
+    }
+
+    private void setDatasourceId(UUID datasourceId) {
+        if(datasourceId == null) {
+            throw new DomainException("Не передан идентификатор источника данных.");
+        }
+        this.datasourceId = datasourceId;
+    }
+
+    private void setAlgorithm(ScannerAlgorithm algorithm) {
+        if(algorithm == null) {
+            throw new DomainException("Не передан алгоритм поиска сигналов.");
+        }
+        this.algorithm = algorithm;
+    }
+
+    private void setLastExecutionDateTime(LocalDateTime lastExecutionDateTime) {
+        this.lastExecutionDateTime = lastExecutionDateTime;
+    }
+
+    private void setSignals(List<Signal> signals) {
+        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
+    }
+
+    private void setTradingSnapshots(List<TradingSnapshot> tradingSnapshots) {
+        if (tradingSnapshots == null || tradingSnapshots.isEmpty()) {
+            throw new DomainException("Не передан список снэпшотов торговых данных.");
+        }
+        this.tradingSnapshots = tradingSnapshots;
     }
 }

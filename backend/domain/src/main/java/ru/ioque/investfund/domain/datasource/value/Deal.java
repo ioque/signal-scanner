@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.DomainException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Deal extends IntradayValue {
     Boolean isBuy;
     Integer qnt;
@@ -30,7 +31,24 @@ public class Deal extends IntradayValue {
         Double value
     ) {
         super(datasourceId, number, dateTime, ticker, price, value);
-        this.isBuy = isBuy;
+        setBuy(isBuy);
+        setQnt(qnt);
+    }
+
+    private void setBuy(Boolean buy) {
+        if (buy == null) {
+            throw new DomainException("Не заполнен признак покупки/продажи");
+        }
+        isBuy = buy;
+    }
+
+    private void setQnt(Integer qnt) {
+        if (qnt == null) {
+            throw new DomainException("Не заполнено количество купленных лотов.");
+        }
+        if (qnt <= 0) {
+            throw new DomainException("Количество купленных лотов должно быть больше нуля.");
+        }
         this.qnt = qnt;
     }
 }

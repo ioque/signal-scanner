@@ -14,13 +14,13 @@ import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CorrelationSectoralAlgorithmConfig extends AlgorithmConfig {
+public class SectoralCorrelationAlgorithmConfig extends AlgorithmConfig {
     Double futuresOvernightScale;
     Double stockOvernightScale;
     String futuresTicker;
 
     @Builder
-    public CorrelationSectoralAlgorithmConfig(
+    public SectoralCorrelationAlgorithmConfig(
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker

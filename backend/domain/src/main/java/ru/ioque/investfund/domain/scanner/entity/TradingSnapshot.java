@@ -1,11 +1,11 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 
 import java.time.DayOfWeek;
@@ -18,9 +18,8 @@ import java.util.Optional;
 
 @Builder
 @ToString
-@AllArgsConstructor
 @Getter(AccessLevel.PUBLIC)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
     String ticker;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
@@ -29,6 +28,24 @@ public class TradingSnapshot {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
     List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
+
+    public TradingSnapshot(
+        String ticker,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
+        List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries,
+        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
+        List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
+    ) {
+        setTicker(ticker);
+        setClosePriceSeries(closePriceSeries);
+        setOpenPriceSeries(openPriceSeries);
+        setValueSeries(valueSeries);
+        setWaPriceSeries(waPriceSeries);
+        setTodayPriceSeries(todayPriceSeries);
+        setTodayValueSeries(todayValueSeries);
+    }
 
     public Optional<Double> getHistoryMedianValue() {
         if (valueSeries.size() == 1) return Optional.of(valueSeries.get(0).getValue());
@@ -131,5 +148,36 @@ public class TradingSnapshot {
     @Override
     public int hashCode() {
         return Objects.hash(ticker);
+    }
+
+    private void setTicker(String ticker) {
+        if (ticker == null || ticker.isEmpty()) {
+            throw new DomainException("Не передан тикер.");
+        }
+        this.ticker = ticker;
+    }
+
+    private void setClosePriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries) {
+        this.closePriceSeries = closePriceSeries;
+    }
+
+    private void setOpenPriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries) {
+        this.openPriceSeries = openPriceSeries;
+    }
+
+    private void setValueSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries) {
+        this.valueSeries = valueSeries;
+    }
+
+    private void setWaPriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries) {
+        this.waPriceSeries = waPriceSeries;
+    }
+
+    private void setTodayPriceSeries(List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries) {
+        this.todayPriceSeries = todayPriceSeries;
+    }
+
+    private void setTodayValueSeries(List<TimeSeriesValue<Double, LocalTime>> todayValueSeries) {
+        this.todayValueSeries = todayValueSeries;
     }
 }

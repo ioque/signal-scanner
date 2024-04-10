@@ -2,7 +2,7 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.configurator.command.SaveCorrelationSectoralScanner;
+import ru.ioque.investfund.domain.configurator.command.SaveSectoralCorrelationScanner;
 
 import java.util.List;
 import java.util.UUID;
@@ -223,7 +223,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     private void initScanner(UUID datasourceId) {
         scannerConfigurator().addNewScanner(
-            SaveCorrelationSectoralScanner.builder()
+            SaveSectoralCorrelationScanner.builder()
                 .workPeriodInMinutes(1)
                 .description("Корреляция сектора с фьючерсом.")
                 .datasourceId(datasourceId)

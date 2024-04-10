@@ -3,7 +3,7 @@ package ru.ioque.investfund.configurator;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.configurator.command.SaveAnomalyVolumeScanner;
-import ru.ioque.investfund.domain.configurator.command.SaveCorrelationSectoralScanner;
+import ru.ioque.investfund.domain.configurator.command.SaveSectoralCorrelationScanner;
 import ru.ioque.investfund.domain.configurator.command.SavePrefSimpleScanner;
 import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 import ru.ioque.investfund.domain.configurator.command.SaveSectoralRetardScanner;
@@ -103,8 +103,8 @@ public class BaseScannerConfiguratorTest extends BaseTest {
             .intradayScale(0.015);
     }
 
-    protected SaveCorrelationSectoralScanner.SaveCorrelationSectoralScannerBuilder buildSaveCorrelationSectoralScannerWith() {
-        return SaveCorrelationSectoralScanner.builder()
+    protected SaveSectoralCorrelationScanner.SaveSectoralCorrelationScannerBuilder buildSaveSectoralCorrelationScannerWith() {
+        return SaveSectoralCorrelationScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())

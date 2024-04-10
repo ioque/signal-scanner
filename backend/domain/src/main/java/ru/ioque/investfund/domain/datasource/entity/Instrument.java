@@ -7,18 +7,20 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument extends Domain {
     String ticker;
     String shortName;
@@ -40,12 +42,12 @@ public class Instrument extends Domain {
         Long lastTradingNumber
     ) {
         super(id);
-        this.ticker = ticker;
-        this.shortName = shortName;
-        this.name = name;
-        this.updatable = updatable;
-        this.lastHistoryDate = lastHistoryDate;
-        this.lastTradingNumber = lastTradingNumber;
+        setTicker(ticker);
+        setShortName(shortName);
+        setName(name);
+        setUpdatable(updatable);
+        setLastHistoryDate(lastHistoryDate);
+        setLastTradingNumber(lastTradingNumber);
     }
 
     public Optional<LocalDate> getLastHistoryDate() {
@@ -106,5 +108,30 @@ public class Instrument extends Domain {
 
     private void setLastTradingNumber(Long lastTradingNumber) {
         this.lastTradingNumber = lastTradingNumber;
+    }
+
+    private void setTicker(String ticker) {
+        if (ticker == null || ticker.isBlank()) {
+            throw new DomainException("Не заполнен тикер инструмента.");
+        }
+        this.ticker = ticker;
+    }
+
+    private void setShortName(String shortName) {
+        if (shortName == null || shortName.isBlank()) {
+            throw new DomainException("Не заполнено краткое наименование инструмента.");
+        }
+        this.shortName = shortName;
+    }
+
+    private void setUpdatable(Boolean updatable) {
+        this.updatable = !Objects.isNull(updatable) && updatable;
+    }
+
+    private void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new DomainException("Не заполнено полное наименование инструмента.");
+        }
+        this.name = name;
     }
 }
