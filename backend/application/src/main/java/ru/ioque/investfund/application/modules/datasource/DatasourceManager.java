@@ -60,7 +60,7 @@ public class DatasourceManager implements SystemModule {
     public synchronized void integrateInstruments(final UUID datasourceId) {
         final Datasource datasource = getExchangeFromRepo(datasourceId);
         loggerFacade.logRunSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
-        datasourceProvider.fetchInstruments(datasource).forEach(datasource::saveInstrument);
+        datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
         repository.saveDatasource(datasource);
         loggerFacade.logFinishSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
     }

@@ -39,7 +39,7 @@ public class Datasource extends Domain {
         this.instruments = instruments != null ? new ArrayList<>(instruments) : new ArrayList<>();
     }
 
-    public void saveInstrument(Instrument instrument) {
+    public void addInstrument(Instrument instrument) {
         if (findBy(instrument.getTicker()).isEmpty()) {
             instruments.add(instrument);
         }

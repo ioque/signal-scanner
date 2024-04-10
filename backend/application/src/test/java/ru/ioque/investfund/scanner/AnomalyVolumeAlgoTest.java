@@ -601,7 +601,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
     }
 
-    private static AnomalyVolumeAlgorithmConfig defaultConfiguration() {
+    private AnomalyVolumeAlgorithmConfig defaultConfiguration() {
         return new AnomalyVolumeAlgorithmConfig(
             1.5,
             180,

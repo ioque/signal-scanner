@@ -16,11 +16,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScannerConfigurator {
+    CommandValidator commandValidator;
     ScannerConfigRepository scannerConfigRepository;
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
 
     public synchronized void addNewScanner(final AddNewScannerCommand command) {
+        commandValidator.validate(command);
         loggerFacade.logRunCreateSignalScanner(command);
         final UUID id = uuidProvider.generate();
         scannerConfigRepository.save(
