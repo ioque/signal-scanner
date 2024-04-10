@@ -17,6 +17,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRep
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventBus;
+import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
@@ -25,6 +26,11 @@ import static org.mockito.Mockito.mock;
 @Order(1)
 @TestConfiguration
 public class ControllerTestConfiguration {
+    @Bean
+    @Primary
+    public ScannerConfigurator mockScannerConfigurator() {
+        return mock(ScannerConfigurator.class);
+    }
 
     @Bean
     @Primary

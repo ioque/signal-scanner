@@ -3,13 +3,11 @@ package ru.ioque.investfund.application.share.logger;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
-import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -28,13 +26,12 @@ public class LoggerFacade {
         );
     }
 
-    public void logRunCreateSignalScanner(AddNewScannerCommand command) {
+    public void logRunCreateSignalScanner(SaveScannerCommand command) {
         log(
             new InfoLog(
                 String
                     .format(
-                        "Начато создание сканера сигналов, идентификаторы инструментов %s.",
-                        Objects.isNull(command.getAlgorithmConfig()) ? "не переданы" : command.getTickers()
+                        "Начато создание сканера сигналов, идентификаторы инструментов %s.", command.getTickers()
                     )
             )
         );
@@ -125,9 +122,9 @@ public class LoggerFacade {
         );
     }
 
-    public void logUpdateSignalScanner(UpdateScannerCommand command) {
+    public void logUpdateSignalScanner(UUID scannerId) {
         log(
-            new InfoLog("Обновлен сканер сигналов с идентификатором " + command.getId() + ".")
+            new InfoLog("Обновлен сканер сигналов с идентификатором " + scannerId + ".")
         );
     }
 }

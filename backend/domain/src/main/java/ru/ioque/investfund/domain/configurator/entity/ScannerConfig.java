@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
-import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 
@@ -42,24 +41,13 @@ public class ScannerConfig extends Domain {
         setAlgorithmConfig(algorithmConfig);
     }
 
-    public static ScannerConfig from(UUID id, AddNewScannerCommand command) {
+    public static ScannerConfig from(UUID id, SaveScannerCommand command) {
         return ScannerConfig.builder()
             .id(id)
             .datasourceId(command.getDatasourceId())
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
             .description(command.getDescription())
-            .algorithmConfig(command.getAlgorithmConfig())
-            .tickers(command.getTickers())
-            .build();
-    }
-
-    public static ScannerConfig from(UpdateScannerCommand command) {
-        return ScannerConfig.builder()
-            .id(command.getId())
-            .datasourceId(command.getDatasourceId())
-            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
-            .description(command.getDescription())
-            .algorithmConfig(command.getAlgorithmConfig())
+            .algorithmConfig(command.buildConfig())
             .tickers(command.getTickers())
             .build();
     }
@@ -89,6 +77,9 @@ public class ScannerConfig extends Domain {
     }
 
     private void setDatasourceId(UUID datasourceId) {
+        if (datasourceId == null) {
+            throw new DomainException("Не передан идентификатор источника данных.");
+        }
         this.datasourceId = datasourceId;
     }
 

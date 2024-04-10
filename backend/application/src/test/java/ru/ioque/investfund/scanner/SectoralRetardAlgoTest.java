@@ -2,17 +2,13 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.configurator.entity.SectoralRetardAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.command.SaveSectoralRetardScanner;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SCANNER MANAGER TEST - SECTORAL RETARD ALGORITHM")
@@ -22,147 +18,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T1. В конфигурацию SectoralRetardSignalConfig не передан параметр historyScale.
-        Результат: ошибка, текст ошибки: "Не передан параметр historyScale."
-        """)
-    void testCase1() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                null,
-                intradayScale
-            )
-        ));
-
-        assertEquals("Не передан параметр historyScale.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. В конфигурацию SectoralRetardSignalConfig параметр historyScale передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
-        """)
-    void testCase2() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                0D,
-                intradayScale
-            )
-        ));
-
-        assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. В конфигурацию SectoralRetardSignalConfig параметр historyScale передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр historyScale должен быть больше нуля."
-        """)
-    void testCase3() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                -1D,
-                intradayScale
-            )
-        ));
-
-        assertEquals("Параметр historyScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T4. В конфигурацию SectoralRetardSignalConfig не передан параметр intradayScale.
-        Результат: ошибка, текст ошибки: "Не передан параметр intradayScale."
-        """)
-    void testCase4() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                historyScale, null
-            )
-        ));
-
-        assertEquals("Не передан параметр intradayScale.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T5. В конфигурацию SectoralRetardSignalConfig параметр intradayScale передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
-        """)
-    void testCase5() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                historyScale,
-                0D
-            )
-        ));
-
-        assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T6. В конфигурацию SectoralRetardSignalConfig параметр intradayScale передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр intradayScale должен быть больше нуля."
-        """)
-    void testCase6() {
-        final UUID datasourceId = getDatasourceId();
-        initOilCompanyData(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new SectoralRetardAlgorithmConfig(
-                historyScale,
-                -1D
-            )
-        ));
-
-        assertEquals("Параметр intradayScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T7. ROSN, LKOH, SIBN, TATN - сектор нефти.
+        T1. ROSN, LKOH, SIBN, TATN - сектор нефти.
         3 из 4 позиций не росли в последние дни, сигнала нет.
         """)
-    void testCase7() {
+    void testCase1() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -181,10 +40,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T8. ROSN, LKOH, SIBN росли в предыдущий день, растут сегодня.
+        T2. ROSN, LKOH, SIBN росли в предыдущий день, растут сегодня.
         TATN росла вчера, сегодня падает.
         """)
-    void testCase8() {
+    void testCase2() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -203,9 +62,9 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T9. С последнего запуска прошло меньше 1 часа, сканер не запущен.
+        T3. С последнего запуска прошло меньше 1 часа, сканер не запущен.
         """)
-    void testCase9() {
+    void testCase3() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -226,9 +85,9 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T10. С последнего запуска прошел 1 час, сканер запущен.
+        T4. С последнего запуска прошел 1 час, сканер запущен.
         """)
-    void testCase10() {
+    void testCase4() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -249,10 +108,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T11. Сканер создан для двух инструментов. TATN отстающий, ROSN растущий.
+        T5. Сканер создан для двух инструментов. TATN отстающий, ROSN растущий.
         Сигнала нет, ошибки нет.
         """)
-    void testCase11() {
+    void testCase5() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -269,10 +128,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T12. Сканер создан для трех инструментов. TATN падающий, ROSN растущий, SIBN растущий.
+        T6. Сканер создан для трех инструментов. TATN падающий, ROSN растущий, SIBN растущий.
         Сигнала нет, ошибки нет.
         """)
-    void testCase12() {
+    void testCase6() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
@@ -289,15 +148,15 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
-        addScanner(
-            1,
-            "Секторальный отстающий, нефтянка.",
-            datasourceId,
-            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
-            new SectoralRetardAlgorithmConfig(
-                historyScale,
-                intradayScale
-            )
+        scannerConfigurator().addNewScanner(
+            SaveSectoralRetardScanner.builder()
+                .workPeriodInMinutes(1)
+                .description("Секторальный отстающий, нефтянка.")
+                .datasourceId(datasourceId)
+                .tickers(Arrays.asList(tickers))
+                .historyScale(historyScale)
+                .intradayScale(intradayScale)
+                .build()
         );
     }
 
@@ -314,8 +173,6 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         datasourceManager().integrateInstruments(datasourceId);
         datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
-
-
 
     private void initDealsTatnFallOtherRise(UUID datasourceId) {
         exchangeDataFixture().initDealDatas(

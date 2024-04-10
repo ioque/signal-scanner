@@ -2,15 +2,13 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
-import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.configurator.command.SaveCorrelationSectoralScanner;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SCANNER MANAGER TEST - CORRELATION SECTORAL ALGORITHM")
@@ -22,202 +20,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T1. В конфигурацию CorrelationSectoralSignalConfig не передан параметр futuresOvernightScale.
-        Результат: ошибка, текст ошибки: "Не передан параметр futuresOvernightScale."
-        """)
-    void testCase1() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                null,
-                stockOvernightScale,
-                BRF4
-            )
-        ));
-
-        assertEquals("Не передан параметр futuresOvernightScale.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. В конфигурацию CorrelationSectoralSignalConfig не передан параметр stockOvernightScale.
-        Результат: ошибка, текст ошибки: "Не передан параметр stockOvernightScale."
-        """)
-    void testCase2() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                null,
-                BRF4
-            )
-        ));
-
-        assertEquals("Не передан параметр stockOvernightScale.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. В конфигурацию CorrelationSectoralSignalConfig не передан параметр futuresTicker.
-        Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
-        """)
-    void testCase3() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                stockOvernightScale,
-                null
-            )
-        ));
-
-        assertEquals("Не передан параметр futuresTicker.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T4. В конфигурацию CorrelationSectoralSignalConfig параметр futuresTicker передан как пустая строка.
-        Результат: ошибка, текст ошибки: "Не передан параметр futuresTicker."
-        """)
-    void testCase4() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                stockOvernightScale,
-                ""
-            )
-        ));
-
-        assertEquals("Не передан параметр futuresTicker.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T5. В конфигурацию CorrelationSectoralSignalConfig параметр futuresOvernightScale передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
-        """)
-    void testCase5() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                0D,
-                stockOvernightScale,
-                BRF4
-            )
-        ));
-
-        assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T6. В конфигурацию CorrelationSectoralSignalConfig параметр futuresOvernightScale передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр futuresOvernightScale должен быть больше нуля."
-        """)
-    void testCase6() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                -1D,
-                stockOvernightScale,
-                BRF4
-            )
-        ));
-
-        assertEquals("Параметр futuresOvernightScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T7. В конфигурацию CorrelationSectoralSignalConfig параметр stockOvernightScale передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
-        """)
-    void testCase7() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                0D,
-                BRF4
-            )
-        ));
-
-        assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T8. В конфигурацию CorrelationSectoralSignalConfig параметр stockOvernightScale передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр stockOvernightScale должен быть больше нуля."
-        """)
-    void testCase8() {
-        final UUID datasourceId = getDatasourceId();
-        initInstruments(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                -1D,
-                BRF4
-            )
-        ));
-
-        assertEquals("Параметр stockOvernightScale должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T9. TATN росла вчера, BRF4 рос вчера.
+        T1. TATN росла вчера, BRF4 рос вчера.
         Сигнал зафиксирован.
         """)
-    void testCase9() {
+    void testCase1() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -234,10 +40,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T10. TATN росла вчера, BRF4 падал вчера.
+        T2. TATN росла вчера, BRF4 падал вчера.
         Сигнал не зафиксирован.
         """)
-    void testCase10() {
+    void testCase2() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -254,9 +60,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T11. С последнего запуска прошло меньше 24 часов, сканер не запущен.
+        T3. С последнего запуска прошло меньше 24 часов, сканер не запущен.
         """)
-    void testCase11() {
+    void testCase3() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -275,9 +81,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T12. С последнего запуска прошло 24 часа, сканер запущен.
+        T4. С последнего запуска прошло 24 часа, сканер запущен.
         """)
-    void testCase12() {
+    void testCase4() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -296,11 +102,11 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T13. Исторические данные проинтегрированы, внутридневные данные проинтегрированы, цена растет.
+        T5. Исторические данные проинтегрированы, внутридневные данные проинтегрированы, цена растет.
         Исторические данные по фьючерсу проинтегрированы за один день, дневные данные проинтегрированы
         Запускается сканер. Ошибок нет, сигнал зафиксирован.
         """)
-    void testCase13() {
+    void testCase5() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -319,11 +125,11 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T14. Исторические данные проинтегрированы, внутридневные данные проинтегрированы, цена растет.
+        T6. Исторические данные проинтегрированы, внутридневные данные проинтегрированы, цена растет.
         Исторические данные по фьючерсу проинтегрированы, дневные данные не проинтегрированы
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase14() {
+    void testCase6() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -344,11 +150,11 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T15. Исторические данные не проинтегрированы, внутридневные данные проинтегрированы, цена растет.
+        T7. Исторические данные не проинтегрированы, внутридневные данные проинтегрированы, цена растет.
         Исторические данные по фьючерсу проинтегрированы, дневные данные проинтегрированы
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase15() {
+    void testCase7() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -368,11 +174,11 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T16. Исторические данные проинтегрированы, внутридневные данные не проинтегрированы.
+        T8. Исторические данные проинтегрированы, внутридневные данные не проинтегрированы.
         Исторические данные по фьючерсу проинтегрированы, дневные данные проинтегрированы
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase16() {
+    void testCase8() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -392,11 +198,11 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T17. Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, цена растет.
+        T9. Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, цена растет.
         Исторические данные по фьючерсу проинтегрированы, дневные данные проинтегрированы
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase17() {
+    void testCase9() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
@@ -416,16 +222,16 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId) {
-        addScanner(
-            1,
-            "Корреляция сектора с фьючерсом.",
-            datasourceId,
-            getTickers(datasourceId),
-            new CorrelationSectoralAlgorithmConfig(
-                futuresOvernightScale,
-                stockOvernightScale,
-                BRF4
-            )
+        scannerConfigurator().addNewScanner(
+            SaveCorrelationSectoralScanner.builder()
+                .workPeriodInMinutes(1)
+                .description("Корреляция сектора с фьючерсом.")
+                .datasourceId(datasourceId)
+                .tickers(getTickers(datasourceId))
+                .futuresOvernightScale(futuresOvernightScale)
+                .stockOvernightScale(stockOvernightScale)
+                .futuresTicker(BRF4)
+                .build()
         );
     }
 

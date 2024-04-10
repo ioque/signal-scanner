@@ -2,10 +2,7 @@ package ru.ioque.investfund;
 
 import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
-import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
@@ -36,7 +33,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -89,29 +85,6 @@ public class BaseTest {
         return dateTimeProvider().nowDateTime().minusMonths(3).toLocalDate();
     }
 
-    protected void addScanner(
-        Integer workPeriodInMinutes,
-        String description,
-        UUID datasourceId,
-        List<String> tickers,
-        AlgorithmConfig config
-    ) {
-        scannerConfigurator()
-            .addNewScanner(
-                AddNewScannerCommand.builder()
-                    .workPeriodInMinutes(workPeriodInMinutes)
-                    .description(description)
-                    .datasourceId(datasourceId)
-                    .tickers(tickers)
-                    .algorithmConfig(config)
-                    .build()
-            );
-    }
-
-    protected void updateScanner(UpdateScannerCommand command) {
-        scannerConfigurator().updateScanner(command);
-    }
-
     protected List<Instrument> getInstruments(UUID datasourceId) {
         return datasourceRepository()
             .getBy(datasourceId)
@@ -121,10 +94,6 @@ public class BaseTest {
 
     protected void initTodayDateTime(String dateTime) {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
-    }
-
-    protected Stream<Instrument> getInstrumentsBy(UUID datasourceId, List<String> tickers) {
-        return getInstruments(datasourceId).stream().filter(row -> tickers.contains(row.getTicker()));
     }
 
     protected List<HistoryValue> generateTradingResultsBy(

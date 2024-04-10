@@ -73,19 +73,23 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
     }
 
     private SignalScanner map(ScannerConfig config) {
-        return SignalScanner.builder()
-            .id(config.getId())
-            .datasourceId(config.getDatasourceId())
-            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
-            .algorithm(config.getAlgorithmConfig().factoryAlgorithm())
-            .description(config.getDescription())
-            .signals(getBy(config.getId()).map(SignalScanner::getSignals).orElse(new ArrayList<>()))
-            .lastExecutionDateTime(getBy(config.getId())
-                .map(SignalScanner::getLastExecutionDateTime)
-                .flatMap(r -> r)
-                .orElse(null))
-            .tradingSnapshots(createSnapshots(config.getDatasourceId(), config.getTickers()))
-            .build();
+        try {
+            return SignalScanner.builder()
+                .id(config.getId())
+                .datasourceId(config.getDatasourceId())
+                .workPeriodInMinutes(config.getWorkPeriodInMinutes())
+                .algorithm(config.getAlgorithmConfig().factoryAlgorithm())
+                .description(config.getDescription())
+                .signals(getBy(config.getId()).map(SignalScanner::getSignals).orElse(new ArrayList<>()))
+                .lastExecutionDateTime(getBy(config.getId())
+                    .map(SignalScanner::getLastExecutionDateTime)
+                    .flatMap(r -> r)
+                    .orElse(null))
+                .tradingSnapshots(createSnapshots(config.getDatasourceId(), config.getTickers()))
+                .build();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     private List<TradingSnapshot> createSnapshots(UUID datasourceId, List<String> tickers) {

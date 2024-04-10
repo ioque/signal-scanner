@@ -7,36 +7,32 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateScannerCommand {
-    UUID id;
-    Integer workPeriodInMinutes;
-    String description;
-    UUID datasourceId;
-    List<String> tickers;
-    AlgorithmConfig algorithmConfig;
+public class SavePrefSimpleScanner extends SaveScannerCommand {
+    Double spreadParam;
 
     @Builder
-    public UpdateScannerCommand(
-        UUID id,
+    public SavePrefSimpleScanner(
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
         List<String> tickers,
-        AlgorithmConfig algorithmConfig
+        Double spreadParam
     ) {
-        this.id = id;
-        this.workPeriodInMinutes = workPeriodInMinutes;
-        this.description = description;
-        this.datasourceId = datasourceId;
-        this.tickers = tickers;
-        this.algorithmConfig = algorithmConfig;
+        super(workPeriodInMinutes, description, datasourceId, tickers);
+        this.spreadParam = spreadParam;
+    }
+
+    @Override
+    public AlgorithmConfig buildConfig() {
+        return PrefSimpleAlgorithmConfig.builder().spreadParam(spreadParam).build();
     }
 }

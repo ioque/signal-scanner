@@ -3,232 +3,32 @@ package ru.ioque.investfund.scanner;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.configurator.command.SaveAnomalyVolumeScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SCANNER MANAGER TEST - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     @Test
-    @DisplayName("""
-        T1. В конфигурацию AnomalyVolumeSignalConfig не передан параметр scaleCoefficient.
-        Результат: ошибка, текст ошибки: "Не передан параметр scaleCoefficient."
-        """)
-    void testCase1() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                null,
-                180,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Не передан параметр scaleCoefficient.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. В конфигурацию AnomalyVolumeSignalConfig не передан параметр historyPeriod.
-        Результат: ошибка, текст ошибки: "Не передан параметр historyPeriod."
-        """)
-    void testCase2() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                1.5,
-                null,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Не передан параметр historyPeriod.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. В конфигурацию AnomalyVolumeSignalConfig не передан параметр indexTicker.
-        Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
-        """)
-    void testCase3() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                1.5,
-                180,
-                null
-            )
-        ));
-
-        assertEquals("Не передан параметр indexTicker.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T4. В конфигурацию AnomalyVolumeSignalConfig параметр indexTicker передан как пустая строка.
-        Результат: ошибка, текст ошибки: "Не передан параметр indexTicker."
-        """)
-    void testCase4() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                1.5,
-                180,
-                ""
-            )
-        ));
-
-        assertEquals("Не передан параметр indexTicker.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T5. В конфигурацию AnomalyVolumeSignalConfig параметр scaleCoefficient передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
-        """)
-    void testCase5() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                0D,
-                180,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T6. В конфигурацию AnomalyVolumeSignalConfig параметр scaleCoefficient передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр scaleCoefficient должен быть больше нуля."
-        """)
-    void testCase6() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                -1D,
-                180,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Параметр scaleCoefficient должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T7. В конфигурацию AnomalyVolumeSignalConfig параметр historyPeriod передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
-        """)
-    void testCase7() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                1.5,
-                0,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T8. В конфигурацию AnomalyVolumeSignalConfig параметр historyPeriod передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр historyPeriod должен быть больше нуля."
-        """)
-    void testCase8() {
-        final UUID datasourceId = getDatasourceId();
-        initTgknAndTgkbAndImoex(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getTickers(datasourceId),
-            new AnomalyVolumeAlgorithmConfig(
-                1.5,
-                -180,
-                "IMOEX"
-            )
-        ));
-
-        assertEquals("Параметр historyPeriod должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
     @SneakyThrows
     @DisplayName("""
-        Т9. Создан сканер сигналов AnomalyVolumeScannerSignal для двух инструментов.
+        Т1. Создан сканер сигналов AnomalyVolumeScannerSignal для двух инструментов.
         По обоим инструментам есть торговые данные. По обоим инструментам объемы превышают средневзвешенные больше, чем
         в scaleCoefficient-раз.
         Результат: зарегистрировано два сигнала.
         """)
-    void testCase9() {
+    void testCase1() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "TGKB", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
 
         datasourceManager().execute();
 
@@ -240,19 +40,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T10. С последнего запуска прошло меньше минуты, сканер не запущен.
+        T2. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
-    void testCase10() {
+    void testCase2() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "TGKB", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:00:30");
 
@@ -267,19 +63,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T11. С последнего запуска прошла минута, сканер запущен.
+        T3. С последнего запуска прошла минута, сканер запущен.
         """)
-    void testCase11() {
+    void testCase3() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "TGKB", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 
@@ -294,21 +86,17 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T12. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T4. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Ранее был зарегистрирован сигнал к покупке. В текущем массиве данных
         объем торгов провышает медиану в scaleCoefficient-раз. Объем продаж превышает объем покупок.
         Результат: зарегистрирован сигнал к продаже. Сигнал к покупке закрыт.
         """)
-    void testCase12() {
+    void testCase4() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknBuySignalDataset(datasourceId);
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset(datasourceId);
@@ -322,12 +110,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T13. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T5. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы, внутри дня сделок по бумаге не было.
         Исторические и дневные данные по индексу проинтегрированы.
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase13() {
+    void testCase5() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
@@ -343,11 +131,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -358,12 +142,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T14. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T6. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные не проинтегрированы, внутри дня сделок по бумаге не было.
         Исторические и дневные данные по индексу проинтегрированы.
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase14() {
+    void testCase6() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
@@ -376,11 +160,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -391,12 +171,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T15. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T7. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы, внутри дня была совершена одна сделка.
         Исторические и дневные данные по индексу проинтегрированы.
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase15() {
+    void testCase7() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
@@ -413,11 +193,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
             buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 469D, 1)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -428,12 +204,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T16. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T8. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные не проинтегрированы, внутридневные данные проинтегрированы.
         Исторические данные по индексу есть, внутридневных данных по индексу нет.
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase16() {
+    void testCase8() {
         final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
@@ -447,11 +223,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -462,12 +234,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T17. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T9. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы, внутридневные данные проинтегрированы.
         Исторических данных по индексу нет, внутридневные данные по индексу есть.
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
-    void testCase17() {
+    void testCase9() {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(getDatasourceId());
         initTradingResults(
@@ -482,11 +254,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(getDatasourceId(),2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(getDatasourceId(),3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
-        initScanner(
-            getDatasourceId(),
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(getDatasourceId(), "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -497,7 +265,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T18. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T10. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы, внутридневные данные не проинтегрированы.
         Исторических данных по индексу нет, внутридневные данные по индексу есть.
         Запускается сканер. Ошибок нет, сигналов нет.
@@ -515,11 +283,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
             buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -531,7 +295,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T19. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T11. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, объем превышает объем за предыдущий день.
         Исторические и дневные данные по индексу проинтегрированы.
         Запускается сканер. Ошибок нет, сигнал есть.
@@ -553,11 +317,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
@@ -568,7 +328,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T20. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
+        T12. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы, внутридневные данные проинтегрированы, объем превышает исторический.
         Исторические данные по индексу проинтегрированы за один день, дневные данные по индексу проинтегрированы
         Запускается сканер. Ошибок нет, сигналов нет.
@@ -588,25 +348,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
         );
-        initScanner(
-            datasourceId,
-            defaultConfiguration(),
-            "TGKN", "IMOEX"
-        );
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
         datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
         assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
-    }
-
-    private AnomalyVolumeAlgorithmConfig defaultConfiguration() {
-        return new AnomalyVolumeAlgorithmConfig(
-            1.5,
-            180,
-            "IMOEX"
-        );
     }
 
     public void assertFinInstrument(
@@ -715,13 +463,17 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
-    private void initScanner(UUID datasourceId, AlgorithmConfig configurator, String... tickers) {
-        addScanner(
-            1,
-            "Аномальные объемы, третий эшелон.",
-            datasourceId,
-            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
-            configurator
+    private void initScanner(UUID datasourceId, String... tickers) {
+        scannerConfigurator().addNewScanner(
+            SaveAnomalyVolumeScanner.builder()
+                .workPeriodInMinutes(1)
+                .description("Аномальные объемы, третий эшелон.")
+                .datasourceId(datasourceId)
+                .tickers(Arrays.asList(tickers))
+                .indexTicker("IMOEX")
+                .historyPeriod(180)
+                .scaleCoefficient(1.5)
+                .build()
         );
     }
 }

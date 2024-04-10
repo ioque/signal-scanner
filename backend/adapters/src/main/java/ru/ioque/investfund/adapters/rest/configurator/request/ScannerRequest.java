@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,5 +41,6 @@ public abstract class ScannerRequest implements Serializable {
     UUID datasourceId;
     @NotNull(message = "The tickers is required.")
     List<String> tickers;
-    public abstract AlgorithmConfig buildConfig();
+
+    public abstract SaveScannerCommand toCommand();
 }

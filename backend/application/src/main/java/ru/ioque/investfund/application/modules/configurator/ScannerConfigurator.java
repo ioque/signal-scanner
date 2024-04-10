@@ -9,8 +9,7 @@ import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
-import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.configurator.validator.ScannerConfigValidator;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
@@ -26,29 +25,28 @@ public class ScannerConfigurator {
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
 
-    public synchronized void addNewScanner(final AddNewScannerCommand command) {
+    public synchronized void addNewScanner(final SaveScannerCommand command) {
         loggerFacade.logRunCreateSignalScanner(command);
-        Datasource datasource = getDatasource(command.getDatasourceId());
         ScannerConfig scannerConfig = ScannerConfig.from(uuidProvider.generate(), command);
-        new ScannerConfigValidator(datasource.getTickers(), scannerConfig).validate();
+        validate(command.getDatasourceId(), scannerConfig);
         scannerConfigRepository.save(scannerConfig);
         loggerFacade.logSaveNewDataScanner(scannerConfig.getId());
     }
 
-    public synchronized void updateScanner(final UpdateScannerCommand command) {
-        if (!scannerConfigRepository.existsBy(command.getId())) {
-            throw new ApplicationException("Сканер сигналов с идентификатором " + command.getId() + " не найден.");
+    public synchronized void updateScanner(final UUID scannerId, final SaveScannerCommand command) {
+        if (!scannerConfigRepository.existsBy(scannerId)) {
+            throw new ApplicationException("Сканер сигналов с идентификатором " + scannerId + " не найден.");
         }
-        Datasource datasource = getDatasource(command.getDatasourceId());
-        ScannerConfig scannerConfig = ScannerConfig.from(command);
-        new ScannerConfigValidator(datasource.getTickers(), scannerConfig).validate();
+        ScannerConfig scannerConfig = ScannerConfig.from(scannerId, command);
+        validate(command.getDatasourceId(), scannerConfig);
         scannerConfigRepository.save(scannerConfig);
-        loggerFacade.logUpdateSignalScanner(command);
+        loggerFacade.logUpdateSignalScanner(scannerId);
     }
 
-    private Datasource getDatasource(UUID command) {
-        return datasourceRepository
+    private void validate(UUID command, ScannerConfig scannerConfig) {
+        Datasource datasource = datasourceRepository
             .getBy(command)
             .orElseThrow(() -> new ApplicationException("Источник данных не найден."));
+        new ScannerConfigValidator(datasource.getTickers(), scannerConfig).validate();
     }
 }

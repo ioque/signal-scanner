@@ -2,9 +2,7 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.command.SavePrefSimpleScanner;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 
@@ -13,70 +11,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SCANNER MANAGER TEST - SIMPLE-PREF PAIR ALGORITHM")
 public class SimplePrefPairAlgoTest extends BaseScannerTest {
     private static final Double SPREAD_PARAM = 1.0;
-    @Test
-    @DisplayName("""
-        T1. В конфигурацию PrefSimpleSignalConfig не передан параметр spreadParam.
-        Результат: ошибка, текст ошибки: "Не передан параметр spreadParam."
-        """)
-    void testCase1() {
-        final UUID datasourceId = getDatasourceId();
-        initSberSberp(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Анализ пар преф-обычка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new PrefSimpleAlgorithmConfig(null)
-        ));
-
-        assertEquals("Не передан параметр spreadParam.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. В конфигурацию PrefSimpleSignalConfig параметр spreadParam передан со значением = 0.
-        Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
-        """)
-    void testCase2() {
-        final UUID datasourceId = getDatasourceId();
-        initSberSberp(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Анализ пар преф-обычка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new PrefSimpleAlgorithmConfig(0D)
-        ));
-
-        assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. В конфигурацию PrefSimpleSignalConfig параметр spreadParam передан со значением < 0.
-        Результат: ошибка, текст ошибки: "Параметр spreadParam должен быть больше нуля."
-        """)
-    void testCase3() {
-        final UUID datasourceId = getDatasourceId();
-        initSberSberp(datasourceId);
-
-        var error = assertThrows(DomainException.class, () -> addScanner(
-            1,
-            "Анализ пар преф-обычка.",
-            datasourceId,
-            getTickers(datasourceId),
-            new PrefSimpleAlgorithmConfig(-1D)
-        ));
-
-        assertEquals("Параметр spreadParam должен быть больше нуля.", error.getMessage());
-    }
 
     @Test
     @DisplayName("""
@@ -450,12 +388,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
-        addScanner(
-            1,
-            "Анализ пар преф-обычка.",
-            datasourceId,
-            getInstrumentsBy(datasourceId, Arrays.asList(tickers)).map(Instrument::getTicker).toList(),
-            new PrefSimpleAlgorithmConfig(SPREAD_PARAM)
+        scannerConfigurator().addNewScanner(
+            SavePrefSimpleScanner.builder()
+                .workPeriodInMinutes(1)
+                .description("Анализ пар преф-обычка.")
+                .datasourceId(datasourceId)
+                .tickers(Arrays.asList(tickers))
+                .spreadParam(SPREAD_PARAM)
+                .build()
         );
     }
 

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.configurator.request.ScannerRequest;
 import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
-import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
-import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 
 import java.util.UUID;
 
@@ -26,30 +24,11 @@ public class ScannerConfiguratorCommandController {
 
     @PostMapping("/api/scanner")
     public void addNewScanner(@Valid @RequestBody ScannerRequest request) {
-        scannerConfigurator
-            .addNewScanner(
-                AddNewScannerCommand.builder()
-                    .tickers(request.getTickers())
-                    .description(request.getDescription())
-                    .datasourceId(request.getDatasourceId())
-                    .workPeriodInMinutes(request.getWorkPeriodInMinutes())
-                    .algorithmConfig(request.buildConfig())
-                    .build()
-            );
+        scannerConfigurator.addNewScanner(request.toCommand());
     }
 
     @PatchMapping("/api/scanner/{scannerId}")
     public void updateScanner(@PathVariable UUID scannerId, @Valid @RequestBody ScannerRequest request) {
-        scannerConfigurator
-            .updateScanner(
-                UpdateScannerCommand.builder()
-                    .id(scannerId)
-                    .tickers(request.getTickers())
-                    .description(request.getDescription())
-                    .datasourceId(request.getDatasourceId())
-                    .workPeriodInMinutes(request.getWorkPeriodInMinutes())
-                    .algorithmConfig(request.buildConfig())
-                    .build()
-            );
+        scannerConfigurator.updateScanner(scannerId, request.toCommand());
     }
 }
