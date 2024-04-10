@@ -55,6 +55,82 @@ public class ScannerConfiguratorTest extends BaseTest {
         );
     }
 
+    @Test
+    @DisplayName("""
+        T2. В конфигурации сканера передан тикер несуществующего инструмента.
+        Выброшена ошибка, текст ошибки: "Инструмент с тикерм {} не найден.".
+        """)
+    void testCase2() {
+        final AddNewScannerCommand command = AddNewScannerCommand.builder()
+            .workPeriodInMinutes(1)
+            .description("description")
+            .datasourceId(getDatasourceId())
+            .tickers(List.of("TGKN", "LVHK", "IMOEX"))
+            .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
+            .build();
+
+        final ValidatorException exception = assertThrows(
+            ValidatorException.class,
+            () -> scannerConfigurator().addNewScanner(command)
+        );
+
+        assertEquals(1, exception.getErrors().size());
+        assertEquals(
+            "Инструмент с тикером LVHK не найден.",
+            exception.getErrors().get(0)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+        T3. В конфигурации сканера передан тикер несуществующего инструмента.
+        Выброшена ошибка, текст ошибки: "Инструмент с тикерм {} не найден.".
+        """)
+    void testCase3() {
+        final AddNewScannerCommand command = AddNewScannerCommand.builder()
+            .workPeriodInMinutes(1)
+            .datasourceId(getDatasourceId())
+            .tickers(List.of("TGKN", "IMOEX"))
+            .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
+            .build();
+
+        final ValidatorException exception = assertThrows(
+            ValidatorException.class,
+            () -> scannerConfigurator().addNewScanner(command)
+        );
+
+        assertEquals(1, exception.getErrors().size());
+        assertEquals(
+            "Не заполнено описание сканера.",
+            exception.getErrors().get(0)
+        );
+    }
+
+    @Test
+    @DisplayName("""
+        T4. В конфигурации сканера передан тикер несуществующего инструмента.
+        Выброшена ошибка, текст ошибки: "Инструмент с тикерм {} не найден.".
+        """)
+    void testCase4() {
+        final AddNewScannerCommand command = AddNewScannerCommand.builder()
+            .description("description")
+            .datasourceId(getDatasourceId())
+            .tickers(List.of("TGKN", "IMOEX"))
+            .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
+            .build();
+
+        final ValidatorException exception = assertThrows(
+            ValidatorException.class,
+            () -> scannerConfigurator().addNewScanner(command)
+        );
+
+        assertEquals(1, exception.getErrors().size());
+        assertEquals(
+            "Не указан период работы сканера.",
+            exception.getErrors().get(0)
+        );
+    }
+
     private void prepareDatasource() {
         exchangeDataFixture().initInstruments(
             List.of(imoex(), tgkb(), tgkn(), sber(), sberP(), brf4(), usdRub())
