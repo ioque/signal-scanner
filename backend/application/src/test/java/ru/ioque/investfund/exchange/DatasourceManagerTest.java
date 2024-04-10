@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;

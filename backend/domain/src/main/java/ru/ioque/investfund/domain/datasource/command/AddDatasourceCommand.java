@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.datasource;
+package ru.ioque.investfund.domain.datasource.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

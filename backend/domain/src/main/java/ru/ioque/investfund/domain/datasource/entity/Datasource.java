@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
+import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,17 @@ public class Datasource extends Domain {
         this.url = url;
         this.description = description;
         this.instruments = instruments != null ? new ArrayList<>(instruments) : new ArrayList<>();
+    }
+
+    public static Datasource from(UUID id, AddDatasourceCommand command) {
+        return Datasource
+            .builder()
+            .id(id)
+            .name(command.getName())
+            .url(command.getUrl())
+            .description(command.getDescription())
+            .instruments(new ArrayList<>())
+            .build();
     }
 
     public void addInstrument(Instrument instrument) {

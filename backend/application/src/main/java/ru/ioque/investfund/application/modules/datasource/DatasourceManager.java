@@ -12,6 +12,7 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
+import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
@@ -38,7 +39,7 @@ public class DatasourceManager implements SystemModule {
     }
 
     public synchronized void registerDatasource(final AddDatasourceCommand command) {
-        repository.saveDatasource(command.factory(uuidProvider.generate()));
+        repository.saveDatasource(Datasource.from(uuidProvider.generate(), command));
     }
 
     public synchronized void unregisterDatasource(final UUID datasourceId) {
