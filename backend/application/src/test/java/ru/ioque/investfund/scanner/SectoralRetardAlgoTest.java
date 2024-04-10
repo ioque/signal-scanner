@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("SIGNAL SCANNER MANAGER - SECTORAL RETARD ALGORITHM")
+@DisplayName("SCANNER MANAGER TEST - SECTORAL RETARD ALGORITHM")
 public class SectoralRetardAlgoTest extends BaseScannerTest {
     private final Double historyScale = 0.015;
     private final Double intradayScale = 0.015;
@@ -170,7 +170,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initDealsTatnFallOtherRise(datasourceId);
         initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFalse(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -192,7 +192,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initDealsTatnFallOtherRise(datasourceId);
         initScanner(datasourceId,"ROSN", "LKOH", "SIBN", "TATN");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -215,7 +215,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:30:00");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -238,7 +238,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T14:00:00");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -260,7 +260,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initDealsTatnFallOtherRise(datasourceId);
         initScanner(datasourceId,"ROSN", "TATN");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -280,7 +280,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initDealsTatnFallOtherRise(datasourceId);
         initScanner(datasourceId,"ROSN", "TATN", "SIBN");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -311,8 +311,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        exchangeManager().integrateInstruments(datasourceId);
-        exchangeManager().enableUpdate(datasourceId, getTickers(datasourceId));
+        datasourceManager().integrateInstruments(datasourceId);
+        datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
 

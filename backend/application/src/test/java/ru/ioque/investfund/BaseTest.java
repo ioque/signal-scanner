@@ -45,7 +45,7 @@ public class BaseTest {
         return fakeDIContainer.getExchangeDataFixture();
     }
 
-    protected FakeDatasourceRepository exchangeRepository() {
+    protected FakeDatasourceRepository datasourceRepository() {
         return fakeDIContainer.getDatasourceRepository();
     }
 
@@ -53,11 +53,11 @@ public class BaseTest {
         return fakeDIContainer.getDateTimeProvider();
     }
 
-    protected FakeScannerRepository signalProducerRepo() {
+    protected FakeScannerRepository scannerRepository() {
         return fakeDIContainer.getScannerRepository();
     }
 
-    protected final ScannerManager dataScannerManager() {
+    protected final ScannerManager scannerManager() {
         return fakeDIContainer.getScannerManager();
     }
 
@@ -69,7 +69,7 @@ public class BaseTest {
         return fakeDIContainer.getLoggerProvider();
     }
 
-    protected final DatasourceManager exchangeManager() {
+    protected final DatasourceManager datasourceManager() {
         return fakeDIContainer.getDatasourceManager();
     }
 
@@ -79,10 +79,6 @@ public class BaseTest {
 
     protected final FakeEventBus eventBus() {
         return fakeDIContainer.getEventBus();
-    }
-
-    protected final FakeScannerRepository fakeDataScannerStorage() {
-        return fakeDIContainer.getScannerRepository();
     }
 
     protected LocalDate nowMinus1Days() {
@@ -117,7 +113,7 @@ public class BaseTest {
     }
 
     protected List<Instrument> getInstruments(UUID datasourceId) {
-        return exchangeRepository()
+        return datasourceRepository()
             .getBy(datasourceId)
             .map(Datasource::getInstruments)
             .orElse(new ArrayList<>());
@@ -150,7 +146,7 @@ public class BaseTest {
 
     protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
-        exchangeManager().integrateInstruments(datasourceId);
+        datasourceManager().integrateInstruments(datasourceId);
     }
 
     protected void initInstruments(Instrument... instruments) {
@@ -170,11 +166,11 @@ public class BaseTest {
     }
 
     protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId, String ticker) {
-        return exchangeRepository().getIntradayBy(datasourceId, ticker).toList();
+        return datasourceRepository().getIntradayBy(datasourceId, ticker).toList();
     }
 
     protected List<IntradayValue> getIntradayValues(UUID datasourceId) {
-        return exchangeRepository()
+        return datasourceRepository()
             .getIntradayValues()
             .getOrDefault(datasourceId, new ConcurrentHashMap<>())
             .values()
@@ -184,11 +180,11 @@ public class BaseTest {
     }
 
     protected List<HistoryValue> getHistoryValuesBy(UUID datasourceId, String ticker) {
-        return exchangeRepository().getHistoryBy(datasourceId, ticker).toList();
+        return datasourceRepository().getHistoryBy(datasourceId, ticker).toList();
     }
 
     protected List<HistoryValue> getHistoryValues(UUID datasourceId) {
-        return exchangeRepository()
+        return datasourceRepository()
             .getHistoryValues()
             .getOrDefault(datasourceId, new ConcurrentHashMap<>())
             .values()

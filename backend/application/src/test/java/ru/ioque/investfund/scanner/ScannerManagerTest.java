@@ -20,18 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("SIGNAL SCANNER MANAGER - CREATE SIGNAL SCANNER")
+@DisplayName("SCANNER MANAGER TEST - CREATE SIGNAL SCANNER")
 public class ScannerManagerTest extends BaseScannerTest {
     @BeforeEach
     void initRepo() {
-        exchangeManager().registerDatasource(
+        datasourceManager().registerDatasource(
             AddDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
                 .build()
         );
-        exchangeManager().integrateInstruments(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
     }
 
     @Test
@@ -51,13 +51,13 @@ public class ScannerManagerTest extends BaseScannerTest {
                 "IMOEX")
         );
         assertFalse(
-            signalProducerRepo()
+            scannerRepository()
                 .getAll()
                 .isEmpty()
         );
         assertEquals(
             "Аномальные объемы",
-            signalProducerRepo()
+            scannerRepository()
                 .getAll()
                 .stream()
                 .findFirst()
@@ -86,7 +86,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             )
         );
         assertTrue(error.getMessage().contains("Не передан список тикеров анализируемых инструментов."));
-        assertEquals(0, signalProducerRepo().getAll().size());
+        assertEquals(0, scannerRepository().getAll().size());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             )
         );
         assertTrue(error.getMessage().contains("Не передан список тикеров анализируемых инструментов."));
-        assertEquals(0, signalProducerRepo().getAll().size());
+        assertEquals(0, scannerRepository().getAll().size());
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ScannerManagerTest extends BaseScannerTest {
         );
         assertEquals(
             "Аномальные объемы",
-            signalProducerRepo()
+            scannerRepository()
                 .getAll()
                 .stream()
                 .findFirst()
@@ -158,11 +158,11 @@ public class ScannerManagerTest extends BaseScannerTest {
                 "IMOEX"
             )
         );
-        int qnt = fakeDataScannerStorage().getAll().get(0).getTickers().size();
+        int qnt = scannerRepository().getAll().get(0).getTickers().size();
 
         updateScanner(
                 new UpdateScannerCommand(
-                    fakeDataScannerStorage().getAll().get(0).getId(),
+                    scannerRepository().getAll().get(0).getId(),
                     1,
                     "Старое описание",
                     getDatasourceId(),
@@ -175,8 +175,8 @@ public class ScannerManagerTest extends BaseScannerTest {
                 )
             );
 
-        assertNotEquals(qnt, fakeDataScannerStorage().getAll().get(0).getTickers().size());
-        assertEquals(getInstruments(getDatasourceId()).size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
+        assertNotEquals(qnt, scannerRepository().getAll().get(0).getTickers().size());
+        assertEquals(getInstruments(getDatasourceId()).size(), scannerRepository().getAll().get(0).getTickers().size());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class ScannerManagerTest extends BaseScannerTest {
 
         updateScanner(
                 new UpdateScannerCommand(
-                    fakeDataScannerStorage().getAll().get(0).getId(),
+                    scannerRepository().getAll().get(0).getId(),
                     1,
                     "Новое описание",
                     getDatasourceId(),
@@ -212,8 +212,8 @@ public class ScannerManagerTest extends BaseScannerTest {
                 )
             );
 
-        assertEquals("Новое описание", fakeDataScannerStorage().getAll().get(0).getDescription());
-        assertEquals(getInstruments(getDatasourceId()).size(), fakeDataScannerStorage().getAll().get(0).getTickers().size());
+        assertEquals("Новое описание", scannerRepository().getAll().get(0).getDescription());
+        assertEquals(getInstruments(getDatasourceId()).size(), scannerRepository().getAll().get(0).getTickers().size());
     }
 
     @Test
@@ -264,7 +264,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             DomainException.class,
             () -> updateScanner(
                     new UpdateScannerCommand(
-                        fakeDataScannerStorage().getAll().get(0).getId(),
+                        scannerRepository().getAll().get(0).getId(),
                         1,
                         "",
                         getDatasourceId(),
@@ -301,7 +301,7 @@ public class ScannerManagerTest extends BaseScannerTest {
             DomainException.class,
             () -> updateScanner(
                     new UpdateScannerCommand(
-                        fakeDataScannerStorage().getAll().get(0).getId(),
+                        scannerRepository().getAll().get(0).getId(),
                         1,
                         "Старое описание",
                         getDatasourceId(),

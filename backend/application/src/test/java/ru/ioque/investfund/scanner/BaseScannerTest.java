@@ -27,23 +27,23 @@ public class BaseScannerTest extends BaseTest {
     protected static final String SBERP = "SBERP";
     @BeforeEach
     void beforeEach() {
-        exchangeManager().registerDatasource(
+        datasourceManager().registerDatasource(
             AddDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
                 .build()
         );
-        eventBus().subscribe(TradingDataUpdatedEvent.class, dataScannerManager());
+        eventBus().subscribe(TradingDataUpdatedEvent.class, scannerManager());
         loggerProvider().clearLogs();
     }
 
     protected UUID getDatasourceId() {
-        return exchangeRepository().getAll().get(0).getId();
+        return datasourceRepository().getAll().get(0).getId();
     }
 
     protected void runWorkPipelineAndClearLogs() {
-        exchangeManager().execute();
+        datasourceManager().execute();
         loggerProvider().clearLogs();
     }
 
@@ -54,7 +54,7 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected List<Signal> getSignals() {
-        return fakeDataScannerStorage()
+        return scannerRepository()
             .getAll()
             .stream()
             .map(SignalScanner::getSignals)
@@ -100,7 +100,7 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected TradingSnapshot getSnapshotBy(String ticker) {
-        return fakeDataScannerStorage()
+        return scannerRepository()
             .getAll()
             .stream()
             .map(SignalScanner::getTradingSnapshots)

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.exchange;
+package ru.ioque.investfund.datasource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("EXCHANGE MANAGER - INTEGRATION")
+@DisplayName("DATASOURCE MANAGER TEST")
 public class DatasourceManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
-        exchangeManager().registerDatasource(
+        datasourceManager().registerDatasource(
             AddDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
@@ -34,7 +34,7 @@ public class DatasourceManagerTest extends BaseTest {
     }
 
     private UUID getDatasourceId() {
-        return exchangeRepository().getAll().get(0).getId();
+        return datasourceRepository().getAll().get(0).getId();
     }
 
     @Test
@@ -52,8 +52,8 @@ public class DatasourceManagerTest extends BaseTest {
             afks()
         );
 
-        exchangeManager().integrateInstruments(getDatasourceId());
-        final Optional<Datasource> exchange = exchangeRepository().getBy(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
+        final Optional<Datasource> exchange = datasourceRepository().getBy(getDatasourceId());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
         assertEquals("http://localhost:8080", exchange.get().getUrl());
@@ -78,13 +78,13 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateInstruments(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
         clearLogs();
 
-        final var id = exchangeRepository().getBy(getDatasourceId()).orElseThrow().getId();
-        exchangeManager().integrateInstruments(getDatasourceId());
+        final var id = datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId();
+        datasourceManager().integrateInstruments(getDatasourceId());
         assertEquals(10, getInstruments(getDatasourceId()).size());
-        assertEquals(id, exchangeRepository().getBy(getDatasourceId()).orElseThrow().getId());
+        assertEquals(id, datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId());
     }
 
     @Test
@@ -96,10 +96,10 @@ public class DatasourceManagerTest extends BaseTest {
     void testCase3() {
         initInstruments(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeManager().integrateInstruments(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
         clearLogs();
         initInstruments(afks(), imoex(), brf4(), lkoh(), rosn(), sibn());
-        exchangeManager().integrateInstruments(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
         assertEquals(6, getInstruments(getDatasourceId()).size());
     }
 
@@ -122,7 +122,7 @@ public class DatasourceManagerTest extends BaseTest {
                 .lotSize(10000)
                 .build()
         ));
-        exchangeManager().integrateInstruments(getDatasourceId());
+        datasourceManager().integrateInstruments(getDatasourceId());
         assertEquals(1, getInstruments(getDatasourceId()).size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(loggerProvider().logContainsMessageParts(
@@ -142,7 +142,7 @@ public class DatasourceManagerTest extends BaseTest {
         final UUID datasourceId = getDatasourceId();
         exchangeDataFixture().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
-        exchangeManager().integrateInstruments(datasourceId);
+        datasourceManager().integrateInstruments(datasourceId);
         clearLogs();
         initDealDatas(
             buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
@@ -156,8 +156,8 @@ public class DatasourceManagerTest extends BaseTest {
             buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-11")).build()
         );
 
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         assertEquals(1, getInstruments(datasourceId).size());
         assertEquals(3, getIntradayValues(datasourceId).size());
         assertEquals(4, getHistoryValues(datasourceId).size());
@@ -183,8 +183,8 @@ public class DatasourceManagerTest extends BaseTest {
             dateTimeProvider().daysAgo(1)
         ));
 
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
 
         assertEquals(
             131,
@@ -213,8 +213,8 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
 
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
         assertEquals(2, loggerProvider().log.size());
@@ -235,8 +235,8 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
             buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
@@ -247,7 +247,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(5, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
@@ -264,13 +264,13 @@ public class DatasourceManagerTest extends BaseTest {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(66, getHistoryValuesBy(datasourceId, "AFKS").size());
     }
@@ -287,7 +287,7 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(0, getHistoryValues(datasourceId).size());
         assertEquals(0, getIntradayValues(datasourceId).size());
@@ -306,11 +306,11 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         clearLogs();
 
-        exchangeManager().disableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().disableUpdate(datasourceId, List.of("AFKS"));
         initDealDatas(
             buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1),
             buildBuyDealBy(datasourceId, 1L,"AFKS", "11:00:00", 10D, 10D, 1)
@@ -320,7 +320,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
@@ -334,8 +334,8 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase15() {
         UUID datasourceId = getDatasourceId();
-        exchangeManager().unregisterDatasource(datasourceId);
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().enableUpdate(datasourceId, List.of("AFKS")));
+        datasourceManager().unregisterDatasource(datasourceId);
+        var error = assertThrows(ApplicationException.class, () -> datasourceManager().enableUpdate(datasourceId, List.of("AFKS")));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 
@@ -347,8 +347,8 @@ public class DatasourceManagerTest extends BaseTest {
         """)
     void testCase16() {
         UUID datasourceId = getDatasourceId();
-        exchangeManager().unregisterDatasource(datasourceId);
-        var error = assertThrows(ApplicationException.class, () -> exchangeManager().disableUpdate(datasourceId, List.of("AFKS")));
+        datasourceManager().unregisterDatasource(datasourceId);
+        var error = assertThrows(ApplicationException.class, () -> datasourceManager().disableUpdate(datasourceId, List.of("AFKS")));
         assertEquals("Биржа не зарегистрирована.", error.getMessage());
     }
 
@@ -362,8 +362,8 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
     }
 
@@ -381,8 +381,8 @@ public class DatasourceManagerTest extends BaseTest {
             buildBuyDealBy(datasourceId, 2L,"AFKS", "10:00:00", 11D, 10D, 1),
             buildBuyDealBy(datasourceId, 3L,"AFKS", "10:00:00", 11D, 10D, 2)
         );
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
@@ -396,9 +396,9 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
-        exchangeManager().enableUpdate(datasourceId, List.of("AFKS"));
-        exchangeManager().execute();
-        exchangeManager().execute();
+        datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
+        datasourceManager().execute();
+        datasourceManager().execute();
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 }

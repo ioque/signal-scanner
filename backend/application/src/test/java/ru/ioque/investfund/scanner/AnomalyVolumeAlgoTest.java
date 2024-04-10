@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DisplayName("SIGNAL SCANNER MANAGER - ANOMALY VOLUME ALGORITHM")
+@DisplayName("SCANNER MANAGER TEST - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     @Test
     @DisplayName("""
@@ -230,7 +230,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "TGKB", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
@@ -256,7 +256,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:00:30");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(8, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -283,7 +283,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T13:01:00");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(10, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -313,7 +313,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 0, 1);
         assertFinInstrument(getTgkn(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
@@ -349,7 +349,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, 1000.0, 100.0, 99.0, null);
@@ -382,7 +382,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, null, null, null, null);
@@ -419,7 +419,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
@@ -453,7 +453,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, null, null, null);
@@ -488,7 +488,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
@@ -521,7 +521,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertEquals(0, getSignals().size());
         assertSignals(getSignals(), 0, 0, 0);
@@ -559,7 +559,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, null, true);
@@ -594,7 +594,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             "TGKN", "IMOEX"
         );
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
@@ -711,8 +711,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        exchangeManager().integrateInstruments(datasourceId);
-        exchangeManager().enableUpdate(datasourceId, getTickers(datasourceId));
+        datasourceManager().integrateInstruments(datasourceId);
+        datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
     }
 
     private void initScanner(UUID datasourceId, AlgorithmConfig configurator, String... tickers) {

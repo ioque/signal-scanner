@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("SIGNAL SCANNER MANAGER - CORRELATION SECTORAL ALGORITHM")
+@DisplayName("SCANNER MANAGER TEST - CORRELATION SECTORAL ALGORITHM")
 public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private static final double futuresOvernightScale = 0.02;
     private static final double stockOvernightScale = 0.005;
@@ -225,7 +225,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDealResults(datasourceId);
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -245,7 +245,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initNegativeDealResults(datasourceId);
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -266,7 +266,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-22T18:00:00");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -287,7 +287,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipelineAndClearLogs();
         initTodayDateTime("2023-12-23T13:00:00");
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -312,9 +312,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
-        assertEquals(1, fakeDataScannerStorage().getAll().get(0).getSignals().size());
+        assertEquals(1, scannerRepository().getAll().get(0).getSignals().size());
     }
 
     @Test
@@ -335,7 +335,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -359,7 +359,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -383,7 +383,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -408,7 +408,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        exchangeManager().execute();
+        datasourceManager().execute();
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -477,7 +477,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        exchangeManager().integrateInstruments(datasourceId);
-        exchangeManager().enableUpdate(datasourceId, tickers);
+        datasourceManager().integrateInstruments(datasourceId);
+        datasourceManager().enableUpdate(datasourceId, tickers);
     }
 }
