@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Datasource extends Domain {
     String name;
     String url;
@@ -34,10 +35,10 @@ public class Datasource extends Domain {
         List<Instrument> instruments
     ) {
         super(id);
-        this.name = name;
-        this.url = url;
-        this.description = description;
-        this.instruments = instruments != null ? new ArrayList<>(instruments) : new ArrayList<>();
+        setName(name);
+        setUrl(url);
+        setDescription(description);
+        setInstruments(instruments);
     }
 
     public static Datasource from(UUID id, AddDatasourceCommand command) {
@@ -75,5 +76,33 @@ public class Datasource extends Domain {
 
     public List<String> getTickers() {
         return getInstruments().stream().map(Instrument::getTicker).toList();
+    }
+
+    private void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new DomainException("Не заполнено наименование источника данных.");
+        }
+        this.name = name;
+    }
+
+    private void setUrl(String url) {
+        if (url == null || url.isBlank()) {
+            throw new DomainException("Не заполнен url источника данных.");
+        }
+        this.url = url;
+    }
+
+    private void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw new DomainException("Не заполнено описание источника данных.");
+        }
+        this.description = description;
+    }
+
+    private void setInstruments(List<Instrument> instruments) {
+        if (instruments == null) {
+            throw new DomainException("Не передан список инструментов источника данных.");
+        }
+        this.instruments = instruments;
     }
 }
