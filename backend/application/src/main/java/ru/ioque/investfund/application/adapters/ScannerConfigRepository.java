@@ -1,10 +1,10 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 
 import java.util.UUID;
 
 public interface ScannerConfigRepository {
-    void save(SignalScannerConfig config);
+    void save(ScannerConfig config);
     boolean existsBy(UUID id);
 }

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
@@ -46,7 +46,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
         this.spreadParam = spreadParam;
     }
 
-    public static ScannerEntity from(SignalScannerConfig config) {
+    public static ScannerEntity from(ScannerConfig config) {
         PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config.getAlgorithmConfig();
         return PrefSimpleScannerEntity.builder()
             .id(config.getId())

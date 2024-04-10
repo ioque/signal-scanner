@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.share.exception;
+package ru.ioque.investfund.domain.core;
 
 import lombok.Getter;
 

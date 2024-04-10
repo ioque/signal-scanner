@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.configurator.request.ScannerRequest;
 import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
-import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
-import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 
 import java.util.UUID;
 

@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 
 import java.io.Serializable;
 import java.util.List;

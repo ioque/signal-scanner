@@ -3,8 +3,8 @@ package ru.ioque.investfund.application.share.logger;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
-import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 

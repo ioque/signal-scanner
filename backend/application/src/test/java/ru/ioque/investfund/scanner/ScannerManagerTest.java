@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
-import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
@@ -85,7 +85,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                     "IMOEX")
             )
         );
-        assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
+        assertTrue(error.getMessage().contains("Не передан список тикеров анализируемых инструментов."));
         assertEquals(0, signalProducerRepo().getAll().size());
     }
 
@@ -107,7 +107,7 @@ public class ScannerManagerTest extends BaseScannerTest {
                     "IMOEX")
             )
         );
-        assertTrue(error.getMessage().contains("Не передан список анализируемых инструментов."));
+        assertTrue(error.getMessage().contains("Не передан список тикеров анализируемых инструментов."));
         assertEquals(0, signalProducerRepo().getAll().size());
     }
 
@@ -314,6 +314,6 @@ public class ScannerManagerTest extends BaseScannerTest {
                     )
                 )
         );
-        assertEquals("Не передан список анализируемых инструментов.", error.getMessage());
+        assertEquals("Не передан список тикеров анализируемых инструментов.", error.getMessage());
     }
 }

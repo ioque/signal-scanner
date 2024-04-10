@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
@@ -52,7 +52,7 @@ public class CorrelationSectoralScannerEntity extends ScannerEntity {
         this.futuresTicker = futuresTicker;
     }
 
-    public static ScannerEntity from(SignalScannerConfig config) {
+    public static ScannerEntity from(ScannerConfig config) {
         CorrelationSectoralAlgorithmConfig algorithmConfig = (CorrelationSectoralAlgorithmConfig) config.getAlgorithmConfig();
         return CorrelationSectoralScannerEntity.builder()
             .id(config.getId())

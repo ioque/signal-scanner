@@ -11,9 +11,9 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
@@ -86,8 +86,8 @@ public class BaseJpaTest {
         );
     }
 
-    protected SignalScannerConfig createConfig(List<String> tickers, AlgorithmConfig config) {
-        return SignalScannerConfig.builder()
+    protected ScannerConfig createConfig(List<String> tickers, AlgorithmConfig config) {
+        return ScannerConfig.builder()
             .id(SCANNER_ID)
             .datasourceId(DATASOURCE_ID)
             .workPeriodInMinutes(1)

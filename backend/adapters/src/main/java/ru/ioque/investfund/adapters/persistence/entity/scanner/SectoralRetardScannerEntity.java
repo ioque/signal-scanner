@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SectoralRetardAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.SectoralRetardAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
@@ -49,7 +49,7 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
         this.intradayScale = intradayScale;
     }
 
-    public static ScannerEntity from(SignalScannerConfig config) {
+    public static ScannerEntity from(ScannerConfig config) {
         SectoralRetardAlgorithmConfig algorithmConfig = (SectoralRetardAlgorithmConfig) config.getAlgorithmConfig();
         return SectoralRetardScannerEntity.builder()
             .id(config.getId())

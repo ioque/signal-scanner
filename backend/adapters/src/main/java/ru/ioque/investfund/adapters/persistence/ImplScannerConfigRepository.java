@@ -11,12 +11,12 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SectoralRetardAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.SectoralRetardAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
 
     @Override
     @Transactional
-    public void save(SignalScannerConfig config) {
+    public void save(ScannerConfig config) {
         Optional<ScannerEntity> scanner = repository.findById(config.getId());
         if (scanner.isPresent()) {
             scanner.get().updateConfig(config);
@@ -47,12 +47,12 @@ public class ImplScannerConfigRepository implements ScannerConfigRepository {
         return repository.existsById(id);
     }
 
-    private ScannerEntity updateConfig(ScannerEntity scannerEntity, SignalScannerConfig config) {
+    private ScannerEntity updateConfig(ScannerEntity scannerEntity, ScannerConfig config) {
         scannerEntity.updateConfig(config);
         return scannerEntity;
     }
 
-    static Map<Class<? extends AlgorithmConfig>, Function<SignalScannerConfig, ScannerEntity>> factories = Map.of(
+    static Map<Class<? extends AlgorithmConfig>, Function<ScannerConfig, ScannerEntity>> factories = Map.of(
         AnomalyVolumeAlgorithmConfig.class, AnomalyVolumeScannerEntity::from,
         CorrelationSectoralAlgorithmConfig.class, CorrelationSectoralScannerEntity::from,
         SectoralRetardAlgorithmConfig.class, SectoralRetardScannerEntity::from,

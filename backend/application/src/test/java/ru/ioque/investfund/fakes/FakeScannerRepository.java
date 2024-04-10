@@ -3,7 +3,7 @@ package ru.ioque.investfund.fakes;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerConfigRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -41,7 +41,7 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
     }
 
     @Override
-    public void save(SignalScannerConfig config) {
+    public void save(ScannerConfig config) {
         scannerMap.put(config.getId(), map(config));
     }
 
@@ -72,7 +72,7 @@ public class FakeScannerRepository implements ScannerRepository, ScannerConfigRe
         }
     }
 
-    private SignalScanner map(SignalScannerConfig config) {
+    private SignalScanner map(ScannerConfig config) {
         return SignalScanner.builder()
             .id(config.getId())
             .datasourceId(config.getDatasourceId())

@@ -2,10 +2,10 @@ package ru.ioque.investfund;
 
 import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
-import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
+import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
-import ru.ioque.investfund.application.modules.configurator.UpdateScannerCommand;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Futures;

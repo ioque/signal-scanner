@@ -17,8 +17,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 
@@ -66,7 +66,7 @@ public abstract class ScannerEntity extends AbstractEntity {
 
     public abstract SignalScanner toDomain(List<TradingSnapshot> instruments);
 
-    public void updateConfig(SignalScannerConfig config) {
+    public void updateConfig(ScannerConfig config) {
         workPeriodInMinutes = config.getWorkPeriodInMinutes();
         description = config.getDescription();
         datasourceId = config.getDatasourceId();

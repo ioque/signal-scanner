@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.configurator.PrefSimpleAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 

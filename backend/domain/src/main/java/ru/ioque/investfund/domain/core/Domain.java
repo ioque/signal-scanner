@@ -14,12 +14,16 @@ import java.util.UUID;
 @SuperBuilder
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Domain implements Serializable {
     UUID id;
 
     public Domain(UUID id) {
+        setId(id);
+    }
+
+    private void setId(UUID id) {
+        if (id == null) throw new DomainException("Не передан идентификатор объекта.");
         this.id = id;
-        if (this.id == null) throw new DomainException("Не передан идентификатор объекта.");
     }
 }

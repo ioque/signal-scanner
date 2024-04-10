@@ -2,7 +2,7 @@ package ru.ioque.investfund.scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.configurator.CorrelationSectoralAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.CorrelationSectoralAlgorithmConfig;
 import ru.ioque.investfund.domain.core.DomainException;
 
 import java.util.List;

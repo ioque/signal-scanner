@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.configurator;
+package ru.ioque.investfund.domain.configurator.command;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +15,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateScannerCommand {
-    UUID id;
+public class AddNewScannerCommand {
     Integer workPeriodInMinutes;
     String description;
     UUID datasourceId;
@@ -24,15 +23,13 @@ public class UpdateScannerCommand {
     AlgorithmConfig algorithmConfig;
 
     @Builder
-    public UpdateScannerCommand(
-        UUID id,
+    public AddNewScannerCommand(
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
         List<String> tickers,
         AlgorithmConfig algorithmConfig
     ) {
-        this.id = id;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.SignalScannerConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
@@ -52,7 +52,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
         this.indexTicker = indexTicker;
     }
 
-    public static ScannerEntity from(SignalScannerConfig config) {
+    public static ScannerEntity from(ScannerConfig config) {
         AnomalyVolumeAlgorithmConfig algorithmConfig = (AnomalyVolumeAlgorithmConfig) config.getAlgorithmConfig();
         return AnomalyVolumeScannerEntity.builder()
             .id(config.getId())

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
-import ru.ioque.investfund.domain.configurator.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
 
 import java.util.Arrays;
 import java.util.List;

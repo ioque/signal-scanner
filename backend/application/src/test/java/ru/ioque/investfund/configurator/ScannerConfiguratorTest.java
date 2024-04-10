@@ -4,16 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.configurator.AddNewScannerCommand;
 import ru.ioque.investfund.application.modules.datasource.AddDatasourceCommand;
-import ru.ioque.investfund.application.share.exception.ValidatorException;
-import ru.ioque.investfund.domain.configurator.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.application.share.exception.ApplicationException;
+import ru.ioque.investfund.domain.configurator.command.AddNewScannerCommand;
+import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
+import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.core.ValidatorException;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ScannerConfiguratorTest extends BaseTest {
     @BeforeEach
@@ -43,15 +46,13 @@ public class ScannerConfiguratorTest extends BaseTest {
             .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
             .build();
 
-        final ValidatorException exception = assertThrows(
-            ValidatorException.class,
+        final ApplicationException exception = assertThrows(
+            ApplicationException.class,
             () -> scannerConfigurator().addNewScanner(command)
         );
-
-        assertEquals(1, exception.getErrors().size());
         assertEquals(
-            "Источник данных с идентификатором " + command.getDatasourceId() + " не найден.",
-            exception.getErrors().get(0)
+            "Источник данных не найден.",
+            exception.getMessage()
         );
     }
 
@@ -65,7 +66,7 @@ public class ScannerConfiguratorTest extends BaseTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "LVHK", "IMOEX"))
+            .tickers(List.of("TGKN", "LVHK", "TGKM", "IMOEX"))
             .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
             .build();
 
@@ -74,10 +75,12 @@ public class ScannerConfiguratorTest extends BaseTest {
             () -> scannerConfigurator().addNewScanner(command)
         );
 
-        assertEquals(1, exception.getErrors().size());
-        assertEquals(
-            "Инструмент с тикером LVHK не найден.",
-            exception.getErrors().get(0)
+        assertEquals(2, exception.getErrors().size());
+        assertTrue(
+            exception.getErrors().containsAll(List.of(
+                "Инструмент с тикером LVHK не найден.",
+                "Инструмент с тикером TGKM не найден."
+            ))
         );
     }
 
@@ -94,15 +97,14 @@ public class ScannerConfiguratorTest extends BaseTest {
             .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
             .build();
 
-        final ValidatorException exception = assertThrows(
-            ValidatorException.class,
+        final DomainException exception = assertThrows(
+            DomainException.class,
             () -> scannerConfigurator().addNewScanner(command)
         );
 
-        assertEquals(1, exception.getErrors().size());
         assertEquals(
-            "Не заполнено описание сканера.",
-            exception.getErrors().get(0)
+            "Не передано описание.",
+            exception.getMessage()
         );
     }
 
@@ -119,15 +121,14 @@ public class ScannerConfiguratorTest extends BaseTest {
             .algorithmConfig(defaultAnomalyVolumeAlgorithmConfig())
             .build();
 
-        final ValidatorException exception = assertThrows(
-            ValidatorException.class,
+        final DomainException exception = assertThrows(
+            DomainException.class,
             () -> scannerConfigurator().addNewScanner(command)
         );
 
-        assertEquals(1, exception.getErrors().size());
         assertEquals(
-            "Не указан период работы сканера.",
-            exception.getErrors().get(0)
+            "Не передан период работы сканера.",
+            exception.getMessage()
         );
     }
 
