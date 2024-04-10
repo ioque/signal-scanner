@@ -1,8 +1,10 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -27,16 +29,17 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
-    private final Double scaleCoefficient;
-    private final String indexTicker;
-    private final Integer historyPeriod;
+    Double scaleCoefficient;
+    String indexTicker;
+    Integer historyPeriod;
 
     public AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
         super("Аномальные объемы");
-        this.scaleCoefficient = scaleCoefficient;
-        this.indexTicker = indexTicker;
-        this.historyPeriod = historyPeriod;
+        setScaleCoefficient(scaleCoefficient);
+        setHistoryPeriod(historyPeriod);
+        setIndexTicker(indexTicker);
     }
 
     @Override
@@ -127,5 +130,32 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             ),
             LocalDateTime.now()
         );
+    }
+
+    private void setScaleCoefficient(Double scaleCoefficient) {
+        if (scaleCoefficient == null) {
+            throw new DomainException("Не передан параметр scaleCoefficient.");
+        }
+        if (scaleCoefficient <= 0) {
+            throw new DomainException("Параметр scaleCoefficient должен быть больше нуля.");
+        }
+        this.scaleCoefficient = scaleCoefficient;
+    }
+
+    private void setIndexTicker(String indexTicker) {
+        if (indexTicker == null || indexTicker.isEmpty()) {
+            throw new DomainException("Не передан параметр indexTicker.");
+        }
+        this.indexTicker = indexTicker;
+    }
+
+    private void setHistoryPeriod(Integer historyPeriod) {
+        if (historyPeriod == null) {
+            throw new DomainException("Не передан параметр historyPeriod.");
+        }
+        if (historyPeriod <= 0) {
+            throw new DomainException("Параметр historyPeriod должен быть больше нуля.");
+        }
+        this.historyPeriod = historyPeriod;
     }
 }

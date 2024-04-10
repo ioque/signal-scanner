@@ -1,8 +1,10 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
@@ -16,10 +18,11 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
-    private final Double futuresOvernightScale;
-    private final Double stockOvernightScale;
-    private final String futuresTicker;
+    Double futuresOvernightScale;
+    Double stockOvernightScale;
+    String futuresTicker;
 
     public CorrelationSectoralAlgorithm(
         Double futuresOvernightScale,
@@ -27,9 +30,9 @@ public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
         String futuresTicker
     ) {
         super("Корреляция сектора с фьючерсом на основной товар сектора");
-        this.futuresOvernightScale = futuresOvernightScale;
-        this.stockOvernightScale = stockOvernightScale;
-        this.futuresTicker = futuresTicker;
+        setFuturesOvernightScale(futuresOvernightScale);
+        setStockOvernightScale(stockOvernightScale);
+        setFuturesTicker(futuresTicker);
     }
 
     @Override
@@ -103,5 +106,32 @@ public class CorrelationSectoralAlgorithm extends ScannerAlgorithm {
             ),
             LocalDateTime.now()
         );
+    }
+
+    private void setFuturesOvernightScale(Double futuresOvernightScale) {
+        if (futuresOvernightScale == null) {
+            throw new DomainException("Не передан параметр futuresOvernightScale.");
+        }
+        if (futuresOvernightScale <= 0) {
+            throw new DomainException("Параметр futuresOvernightScale должен быть больше нуля.");
+        }
+        this.futuresOvernightScale = futuresOvernightScale;
+    }
+
+    private void setStockOvernightScale(Double stockOvernightScale) {
+        if (stockOvernightScale == null) {
+            throw new DomainException("Не передан параметр stockOvernightScale.");
+        }
+        if (stockOvernightScale <= 0) {
+            throw new DomainException("Параметр stockOvernightScale должен быть больше нуля.");
+        }
+        this.stockOvernightScale = stockOvernightScale;
+    }
+
+    private void setFuturesTicker(String futuresTicker) {
+        if (futuresTicker == null || futuresTicker.isEmpty()) {
+            throw new DomainException("Не передан параметр futuresTicker.");
+        }
+        this.futuresTicker = futuresTicker;
     }
 }

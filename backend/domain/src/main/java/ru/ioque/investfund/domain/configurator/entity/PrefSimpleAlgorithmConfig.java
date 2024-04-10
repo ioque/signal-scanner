@@ -13,14 +13,13 @@ import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrefSimpleAlgorithmConfig extends AlgorithmConfig {
     Double spreadParam;
 
     @Builder
     public PrefSimpleAlgorithmConfig(Double spreadParam) {
-        this.spreadParam = spreadParam;
-        validate();
+        setSpreadParam(spreadParam);
     }
 
     @Override
@@ -28,12 +27,13 @@ public class PrefSimpleAlgorithmConfig extends AlgorithmConfig {
         return new PrefSimpleAlgorithm(spreadParam);
     }
 
-    private void validate() {
-        if (getSpreadParam() == null) {
+    private void setSpreadParam(Double spreadParam) {
+        if (spreadParam == null) {
             throw new DomainException("Не передан параметр spreadParam.");
         }
-        if (getSpreadParam() <= 0) {
+        if (spreadParam <= 0) {
             throw new DomainException("Параметр spreadParam должен быть больше нуля.");
         }
+        this.spreadParam = spreadParam;
     }
 }

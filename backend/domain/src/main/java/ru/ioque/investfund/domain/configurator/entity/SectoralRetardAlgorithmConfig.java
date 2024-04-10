@@ -13,16 +13,15 @@ import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SectoralRetardAlgorithmConfig extends AlgorithmConfig {
     Double historyScale;
     Double intradayScale;
 
     @Builder
     public SectoralRetardAlgorithmConfig(Double historyScale, Double intradayScale) {
-        this.historyScale = historyScale;
-        this.intradayScale = intradayScale;
-        validate();
+        setHistoryScale(historyScale);
+        setIntradayScale(intradayScale);
     }
 
     @Override
@@ -30,18 +29,23 @@ public class SectoralRetardAlgorithmConfig extends AlgorithmConfig {
         return new SectoralRetardAlgorithm(historyScale, intradayScale);
     }
 
-    private void validate() {
-        if (getHistoryScale() == null) {
-            throw new DomainException("Не передан параметр historyScale.");
-        }
-        if (getHistoryScale() <= 0) {
-            throw new DomainException("Параметр historyScale должен быть больше нуля.");
-        }
-        if (getIntradayScale() == null) {
+    private void setIntradayScale(Double intradayScale) {
+        if (intradayScale == null) {
             throw new DomainException("Не передан параметр intradayScale.");
         }
-        if (getIntradayScale() <= 0) {
+        if (intradayScale <= 0) {
             throw new DomainException("Параметр intradayScale должен быть больше нуля.");
         }
+        this.intradayScale = intradayScale;
+    }
+
+    private void setHistoryScale(Double historyScale) {
+        if (historyScale == null) {
+            throw new DomainException("Не передан параметр historyScale.");
+        }
+        if (historyScale <= 0) {
+            throw new DomainException("Параметр historyScale должен быть больше нуля.");
+        }
+        this.historyScale = historyScale;
     }
 }

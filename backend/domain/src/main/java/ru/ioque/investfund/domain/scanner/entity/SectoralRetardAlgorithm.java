@@ -1,8 +1,11 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.Signal;
@@ -15,15 +18,15 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SectoralRetardAlgorithm extends ScannerAlgorithm {
-    public final String name = "Секторальный отстающий";
-    private final Double historyScale;
-    private final Double intradayScale;
+    Double historyScale;
+    Double intradayScale;
 
     public SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
         super("Секторальный отстающий");
-        this.historyScale = historyScale;
-        this.intradayScale = intradayScale;
+        setHistoryScale(historyScale);
+        setIntradayScale(intradayScale);
     }
 
     @Override
@@ -96,5 +99,25 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             ),
             LocalDateTime.now()
         );
+    }
+
+    private void setIntradayScale(Double intradayScale) {
+        if (intradayScale == null) {
+            throw new DomainException("Не передан параметр intradayScale.");
+        }
+        if (intradayScale <= 0) {
+            throw new DomainException("Параметр intradayScale должен быть больше нуля.");
+        }
+        this.intradayScale = intradayScale;
+    }
+
+    private void setHistoryScale(Double historyScale) {
+        if (historyScale == null) {
+            throw new DomainException("Не передан параметр historyScale.");
+        }
+        if (historyScale <= 0) {
+            throw new DomainException("Параметр historyScale должен быть больше нуля.");
+        }
+        this.historyScale = historyScale;
     }
 }

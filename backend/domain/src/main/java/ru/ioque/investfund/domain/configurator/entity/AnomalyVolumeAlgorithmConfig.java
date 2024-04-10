@@ -13,7 +13,7 @@ import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnomalyVolumeAlgorithmConfig extends AlgorithmConfig {
     Double scaleCoefficient;
     Integer historyPeriod;
@@ -25,10 +25,9 @@ public class AnomalyVolumeAlgorithmConfig extends AlgorithmConfig {
         Integer historyPeriod,
         String indexTicker
     ) {
-        this.scaleCoefficient = scaleCoefficient;
-        this.historyPeriod = historyPeriod;
-        this.indexTicker = indexTicker;
-        validate();
+        setScaleCoefficient(scaleCoefficient);
+        setHistoryPeriod(historyPeriod);
+        setIndexTicker(indexTicker);
     }
 
     @Override
@@ -36,21 +35,30 @@ public class AnomalyVolumeAlgorithmConfig extends AlgorithmConfig {
         return new AnomalyVolumeAlgorithm(scaleCoefficient, historyPeriod, indexTicker);
     }
 
-    private void validate() {
-        if (getScaleCoefficient() == null) {
+    private void setScaleCoefficient(Double scaleCoefficient) {
+        if (scaleCoefficient == null) {
             throw new DomainException("Не передан параметр scaleCoefficient.");
         }
-        if (getHistoryPeriod() == null) {
-            throw new DomainException("Не передан параметр historyPeriod.");
-        }
-        if (getIndexTicker() == null || getIndexTicker().isEmpty()) {
-            throw new DomainException("Не передан параметр indexTicker.");
-        }
-        if (getScaleCoefficient() <= 0) {
+        if (scaleCoefficient <= 0) {
             throw new DomainException("Параметр scaleCoefficient должен быть больше нуля.");
         }
-        if (getHistoryPeriod() <= 0) {
+        this.scaleCoefficient = scaleCoefficient;
+    }
+
+    private void setHistoryPeriod(Integer historyPeriod) {
+        if (historyPeriod == null) {
+            throw new DomainException("Не передан параметр historyPeriod.");
+        }
+        if (historyPeriod <= 0) {
             throw new DomainException("Параметр historyPeriod должен быть больше нуля.");
         }
+        this.historyPeriod = historyPeriod;
+    }
+
+    private void setIndexTicker(String indexTicker) {
+        if (indexTicker == null || indexTicker.isEmpty()) {
+            throw new DomainException("Не передан параметр indexTicker.");
+        }
+        this.indexTicker = indexTicker;
     }
 }

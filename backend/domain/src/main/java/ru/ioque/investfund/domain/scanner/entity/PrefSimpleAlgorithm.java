@@ -1,8 +1,10 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScannerLog;
@@ -17,12 +19,13 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrefSimpleAlgorithm extends ScannerAlgorithm {
-    private final Double spreadParam;
+    Double spreadParam;
 
     public PrefSimpleAlgorithm(Double spreadParam) {
         super("Дельта анализ цен пар преф-обычка");
-        this.spreadParam = spreadParam;
+        setSpreadParam(spreadParam);
     }
 
     @Override
@@ -106,5 +109,15 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
             ),
             LocalDateTime.now()
         );
+    }
+
+    private void setSpreadParam(Double spreadParam) {
+        if (spreadParam == null) {
+            throw new DomainException("Не передан параметр spreadParam.");
+        }
+        if (spreadParam <= 0) {
+            throw new DomainException("Параметр spreadParam должен быть больше нуля.");
+        }
+        this.spreadParam = spreadParam;
     }
 }
