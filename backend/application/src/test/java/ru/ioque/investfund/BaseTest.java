@@ -1,5 +1,7 @@
 package ru.ioque.investfund;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
@@ -141,6 +143,10 @@ public class BaseTest {
         return datasourceRepository().getIntradayBy(datasourceId, ticker).toList();
     }
 
+    protected UUID getDatasourceId() {
+        return datasourceRepository().getAll().get(0).getId();
+    }
+
     protected List<IntradayValue> getIntradayValues(UUID datasourceId) {
         return datasourceRepository()
             .getIntradayValues()
@@ -185,6 +191,10 @@ public class BaseTest {
 
     protected List<String> getTickers(UUID datasourceId) {
         return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
+    }
+
+    protected String getMessage(ConstraintViolationException exception) {
+        return exception.getConstraintViolations().stream().findFirst().map(ConstraintViolation::getMessage).orElseThrow();
     }
 
     protected Deal buildBuyDealBy(

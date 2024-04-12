@@ -38,10 +38,6 @@ public class DatasourceManagerTest extends BaseTest {
         );
     }
 
-    private UUID getDatasourceId() {
-        return datasourceRepository().getAll().get(0).getId();
-    }
-
     @Test
     @DisplayName("""
         T1. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.

@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private static final double futuresOvernightScale = 0.02;
     private static final double stockOvernightScale = 0.005;
-    private static final List<String> tickers = List.of(TATN, BRF4);
     private static final String startDate = "2023-12-22T13:00:00";
 
     @Test

@@ -1,6 +1,5 @@
 package ru.ioque.investfund.scanner.configurator;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
@@ -30,13 +29,6 @@ public class BaseConfiguratorTest extends BaseTest {
         );
         prepareDatasource();
         loggerProvider().clearLogs();
-    }
-
-    protected UUID getDatasourceId() {
-        return datasourceRepository()
-            .getAll()
-            .get(0)
-            .getId();
     }
 
     protected UUID getFirstScannerId() {
@@ -108,10 +100,6 @@ public class BaseConfiguratorTest extends BaseTest {
                     .scaleCoefficient(1.5)
                     .build()
             );
-    }
-
-    protected String getMessage(ConstraintViolationException exception) {
-        return exception.getConstraintViolations().stream().findFirst().map(ConstraintViolation::getMessage).orElseThrow();
     }
 
     protected String descIsEmpty() {
