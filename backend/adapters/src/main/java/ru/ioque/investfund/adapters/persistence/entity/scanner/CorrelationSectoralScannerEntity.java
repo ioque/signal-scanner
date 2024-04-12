@@ -14,7 +14,7 @@ import ru.ioque.investfund.domain.configurator.entity.SectoralCorrelationAlgorit
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.value.algorithms.CorrelationSectoralAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

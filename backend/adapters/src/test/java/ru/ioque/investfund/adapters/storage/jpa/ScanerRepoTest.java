@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.ImplScannerConfigRepository;
 import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.List;
 import java.util.Optional;

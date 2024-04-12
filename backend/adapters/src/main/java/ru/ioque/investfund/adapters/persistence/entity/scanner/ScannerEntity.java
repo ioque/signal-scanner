@@ -20,7 +20,7 @@ import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
 import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
 import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

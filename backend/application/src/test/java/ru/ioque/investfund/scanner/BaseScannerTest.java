@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 

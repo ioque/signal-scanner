@@ -2,7 +2,7 @@ package ru.ioque.investfund.domain.scanner.value.algorithms;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 
 import java.time.LocalDateTime;
