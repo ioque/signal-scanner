@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface ScannerRepository {
     void save(SignalScanner scanner);
-    List<SignalScanner> getAll();
+    List<SignalScanner> getAllBy(UUID datasourceId);
     Optional<SignalScanner> getBy(UUID scannerId);
 }

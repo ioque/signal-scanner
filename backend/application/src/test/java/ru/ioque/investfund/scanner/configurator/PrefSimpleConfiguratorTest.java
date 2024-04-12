@@ -51,7 +51,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().spreadValue(null).build())
                 .build(),
             spreadParamIsEmpty()
@@ -66,7 +66,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().spreadValue(0D).build())
                 .build(),
             spreadParamIsNegative()
@@ -81,7 +81,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().spreadValue(-1D).build())
                 .build(),
             spreadParamIsNegative()
@@ -118,7 +118,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .scannerId(getScannerId())
+            .scannerId(getFirstScannerId())
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .properties(
                 PrefSimpleProperties.builder()

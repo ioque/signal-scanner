@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.Command;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
 
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class CreateScannerCommand {
+public class CreateScannerCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     UUID datasourceId;
     @NotNull(message = "Не передан период работы сканера.")

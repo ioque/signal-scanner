@@ -30,7 +30,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initPositiveDeals(datasourceId);
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
@@ -55,7 +55,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initNegativeDeals(datasourceId);
         initScanner(datasourceId, "SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
@@ -73,10 +73,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberAndSberpHistory(datasourceId);
         initPositiveDeals(datasourceId);
         initScanner(datasourceId,"SBER", "SBERP");
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-21T11:00:30");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertEquals(3, getLogs().size());
         assertSignals(getSignals(), 1, 1, 0);
@@ -95,10 +95,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberAndSberpHistory(datasourceId);
         initNegativeDeals(datasourceId);
         initScanner(datasourceId,"SBER", "SBERP");
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-21T11:01:00");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertEquals(6, getLogs().size());
         assertSignals(getSignals(), 0, 0, 0);
@@ -128,7 +128,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -157,7 +157,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -185,7 +185,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -213,7 +213,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -240,7 +240,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -267,7 +267,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -291,7 +291,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -314,7 +314,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -338,7 +338,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -361,7 +361,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -381,7 +381,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp(datasourceId);
         initScanner(datasourceId, "SBER", "SBERP");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
@@ -447,6 +447,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private List<ScannerLog> getLogs() {
-        return scannerLogRepository().logs.get(scannerRepository().getAll().get(0).getId());
+        return scannerLogRepository().logs.get(scannerRepository().getAllBy(getDatasourceId()).get(0).getId());
     }
 }

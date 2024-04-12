@@ -1,5 +1,6 @@
 package ru.ioque.investfund.fakes;
 
+import lombok.Getter;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Getter
 public class FakeScannerRepository implements ScannerRepository {
     public Map<UUID, SignalScanner> scannerMap = new HashMap<>();
 
@@ -18,8 +20,12 @@ public class FakeScannerRepository implements ScannerRepository {
     }
 
     @Override
-    public List<SignalScanner> getAll() {
-        return scannerMap.values().stream().toList();
+    public List<SignalScanner> getAllBy(UUID datasourceId) {
+        return scannerMap
+            .values()
+            .stream()
+            .filter(row -> row.getDatasourceId().equals(datasourceId))
+            .toList();
     }
 
     @Override

@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EventBus;
-import ru.ioque.investfund.application.adapters.DatasourceProvider;
+import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
@@ -25,18 +24,13 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class DatasourceManager implements SystemModule {
+public class DatasourceManager {
     DateTimeProvider dateTimeProvider;
     DatasourceProvider datasourceProvider;
     DatasourceRepository repository;
     UUIDProvider uuidProvider;
     LoggerFacade loggerFacade;
-    EventBus eventBus;
-
-    @Override
-    public synchronized void execute() {
-        repository.getAll().stream().map(Datasource::getId).forEach(this::integrateTradingData);
-    }
+    EventPublisher eventPublisher;
 
     public synchronized void registerDatasource(final AddDatasourceCommand command) {
         repository.saveDatasource(Datasource.from(uuidProvider.generate(), command));
@@ -87,7 +81,7 @@ public class DatasourceManager implements SystemModule {
             loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
         });
         repository.saveDatasource(datasource);
-        eventBus.publish(TradingDataUpdatedEvent.builder()
+        eventPublisher.publish(TradingDataUpdatedEvent.builder()
             .id(uuidProvider.generate())
             .dateTime(dateTimeProvider.nowDateTime())
             .datasourceId(datasource.getId())

@@ -37,14 +37,12 @@ public class BaseConfiguratorTest extends BaseTest {
             .getId();
     }
 
-    protected UUID getScannerId() {
-        return getScanner().getId();
+    protected UUID getFirstScannerId() {
+        return scannerRepository().getScannerMap().keySet().iterator().next();
     }
 
-    protected SignalScanner getScanner() {
-        return scannerRepository()
-            .getAll()
-            .get(0);
+    protected SignalScanner getScanner(UUID scannerId) {
+        return scannerRepository().getBy(scannerId).orElseThrow();
     }
 
     private void prepareDatasource() {

@@ -129,7 +129,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().futuresOvernightScale(null).build()
                 )
@@ -146,7 +146,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().stockOvernightScale(null).build()
                 )
@@ -163,7 +163,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().futuresTicker(null).build()
                 )
@@ -180,7 +180,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().futuresTicker("").build()
                 )
@@ -197,7 +197,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().futuresOvernightScale(0D).build()
                 )
@@ -214,7 +214,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().futuresOvernightScale(-1D).build()
                 )
@@ -231,7 +231,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().stockOvernightScale(0D).build()
                 )
@@ -248,7 +248,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(
                     buildPropertiesWith().stockOvernightScale(-1D).build()
                 )
@@ -295,7 +295,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .scannerId(getScannerId())
+            .scannerId(getFirstScannerId())
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .properties(
                 SectoralFuturesProperties.builder()

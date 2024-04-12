@@ -16,7 +16,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EventBus;
+import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 
@@ -111,7 +111,7 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public EventBus mockEventBus() {
-        return mock(EventBus.class);
+    public EventPublisher mockEventBus() {
+        return mock(EventPublisher.class);
     }
 }

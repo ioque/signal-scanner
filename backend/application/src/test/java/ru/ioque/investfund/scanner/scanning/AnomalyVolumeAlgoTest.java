@@ -31,7 +31,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
@@ -50,10 +50,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:00:30");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertEquals(8, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -73,10 +73,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
         initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:01:00");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertEquals(10, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
@@ -98,11 +98,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknBuySignalDataset(datasourceId);
         initScanner(datasourceId, "TGKN", "IMOEX");
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 0, 1);
         assertFinInstrument(getTgkn(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
@@ -134,7 +134,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, 1000.0, 100.0, 99.0, null);
@@ -163,7 +163,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), null, null, null, null, null, null, null);
@@ -196,7 +196,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
@@ -226,7 +226,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, null, null, null);
@@ -241,23 +241,24 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex(getDatasourceId());
+        initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(getDatasourceId(),"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(getDatasourceId(),1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(getDatasourceId(),2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(getDatasourceId(),1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(getDatasourceId(),2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(getDatasourceId(),3L, "TGKN", "11:00:00", 103D, 6000D, 1)
+            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 103D, 6000D, 1)
         );
-        initScanner(getDatasourceId(), "TGKN", "IMOEX");
+        initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
@@ -286,7 +287,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertEquals(0, getSignals().size());
         assertSignals(getSignals(), 0, 0, 0);
@@ -320,7 +321,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, null, true);
@@ -351,7 +352,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);

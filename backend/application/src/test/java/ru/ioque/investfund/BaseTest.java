@@ -13,10 +13,11 @@ import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.scanner.command.ScanningCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
-import ru.ioque.investfund.fakes.FakeEventBus;
+import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
@@ -73,8 +74,8 @@ public class BaseTest {
         return fakeDIContainer.getDatasourceManager();
     }
 
-    protected final FakeEventBus eventBus() {
-        return fakeDIContainer.getEventBus();
+    protected final FakeEventPublisher eventPublisher() {
+        return fakeDIContainer.getEventPublisher();
     }
 
     protected LocalDate nowMinus1Days() {
@@ -163,6 +164,20 @@ public class BaseTest {
     }
 
     protected void clearLogs() {
+        loggerProvider().clearLogs();
+    }
+
+    protected LocalDateTime getToday() {
+        return dateTimeProvider().nowDateTime();
+    }
+
+    protected void runWorkPipeline(UUID datasourceId) {
+        datasourceManager().integrateTradingData(datasourceId);
+        scannerManager().scanning(new ScanningCommand(datasourceId, getToday()));
+    }
+
+    protected void runWorkPipelineAndClearLogs(UUID datasourceId) {
+        runWorkPipeline(datasourceId);
         loggerProvider().clearLogs();
     }
 

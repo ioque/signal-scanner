@@ -32,9 +32,4 @@ public class ScannerConfiguratorCommandController {
     public void updateScanner(@PathVariable UUID scannerId, @Valid @RequestBody UpdateScannerRequest request) {
         scannerManager.updateScanner(request.toCommand(scannerId));
     }
-
-    @PostMapping("/api/scanner/signal")
-    public void runScanning() {
-        scannerManager.execute();
-    }
 }

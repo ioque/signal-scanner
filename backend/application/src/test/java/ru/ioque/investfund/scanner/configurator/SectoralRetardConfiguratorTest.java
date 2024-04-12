@@ -96,7 +96,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyScale(null).build())
                 .build(),
             historyScaleCoefficientIsEmpty()
@@ -111,7 +111,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyScale(0D).build())
                 .build(),
             historyScaleCoefficientIsNegative()
@@ -126,7 +126,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyScale(-1D).build())
                 .build(),
             historyScaleCoefficientIsNegative()
@@ -141,7 +141,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().intradayScale(null).build())
                 .build(),
             intradayScaleCoefficientIsEmpty()
@@ -156,7 +156,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().intradayScale(0D).build())
                 .build(),
             intradayScaleCoefficientIsNegative()
@@ -171,7 +171,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().intradayScale(-1D).build())
                 .build(),
             intradayScaleCoefficientIsNegative()
@@ -218,7 +218,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .scannerId(getScannerId())
+            .scannerId(getFirstScannerId())
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .properties(
                 SectoralRetardProperties.builder()

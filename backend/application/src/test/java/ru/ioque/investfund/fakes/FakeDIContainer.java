@@ -25,11 +25,11 @@ public class FakeDIContainer {
     LoggerFacade loggerFacade;
     ScannerManager scannerManager;
     DatasourceManager datasourceManager;
-    FakeEventBus eventBus;
+    FakeEventPublisher eventPublisher;
 
     public FakeDIContainer() {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        eventBus = new FakeEventBus();
+        eventPublisher = new FakeEventPublisher();
         dateTimeProvider = new FakeDateTimeProvider();
         exchangeDataFixture = new ExchangeDataFixture();
         exchangeProvider = getFakeExchangeProvider();
@@ -46,7 +46,7 @@ public class FakeDIContainer {
             datasourceRepository,
             uuidProvider,
             loggerFacade,
-            eventBus
+            eventPublisher
         );
         scannerManager = new ScannerManager(
             validator,

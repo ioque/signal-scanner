@@ -32,7 +32,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDealResults(datasourceId);
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -52,7 +52,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initNegativeDealResults(datasourceId);
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -70,10 +70,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDeals(datasourceId);
         initPositiveDealResults(datasourceId);
         initScanner(datasourceId);
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T18:00:00");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -91,10 +91,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initPositiveDeals(datasourceId);
         initPositiveDealResults(datasourceId);
         initScanner(datasourceId);
-        runWorkPipelineAndClearLogs();
+        runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-23T13:00:00");
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -119,9 +119,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
-        assertEquals(1, scannerRepository().getAll().get(0).getSignals().size());
+        assertEquals(1, scannerRepository().getAllBy(getDatasourceId()).get(0).getSignals().size());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
@@ -166,7 +166,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -190,7 +190,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
         assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
@@ -215,7 +215,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
         initScanner(datasourceId);
 
-        datasourceManager().execute();
+        runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
         assertTrue(getTatn().isRiseOvernight(stockOvernightScale));

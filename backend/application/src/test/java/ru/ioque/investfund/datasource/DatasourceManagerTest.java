@@ -157,7 +157,8 @@ public class DatasourceManagerTest extends BaseTest {
         );
 
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
+
         assertEquals(1, getInstruments(datasourceId).size());
         assertEquals(3, getIntradayValues(datasourceId).size());
         assertEquals(4, getHistoryValues(datasourceId).size());
@@ -184,7 +185,7 @@ public class DatasourceManagerTest extends BaseTest {
         ));
 
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(
             131,
@@ -214,7 +215,7 @@ public class DatasourceManagerTest extends BaseTest {
         );
 
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
         assertEquals(2, loggerProvider().log.size());
@@ -236,7 +237,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
@@ -247,7 +248,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(5, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
@@ -265,12 +266,12 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
 
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(66, getHistoryValuesBy(datasourceId, "AFKS").size());
     }
@@ -287,7 +288,7 @@ public class DatasourceManagerTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(0, getHistoryValues(datasourceId).size());
         assertEquals(0, getIntradayValues(datasourceId).size());
@@ -307,7 +308,7 @@ public class DatasourceManagerTest extends BaseTest {
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
         clearLogs();
 
         datasourceManager().disableUpdate(datasourceId, List.of("AFKS"));
@@ -320,7 +321,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
 
         assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
@@ -363,8 +364,8 @@ public class DatasourceManagerTest extends BaseTest {
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
-        assertEquals(TradingDataUpdatedEvent.class, eventBus().getEvents().get(0).getClass());
+        datasourceManager().integrateTradingData(datasourceId);
+        assertEquals(TradingDataUpdatedEvent.class, eventPublisher().getEvents().get(0).getClass());
     }
 
     @Test
@@ -382,7 +383,7 @@ public class DatasourceManagerTest extends BaseTest {
             buildBuyDealBy(datasourceId, 3L,"AFKS", "10:00:00", 11D, 10D, 2)
         );
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
@@ -397,8 +398,8 @@ public class DatasourceManagerTest extends BaseTest {
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(buildBuyDealBy(datasourceId, 1L,"AFKS", "10:00:00", 10D, 10D, 1));
         datasourceManager().enableUpdate(datasourceId, List.of("AFKS"));
-        datasourceManager().execute();
-        datasourceManager().execute();
+        datasourceManager().integrateTradingData(datasourceId);
+        datasourceManager().integrateTradingData(datasourceId);
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 }

@@ -125,7 +125,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().scaleCoefficient(null).build())
                 .build(),
             scaleCoefficientIsEmpty()
@@ -140,7 +140,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyPeriod(null).build())
                 .build(),
             historyPeriodIsEmpty()
@@ -155,7 +155,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().indexTicker(null).build())
                 .build(),
             indexTickerIsEmpty()
@@ -170,7 +170,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().indexTicker("").build())
                 .build(),
             indexTickerIsEmpty()
@@ -185,7 +185,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().scaleCoefficient(0D).build())
                 .build(),
             scaleCoefficientIsNegative()
@@ -200,7 +200,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().scaleCoefficient(-1D).build())
                 .build(),
             scaleCoefficientIsNegative()
@@ -215,7 +215,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyPeriod(0).build())
                 .build(),
             historyPeriodIsNegative()
@@ -230,7 +230,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(getFirstScannerId())
                 .properties(buildPropertiesWith().historyPeriod(-180).build())
                 .build(),
             historyPeriodIsNegative()

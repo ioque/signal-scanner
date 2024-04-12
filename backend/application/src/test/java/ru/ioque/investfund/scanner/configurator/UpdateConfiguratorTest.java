@@ -41,15 +41,16 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
                 .tickers(List.of("TGKN", "TGKB", "IMOEX"))
                 .build()
         );
+        final UUID scannerId = getFirstScannerId();
 
         scannerManager().updateScanner(
             buildUpdateAnomalyVolumeScannerWith()
-                .scannerId(getScannerId())
+                .scannerId(scannerId)
                 .tickers(List.of("TGKN", "IMOEX"))
                 .build()
         );
 
-        assertTrue(List.of("TGKN", "IMOEX").containsAll(getScanner().getTickers()));
+        assertTrue(List.of("TGKN", "IMOEX").containsAll(getScanner(scannerId).getTickers()));
     }
 
     @Test
@@ -63,7 +64,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .description(null)
                     .build()
             )
@@ -83,7 +84,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .description("")
                     .build()
             )
@@ -103,7 +104,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(null)
                     .build()
             )
@@ -123,7 +124,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(0)
                     .build()
             )
@@ -143,7 +144,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(-11)
                     .build()
             )
@@ -163,7 +164,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .tickers(null)
                     .build()
             )
@@ -183,7 +184,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             ConstraintViolationException.class,
             () -> scannerManager().updateScanner(
                 buildUpdateAnomalyVolumeScannerWith()
-                    .scannerId(getScannerId())
+                    .scannerId(getFirstScannerId())
                     .tickers(List.of())
                     .build()
             )

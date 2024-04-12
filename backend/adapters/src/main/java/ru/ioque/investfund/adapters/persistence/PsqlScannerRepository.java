@@ -38,9 +38,9 @@ public class PsqlScannerRepository implements ScannerRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SignalScanner> getAll() {
+    public List<SignalScanner> getAllBy(UUID datasourceId) {
         return signalScannerEntityRepository
-            .findAll()
+            .findAllByDatasourceId(datasourceId)
             .stream()
             .map(ScannerEntity::toDomain)
             .toList();

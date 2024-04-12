@@ -3,10 +3,9 @@ package ru.ioque.investfund.scanner.scanning;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,17 +33,11 @@ public class BaseScannerTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        eventBus().subscribe(TradingDataUpdatedEvent.class, scannerManager());
         loggerProvider().clearLogs();
     }
 
     protected UUID getDatasourceId() {
         return datasourceRepository().getAll().get(0).getId();
-    }
-
-    protected void runWorkPipelineAndClearLogs() {
-        datasourceManager().execute();
-        loggerProvider().clearLogs();
     }
 
     protected void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
@@ -55,7 +48,7 @@ public class BaseScannerTest extends BaseTest {
 
     protected List<Signal> getSignals() {
         return scannerRepository()
-            .getAll()
+            .getAllBy(getDatasourceId())
             .stream()
             .map(SignalScanner::getSignals)
             .flatMap(Collection::stream)

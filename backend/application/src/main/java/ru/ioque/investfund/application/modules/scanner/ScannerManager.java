@@ -12,22 +12,23 @@ import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingDataRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.SystemModule;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
+import ru.ioque.investfund.domain.core.Command;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.scanner.command.ScanningCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ScannerManager implements SystemModule {
+public class ScannerManager {
     Validator validator;
     DatasourceRepository datasourceRepository;
     TradingDataRepository tradingDataRepository;
@@ -57,37 +58,54 @@ public class ScannerManager implements SystemModule {
         this.loggerFacade = loggerFacade;
     }
 
-    @Override
-    public synchronized void execute() {
+    public synchronized void scanning(ScanningCommand command) {
+        validateCommand(command);
         loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
         scannerRepository
-            .getAll()
+            .getAllBy(command.getDatasourceId())
             .stream()
-            .filter(row -> row.isTimeForExecution(dateTimeProvider.nowDateTime()))
-            .forEach(this::runScanner);
+            .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
+            .forEach(scanner -> {
+                loggerFacade.logRunWorkScanner(scanner);
+                final List<TradingSnapshot> snapshots = tradingDataRepository.findBy(
+                    scanner.getDatasourceId(),
+                    scanner.getTickers()
+                );
+                final List<ScannerLog> scanning = scanner.scanning(
+                    snapshots,
+                    command.getWatermark()
+                );
+                scannerLogRepository.saveAll(scanner.getId(), scanning);
+                scannerRepository.save(scanner);
+                loggerFacade.logFinishWorkScanner(scanner);
+            });
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
     }
 
-    public void createScanner(CreateScannerCommand command) {
-        Set<ConstraintViolation<CreateScannerCommand>> violations = validator.validate(command);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
+    public synchronized void createScanner(CreateScannerCommand command) {
+        validateCommand(command);
         validateDatasource(command.getDatasourceId(), command.getTickers());
+
         SignalScanner scanner = SignalScanner.from(uuidProvider.generate(), command);
+
         scannerRepository.save(scanner);
     }
 
-    public void updateScanner(UpdateScannerCommand command) {
-        Set<ConstraintViolation<UpdateScannerCommand>> violations = validator.validate(command);
+    public synchronized void updateScanner(UpdateScannerCommand command) {
+        validateCommand(command);
+        SignalScanner scanner = getScanner(command.getScannerId());
+        validateDatasource(scanner.getDatasourceId(), command.getTickers());
+
+        scanner.update(command);
+
+        scannerRepository.save(scanner);
+    }
+
+    private void validateCommand(Command command) {
+        Set<ConstraintViolation<Command>> violations = validator.validate(command);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-        SignalScanner scanner = getScanner(command.getScannerId());
-        validateDatasource(scanner.getDatasourceId(), command
-            .getTickers());
-        scanner.update(command);
-        scannerRepository.save(scanner);
     }
 
     private SignalScanner getScanner(UUID scannerId) {
@@ -128,14 +146,5 @@ public class ScannerManager implements SystemModule {
                     String.format("Источник данных[id=%s] не существует.", datasourceId)
                 )
             );
-    }
-
-    private void runScanner(final SignalScanner scanner) {
-        loggerFacade.logRunWorkScanner(scanner);
-        LocalDateTime watermark = dateTimeProvider.nowDateTime();
-        List<TradingSnapshot> snapshots = tradingDataRepository.findBy(scanner.getDatasourceId(), scanner.getTickers());
-        scannerLogRepository.saveAll(scanner.getId(), scanner.scanning(snapshots, watermark));
-        scannerRepository.save(scanner);
-        loggerFacade.logFinishWorkScanner(scanner);
     }
 }
