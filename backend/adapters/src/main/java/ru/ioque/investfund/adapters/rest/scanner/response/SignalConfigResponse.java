@@ -1,7 +1,7 @@
 package ru.ioque.investfund.adapters.rest.scanner.response;
 
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.CorrelationSectoralScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralFuturesScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralRetardScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
@@ -16,7 +16,7 @@ public abstract class SignalConfigResponse {
 
     private static final Map<Class<? extends ScannerEntity>, Function<ScannerEntity, SignalConfigResponse>> mappers = Map.of(
         AnomalyVolumeScannerEntity.class, config -> AnomalyVolumeSignalScannerConfigResponse.from((AnomalyVolumeScannerEntity) config),
-        CorrelationSectoralScannerEntity.class, config -> CorrelationSectoralScannerConfigResponse.from((CorrelationSectoralScannerEntity) config),
+        SectoralFuturesScannerEntity.class, config -> CorrelationSectoralScannerConfigResponse.from((SectoralFuturesScannerEntity) config),
         SectoralRetardScannerEntity.class, config -> SectoralRetardScannerConfigResponse.from((SectoralRetardScannerEntity) config),
         PrefSimpleScannerEntity.class, config -> PrefSimpleConfigResponse.from((PrefSimpleScannerEntity) config)
     );

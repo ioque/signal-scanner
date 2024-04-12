@@ -15,11 +15,12 @@ import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
-import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
-import ru.ioque.core.dto.scanner.request.PrefSimpleRequest;
-import ru.ioque.core.dto.scanner.request.SectoralRetardScannerRequest;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.scanner.request.AnomalyVolumePropertiesDto;
+import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
+import ru.ioque.core.dto.scanner.request.PrefSimplePropertiesDto;
+import ru.ioque.core.dto.scanner.request.SectoralFuturesPropertiesDto;
+import ru.ioque.core.dto.scanner.request.SectoralRetardPropertiesDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,15 +64,19 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            AnomalyVolumeScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .scaleCoefficient(1.5)
                 .description("desc")
                 .datasourceId(datasourceId)
-                .historyPeriod(180)
-                .indexTicker("IMOEX")
                 .tickers(getTickers(datasourceId))
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(180)
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
                 .build()
         );
 
@@ -91,13 +96,13 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            PrefSimpleRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
-                .spreadParam(1.0)
+                .properties(new PrefSimplePropertiesDto(1.0))
                 .build()
         );
 
@@ -122,14 +127,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            SectoralRetardScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
-                .historyScale(0.015)
-                .intradayScale(0.015)
+                .properties(
+                    SectoralRetardPropertiesDto.builder()
+                        .historyScale(0.015)
+                        .intradayScale(0.015)
+                        .build()
+                )
                 .build()
         );
 
@@ -155,15 +164,19 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            CorrelationSectoralScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
-                .futuresTicker("BRF4")
-                .futuresOvernightScale(0.015)
-                .stockOvernightScale(0.015)
+                .properties(
+                    SectoralFuturesPropertiesDto.builder()
+                        .futuresTicker("BRF4")
+                        .futuresOvernightScale(0.015)
+                        .stockOvernightScale(0.015)
+                        .build()
+                )
                 .build()
         );
 
@@ -263,15 +276,19 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            AnomalyVolumeScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .scaleCoefficient(1.5)
                 .datasourceId(datasourceId)
                 .description("desc")
-                .historyPeriod(180)
-                .indexTicker("IMOEX")
                 .tickers(getTickers(datasourceId))
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(180)
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
                 .build()
         );
         integrateTradingData(datasourceId);
@@ -363,13 +380,13 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            PrefSimpleRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
-                .spreadParam(1D)
                 .description("desc")
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
+                .properties(new PrefSimplePropertiesDto(1.0))
                 .build()
         );
 
@@ -495,14 +512,18 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateInstruments(datasourceId);
 
-        addSignalScanner(
-            SectoralRetardScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
-                .historyScale(0.015)
-                .intradayScale(0.015)
+                .properties(
+                    SectoralRetardPropertiesDto.builder()
+                        .historyScale(0.015)
+                        .intradayScale(0.015)
+                        .build()
+                )
                 .build()
         );
         integrateTradingData(datasourceId);
@@ -573,15 +594,19 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         integrateInstruments(datasourceId);
 
 
-        addSignalScanner(
-            CorrelationSectoralScannerRequest.builder()
+        createScanner(
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(datasourceId)
                 .tickers(getTickers(datasourceId))
                 .description("desc")
-                .futuresTicker("BRF4")
-                .futuresOvernightScale(0.015)
-                .stockOvernightScale(0.015)
+                .properties(
+                    SectoralFuturesPropertiesDto.builder()
+                        .futuresTicker("BRF4")
+                        .futuresOvernightScale(0.015)
+                        .stockOvernightScale(0.015)
+                        .build()
+                )
                 .build()
         );
         integrateTradingData(datasourceId);

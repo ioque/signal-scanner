@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     Double historyScale;
     Double intradayScale;
 
-    public SectoralRetardAlgorithm(Double historyScale, Double intradayScale) {
-        super("Секторальный отстающий");
-        setHistoryScale(historyScale);
-        setIntradayScale(intradayScale);
+    public SectoralRetardAlgorithm(SectoralRetardProperties properties) {
+        super(properties.getType().getName());
+        setHistoryScale(properties.getHistoryScale());
+        setIntradayScale(properties.getIntradayScale());
     }
 
     @Override

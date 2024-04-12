@@ -21,11 +21,11 @@ import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
-import ru.ioque.core.dto.scanner.request.AnomalyVolumeScannerRequest;
-import ru.ioque.core.dto.scanner.request.CorrelationSectoralScannerRequest;
-import ru.ioque.core.dto.scanner.request.PrefSimpleRequest;
-import ru.ioque.core.dto.scanner.request.SectoralRetardScannerRequest;
+import ru.ioque.core.dto.scanner.request.AnomalyVolumePropertiesDto;
+import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
+import ru.ioque.core.dto.scanner.request.PrefSimplePropertiesDto;
+import ru.ioque.core.dto.scanner.request.SectoralFuturesPropertiesDto;
+import ru.ioque.core.dto.scanner.request.SectoralRetardPropertiesDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -83,48 +83,61 @@ public class UiTestsDataset {
         return dailyResults;
     }
 
-    public static AddSignalScannerRequest getAnomalyVolumeSignalRequest(UUID datasourceId) {
-        return AnomalyVolumeScannerRequest.builder()
+    public static CreateScannerRequest getAnomalyVolumeSignalRequest(UUID datasourceId) {
+        return CreateScannerRequest.builder()
             .datasourceId(datasourceId)
             .workPeriodInMinutes(1)
-            .scaleCoefficient(1.5)
             .description("Сканер сигналов с алгоритмом \"Аномальные объемы\": TGKN, TGKB, индекс IMOEX.")
-            .historyPeriod(180)
-            .indexTicker("IMOEX")
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .properties(
+                AnomalyVolumePropertiesDto.builder()
+                    .scaleCoefficient(1.5)
+                    .historyPeriod(180)
+                    .indexTicker("IMOEX")
+                    .build()
+            )
             .build();
     }
 
-    public static AddSignalScannerRequest getPrefSimpleRequest(UUID datasourceId) {
-        return PrefSimpleRequest.builder()
+    public static CreateScannerRequest getPrefSimpleRequest(UUID datasourceId) {
+        return CreateScannerRequest.builder()
             .datasourceId(datasourceId)
             .workPeriodInMinutes(1)
             .tickers(List.of("SBER", "SBERP"))
             .description("Сканер сигналов с алгоритмом \"Дельта-анализ пар преф-обычка\": SBERP-SBER.")
-            .spreadParam(1.0)
+            .properties(new PrefSimplePropertiesDto(1.0))
             .build();
     }
 
-    public static AddSignalScannerRequest getSectoralRetardScannerRequest(UUID datasourceId) {
-        return SectoralRetardScannerRequest.builder()
+    public static CreateScannerRequest getSectoralRetardScannerRequest(UUID datasourceId) {
+        return CreateScannerRequest.builder()
             .datasourceId(datasourceId)
             .workPeriodInMinutes(60)
             .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH"))
             .description("Сканер сигналов с алгоритмом \"Секторальный отстающий\": TATN, ROSN, SIBN, LKOH.")
-            .historyScale(0.015)
-            .intradayScale(0.015)
+            .properties(
+                SectoralRetardPropertiesDto.builder()
+                    .historyScale(0.015)
+                    .intradayScale(0.015)
+                    .build()
+            )
             .build();
     }
 
-    public static AddSignalScannerRequest getCorrelationSectoralScannerRequest(UUID datasourceId) {
-        return CorrelationSectoralScannerRequest.builder()
+    public static CreateScannerRequest getCorrelationSectoralScannerRequest(UUID datasourceId) {
+        return CreateScannerRequest.builder()
             .datasourceId(datasourceId)
             .workPeriodInMinutes(24 * 60)
             .tickers(List.of("TATN", "ROSN", "SIBN", "LKOH", "BRF4"))
-            .description("Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
-            .futuresTicker("BRF4")
-            .futuresOvernightScale(0.015)
-            .stockOvernightScale(0.015)
+            .description(
+                "Сканер сигналов с алгоритмом \"Корреляция сектора с фьючерсом на базовый товар сектора\": TATN, ROSN, SIBN, LKOH, фьючерс BRF4.")
+            .properties(
+                SectoralFuturesPropertiesDto.builder()
+                    .futuresTicker("BRF4")
+                    .futuresOvernightScale(0.015)
+                    .stockOvernightScale(0.015)
+                    .build()
+            )
             .build();
     }
 
@@ -285,35 +298,35 @@ public class UiTestsDataset {
             new ParameterConfig("historyValue", 700_000D, neutralHistoryTrend()),
             new ParameterConfig("intradayValue", 700_000D, upValueDailyTrend())
         ),
-        "TATN",  new StartParameters(
+        "TATN", new StartParameters(
             new ParameterConfig("openPrice", 210D, upHistoryTrend()),
             new ParameterConfig("closePrice", 212D, upHistoryTrend()),
             new ParameterConfig("intradayPrice", 240D, upDailyTrend()),
             new ParameterConfig("historyValue", 7_000_000D, upHistoryTrend()),
             new ParameterConfig("intradayValue", 70D, upValueDailyTrend())
         ),
-        "ROSN",  new StartParameters(
+        "ROSN", new StartParameters(
             new ParameterConfig("openPrice", 340D, upHistoryTrend()),
             new ParameterConfig("closePrice", 345D, upHistoryTrend()),
             new ParameterConfig("intradayPrice", 390D, upDailyTrend()),
             new ParameterConfig("historyValue", 700_000D, upHistoryTrend()),
             new ParameterConfig("intradayValue", 50_000D, upValueDailyTrend())
         ),
-        "SIBN",  new StartParameters(
+        "SIBN", new StartParameters(
             new ParameterConfig("openPrice", 120D, upHistoryTrend()),
             new ParameterConfig("closePrice", 122D, upHistoryTrend()),
             new ParameterConfig("intradayPrice", 130D, downDailyTrend()),
             new ParameterConfig("historyValue", 5_000_000D, neutralHistoryTrend()),
             new ParameterConfig("intradayValue", 100_000D, upValueDailyTrend())
         ),
-        "LKOH",  new StartParameters(
+        "LKOH", new StartParameters(
             new ParameterConfig("openPrice", 4000D, upHistoryTrend()),
             new ParameterConfig("closePrice", 4123D, upHistoryTrend()),
             new ParameterConfig("intradayPrice", 4500D, upDailyTrend()),
             new ParameterConfig("historyValue", 7_000_000D, upHistoryTrend()),
             new ParameterConfig("intradayValue", 200_000D, upValueDailyTrend())
         ),
-        "SBER",  new StartParameters(
+        "SBER", new StartParameters(
             new ParameterConfig("openPrice", 240D, upHistoryTrend()),
             new ParameterConfig("closePrice", 242D, upHistoryTrend()),
             new ParameterConfig("intradayPrice", 270D, upDailyTrend()),

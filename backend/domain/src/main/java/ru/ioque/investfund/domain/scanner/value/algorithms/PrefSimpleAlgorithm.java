@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,11 +23,11 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrefSimpleAlgorithm extends ScannerAlgorithm {
-    Double spreadParam;
+    Double spreadValue;
 
-    public PrefSimpleAlgorithm(Double spreadParam) {
-        super("Дельта анализ цен пар преф-обычка");
-        setSpreadParam(spreadParam);
+    public PrefSimpleAlgorithm(PrefSimpleProperties properties) {
+        super(properties.getType().getName());
+        setSpreadValue(properties.getSpreadValue());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
             logs.add(parametersMessage(pair, currentDelta, historyDelta, multiplier));
-            if (multiplier > spreadParam) {
+            if (multiplier > spreadValue) {
                 signals.add(new Signal(dateTimeNow, pair.getPref().getTicker(), true));
             }
         });
@@ -76,7 +77,7 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
                 .format(
                     "Начата обработка данных по алгоритму %s. Параметр spreadParam = %s.",
                     getName(),
-                    spreadParam
+                    spreadValue
                 ),
             LocalDateTime.now()
         );
@@ -112,13 +113,13 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
         );
     }
 
-    private void setSpreadParam(Double spreadParam) {
-        if (spreadParam == null) {
+    private void setSpreadValue(Double spreadValue) {
+        if (spreadValue == null) {
             throw new DomainException("Не передан параметр spreadParam.");
         }
-        if (spreadParam <= 0) {
+        if (spreadValue <= 0) {
             throw new DomainException("Параметр spreadParam должен быть больше нуля.");
         }
-        this.spreadParam = spreadParam;
+        this.spreadValue = spreadValue;
     }
 }

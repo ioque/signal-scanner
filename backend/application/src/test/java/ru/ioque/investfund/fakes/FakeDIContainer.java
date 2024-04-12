@@ -1,9 +1,10 @@
 package ru.ioque.investfund.fakes;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
@@ -17,16 +18,17 @@ public class FakeDIContainer {
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
+    FakeTradingDataRepository tradingDataRepository;
     FakeScannerLogRepository scannerLogRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     LoggerFacade loggerFacade;
-    ScannerConfigurator scannerConfigurator;
     ScannerManager scannerManager;
     DatasourceManager datasourceManager;
     FakeEventBus eventBus;
 
     public FakeDIContainer() {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         eventBus = new FakeEventBus();
         dateTimeProvider = new FakeDateTimeProvider();
         exchangeDataFixture = new ExchangeDataFixture();
@@ -36,7 +38,8 @@ public class FakeDIContainer {
         scannerLogRepository = new FakeScannerLogRepository();
         loggerFacade = new LoggerFacade(loggerProvider);
         datasourceRepository = new FakeDatasourceRepository();
-        scannerRepository = new FakeScannerRepository(datasourceRepository, dateTimeProvider);
+        scannerRepository = new FakeScannerRepository();
+        tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);
         datasourceManager = new DatasourceManager(
             dateTimeProvider,
             exchangeProvider,
@@ -45,16 +48,14 @@ public class FakeDIContainer {
             loggerFacade,
             eventBus
         );
-        scannerConfigurator = new ScannerConfigurator(
-            datasourceRepository,
-            scannerRepository,
-            uuidProvider,
-            loggerFacade
-        );
         scannerManager = new ScannerManager(
+            validator,
+            datasourceRepository,
+            tradingDataRepository,
             scannerRepository,
             scannerLogRepository,
             dateTimeProvider,
+            uuidProvider,
             loggerFacade
         );
     }

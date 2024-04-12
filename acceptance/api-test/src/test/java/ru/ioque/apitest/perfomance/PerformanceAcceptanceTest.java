@@ -11,8 +11,8 @@ import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.exchange.response.InstrumentResponse;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

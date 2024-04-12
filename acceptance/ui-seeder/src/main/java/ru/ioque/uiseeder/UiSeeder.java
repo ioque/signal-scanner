@@ -7,8 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.dataset.Dataset;
-import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -46,12 +46,12 @@ public class UiSeeder implements CommandLineRunner {
                     .map(Instrument::getTicker)
                     .toList())
             );
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getAnomalyVolumeSignalRequest(datasourceID));
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getPrefSimpleRequest(datasourceID));
+        clientFacade.getSignalScannerRestClient().createScanner(UiTestsDataset.getAnomalyVolumeSignalRequest(datasourceID));
+        clientFacade.getSignalScannerRestClient().createScanner(UiTestsDataset.getPrefSimpleRequest(datasourceID));
         clientFacade
             .getSignalScannerRestClient()
-            .saveDataScannerConfig(UiTestsDataset.getCorrelationSectoralScannerRequest(datasourceID));
-        clientFacade.getSignalScannerRestClient().saveDataScannerConfig(UiTestsDataset.getSectoralRetardScannerRequest(datasourceID));
+            .createScanner(UiTestsDataset.getCorrelationSectoralScannerRequest(datasourceID));
+        clientFacade.getSignalScannerRestClient().createScanner(UiTestsDataset.getSectoralRetardScannerRequest(datasourceID));
         clientFacade.getDatasourceRestClient().integrateTradingData(datasourceID);
         log.info("UiTestStartup finish");
     }

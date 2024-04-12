@@ -9,17 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.PrefSimpleAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
-import ru.ioque.investfund.domain.scanner.value.algorithms.PrefSimpleAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -46,22 +43,8 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
         this.spreadParam = spreadParam;
     }
 
-    public static ScannerEntity from(ScannerConfig config) {
-        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config.getAlgorithmConfig();
-        return PrefSimpleScannerEntity.builder()
-            .id(config.getId())
-            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
-            .description(config.getDescription())
-            .datasourceId(config.getDatasourceId())
-            .tickers(config.getTickers())
-            .lastWorkDateTime(null)
-            .signals(new ArrayList<>())
-            .spreadParam(algorithmConfig.getSpreadParam())
-            .build();
-    }
-
     public static ScannerEntity from(SignalScanner scannerDomain) {
-        PrefSimpleAlgorithm algorithm = (PrefSimpleAlgorithm) scannerDomain.getAlgorithm();
+        PrefSimpleProperties properties = (PrefSimpleProperties) scannerDomain.getProperties();
         PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
             .id(scannerDomain.getId())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
@@ -69,7 +52,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
             .datasourceId(scannerDomain.getDatasourceId())
             .tickers(scannerDomain.getTickers())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
-            .spreadParam(algorithm.getSpreadParam())
+            .spreadParam(properties.getSpreadValue())
             .build();
         List<SignalEntity> signals = scannerDomain
             .getSignals()
@@ -82,28 +65,21 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     }
 
     @Override
-    public SignalScanner toDomain(List<TradingSnapshot> instruments) {
+    public SignalScanner toDomain() {
         return SignalScanner.builder()
             .id(getId())
-            .algorithm(
-                PrefSimpleAlgorithmConfig
+            .properties(
+                PrefSimpleProperties
                     .builder()
-                    .spreadParam(spreadParam)
+                    .spreadValue(spreadParam)
                     .build()
-                    .factoryAlgorithm()
             )
             .datasourceId(getDatasourceId())
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .tradingSnapshots(instruments)
+            .tickers(getTickers())
             .lastExecutionDateTime(getLastExecutionDateTime())
-            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();
-    }
-
-    @Override
-    public void updateAlgorithmConfig(AlgorithmConfig config) {
-        PrefSimpleAlgorithmConfig algorithmConfig = (PrefSimpleAlgorithmConfig) config;
-        this.spreadParam = algorithmConfig.getSpreadParam();
     }
 }

@@ -3,7 +3,7 @@ package ru.ioque.core.client.archive;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import ru.ioque.core.client.JsonApplicationHttpClient;
-import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
+import ru.ioque.core.dto.datasource.response.IntradayValueResponse;
 
 import java.util.List;
 

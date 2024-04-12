@@ -3,28 +3,25 @@ package ru.ioque.investfund.adapters.storage.jpa;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.ioque.investfund.adapters.persistence.ImplScannerConfigRepository;
-import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
+import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SCANER REPOSITORY TEST")
 public class ScanerRepoTest extends BaseJpaTest {
-    ImplScannerConfigRepository scannerConfigRepository;
-    ImplScannerRepository dataImplScannerRepository;
+    PsqlScannerRepository psqlScannerRepository;
 
     public ScanerRepoTest(
-        @Autowired ImplScannerConfigRepository scannerConfigRepository,
-        @Autowired ImplScannerRepository dataImplScannerRepository
+        @Autowired PsqlScannerRepository psqlScannerRepository
     ) {
-        this.scannerConfigRepository = scannerConfigRepository;
-        this.dataImplScannerRepository = dataImplScannerRepository;
+        this.psqlScannerRepository = psqlScannerRepository;
     }
 
     @Test
@@ -33,29 +30,33 @@ public class ScanerRepoTest extends BaseJpaTest {
         """)
     void testCase1() {
         prepareState();
-        scannerConfigRepository.save(
-            createConfig(
+        psqlScannerRepository.save(
+            createScanner(
                 List.of("TGKN", "TGKB", "IMOEX"),
-                createAlgorithmConfig(1.5, 180, "IMOEX")
+                createAnomalyVolumeProperties(1.5, 180, "IMOEX")
             )
         );
 
-        final Optional<SignalScanner> scanner = dataImplScannerRepository.getBy(SCANNER_ID);
-        assertTrue(scannerConfigRepository.existsBy(SCANNER_ID));
+        final Optional<SignalScanner> scanner = psqlScannerRepository.getBy(SCANNER_ID);
         assertTrue(scanner.isPresent());
-
-        assertEquals(3, scanner.get().getTradingSnapshots().size());
-        assertSnapshot(scanner.get().getTradingSnapshots().get(0));
-        assertSnapshot(scanner.get().getTradingSnapshots().get(1));
-        assertSnapshot(scanner.get().getTradingSnapshots().get(2));
+        assertTrue(List.of("TGKN", "TGKB", "IMOEX").containsAll(scanner.get().getTickers()));
 
     }
 
-    private void assertSnapshot(TradingSnapshot snapshot) {
-        assertEquals(3, snapshot.getClosePriceSeries().size());
-        assertEquals(3, snapshot.getValueSeries().size());
-        assertEquals(3, snapshot.getOpenPriceSeries().size());
-        assertEquals(3, snapshot.getTodayValueSeries().size());
-        assertEquals(3, snapshot.getTodayPriceSeries().size());
+    private SignalScanner createScanner(List<String> tickers, AnomalyVolumeProperties properties) {
+        return SignalScanner.builder()
+            .id(SCANNER_ID)
+            .datasourceId(exchangeEntityRepository.findAll().get(0).getId())
+            .tickers(tickers)
+            .properties(properties)
+            .description("desc")
+            .signals(new ArrayList<>())
+            .workPeriodInMinutes(1)
+            .lastExecutionDateTime(LocalDateTime.now())
+            .build();
+    }
+
+    private AnomalyVolumeProperties createAnomalyVolumeProperties(double scaleCoefficient, int historyPeriod, String indexTicker) {
+        return new AnomalyVolumeProperties(scaleCoefficient, historyPeriod, indexTicker);
     }
 }

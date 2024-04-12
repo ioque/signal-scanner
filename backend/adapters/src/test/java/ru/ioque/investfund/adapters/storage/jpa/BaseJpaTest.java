@@ -11,9 +11,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.AnomalyVolumeAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
@@ -84,25 +81,6 @@ public class BaseJpaTest {
                 createDelta(3L, "IMOEX", LocalDateTime.parse("2024-04-04T12:00:00"))
             )
         );
-    }
-
-    protected ScannerConfig createConfig(List<String> tickers, AlgorithmConfig config) {
-        return ScannerConfig.builder()
-            .id(SCANNER_ID)
-            .datasourceId(DATASOURCE_ID)
-            .workPeriodInMinutes(1)
-            .description("description")
-            .tickers(tickers)
-            .algorithmConfig(config)
-            .build();
-    }
-
-    protected AnomalyVolumeAlgorithmConfig createAlgorithmConfig(
-        Double scaleCoefficient,
-        Integer historyPeriod,
-        String indexTicker
-    ) {
-        return new AnomalyVolumeAlgorithmConfig(scaleCoefficient, historyPeriod, indexTicker);
     }
 
     private Datasource createExchange() {

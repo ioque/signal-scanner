@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.configurator.request.AnomalyVolumeScannerRequest;
-import ru.ioque.investfund.adapters.rest.configurator.request.CorrelationSectoralScannerRequest;
-import ru.ioque.investfund.adapters.rest.configurator.request.PrefSimpleScannerRequest;
-import ru.ioque.investfund.adapters.rest.configurator.request.ScannerRequest;
-import ru.ioque.investfund.adapters.rest.configurator.request.SectoralRetardScannerRequest;
+import ru.ioque.investfund.adapters.rest.scanner.request.AnomalyVolumePropertiesDto;
+import ru.ioque.investfund.adapters.rest.scanner.request.CreateScannerRequest;
+import ru.ioque.investfund.adapters.rest.scanner.request.PrefSimplePropertiesDto;
+import ru.ioque.investfund.adapters.rest.scanner.request.SectoralFuturesPropertiesDto;
+import ru.ioque.investfund.adapters.rest.scanner.request.SectoralRetardPropertiesDto;
 
 import java.util.List;
 import java.util.Map;
@@ -29,14 +29,17 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase1() {
         assertIsOk(
-            AnomalyVolumeScannerRequest.builder()
+            CreateScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
-                .historyPeriod(180)
-                .indexTicker("IMOEX")
-                .scaleCoefficient(1.5)
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(180)
+                        .indexTicker("IMOEX")
+                        .scaleCoefficient(1.5).build()
+                )
                 .build()
         );
     }
@@ -48,16 +51,20 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase2() {
         assertValidationErrors(
-            AnomalyVolumeScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(DATASOURCE_ID)
                 .description("desc")
                 .tickers(List.of("TGKN", "IMOEX"))
-                .historyPeriod(180)
-                .indexTicker("IMOEX")
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(180)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
                 .build(),
-            List.of("The scaleCoefficient is required.")
+            List.of("Не заполнен параметр scaleCoefficient.")
         );
     }
 
@@ -68,15 +75,17 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase3() {
         assertValidationErrors(
-            AnomalyVolumeScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
-                .historyPeriod(180)
+                .properties(
+                    AnomalyVolumePropertiesDto.builder().historyPeriod(180).build()
+                )
                 .build(),
-            List.of("The scaleCoefficient is required.", "The indexTicker is required.")
+            List.of("Не заполнен параметр scaleCoefficient.", "Не заполнен параметр indexTicker.")
         );
     }
 
@@ -87,16 +96,20 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase4() {
         assertValidationErrors(
-            AnomalyVolumeScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TGKN", "IMOEX"))
-                .scaleCoefficient(1.5)
-                .indexTicker("IMOEX")
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
                 .build(),
-            List.of("The historyPeriod is required.")
+            List.of("Не заполнен параметр historyPeriod.")
         );
     }
 
@@ -107,12 +120,12 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase5() {
         assertIsOk(
-            PrefSimpleScannerRequest.builder()
+            CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("BANE", "BANEP"))
-                .spreadParam(1.0)
+                .properties(PrefSimplePropertiesDto.builder().spreadValue(1.0).build())
                 .build()
         );
     }
@@ -124,13 +137,13 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase6() {
         assertValidationErrors(
-            PrefSimpleScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("BANE", "BANEP"))
                 .build(),
-            List.of("The spreadParam is required.", "The description is required.")
+            List.of("Не передано описание сканера.", "Не переданы параметры алгоритма.")
         );
     }
 
@@ -141,14 +154,18 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase7() {
         assertIsOk(
-            SectoralRetardScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
-                .historyScale(0.015)
-                .intradayScale(0.012)
+                .properties(
+                    SectoralRetardPropertiesDto.builder()
+                        .historyScale(0.015)
+                        .intradayScale(0.012)
+                        .build()
+                )
                 .build()
         );
     }
@@ -160,14 +177,18 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase8() {
         assertValidationErrors(
-            SectoralRetardScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
-                .historyScale(0.015)
+                .properties(
+                    SectoralRetardPropertiesDto.builder()
+                        .historyScale(0.015)
+                        .build()
+                )
                 .build(),
-            List.of("The tickers is required.", "The intradayScale is required.")
+            List.of("Не заполнен параметр intradayScale.", "Не передан список тикеров анализируемых инструментов.")
         );
     }
 
@@ -178,15 +199,19 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase9() {
         assertValidationErrors(
-            SectoralRetardScannerRequest
+            CreateScannerRequest
                 .builder()
                 .workPeriodInMinutes(1)
                 .description("")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH"))
-                .intradayScale(0.015)
+                .properties(
+                    SectoralRetardPropertiesDto.builder()
+                        .intradayScale(0.012)
+                        .build()
+                )
                 .build(),
-            List.of("The historyScale is required.", "The description is required.")
+            List.of("Не передано описание сканера.", "Не заполнен параметр historyScale.")
         );
     }
 
@@ -197,14 +222,18 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase10() {
         assertIsOk(
-            CorrelationSectoralScannerRequest.builder()
+            CreateScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
-                .futuresTicker("BRF4")
-                .futuresOvernightScale(0.015)
-                .stockOvernightScale(0.015)
+                .properties(
+                    SectoralFuturesPropertiesDto.builder()
+                        .futuresTicker("BRF4")
+                        .futuresOvernightScale(0.015)
+                        .stockOvernightScale(0.015)
+                        .build()
+                )
                 .build()
         );
     }
@@ -216,22 +245,42 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
         """)
     public void testCase11() {
         assertValidationErrors(
-            CorrelationSectoralScannerRequest.builder()
+            CreateScannerRequest.builder()
                 .description("desc")
                 .workPeriodInMinutes(1)
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("TATN", "BANE", "ROSN", "LKOH", "BRF4"))
+                .properties(new SectoralFuturesPropertiesDto())
                 .build(),
             List.of(
-                "The futuresTicker is required.",
-                "The futuresOvernightScale is required.",
-                "The stockOvernightScale is required."
+                "Не заполнен параметр stockOvernightScale.",
+                "Не заполнен параметр futuresTicker.",
+                "Не заполнен параметр futuresOvernightScale."
             )
         );
     }
 
+    @Test
+    @DisplayName("""
+        T12. Выполнение запроса по эндпоинту POST /api/scanner на добавление сканера сигналов по алгоритму
+        дельта анализа пар преф-обычка, передан пустой список анализируемых инструментов.
+        """)
+    public void testCase12() {
+        assertValidationErrors(
+            CreateScannerRequest
+                .builder()
+                .workPeriodInMinutes(1)
+                .datasourceId(DATASOURCE_ID)
+                .tickers(List.of())
+                .description("desc")
+                .properties(new PrefSimplePropertiesDto(1.0))
+                .build(),
+            List.of("Не передан список тикеров анализируемых инструментов.")
+        );
+    }
+
     @SneakyThrows
-    private void assertValidationErrors(ScannerRequest request, List<String> errors) {
+    private void assertValidationErrors(CreateScannerRequest request, List<String> errors) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/scanner")
@@ -249,7 +298,7 @@ public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest
     }
 
     @SneakyThrows
-    private void assertIsOk(ScannerRequest request) {
+    private void assertIsOk(CreateScannerRequest request) {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/scanner")

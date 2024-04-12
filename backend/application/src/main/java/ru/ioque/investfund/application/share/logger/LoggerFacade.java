@@ -3,7 +3,6 @@ package ru.ioque.investfund.application.share.logger;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.domain.configurator.command.SaveScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
@@ -22,17 +21,6 @@ public class LoggerFacade {
                     "Успешно создан и сохранен в постоянное хранилище новый сканер сигналов, идентификатор объекта: %s",
                     id
                 )
-            )
-        );
-    }
-
-    public void logRunCreateSignalScanner(SaveScannerCommand command) {
-        log(
-            new InfoLog(
-                String
-                    .format(
-                        "Начато создание сканера сигналов, идентификаторы инструментов %s.", command.getTickers()
-                    )
             )
         );
     }
@@ -103,7 +91,7 @@ public class LoggerFacade {
                 String.format(
                     "Начал работу сканер сигналов c идентификатором %s, алгоритм сканера - %s.",
                     scanner.getId(),
-                    scanner.getAlgorithm().getName()
+                    scanner.getProperties().getType()
                 )
             )
         );
@@ -115,7 +103,7 @@ public class LoggerFacade {
                 String.format(
                     "Завершил работу сканер сигналов c идентификатором %s, алгоритм сканера - %s. Текущие сигналы: %s",
                     scanner.getId(),
-                    scanner.getAlgorithm().getName(),
+                    scanner.getProperties().getType(),
                     scanner.getSignals()
                 )
             )

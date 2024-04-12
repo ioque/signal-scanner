@@ -6,12 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmFactory;
+import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,11 +31,10 @@ public class SignalScanner extends Domain {
     Integer workPeriodInMinutes;
     String description;
     UUID datasourceId;
-    ScannerAlgorithm algorithm;
-    @NonFinal
     LocalDateTime lastExecutionDateTime;
-    List<Signal> signals;
-    List<TradingSnapshot> tradingSnapshots;
+    List<String> tickers;
+    final List<Signal> signals;
+    AlgorithmProperties properties;
 
     @Builder
     public SignalScanner(
@@ -40,29 +42,55 @@ public class SignalScanner extends Domain {
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
-        ScannerAlgorithm algorithm,
+        AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
-        List<TradingSnapshot> tradingSnapshots,
+        List<String> tickers,
         List<Signal> signals
     ) {
         super(id);
-        setWorkPeriodInMinutes(workPeriodInMinutes);
-        setDescription(description);
-        setDatasourceId(datasourceId);
-        setAlgorithm(algorithm);
-        setLastExecutionDateTime(lastExecutionDateTime);
-        setTradingSnapshots(tradingSnapshots);
-        setSignals(signals);
+        this.workPeriodInMinutes = workPeriodInMinutes;
+        this.description = description;
+        this.datasourceId = datasourceId;
+        this.properties = properties;
+        this.lastExecutionDateTime = lastExecutionDateTime;
+        this.tickers = tickers;
+        this.signals = signals;
+    }
+
+    public static SignalScanner from(UUID id, CreateScannerCommand command) {
+        return SignalScanner.builder()
+            .id(id)
+            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
+            .description(command.getDescription())
+            .datasourceId(command.getDatasourceId())
+            .tickers(command.getTickers())
+            .signals(new ArrayList<>())
+            .properties(command.getProperties())
+            .lastExecutionDateTime(null)
+            .build();
+    }
+
+    public void update(UpdateScannerCommand command) {
+        if (!command.getProperties().getType().equals(getProperties().getType())) {
+            throw new IllegalArgumentException("Невозможно изменить тип алгоритма.");
+        }
+        this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
+        this.description = command.getDescription();
+        this.datasourceId = command.getScannerId();
+        this.tickers = command.getTickers();
+        this.properties = command.getProperties();
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<ScannerLog> scanning(LocalDateTime dateTimeNow) {
+    public List<ScannerLog> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
+        AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+        ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
         return processResult(algorithm.run(getId(), tradingSnapshots, dateTimeNow));
     }
 
@@ -100,61 +128,7 @@ public class SignalScanner extends Domain {
         return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
-    public List<TradingSnapshot> getTradingSnapshots() {
-        return List.copyOf(tradingSnapshots);
-    }
-
-    public List<String> getTickers() {
-        return List.copyOf(tradingSnapshots.stream().map(TradingSnapshot::getTicker).toList());
-    }
-
     public List<Signal> getSignals() {
         return List.copyOf(signals);
-    }
-
-    private void setWorkPeriodInMinutes(Integer workPeriodInMinutes) {
-        if(workPeriodInMinutes == null) {
-            throw new DomainException("Не передан период работы сканера.");
-        }
-        if(workPeriodInMinutes <= 0) {
-            throw new DomainException("Период работы сканера должен быть целым положительным числом.");
-        }
-        this.workPeriodInMinutes = workPeriodInMinutes;
-    }
-
-    private void setDescription(String description) {
-        if(description == null || description.isEmpty()) {
-            throw new DomainException("Не передано описание сканера.");
-        }
-        this.description = description;
-    }
-
-    private void setDatasourceId(UUID datasourceId) {
-        if(datasourceId == null) {
-            throw new DomainException("Не передан идентификатор источника данных.");
-        }
-        this.datasourceId = datasourceId;
-    }
-
-    private void setAlgorithm(ScannerAlgorithm algorithm) {
-        if(algorithm == null) {
-            throw new DomainException("Не передан алгоритм поиска сигналов.");
-        }
-        this.algorithm = algorithm;
-    }
-
-    private void setLastExecutionDateTime(LocalDateTime lastExecutionDateTime) {
-        this.lastExecutionDateTime = lastExecutionDateTime;
-    }
-
-    private void setSignals(List<Signal> signals) {
-        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
-    }
-
-    private void setTradingSnapshots(List<TradingSnapshot> tradingSnapshots) {
-        if (tradingSnapshots == null || tradingSnapshots.isEmpty()) {
-            throw new DomainException("Не передан список снэпшотов торговых данных.");
-        }
-        this.tradingSnapshots = tradingSnapshots;
     }
 }

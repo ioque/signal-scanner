@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.CorrelationSectoralScannerEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralFuturesScannerEntity;
 
 @Getter
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class CorrelationSectoralScannerConfigResponse extends SignalConfigRespon
     Double stockOvernightScale;
     String futuresTicker;
 
-    public static SignalConfigResponse from(CorrelationSectoralScannerEntity scanner) {
+    public static SignalConfigResponse from(SectoralFuturesScannerEntity scanner) {
         return new CorrelationSectoralScannerConfigResponse(
             scanner.getFuturesOvernightScale(),
             scanner.getStockOvernightScale(),

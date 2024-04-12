@@ -7,7 +7,7 @@ import ru.ioque.core.client.datasource_provider.DatasourceProviderClient;
 import ru.ioque.core.dataset.Dataset;
 
 @Component
-@Profile("!local")
+@Profile("stage")
 public class ExternalDatasetManager implements DatasetManager {
     private final DatasourceProviderClient datasourceProviderClient;
 

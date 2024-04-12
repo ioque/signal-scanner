@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,11 +37,11 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     String indexTicker;
     Integer historyPeriod;
 
-    public AnomalyVolumeAlgorithm(Double scaleCoefficient, Integer historyPeriod, String indexTicker) {
-        super("Аномальные объемы");
-        setScaleCoefficient(scaleCoefficient);
-        setHistoryPeriod(historyPeriod);
-        setIndexTicker(indexTicker);
+    public AnomalyVolumeAlgorithm(AnomalyVolumeProperties properties) {
+        super(properties.getType().getName());
+        setScaleCoefficient(properties.getScaleCoefficient());
+        setHistoryPeriod(properties.getHistoryPeriod());
+        setIndexTicker(properties.getIndexTicker());
     }
 
     @Override

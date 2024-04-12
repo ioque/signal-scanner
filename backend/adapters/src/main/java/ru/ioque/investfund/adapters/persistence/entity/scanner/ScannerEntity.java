@@ -17,13 +17,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,20 +55,10 @@ public abstract class ScannerEntity extends AbstractEntity {
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;
-        this.tickers = tickers != null ? new ArrayList<>(tickers) : new ArrayList<>();
+        this.tickers = tickers;
         this.lastExecutionDateTime = lastExecutionDateTime;
-        this.signals = signals != null ? new ArrayList<>(signals) : new ArrayList<>();
+        this.signals = signals;
     }
 
-    public abstract SignalScanner toDomain(List<TradingSnapshot> instruments);
-
-    public void updateConfig(ScannerConfig config) {
-        workPeriodInMinutes = config.getWorkPeriodInMinutes();
-        description = config.getDescription();
-        datasourceId = config.getDatasourceId();
-        tickers = config.getTickers() != null ? new ArrayList<>(config.getTickers()) : new ArrayList<>();
-        updateAlgorithmConfig(config.getAlgorithmConfig());
-    }
-
-    public abstract void updateAlgorithmConfig(AlgorithmConfig algorithmConfig);
+    public abstract SignalScanner toDomain();
 }

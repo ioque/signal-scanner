@@ -3,12 +3,12 @@ package ru.ioque.core.client.datasource;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import ru.ioque.core.client.JsonApplicationHttpClient;
-import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
-import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.exchange.response.ExchangeResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentResponse;
+import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
+import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 
 import java.util.List;
 import java.util.UUID;

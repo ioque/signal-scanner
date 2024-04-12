@@ -12,14 +12,14 @@ import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
 import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.dataset.Dataset;
-import ru.ioque.core.dto.exchange.request.DisableUpdateInstrumentRequest;
-import ru.ioque.core.dto.exchange.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.exchange.response.ExchangeResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentResponse;
-import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
-import ru.ioque.core.dto.scanner.request.AddSignalScannerRequest;
+import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
+import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentResponse;
+import ru.ioque.core.dto.datasource.response.IntradayValueResponse;
+import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
 
@@ -68,8 +68,12 @@ public class BaseApiAcceptanceTest {
         exchangeClient().registerDatasource(request);
     }
 
-    protected void addSignalScanner(AddSignalScannerRequest request) {
-        signalScannerClient().saveDataScannerConfig(request);
+    protected void createScanner(CreateScannerRequest request) {
+        signalScannerClient().createScanner(request);
+    }
+
+    protected void updateScanner(CreateScannerRequest request) {
+        signalScannerClient().createScanner(request);
     }
 
     protected List<SignalResponse> getSignalsBy(UUID id) {

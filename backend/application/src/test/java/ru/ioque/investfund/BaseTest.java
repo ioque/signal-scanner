@@ -1,6 +1,5 @@
 package ru.ioque.investfund;
 
-import ru.ioque.investfund.application.modules.configurator.ScannerConfigurator;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
@@ -21,6 +20,7 @@ import ru.ioque.investfund.fakes.FakeEventBus;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
+import ru.ioque.investfund.fakes.FakeTradingDataRepository;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
 import java.time.DayOfWeek;
@@ -53,6 +53,10 @@ public class BaseTest {
         return fakeDIContainer.getScannerRepository();
     }
 
+    protected FakeTradingDataRepository tradingDataRepository() {
+        return fakeDIContainer.getTradingDataRepository();
+    }
+
     protected final ScannerManager scannerManager() {
         return fakeDIContainer.getScannerManager();
     }
@@ -67,10 +71,6 @@ public class BaseTest {
 
     protected final DatasourceManager datasourceManager() {
         return fakeDIContainer.getDatasourceManager();
-    }
-
-    protected final ScannerConfigurator scannerConfigurator() {
-        return fakeDIContainer.getScannerConfigurator();
     }
 
     protected final FakeEventBus eventBus() {

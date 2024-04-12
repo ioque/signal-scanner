@@ -15,11 +15,11 @@ import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.exchange.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.exchange.response.ExchangeResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentInListResponse;
-import ru.ioque.core.dto.exchange.response.InstrumentResponse;
-import ru.ioque.core.dto.exchange.response.IntradayValueResponse;
+import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
+import ru.ioque.core.dto.datasource.response.InstrumentResponse;
+import ru.ioque.core.dto.datasource.response.IntradayValueResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

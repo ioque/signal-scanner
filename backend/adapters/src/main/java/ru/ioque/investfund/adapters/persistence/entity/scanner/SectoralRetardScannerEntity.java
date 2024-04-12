@@ -9,17 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.configurator.entity.AlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.SectoralRetardAlgorithmConfig;
-import ru.ioque.investfund.domain.configurator.entity.ScannerConfig;
-import ru.ioque.investfund.domain.scanner.value.algorithms.SectoralRetardAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -49,23 +46,8 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
         this.intradayScale = intradayScale;
     }
 
-    public static ScannerEntity from(ScannerConfig config) {
-        SectoralRetardAlgorithmConfig algorithmConfig = (SectoralRetardAlgorithmConfig) config.getAlgorithmConfig();
-        return SectoralRetardScannerEntity.builder()
-            .id(config.getId())
-            .workPeriodInMinutes(config.getWorkPeriodInMinutes())
-            .description(config.getDescription())
-            .datasourceId(config.getDatasourceId())
-            .tickers(config.getTickers())
-            .lastWorkDateTime(null)
-            .signals(new ArrayList<>())
-            .historyScale(algorithmConfig.getHistoryScale())
-            .intradayScale(algorithmConfig.getIntradayScale())
-            .build();
-    }
-
     public static ScannerEntity from(SignalScanner scannerDomain) {
-        SectoralRetardAlgorithm config = (SectoralRetardAlgorithm) scannerDomain.getAlgorithm();
+        SectoralRetardProperties properties = (SectoralRetardProperties) scannerDomain.getProperties();
         SectoralRetardScannerEntity scannerEntity = SectoralRetardScannerEntity.builder()
             .id(scannerDomain.getId())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
@@ -73,8 +55,8 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
             .datasourceId(scannerDomain.getDatasourceId())
             .tickers(scannerDomain.getTickers())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
-            .historyScale(config.getHistoryScale())
-            .intradayScale(config.getIntradayScale())
+            .historyScale(properties.getHistoryScale())
+            .intradayScale(properties.getIntradayScale())
             .build();
         List<SignalEntity> signals = scannerDomain
             .getSignals()
@@ -87,30 +69,22 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
     }
 
     @Override
-    public SignalScanner toDomain(List<TradingSnapshot> tradingSnapshots) {
+    public SignalScanner toDomain() {
         return SignalScanner.builder()
             .id(getId())
-            .algorithm(
-                SectoralRetardAlgorithmConfig
+            .properties(
+                SectoralRetardProperties
                     .builder()
                     .historyScale(historyScale)
                     .intradayScale(intradayScale)
                     .build()
-                    .factoryAlgorithm()
             )
             .datasourceId(getDatasourceId())
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .tradingSnapshots(tradingSnapshots)
+            .tickers(getTickers())
             .lastExecutionDateTime(getLastExecutionDateTime())
-            .signals(getSignals().stream().map(SignalEntity::toDomain).toList())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();
-    }
-
-    @Override
-    public void updateAlgorithmConfig(AlgorithmConfig config) {
-        SectoralRetardAlgorithmConfig algorithmConfig = (SectoralRetardAlgorithmConfig) config;
-        this.historyScale = algorithmConfig.getHistoryScale();
-        this.intradayScale = algorithmConfig.getIntradayScale();
     }
 }
