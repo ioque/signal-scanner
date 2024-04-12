@@ -4,7 +4,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -20,7 +22,7 @@ public class BaseConfiguratorTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         datasourceManager().registerDatasource(
-            AddDatasourceCommand.builder()
+            CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -59,8 +61,8 @@ public class BaseConfiguratorTest extends BaseTest {
                 brf4(),
                 usdRub())
         );
-        datasourceManager().integrateInstruments(getDatasourceId());
-        datasourceManager().enableUpdate(getDatasourceId(), getTickers(getDatasourceId()));
+        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScannerCommand command, String msg) {

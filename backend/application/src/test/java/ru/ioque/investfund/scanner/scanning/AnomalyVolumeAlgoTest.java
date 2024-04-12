@@ -3,6 +3,8 @@ package ru.ioque.investfund.scanner.scanning;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
@@ -461,8 +463,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        datasourceManager().integrateInstruments(datasourceId);
-        datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
+        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {

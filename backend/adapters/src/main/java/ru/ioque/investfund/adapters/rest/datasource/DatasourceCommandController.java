@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.RegisterDatasourceRequest;
-import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
+import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 
 import java.util.UUID;
 
@@ -27,7 +31,7 @@ public class DatasourceCommandController {
     @PostMapping("/api/datasource")
     public void registerDatasource(@RequestBody RegisterDatasourceRequest request) {
         datasourceManager.registerDatasource(
-            AddDatasourceCommand.builder()
+            CreateDatasourceCommand.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .url(request.getUrl())
@@ -37,21 +41,21 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateInstruments(datasourceId);
+        datasourceManager.integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateTradingData(datasourceId);
+        datasourceManager.integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
-        datasourceManager.enableUpdate(datasourceId, request.getTickers());
+        datasourceManager.enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/disable-update")
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
-        datasourceManager.disableUpdate(datasourceId, request.getTickers());
+        datasourceManager.disableUpdate(new DisableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
     }
 }

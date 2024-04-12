@@ -11,7 +11,12 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
-import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
@@ -32,36 +37,36 @@ public class DatasourceManager {
     LoggerFacade loggerFacade;
     EventPublisher eventPublisher;
 
-    public synchronized void registerDatasource(final AddDatasourceCommand command) {
+    public synchronized void registerDatasource(final CreateDatasourceCommand command) {
         repository.saveDatasource(Datasource.from(uuidProvider.generate(), command));
     }
 
-    public synchronized void unregisterDatasource(final UUID datasourceId) {
-        repository.deleteDatasource(datasourceId);
+    public synchronized void unregisterDatasource(final UnregisterDatasourceCommand command) {
+        repository.deleteDatasource(command.getDatasourceId());
     }
 
-    public synchronized void enableUpdate(final UUID datasourceId, final List<String> tickers) {
-        final Datasource datasource = getExchangeFromRepo(datasourceId);
-        datasource.enableUpdate(tickers);
+    public synchronized void enableUpdate(final EnableUpdateInstrumentsCommand command) {
+        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        datasource.enableUpdate(command.getTickers());
         repository.saveDatasource(datasource);
     }
 
-    public synchronized void disableUpdate(final UUID datasourceId, final List<String> tickers) {
-        final Datasource datasource = getExchangeFromRepo(datasourceId);
-        datasource.disableUpdate(tickers);
+    public synchronized void disableUpdate(final DisableUpdateInstrumentsCommand command) {
+        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        datasource.disableUpdate(command.getTickers());
         repository.saveDatasource(datasource);
     }
 
-    public synchronized void integrateInstruments(final UUID datasourceId) {
-        final Datasource datasource = getExchangeFromRepo(datasourceId);
+    public synchronized void integrateInstruments(final IntegrateInstrumentsCommand command) {
+        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
         loggerFacade.logRunSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
         datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
         repository.saveDatasource(datasource);
         loggerFacade.logFinishSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
     }
 
-    public synchronized void integrateTradingData(final UUID datasourceId) {
-        final Datasource datasource = getExchangeFromRepo(datasourceId);
+    public synchronized void integrateTradingData(final IntegrateTradingDataCommand command) {
+        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
             final List<HistoryValue> history = datasourceProvider

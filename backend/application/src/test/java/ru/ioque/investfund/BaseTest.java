@@ -2,6 +2,8 @@ package ru.ioque.investfund;
 
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.application.modules.scanner.ScannerManager;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
@@ -116,7 +118,7 @@ public class BaseTest {
 
     protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
-        datasourceManager().integrateInstruments(datasourceId);
+        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
     }
 
     protected void initInstruments(Instrument... instruments) {
@@ -172,7 +174,7 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(UUID datasourceId) {
-        datasourceManager().integrateTradingData(datasourceId);
+        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
         scannerManager().scanning(new ScanningCommand(datasourceId, getToday()));
     }
 

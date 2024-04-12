@@ -2,6 +2,8 @@ package ru.ioque.investfund.scanner.scanning;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
@@ -175,8 +177,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        datasourceManager().integrateInstruments(datasourceId);
-        datasourceManager().enableUpdate(datasourceId, getTickers(datasourceId));
+        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initDealsTatnFallOtherRise(UUID datasourceId) {

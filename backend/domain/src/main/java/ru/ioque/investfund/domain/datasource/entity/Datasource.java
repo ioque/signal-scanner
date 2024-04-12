@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Datasource extends Domain {
         setInstruments(instruments);
     }
 
-    public static Datasource from(UUID id, AddDatasourceCommand command) {
+    public static Datasource from(UUID id, CreateDatasourceCommand command) {
         return Datasource
             .builder()
             .id(id)

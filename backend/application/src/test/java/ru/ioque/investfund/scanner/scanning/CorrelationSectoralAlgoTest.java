@@ -2,6 +2,8 @@ package ru.ioque.investfund.scanner.scanning;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
 
@@ -288,7 +290,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        datasourceManager().integrateInstruments(datasourceId);
-        datasourceManager().enableUpdate(datasourceId, tickers);
+        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 }
