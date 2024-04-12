@@ -1,5 +1,6 @@
 package ru.ioque.investfund.domain.datasource.command;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +19,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UnregisterDatasourceCommand implements Command {
+    @NotNull(message = "Не передан идентификатор источника данных.")
     UUID datasourceId;
 }

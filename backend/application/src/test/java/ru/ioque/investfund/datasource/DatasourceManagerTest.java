@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.share.exception.ApplicationException;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
@@ -339,11 +338,11 @@ public class DatasourceManagerTest extends BaseTest {
         UUID datasourceId = getDatasourceId();
         datasourceManager().unregisterDatasource(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
-            ApplicationException.class,
+            IllegalArgumentException.class,
             () -> datasourceManager()
                 .enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
-        assertEquals("Биржа не зарегистрирована.", error.getMessage());
+        assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());
     }
 
     @Test
@@ -356,11 +355,11 @@ public class DatasourceManagerTest extends BaseTest {
         UUID datasourceId = getDatasourceId();
         datasourceManager().unregisterDatasource(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
-            ApplicationException.class,
+            IllegalArgumentException.class,
             () -> datasourceManager()
                 .disableUpdate(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
-        assertEquals("Биржа не зарегистрирована.", error.getMessage());
+        assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());
     }
 
     @Test

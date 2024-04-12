@@ -41,6 +41,7 @@ public class FakeDIContainer {
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);
         datasourceManager = new DatasourceManager(
+            validator,
             dateTimeProvider,
             exchangeProvider,
             datasourceRepository,
