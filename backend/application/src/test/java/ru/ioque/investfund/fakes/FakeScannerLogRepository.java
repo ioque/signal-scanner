@@ -18,10 +18,10 @@ public class FakeScannerLogRepository implements ScannerLogRepository {
     }
 
     @Override
-    public void saveAll(UUID id, List<ScannerLog> logs) {
+    public void save(UUID id, ScannerLog log) {
         if (!this.logs.containsKey(id)) {
             this.logs.put(id, new ArrayList<>());
         }
-        this.logs.get(id).addAll(logs);
+        this.logs.get(id).add(log);
     }
 }

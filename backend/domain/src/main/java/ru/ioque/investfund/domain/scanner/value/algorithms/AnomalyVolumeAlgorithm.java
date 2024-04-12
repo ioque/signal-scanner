@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
 
 import java.time.LocalDateTime;
@@ -46,33 +46,42 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
 
     @Override
     public ScanningResult run(UUID scannerId, final List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
-        List<Signal> signals = new ArrayList<>();
-        List<ScannerLog> logs = new ArrayList<>();
+        final List<Signal> signals = new ArrayList<>();
+        final List<TickerSummary> tickerSummaries = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
-        logs.add(runWorkMessage(indexIsRiseToday.orElse(null)));
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
-            final Optional<Double> medianHistoryValue = tradingSnapshot.getHistoryMedianValue();
-            final Optional<Double> value = tradingSnapshot.getTodayValue();
-            if (medianHistoryValue.isEmpty() ||
-                value.isEmpty() ||
+            final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue();
+            final Optional<Double> currentValue = tradingSnapshot.getTodayValue();
+            if (medianValue.isEmpty() ||
+                currentValue.isEmpty() ||
                 indexIsRiseToday.isEmpty() ||
                 tradingSnapshot.isRiseToday().isEmpty()) {
                 continue;
             }
-            final double multiplier = value.get() / medianHistoryValue.get();
-            logs.add(parametersMessage(tradingSnapshot, value.get(), medianHistoryValue.get(), multiplier));
-            if (multiplier > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
+            final double currentValueToMedianValue = currentValue.get() / medianValue.get();
+            if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
                 signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), true));
             }
-            if (multiplier > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
+            if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
                 signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), false));
             }
+            tickerSummaries.add(
+                new TickerSummary(
+                    tradingSnapshot.getTicker(),
+                    String.format(
+                        "медиана исторических объемов: %s; текущий объем: %s; отношение текущего объема к медиане: %s; тренд индекса %s.",
+                        medianValue.get(),
+                        currentValue.get(),
+                        currentValueToMedianValue,
+                        indexIsRiseToday.get() ? "растущий" : "нисходящий"
+                    )
+                )
+            );
         }
-        logs.add(finishWorkMessage(signals));
         return ScanningResult.builder()
             .dateTime(dateTimeNow)
             .signals(signals)
-            .logs(logs)
+            .tickerSummaries(tickerSummaries)
             .build();
     }
 
@@ -86,52 +95,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             .filter(row -> row.getTicker().equals(indexTicker))
             .findFirst()
             .orElseThrow(() -> new DomainException("Не добавлен индекс рынка."));
-    }
-
-    private ScannerLog parametersMessage(
-        TradingSnapshot tradingSnapshot,
-        double value,
-        double waHistoryValue,
-        double multiplier
-    ) {
-        return new ScannerLog(
-            String.format(
-                "Инструмент %s, текущий объем торгов внутри дня: %s, средневзвешенный исторический объем: %s, отношение текущего объема к историческому: %s.",
-                tradingSnapshot.getTicker(),
-                value,
-                waHistoryValue,
-                multiplier
-            ),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog runWorkMessage(Boolean indexIsRiseToday) {
-        return new ScannerLog(
-            String
-                .format(
-                    "Начата обработка данных по алгоритму %s. Параметр scaleCoefficient = %s, параметр historyPeriod = %s, в качестве индекса рынка выбран %s. ",
-                    getName(),
-                    scaleCoefficient,
-                    historyPeriod,
-                    indexTicker
-                )
-                .concat(indexIsRiseToday == null ?
-                    "Данных по индексу нет." :
-                    (indexIsRiseToday ? "Индекс рос в предыдущий день." : "Индекс не рос в предыдущий день.")),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog finishWorkMessage(List<Signal> signals) {
-        return new ScannerLog(
-            String.format(
-                "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
-                getName(),
-                signals.size()
-            ),
-            LocalDateTime.now()
-        );
     }
 
     private void setScaleCoefficient(Double scaleCoefficient) {

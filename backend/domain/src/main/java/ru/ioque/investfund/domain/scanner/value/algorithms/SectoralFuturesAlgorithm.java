@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
 
 import java.time.LocalDateTime;
@@ -38,20 +38,36 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     @Override
     public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ScannerLog> logs = new ArrayList<>();
+        List<TickerSummary> tickerSummaries = new ArrayList<>();
         boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
-        logs.add(runWorkMessage(futuresIsRiseOvernight));
+        tickerSummaries.add(
+            new TickerSummary(
+                getFuturesStatistic(tradingSnapshots).getTicker(),
+                String.format(
+                    "тренд %s;",
+                    (futuresIsRiseOvernight ? "растущий" : "нисходящий")
+                )
+            )
+        );
         for (var finInstrument : analyzeInstruments(tradingSnapshots)) {
-            logs.add(parametersMessage(finInstrument));
-            if (futuresIsRiseOvernight && finInstrument.isRiseOvernight(stockOvernightScale)) {
+            boolean riseOvernight = finInstrument.isRiseOvernight(stockOvernightScale);
+            if (futuresIsRiseOvernight && riseOvernight) {
                 signals.add(new Signal(dateTimeNow, finInstrument.getTicker(), true));
             }
+            tickerSummaries.add(
+                new TickerSummary(
+                    finInstrument.getTicker(),
+                    String.format(
+                        "тренд %s;",
+                        (riseOvernight ? "растущий" : "нисходящий")
+                    )
+                )
+            );
         }
-        logs.add(finishWorkMessage(signals));
         return ScanningResult.builder()
             .dateTime(dateTimeNow)
             .signals(signals)
-            .logs(logs)
+            .tickerSummaries(tickerSummaries)
             .build();
     }
 
@@ -65,47 +81,6 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
 
     private List<TradingSnapshot> analyzeInstruments(List<TradingSnapshot> tradingSnapshots) {
         return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
-    }
-
-    private ScannerLog parametersMessage(
-        TradingSnapshot tradingSnapshot
-    ) {
-        return new ScannerLog(
-            String
-                .format(
-                    "Инструмент %s. ",
-                    tradingSnapshot.getTicker()
-                )
-                .concat(tradingSnapshot.isRiseOvernight(stockOvernightScale) ? "Инструмент рос в предыдущие два дня."
-                    : "Инструмент не рос в предыдущие два дня."),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog runWorkMessage(boolean futuresIsRiseToday) {
-        return new ScannerLog(
-            String
-                .format(
-                    "Начата обработка данных по алгоритму %s. Параметр futuresOvernightScale = %s, параметр stockOvernightScale = %s, в качестве фьючерса сектора выбран %s. ",
-                    getName(),
-                    futuresOvernightScale,
-                    stockOvernightScale,
-                    futuresTicker
-                )
-                .concat(futuresIsRiseToday ? "Фьючерс рос в предыдущий день." : "Фьючерс не рос в предыдущий день."),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog finishWorkMessage(List<Signal> signals) {
-        return new ScannerLog(
-            String.format(
-                "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
-                getName(),
-                signals.size()
-            ),
-            LocalDateTime.now()
-        );
     }
 
     private void setFuturesOvernightScale(Double futuresOvernightScale) {

@@ -6,11 +6,11 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
 
 import java.time.LocalDateTime;
@@ -33,22 +33,28 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
     @Override
     public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ScannerLog> logs = new ArrayList<>();
-        logs.add(runWorkMessage());
+        List<TickerSummary> tickerSummaries = new ArrayList<>();
         findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
-            logs.add(parametersMessage(pair, currentDelta, historyDelta, multiplier));
             if (multiplier > spreadValue) {
                 signals.add(new Signal(dateTimeNow, pair.getPref().getTicker(), true));
             }
+            tickerSummaries.add(
+                new TickerSummary(
+                    pair.getPref().getTicker(),
+                    String.format(
+                        "Текущая дельта: %s; историческая дельта: %s; отношение текущей дельты к исторической: %s.",
+                        currentDelta, historyDelta, multiplier
+                    )
+                )
+            );
         });
-        logs.add(finishWorkMessage(signals));
         return ScanningResult.builder()
             .dateTime(dateTimeNow)
             .signals(signals)
-            .logs(logs)
+            .tickerSummaries(tickerSummaries)
             .build();
     }
 
@@ -69,48 +75,6 @@ public class PrefSimpleAlgorithm extends ScannerAlgorithm {
             .filter(tradingSnapshot::isSimplePair)
             .findFirst()
             .orElseThrow(() -> new DomainException("Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
-    }
-
-    private ScannerLog runWorkMessage() {
-        return new ScannerLog(
-            String
-                .format(
-                    "Начата обработка данных по алгоритму %s. Параметр spreadParam = %s.",
-                    getName(),
-                    spreadValue
-                ),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog parametersMessage(
-        PrefSimplePair prefSimplePair,
-        double currentDelta,
-        double historyDelta,
-        double multiplier
-    ) {
-        return new ScannerLog(
-            String.format(
-                "Пара преф-обычка %s-%s, текущая дельта внутри дня: %s, историческая дельта: %s, отношение текущей дельты к исторической: %s.",
-                prefSimplePair.getPref().getTicker(),
-                prefSimplePair.getSimple().getTicker(),
-                currentDelta,
-                historyDelta,
-                multiplier
-            ),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog finishWorkMessage(List<Signal> signals) {
-        return new ScannerLog(
-            String.format(
-                "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
-                getName(),
-                signals.size()
-            ),
-            LocalDateTime.now()
-        );
     }
 
     private void setSpreadValue(Double spreadValue) {

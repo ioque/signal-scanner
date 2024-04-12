@@ -25,20 +25,19 @@ public class PsqlScannerLogRepository implements ScannerLogRepository {
         return repository
             .findAllByScannerId(scannerId)
             .stream()
-            .map(row -> new ScannerLog(row.getMessage(), row.getDateTime())
-            )
+            .map(row -> new ScannerLog(row.getDateTime(), row.getMessage()))
             .toList();
     }
 
     @Override
     @Transactional
-    public void saveAll(UUID scannerId, List<ScannerLog> logs) {
-        repository.saveAll(
-            logs.stream().map(log -> ScannerLogEntity.builder()
+    public void save(UUID scannerId, ScannerLog log) {
+        repository.save(
+            ScannerLogEntity.builder()
                 .scannerId(scannerId)
                 .message(log.getMessage())
                 .dateTime(log.getDateTime())
-                .build()).toList()
+                .build()
         );
     }
 }

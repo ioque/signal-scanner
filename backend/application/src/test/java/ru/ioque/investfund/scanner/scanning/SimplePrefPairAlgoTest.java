@@ -80,7 +80,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(4, getLogs().size());
+        assertEquals(2, getLogs().size());
         assertSignals(getSignals(), 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
@@ -102,7 +102,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(7, getLogs().size());
+        assertEquals(3, getLogs().size());
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());

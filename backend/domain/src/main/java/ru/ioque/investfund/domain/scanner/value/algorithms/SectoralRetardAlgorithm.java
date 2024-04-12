@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
@@ -34,20 +34,36 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     @Override
     public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         List<Signal> signals = new ArrayList<>();
-        List<ScannerLog> logs = new ArrayList<>();
-        logs.add(runWorkMessage());
+        List<TickerSummary> tickerSummaries = new ArrayList<>();
         List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
         List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
-        logs.add(parametersMessage(riseInstruments, otherInstruments));
+        riseInstruments.forEach(row -> {
+            tickerSummaries.add(
+                new TickerSummary(
+                    row.getTicker(),
+                    "тренд растущий."
+                )
+            );
+        });
+        otherInstruments.forEach(row -> {
+            tickerSummaries.add(
+                new TickerSummary(
+                    row.getTicker(),
+                    "тренд нисходящий."
+                )
+            );
+        });
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
-            otherInstruments.forEach(row -> signals.add(new Signal(dateTimeNow, row.getTicker(), true)));
+            otherInstruments.forEach(row -> {
+                signals.add(new Signal(dateTimeNow, row.getTicker(), true));
+            });
         }
-        logs.add(finishWorkMessage(signals));
+
         return ScanningResult
             .builder()
             .dateTime(dateTimeNow)
             .signals(signals)
-            .logs(logs)
+            .tickerSummaries(tickerSummaries)
             .build();
     }
 
@@ -66,41 +82,6 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             .stream()
             .filter(row -> row.isRiseInLastTwoDay(historyScale, intradayScale))
             .toList();
-    }
-
-    private ScannerLog parametersMessage(List<TradingSnapshot> riseInstruments, List<TradingSnapshot> otherInstruments) {
-        return new ScannerLog(
-            String.format(
-                "Растущие инструменты сектора: %s, секторальные отстающий(е): %s.",
-                riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
-                otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
-            ),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog runWorkMessage() {
-        return new ScannerLog(
-            String
-                .format(
-                    "Начата обработка данных по алгоритму %s. Параметр historyScale = %s, параметр intradayScale = %s.",
-                    getName(),
-                    historyScale,
-                    intradayScale
-                ),
-            LocalDateTime.now()
-        );
-    }
-
-    private ScannerLog finishWorkMessage(List<Signal> signals) {
-        return new ScannerLog(
-            String.format(
-                "Завершена обработка данных по алгоритму %s. Количество сигналов: %s.",
-                getName(),
-                signals.size()
-            ),
-            LocalDateTime.now()
-        );
     }
 
     private void setIntradayScale(Double intradayScale) {

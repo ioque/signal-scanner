@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class ScannerLog {
-    String message;
     LocalDateTime dateTime;
+    String message;
 }

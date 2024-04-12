@@ -36,6 +36,6 @@ public class ScannerLogEntity {
     LocalDateTime dateTime;
 
     public ScannerLog toDomain() {
-        return new ScannerLog(message, dateTime);
+        return new ScannerLog(dateTime, message);
     }
 }

@@ -80,10 +80,11 @@ public class HistoryGenerator extends AbstractGenerator {
             double open = startOpen + deltaOpen * i;
             double close = startClose + deltaClose * i;
             double value = startValue + deltaValue * i;
+            double waPrice = (open + close) / 2;
             if (isWeekend(date)) {
                 continue;
             }
-            dailyResults.add(buildHistoryValue(ticker, date, open, close, value));
+            dailyResults.add(buildHistoryValue(ticker, date, open, close, waPrice, value));
         }
 
         return dailyResults;
@@ -94,6 +95,7 @@ public class HistoryGenerator extends AbstractGenerator {
         LocalDate date,
         double open,
         double close,
+        double waPrice,
         double value
     ) {
         return HistoryValue.builder()
@@ -101,6 +103,7 @@ public class HistoryGenerator extends AbstractGenerator {
             .tradeDate(date)
             .openPrice(open)
             .closePrice(close)
+            .waPrice(waPrice)
             .highPrice((open + close)/2 * 1.5)
             .lowPrice((open + close)/2 * 0.9)
             .value(value)

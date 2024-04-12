@@ -23,7 +23,7 @@ public class Datasource extends Domain {
     String name;
     String url;
     String description;
-    List<Instrument> instruments;
+    final List<Instrument> instruments;
 
     @Builder
     public Datasource(

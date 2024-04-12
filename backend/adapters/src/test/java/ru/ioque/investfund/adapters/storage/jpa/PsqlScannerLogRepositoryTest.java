@@ -7,7 +7,6 @@ import ru.ioque.investfund.application.adapters.ScannerLogRepository;
 import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +25,7 @@ public class PsqlScannerLogRepositoryTest extends BaseJpaTest {
     @DisplayName("T1. Сохранение списка отчетов.")
     void testCase1() {
         final UUID scannerId = UUID.randomUUID();
-        scannerLogRepository.saveAll(scannerId, List.of(new ScannerLog("test", LocalDateTime.now())));
+        scannerLogRepository.save(scannerId, new ScannerLog(LocalDateTime.now(), "test"));
         assertEquals(1, scannerLogRepository.getAllBy(scannerId).size());
     }
 }

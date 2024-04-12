@@ -71,11 +71,11 @@ public class ScannerManager {
                     scanner.getDatasourceId(),
                     scanner.getTickers()
                 );
-                final List<ScannerLog> logs = scanner.scanning(
+                final ScannerLog log = scanner.scanning(
                     snapshots,
                     command.getWatermark()
                 );
-                scannerLogRepository.saveAll(scanner.getId(), logs);
+                scannerLogRepository.save(scanner.getId(), log);
                 scannerRepository.save(scanner);
                 loggerFacade.logFinishWorkScanner(scanner);
             });
@@ -89,12 +89,12 @@ public class ScannerManager {
         SignalScanner scanner = SignalScanner.from(uuidProvider.generate(), command);
 
         scannerRepository.save(scanner);
-        scannerLogRepository.saveAll(
+        scannerLogRepository.save(
             scanner.getId(),
-            List.of(new ScannerLog(
-                "Создан сканер сигналов, параметры: " + command.getProperties().prettyPrint(),
-                dateTimeProvider.nowDateTime()
-            ))
+            new ScannerLog(
+                dateTimeProvider.nowDateTime(),
+                "Создан сканер сигналов, параметры: " + command.getProperties().prettyPrint()
+            )
         );
     }
 
@@ -106,12 +106,12 @@ public class ScannerManager {
         scanner.update(command);
 
         scannerRepository.save(scanner);
-        scannerLogRepository.saveAll(
+        scannerLogRepository.save(
             scanner.getId(),
-            List.of(new ScannerLog(
-                "Обновлен сканер сигналов, параметры: " + command.getProperties().prettyPrint(),
-                dateTimeProvider.nowDateTime()
-            ))
+            new ScannerLog(
+                dateTimeProvider.nowDateTime(),
+                "Обновлен сканер сигналов, параметры: " + command.getProperties().prettyPrint()
+            )
         );
     }
 

@@ -15,6 +15,7 @@ import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,7 +56,12 @@ public class DatasourceEntity extends AbstractEntity {
             .name(name)
             .url(url)
             .description(description)
-            .instruments(instruments.stream().map(InstrumentEntity::toDomain).toList())
+            .instruments(
+                instruments
+                    .stream()
+                    .map(InstrumentEntity::toDomain)
+                    .collect(Collectors.toCollection(ArrayList::new))
+            )
             .build();
     }
 
