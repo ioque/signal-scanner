@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
-import ru.ioque.investfund.domain.scanner.value.ScannerLog;
+import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 
 import java.time.LocalDateTime;
 import java.util.List;

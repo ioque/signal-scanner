@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.ImplScannerConfigRepository;
 import ru.ioque.investfund.adapters.persistence.ImplScannerRepository;
-import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.AnomalyVolumeAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;

@@ -6,7 +6,7 @@ import ru.ioque.investfund.domain.datasource.command.AddDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.Signal;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.util.Collection;
 import java.util.List;

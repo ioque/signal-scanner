@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.application.adapters.ScannerLogRepository;
-import ru.ioque.investfund.domain.scanner.value.ScannerLog;
+import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 
 import java.util.List;
 import java.util.UUID;

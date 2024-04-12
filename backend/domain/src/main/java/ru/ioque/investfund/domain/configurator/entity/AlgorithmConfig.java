@@ -3,7 +3,7 @@ package ru.ioque.investfund.domain.configurator.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.scanner.entity.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
 
 @Getter
 @ToString

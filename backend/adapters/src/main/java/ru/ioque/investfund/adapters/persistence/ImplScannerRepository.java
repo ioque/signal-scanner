@@ -17,11 +17,11 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.domain.scanner.entity.AnomalyVolumeAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.CorrelationSectoralAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.PrefSimpleAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.ScannerAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.AnomalyVolumeAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.CorrelationSectoralAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.PrefSimpleAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.SectoralRetardAlgorithm;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.entity.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;

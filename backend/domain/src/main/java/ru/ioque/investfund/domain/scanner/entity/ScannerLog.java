@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.value;
+package ru.ioque.investfund.domain.scanner.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

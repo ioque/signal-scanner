@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.ScannerAlgorithm;
-import ru.ioque.investfund.domain.scanner.entity.SectoralRetardAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.value.algorithms.SectoralRetardAlgorithm;
 
 @Getter
 @ToString(callSuper = true)
