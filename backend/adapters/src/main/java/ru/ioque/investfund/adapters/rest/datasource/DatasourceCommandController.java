@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.investfund.adapters.rest.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 
 import java.util.UUID;
 
@@ -29,9 +30,21 @@ public class DatasourceCommandController {
     DatasourceManager datasourceManager;
 
     @PostMapping("/api/datasource")
-    public void registerDatasource(@RequestBody RegisterDatasourceRequest request) {
+    public void registerDatasource(@RequestBody SaveDatasourceRequest request) {
         datasourceManager.registerDatasource(
             CreateDatasourceCommand.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .url(request.getUrl())
+                .build()
+        );
+    }
+
+    @PatchMapping("/api/datasource/{datasourceId}")
+    public void registerDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
+        datasourceManager.updateDatasource(
+            UpdateDatasourceCommand.builder()
+                .id(datasourceId)
                 .name(request.getName())
                 .description(request.getDescription())
                 .url(request.getUrl())

@@ -10,8 +10,10 @@ import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsComm
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -221,6 +223,82 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(null))
+        );
+        assertEquals(1, exception.getConstraintViolations().size());
+        assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
+    }
+
+    @Test
+    @DisplayName("""
+        T15. В команде на обновление источника данных не передано название источника данных
+        """)
+    void testCase15() {
+        final ConstraintViolationException exception = assertThrows(
+            ConstraintViolationException.class,
+            () -> datasourceManager().updateDatasource(
+                UpdateDatasourceCommand.builder()
+                    .id(UUID.randomUUID())
+                    .url("http://datasource.ru:8000")
+                    .description("description")
+                    .build()
+            )
+        );
+        assertEquals(1, exception.getConstraintViolations().size());
+        assertEquals("Не передано название источника данных.", getMessage(exception));
+    }
+
+    @Test
+    @DisplayName("""
+        T16. В команде на обновление источника данных не передано описание источника данных
+        """)
+    void testCase16() {
+        final ConstraintViolationException exception = assertThrows(
+            ConstraintViolationException.class,
+            () -> datasourceManager().updateDatasource(
+                UpdateDatasourceCommand.builder()
+                    .id(UUID.randomUUID())
+                    .url("http://datasource.ru")
+                    .name("name")
+                    .build()
+            )
+        );
+        assertEquals(1, exception.getConstraintViolations().size());
+        assertEquals("Не передано описание источника данных.", getMessage(exception));
+    }
+
+    @Test
+    @DisplayName("""
+        T17. В команде на обновление источника данных не передан адрес источника данных
+        """)
+    void testCase17() {
+        final ConstraintViolationException exception = assertThrows(
+            ConstraintViolationException.class,
+            () -> datasourceManager().updateDatasource(
+                UpdateDatasourceCommand.builder()
+                    .id(UUID.randomUUID())
+                    .description("description")
+                    .name("name")
+                    .build()
+            )
+        );
+        assertEquals(1, exception.getConstraintViolations().size());
+        assertEquals("Не передан адрес источника данных.", getMessage(exception));
+    }
+
+    @Test
+    @DisplayName("""
+        T18. В команде на обновление источника данных не передан идентификатор источника данных
+        """)
+    void testCase18() {
+        final ConstraintViolationException exception = assertThrows(
+            ConstraintViolationException.class,
+            () -> datasourceManager().updateDatasource(
+                UpdateDatasourceCommand.builder()
+                    .description("description")
+                    .name("name")
+                    .url("http://datasource.ru")
+                    .build()
+            )
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));

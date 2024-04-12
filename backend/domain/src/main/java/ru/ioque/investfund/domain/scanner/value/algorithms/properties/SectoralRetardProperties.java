@@ -25,4 +25,9 @@ public class SectoralRetardProperties implements AlgorithmProperties {
     @NotNull(message = "Не передан параметр intradayScale.")
     @DecimalMin(value = "0", inclusive = false, message = "Параметр intradayScale должен быть больше 0.")
     Double intradayScale;
+
+    @Override
+    public String prettyPrint() {
+        return "historyScale = " + historyScale + ", intradayScale = " + intradayScale;
+    }
 }

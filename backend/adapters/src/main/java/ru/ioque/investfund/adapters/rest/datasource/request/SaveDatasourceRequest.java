@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterDatasourceRequest {
+public class SaveDatasourceRequest {
     String name;
     String description;
     String url;

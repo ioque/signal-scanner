@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.investfund.adapters.rest.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
                 .post("/api/datasource")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                    RegisterDatasourceRequest.builder()
+                    SaveDatasourceRequest.builder()
                         .name("Московская биржа")
                         .url("http://localhost:8080")
                         .description("Московская биржа")

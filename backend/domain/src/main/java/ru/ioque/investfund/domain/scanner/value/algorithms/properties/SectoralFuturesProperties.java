@@ -28,4 +28,9 @@ public class SectoralFuturesProperties implements AlgorithmProperties {
     Double stockOvernightScale;
     @NotBlank(message = "Не передан параметр futuresTicker.")
     String futuresTicker;
+
+    @Override
+    public String prettyPrint() {
+        return "futuresOvernightScale = " + futuresOvernightScale + ", stockOvernightScale = " + stockOvernightScale + ", futuresTicker = " + futuresTicker;
+    }
 }

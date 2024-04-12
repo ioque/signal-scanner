@@ -71,11 +71,11 @@ public class ScannerManager {
                     scanner.getDatasourceId(),
                     scanner.getTickers()
                 );
-                final List<ScannerLog> scanning = scanner.scanning(
+                final List<ScannerLog> logs = scanner.scanning(
                     snapshots,
                     command.getWatermark()
                 );
-                scannerLogRepository.saveAll(scanner.getId(), scanning);
+                scannerLogRepository.saveAll(scanner.getId(), logs);
                 scannerRepository.save(scanner);
                 loggerFacade.logFinishWorkScanner(scanner);
             });
@@ -89,6 +89,13 @@ public class ScannerManager {
         SignalScanner scanner = SignalScanner.from(uuidProvider.generate(), command);
 
         scannerRepository.save(scanner);
+        scannerLogRepository.saveAll(
+            scanner.getId(),
+            List.of(new ScannerLog(
+                "Создан сканер сигналов, параметры: " + command.getProperties().prettyPrint(),
+                dateTimeProvider.nowDateTime()
+            ))
+        );
     }
 
     public synchronized void updateScanner(UpdateScannerCommand command) {
@@ -99,6 +106,13 @@ public class ScannerManager {
         scanner.update(command);
 
         scannerRepository.save(scanner);
+        scannerLogRepository.saveAll(
+            scanner.getId(),
+            List.of(new ScannerLog(
+                "Обновлен сканер сигналов, параметры: " + command.getProperties().prettyPrint(),
+                dateTimeProvider.nowDateTime()
+            ))
+        );
     }
 
     private void validateCommand(Command command) {

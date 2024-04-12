@@ -20,6 +20,7 @@ import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsComm
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
@@ -46,6 +47,13 @@ public class DatasourceManager {
         repository.saveDatasource(Datasource.from(uuidProvider.generate(), command));
     }
 
+    public void updateDatasource(UpdateDatasourceCommand command) {
+        validateCommand(command);
+        Datasource datasource = getDatasourceBy(command.getId());
+        datasource.update(command);
+        repository.saveDatasource(datasource);
+    }
+
     public synchronized void unregisterDatasource(final UnregisterDatasourceCommand command) {
         validateCommand(command);
         repository.deleteDatasource(command.getDatasourceId());
@@ -53,21 +61,21 @@ public class DatasourceManager {
 
     public synchronized void enableUpdate(final EnableUpdateInstrumentsCommand command) {
         validateCommand(command);
-        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        final Datasource datasource = getDatasourceBy(command.getDatasourceId());
         datasource.enableUpdate(command.getTickers());
         repository.saveDatasource(datasource);
     }
 
     public synchronized void disableUpdate(final DisableUpdateInstrumentsCommand command) {
         validateCommand(command);
-        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        final Datasource datasource = getDatasourceBy(command.getDatasourceId());
         datasource.disableUpdate(command.getTickers());
         repository.saveDatasource(datasource);
     }
 
     public synchronized void integrateInstruments(final IntegrateInstrumentsCommand command) {
         validateCommand(command);
-        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        final Datasource datasource = getDatasourceBy(command.getDatasourceId());
         loggerFacade.logRunSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
         datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
         repository.saveDatasource(datasource);
@@ -76,7 +84,7 @@ public class DatasourceManager {
 
     public synchronized void integrateTradingData(final IntegrateTradingDataCommand command) {
         validateCommand(command);
-        final Datasource datasource = getExchangeFromRepo(command.getDatasourceId());
+        final Datasource datasource = getDatasourceBy(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
             loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
             final List<HistoryValue> history = datasourceProvider
@@ -103,7 +111,7 @@ public class DatasourceManager {
             .build());
     }
 
-    private Datasource getExchangeFromRepo(final UUID datasourceId) {
+    private Datasource getDatasourceBy(final UUID datasourceId) {
         return repository
             .getBy(datasourceId)
             .orElseThrow(

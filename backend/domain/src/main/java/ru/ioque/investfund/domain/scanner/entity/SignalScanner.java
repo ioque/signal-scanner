@@ -28,13 +28,13 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain {
-    Integer workPeriodInMinutes;
     String description;
     UUID datasourceId;
-    LocalDateTime lastExecutionDateTime;
     List<String> tickers;
     final List<Signal> signals;
+    Integer workPeriodInMinutes;
     AlgorithmProperties properties;
+    LocalDateTime lastExecutionDateTime;
 
     @Builder
     public SignalScanner(
@@ -45,7 +45,8 @@ public class SignalScanner extends Domain {
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
         List<String> tickers,
-        List<Signal> signals
+        List<Signal> signals,
+        List<ScannerLog> scannerLogs
     ) {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
@@ -91,7 +92,8 @@ public class SignalScanner extends Domain {
         }
         AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
-        return processResult(algorithm.run(getId(), tradingSnapshots, dateTimeNow));
+        ScanningResult result = algorithm.run(getId(), tradingSnapshots, dateTimeNow);
+        return processResult(result);
     }
 
     private List<ScannerLog> processResult(ScanningResult scanningResult) {

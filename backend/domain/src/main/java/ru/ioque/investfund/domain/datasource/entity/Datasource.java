@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ public class Datasource extends Domain {
     String name;
     String url;
     String description;
-    @Getter
     List<Instrument> instruments;
 
     @Builder
@@ -35,10 +34,10 @@ public class Datasource extends Domain {
         List<Instrument> instruments
     ) {
         super(id);
-        setName(name);
-        setUrl(url);
-        setDescription(description);
-        setInstruments(instruments);
+        this.name = name;
+        this.url = url;
+        this.description = description;
+        this.instruments = instruments;
     }
 
     public static Datasource from(UUID id, CreateDatasourceCommand command) {
@@ -50,6 +49,12 @@ public class Datasource extends Domain {
             .description(command.getDescription())
             .instruments(new ArrayList<>())
             .build();
+    }
+
+    public void update(UpdateDatasourceCommand command) {
+        this.name = command.getName();
+        this.url = command.getUrl();
+        this.description = command.getDescription();
     }
 
     public void addInstrument(Instrument instrument) {
@@ -78,31 +83,7 @@ public class Datasource extends Domain {
         return getInstruments().stream().map(Instrument::getTicker).toList();
     }
 
-    private void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new DomainException("Не заполнено наименование источника данных.");
-        }
-        this.name = name;
-    }
-
-    private void setUrl(String url) {
-        if (url == null || url.isBlank()) {
-            throw new DomainException("Не заполнен url источника данных.");
-        }
-        this.url = url;
-    }
-
-    private void setDescription(String description) {
-        if (description == null || description.isBlank()) {
-            throw new DomainException("Не заполнено описание источника данных.");
-        }
-        this.description = description;
-    }
-
-    private void setInstruments(List<Instrument> instruments) {
-        if (instruments == null) {
-            throw new DomainException("Не передан список инструментов источника данных.");
-        }
-        this.instruments = new ArrayList<>(instruments);
+    public List<Instrument> getInstruments() {
+        return List.copyOf(instruments);
     }
 }

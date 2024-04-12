@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("DATASOURCE MANAGER TEST")
-public class DatasourceManagerTest extends BaseTest {
+@DisplayName("DATASOURCE MANAGER TEST - INTEGRATION")
+public class DatasourceIntegrationTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         datasourceManager().registerDatasource(
