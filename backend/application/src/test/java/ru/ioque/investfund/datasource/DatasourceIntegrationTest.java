@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DatasourceIntegrationTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
@@ -52,7 +52,7 @@ public class DatasourceIntegrationTest extends BaseTest {
             afks()
         );
 
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         final Optional<Datasource> exchange = datasourceRepository().getBy(getDatasourceId());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
@@ -78,11 +78,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         clearLogs();
 
         final var id = datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId();
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         assertEquals(10, getInstruments(getDatasourceId()).size());
         assertEquals(id, datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId());
     }
@@ -96,10 +96,10 @@ public class DatasourceIntegrationTest extends BaseTest {
     void testCase3() {
         initInstruments(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         clearLogs();
         initInstruments(afks(), imoex(), brf4(), lkoh(), rosn(), sibn());
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         assertEquals(6, getInstruments(getDatasourceId()).size());
     }
 
@@ -122,7 +122,7 @@ public class DatasourceIntegrationTest extends BaseTest {
                 .lotSize(10000)
                 .build()
         ));
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         assertEquals(1, getInstruments(getDatasourceId()).size());
         assertEquals(2, loggerProvider().log.size());
         assertTrue(loggerProvider().logContainsMessageParts(
@@ -142,7 +142,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         final UUID datasourceId = getDatasourceId();
         exchangeDataFixture().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
         clearLogs();
         initDealDatas(
             buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
@@ -156,8 +156,8 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-11")).build()
         );
 
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(1, getInstruments(datasourceId).size());
         assertEquals(3, getIntradayValues(datasourceId).size());
@@ -184,8 +184,8 @@ public class DatasourceIntegrationTest extends BaseTest {
             dateTimeProvider().daysAgo(1)
         ));
 
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(
             131,
@@ -214,8 +214,8 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
         assertEquals(2, loggerProvider().log.size());
@@ -236,8 +236,8 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
             buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
@@ -248,7 +248,7 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(5, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
@@ -265,13 +265,13 @@ public class DatasourceIntegrationTest extends BaseTest {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
 
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(66, getHistoryValuesBy(datasourceId, "AFKS").size());
     }
@@ -289,7 +289,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         initDealDatas(buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
 
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(0, getHistoryValues(datasourceId).size());
         assertEquals(0, getIntradayValues(datasourceId).size());
@@ -308,11 +308,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
 
-        datasourceManager().disableUpdate(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         initDealDatas(
             buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1),
             buildBuyDealBy(datasourceId, 1L, "AFKS", "11:00:00", 10D, 10D, 1)
@@ -322,7 +322,7 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
@@ -336,11 +336,10 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase15() {
         UUID datasourceId = getDatasourceId();
-        datasourceManager().unregisterDatasource(new UnregisterDatasourceCommand(datasourceId));
+        commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             IllegalArgumentException.class,
-            () -> datasourceManager()
-                .enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
+            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
         assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());
     }
@@ -353,11 +352,10 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase16() {
         UUID datasourceId = getDatasourceId();
-        datasourceManager().unregisterDatasource(new UnregisterDatasourceCommand(datasourceId));
+        commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             IllegalArgumentException.class,
-            () -> datasourceManager()
-                .disableUpdate(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
+            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
         assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());
     }
@@ -372,8 +370,8 @@ public class DatasourceIntegrationTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         assertEquals(TradingDataUpdatedEvent.class, eventPublisher().getEvents().get(0).getClass());
     }
 
@@ -391,8 +389,8 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildBuyDealBy(datasourceId, 2L, "AFKS", "10:00:00", 11D, 10D, 1),
             buildBuyDealBy(datasourceId, 3L, "AFKS", "10:00:00", 11D, 10D, 2)
         );
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
@@ -406,9 +404,9 @@ public class DatasourceIntegrationTest extends BaseTest {
         integrateInstruments(datasourceId, afks());
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 }

@@ -126,7 +126,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T9. В команду на обновление CorrelationSectoralScanner не передан параметр futuresOvernightScale.
         """)
     void testCase9() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -143,7 +143,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T10. В команду на обновление CorrelationSectoralScanner не передан параметр stockOvernightScale.
         """)
     void testCase10() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -160,7 +160,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T11. В команду на обновление CorrelationSectoralScanner не передан параметр futuresTicker.
         """)
     void testCase11() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -177,7 +177,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T12. В команду на обновление CorrelationSectoralScanner параметр futuresTicker передан как пустая строка.
         """)
     void testCase12() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -194,7 +194,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T13. В команду на обновление CorrelationSectoralScanner параметр futuresOvernightScale передан со значением = 0.
         """)
     void testCase13() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -211,7 +211,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T14. В команду на обновление CorrelationSectoralScanner параметр futuresOvernightScale передан со значением < 0.
         """)
     void testCase14() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -228,7 +228,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T15. В команду на обновление CorrelationSectoralScanner параметр stockOvernightScale передан со значением = 0.
         """)
     void testCase15() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
@@ -245,7 +245,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         T16. В команду на обновление CorrelationSectoralScanner параметр stockOvernightScale передан со значением < 0.
         """)
     void testCase16() {
-        scannerManager().createScanner(buildCreateSectoralFuturesScannerWith().build());
+        commandBus().execute(buildCreateSectoralFuturesScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())

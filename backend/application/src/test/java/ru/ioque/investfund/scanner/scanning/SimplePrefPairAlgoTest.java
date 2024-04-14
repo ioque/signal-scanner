@@ -391,7 +391,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
-        scannerManager().createScanner(
+        commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Анализ пар преф-обычка.")
@@ -411,8 +411,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sber(),
             sberP()
         );
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initSberAndSberpHistory(UUID datasourceId) {

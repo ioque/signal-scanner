@@ -22,7 +22,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(
@@ -40,7 +40,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(datasourceIdIsEmpty(), getMessage(exception));
@@ -57,7 +57,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
         assertEquals("В выбранном источнике данных не существует инструментов с тикерами [LVHK, TGKM].", exception.getMessage());
     }
@@ -71,7 +71,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(descIsEmpty(), getMessage(exception));
@@ -86,7 +86,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(descIsEmpty(), getMessage(exception));
@@ -101,7 +101,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(workPeriodIsEmpty(), getMessage(exception));
@@ -116,7 +116,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(workPeriodIsNegative(), getMessage(exception));
@@ -131,7 +131,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(workPeriodIsNegative(), getMessage(exception));
@@ -146,7 +146,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(tickersIsEmpty(), getMessage(exception));
@@ -161,7 +161,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
 
         assertEquals(tickersIsEmpty(), getMessage(exception));

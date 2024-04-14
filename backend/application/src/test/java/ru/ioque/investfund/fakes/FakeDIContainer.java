@@ -5,10 +5,21 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
-import ru.ioque.investfund.application.modules.scanner.ScannerManager;
+import ru.ioque.investfund.application.modules.CommandBus;
+import ru.ioque.investfund.application.modules.datasource.DisableUpdateInstrumentProcessor;
+import ru.ioque.investfund.application.modules.datasource.EnableUpdateInstrumentProcessor;
+import ru.ioque.investfund.application.modules.datasource.IntegrateInstrumentsProcessor;
+import ru.ioque.investfund.application.modules.datasource.IntegrateTradingDataProcessor;
+import ru.ioque.investfund.application.modules.datasource.RegisterDatasourceProcessor;
+import ru.ioque.investfund.application.modules.datasource.UnregisterDatasourceProcessor;
+import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceProcessor;
+import ru.ioque.investfund.application.modules.scanner.CreateScannerProcessor;
+import ru.ioque.investfund.application.modules.scanner.ProduceSignalProcessor;
+import ru.ioque.investfund.application.modules.scanner.UpdateScannerProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
+
+import java.util.List;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -23,9 +34,18 @@ public class FakeDIContainer {
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     LoggerFacade loggerFacade;
-    ScannerManager scannerManager;
-    DatasourceManager datasourceManager;
     FakeEventPublisher eventPublisher;
+    DisableUpdateInstrumentProcessor disableUpdateInstrumentProcessor;
+    EnableUpdateInstrumentProcessor enableUpdateInstrumentProcessor;
+    IntegrateInstrumentsProcessor integrateInstrumentsProcessor;
+    IntegrateTradingDataProcessor integrateTradingDataProcessor;
+    RegisterDatasourceProcessor registerDatasourceProcessor;
+    UnregisterDatasourceProcessor unregisterDatasourceProcessor;
+    UpdateDatasourceProcessor updateDatasourceProcessor;
+    CreateScannerProcessor createScannerProcessor;
+    ProduceSignalProcessor produceSignalProcessor;
+    UpdateScannerProcessor  updateScannerProcessor;
+    CommandBus commandBus;
 
     public FakeDIContainer() {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -40,24 +60,31 @@ public class FakeDIContainer {
         datasourceRepository = new FakeDatasourceRepository();
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);
-        datasourceManager = new DatasourceManager(
-            validator,
-            dateTimeProvider,
-            exchangeProvider,
-            datasourceRepository,
-            uuidProvider,
-            loggerFacade,
-            eventPublisher
-        );
-        scannerManager = new ScannerManager(
-            validator,
-            datasourceRepository,
-            tradingDataRepository,
-            scannerRepository,
-            scannerLogRepository,
-            dateTimeProvider,
-            uuidProvider,
-            loggerFacade
+
+        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(validator, loggerFacade, datasourceRepository);
+        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentProcessor(validator, loggerFacade, datasourceRepository);
+        integrateInstrumentsProcessor = new IntegrateInstrumentsProcessor(validator, loggerFacade, dateTimeProvider, exchangeProvider, datasourceRepository);
+        integrateTradingDataProcessor = new IntegrateTradingDataProcessor(validator, loggerFacade, uuidProvider, dateTimeProvider, exchangeProvider, datasourceRepository, eventPublisher);
+        registerDatasourceProcessor = new RegisterDatasourceProcessor(validator, loggerFacade, uuidProvider, datasourceRepository);
+        unregisterDatasourceProcessor = new UnregisterDatasourceProcessor(validator, loggerFacade, datasourceRepository);
+        updateDatasourceProcessor = new UpdateDatasourceProcessor(validator, loggerFacade, datasourceRepository);
+        createScannerProcessor = new CreateScannerProcessor(validator, loggerFacade, uuidProvider, dateTimeProvider, scannerRepository, scannerLogRepository, datasourceRepository);
+        updateScannerProcessor = new UpdateScannerProcessor(validator, loggerFacade, dateTimeProvider, scannerRepository, scannerLogRepository, datasourceRepository);
+        produceSignalProcessor = new ProduceSignalProcessor(validator, loggerFacade, dateTimeProvider, scannerRepository, scannerLogRepository, tradingDataRepository);
+
+        commandBus = new CommandBus(
+            List.of(
+                disableUpdateInstrumentProcessor,
+                enableUpdateInstrumentProcessor,
+                integrateInstrumentsProcessor,
+                integrateTradingDataProcessor,
+                registerDatasourceProcessor,
+                updateDatasourceProcessor,
+                unregisterDatasourceProcessor,
+                createScannerProcessor,
+                produceSignalProcessor,
+                updateScannerProcessor
+            )
         );
     }
 

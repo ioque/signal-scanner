@@ -122,7 +122,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T9. В команду на обновление AnomalyVolumeScanner не передан параметр scaleCoefficient.
         """)
     void testCase9() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -137,7 +137,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T10. В команду на обновление AnomalyVolumeScanner не передан параметр historyPeriod.
         """)
     void testCase10() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -152,7 +152,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T11. В команду на обновление AnomalyVolumeScanner не передан параметр indexTicker.
         """)
     void testCase11() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -167,7 +167,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T12. В команду на обновление AnomalyVolumeScanner параметр indexTicker передан как пустая строка.
         """)
     void testCase12() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -182,7 +182,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T13. В команду на обновление AnomalyVolumeScanner параметр scaleCoefficient передан со значением = 0.
         """)
     void testCase13() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -197,7 +197,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T14. В команду на обновление AnomalyVolumeScanner параметр scaleCoefficient передан со значением < 0.
         """)
     void testCase14() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -212,7 +212,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T15. В команду на обновление AnomalyVolumeScanner параметр historyPeriod передан со значением = 0.
         """)
     void testCase15() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
@@ -227,7 +227,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         T16. В команду на обновление AnomalyVolumeScanner параметр historyPeriod передан со значением < 0.
         """)
     void testCase16() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())

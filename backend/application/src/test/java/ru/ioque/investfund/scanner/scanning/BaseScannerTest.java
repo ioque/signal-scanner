@@ -25,7 +25,7 @@ public class BaseScannerTest extends BaseTest {
     protected static final String SBERP = "SBERP";
     @BeforeEach
     void beforeEach() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")

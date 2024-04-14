@@ -48,7 +48,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         T4. В команду на обновление PrefSimpleScanner не передан параметр spreadParam.
         """)
     void testCase4() {
-        scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
+        commandBus().execute(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
                 .scannerId(getFirstScannerId())
@@ -63,7 +63,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         T5. В команду на обновление PrefSimpleScanner параметр spreadParam передан со значением = 0.
         """)
     void testCase5() {
-        scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
+        commandBus().execute(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
                 .scannerId(getFirstScannerId())
@@ -78,7 +78,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         T6. В команду на обновление PrefSimpleScanner параметр spreadParam передан со значением < 0.
         """)
     void testCase6() {
-        scannerManager().createScanner(buildCreatePrefSimpleScannerWith().build());
+        commandBus().execute(buildCreatePrefSimpleScannerWith().build());
         testUpdateScannerError(
             buildUpdatePrefSimpleScannerWith()
                 .scannerId(getFirstScannerId())

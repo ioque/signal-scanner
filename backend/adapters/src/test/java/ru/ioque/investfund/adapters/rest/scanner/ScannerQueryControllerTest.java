@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.IndexEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
@@ -19,7 +16,9 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
-import ru.ioque.investfund.application.modules.scanner.ScannerManager;
+import ru.ioque.investfund.adapters.rest.BaseControllerTest;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("SCANNER QUERY REST CONTROLLER")
 public class ScannerQueryControllerTest extends BaseControllerTest {
-    @Autowired
-    ScannerManager scannerManager;
     @Autowired
     JpaSignalScannerRepository signalScannerEntityRepository;
     @Autowired

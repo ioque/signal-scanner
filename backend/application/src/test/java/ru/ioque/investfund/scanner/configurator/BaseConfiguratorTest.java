@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BaseConfiguratorTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
@@ -53,14 +53,14 @@ public class BaseConfiguratorTest extends BaseTest {
                 brf4(),
                 usdRub())
         );
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScannerCommand command, String msg) {
         var error = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().createScanner(command)
+            () -> commandBus().execute(command)
         );
         assertEquals(msg, getMessage(error));
     }
@@ -68,7 +68,7 @@ public class BaseConfiguratorTest extends BaseTest {
     protected void testUpdateScannerError(UpdateScannerCommand command, String msg) {
         var error = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(command)
+            () -> commandBus().execute(command)
         );
         assertEquals(msg, getMessage(error));
     }

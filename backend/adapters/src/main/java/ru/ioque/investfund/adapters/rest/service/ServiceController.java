@@ -18,7 +18,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 
 @Hidden
 @RestController
@@ -34,7 +33,6 @@ public class ServiceController {
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
     FakeEventPublisher eventBus;
-    DatasourceManager datasourceManager;
     DateTimeProvider dateTimeProvider;
 
     @PostMapping("/api/service/date-time")

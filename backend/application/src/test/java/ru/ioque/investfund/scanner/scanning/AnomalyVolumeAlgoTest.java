@@ -463,12 +463,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgkn()
             )
         );
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
-        scannerManager().createScanner(
+        commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")

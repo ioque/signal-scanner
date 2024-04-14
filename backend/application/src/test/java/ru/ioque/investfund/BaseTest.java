@@ -2,8 +2,7 @@ package ru.ioque.investfund;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
-import ru.ioque.investfund.application.modules.scanner.ScannerManager;
+import ru.ioque.investfund.application.modules.CommandBus;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
@@ -17,7 +16,7 @@ import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
-import ru.ioque.investfund.domain.scanner.command.ScanningCommand;
+import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
@@ -62,10 +61,6 @@ public class BaseTest {
         return fakeDIContainer.getTradingDataRepository();
     }
 
-    protected final ScannerManager scannerManager() {
-        return fakeDIContainer.getScannerManager();
-    }
-
     protected final FakeScannerLogRepository scannerLogRepository() {
         return fakeDIContainer.getScannerLogRepository();
     }
@@ -74,8 +69,8 @@ public class BaseTest {
         return fakeDIContainer.getLoggerProvider();
     }
 
-    protected final DatasourceManager datasourceManager() {
-        return fakeDIContainer.getDatasourceManager();
+    protected final CommandBus commandBus() {
+        return fakeDIContainer.getCommandBus();
     }
 
     protected final FakeEventPublisher eventPublisher() {
@@ -120,7 +115,7 @@ public class BaseTest {
 
     protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
         exchangeDataFixture().initInstruments(Arrays.asList(instruments));
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
     }
 
     protected void initInstruments(Instrument... instruments) {
@@ -180,8 +175,8 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(UUID datasourceId) {
-        datasourceManager().integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
-        scannerManager().scanning(new ScanningCommand(datasourceId, getToday()));
+        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new ProduceSignalCommand(datasourceId, getToday()));
     }
 
     protected void runWorkPipelineAndClearLogs(UUID datasourceId) {

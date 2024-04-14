@@ -63,6 +63,22 @@ public class Datasource extends Domain {
         }
     }
 
+    public void checkExistsTickers(List<String> tickers) {
+        List<String> notExistedTickers = tickers
+            .stream()
+            .filter(ticker -> !getTickers().contains(ticker))
+            .toList();
+        if (!notExistedTickers.isEmpty()) {
+            throw new IllegalArgumentException(
+                String
+                    .format(
+                        "В выбранном источнике данных не существует инструментов с тикерами %s.",
+                        notExistedTickers
+                    )
+            );
+        }
+    }
+
     public List<Instrument> getUpdatableInstruments() {
         return instruments.stream().filter(Instrument::isUpdatable).toList();
     }

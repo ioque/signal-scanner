@@ -93,7 +93,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T7. В команду на обновление SectoralRetardScanner не передан параметр historyScale.
         """)
     void testCase7() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())
@@ -108,7 +108,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T8. В команду на обновление SectoralRetardScanner параметр historyScale передан со значением = 0.
         """)
     void testCase8() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())
@@ -123,7 +123,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T9. В команду на обновление SectoralRetardScanner параметр historyScale передан со значением < 0.
         """)
     void testCase9() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())
@@ -138,7 +138,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T10. В команду на обновление SectoralRetardScanner не передан параметр intradayScale.
         """)
     void testCase10() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())
@@ -153,7 +153,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T11. В команду на обновление SectoralRetardScanner параметр intradayScale передан со значением = 0.
         """)
     void testCase11() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())
@@ -168,7 +168,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         T12. В команду на обновление SectoralRetardScanner параметр intradayScale передан со значением < 0.
         """)
     void testCase12() {
-        scannerManager().createScanner(buildCreateSectoralRetardScannerWith().build());
+        commandBus().execute(buildCreateSectoralRetardScannerWith().build());
         testUpdateScannerError(
             buildUpdateSectoralRetardScannerWith()
                 .scannerId(getFirstScannerId())

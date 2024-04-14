@@ -19,7 +19,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         final String datasourceName = "Московская биржа";
         final String datasourceUrl = "http://localhost:8080";
 
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name(datasourceName)
                 .description(datasourceName)
@@ -40,7 +40,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         T1. Обновление данных источника данных.
         """)
     void testCase2() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
@@ -51,7 +51,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         final String datasourceDesc = "Курлык курлык";
         final String datasourceUrl = "http://localhost:8082";
 
-        datasourceManager().updateDatasource(
+        commandBus().execute(
             UpdateDatasourceCommand.builder()
                 .id(getDatasourceId())
                 .name(datasourceName)
@@ -73,14 +73,14 @@ public class DatasourceConfiguratorTest extends BaseTest {
         T3. Регистрация нескольких источников данных
         """)
     void testCase3() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа 1")
                 .description("Московская биржа 1")
                 .url("http://localhost:8081")
                 .build()
         );
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа 2")
                 .description("Московская биржа 2")

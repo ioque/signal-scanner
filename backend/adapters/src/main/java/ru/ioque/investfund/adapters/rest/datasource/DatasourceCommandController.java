@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
+import ru.ioque.investfund.application.modules.CommandBus;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.DatasourceManager;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
@@ -27,11 +27,11 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name="DatasourceCommandController", description="Контроллер команд к модулю \"DATASOURCE\"")
 public class DatasourceCommandController {
-    DatasourceManager datasourceManager;
+    CommandBus commandBus;
 
     @PostMapping("/api/datasource")
     public void registerDatasource(@RequestBody SaveDatasourceRequest request) {
-        datasourceManager.registerDatasource(
+        commandBus.execute(
             CreateDatasourceCommand.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -42,7 +42,7 @@ public class DatasourceCommandController {
 
     @PatchMapping("/api/datasource/{datasourceId}")
     public void registerDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
-        datasourceManager.updateDatasource(
+        commandBus.execute(
             UpdateDatasourceCommand.builder()
                 .id(datasourceId)
                 .name(request.getName())
@@ -54,21 +54,21 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus.execute(new IntegrateInstrumentsCommand(datasourceId));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        datasourceManager.integrateTradingData(new IntegrateTradingDataCommand(datasourceId));
+        commandBus.execute(new IntegrateTradingDataCommand(datasourceId));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
-        datasourceManager.enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
+        commandBus.execute(new EnableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/disable-update")
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
-        datasourceManager.disableUpdate(new DisableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
+        commandBus.execute(new DisableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
     }
 }

@@ -151,7 +151,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
-        scannerManager().createScanner(
+        commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Секторальный отстающий, нефтянка.")
@@ -177,8 +177,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     sibn()
                 )
             );
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initDealsTatnFallOtherRise(UUID datasourceId) {

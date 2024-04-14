@@ -8,7 +8,7 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.command.ScanningCommand;
+import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
 
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ScanningCommandTest extends BaseTest {
+public class ProduceSignalCommandTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
-        datasourceManager().registerDatasource(
+        commandBus().execute(
             CreateDatasourceCommand.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
@@ -27,8 +27,8 @@ public class ScanningCommandTest extends BaseTest {
                 .build()
         );
         initInstruments(imoex(), tgkb(), tgkn());
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(getDatasourceId()));
-        scannerManager().createScanner(
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(
             CreateScannerCommand.builder()
                 .datasourceId(getDatasourceId())
                 .workPeriodInMinutes(1)
@@ -53,7 +53,7 @@ public class ScanningCommandTest extends BaseTest {
     void testCase1() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().scanning(new ScanningCommand(null, getToday()))
+            () -> commandBus().execute(new ProduceSignalCommand(null, getToday()))
         );
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
     }
@@ -65,7 +65,7 @@ public class ScanningCommandTest extends BaseTest {
     void testCase2() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().scanning(new ScanningCommand(getDatasourceId(), null))
+            () -> commandBus().execute(new ProduceSignalCommand(getDatasourceId(), null))
         );
         assertEquals("Не передан watermark.", getMessage(exception));
     }

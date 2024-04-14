@@ -21,7 +21,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         final UUID scannerId = UUID.randomUUID();
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> scannerManager().updateScanner(buildUpdateAnomalyVolumeScannerWith().scannerId(scannerId).build())
+            () -> commandBus().execute(buildUpdateAnomalyVolumeScannerWith().scannerId(scannerId).build())
         );
 
         assertEquals(
@@ -36,14 +36,14 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         Поступила команда на обновление сканера, изменился список тикеров: TGKN, IMOEX.
         """)
     void testCase2() {
-        scannerManager().createScanner(
+        commandBus().execute(
             buildCreateAnomalyVolumeScannerWith()
                 .tickers(List.of("TGKN", "TGKB", "IMOEX"))
                 .build()
         );
         final UUID scannerId = getFirstScannerId();
 
-        scannerManager().updateScanner(
+        commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(scannerId)
                 .tickers(List.of("TGKN", "IMOEX"))
@@ -58,11 +58,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T3. В команде на обновление сканера не указано описание.
         """)
     void testCase4() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .description(null)
@@ -78,11 +78,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T5. В команде на обновление сканера указано пустое описание.
         """)
     void testCase5() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .description("")
@@ -98,11 +98,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T6. В команде на обновление сканера не передан период работы.
         """)
     void testCase6() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(null)
@@ -118,11 +118,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T7. В команде на обновление сканера передан период работы равный нулю.
         """)
     void testCase7() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(0)
@@ -138,11 +138,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T8. В команде на обновление сканера передан период работы меньше нуля.
         """)
     void testCase8() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .workPeriodInMinutes(-11)
@@ -158,11 +158,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T9. В команде на обновление сканера не передан список тикеров анализируемых инструментов.
         """)
     void testCase10() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .tickers(null)
@@ -178,11 +178,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T10. В команде на обновление сканера передан пустой список тикеров анализируемых инструментов.
         """)
     void testCase11() {
-        scannerManager().createScanner(buildCreateAnomalyVolumeScannerWith().build());
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> scannerManager().updateScanner(
+            () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
                     .tickers(List.of())

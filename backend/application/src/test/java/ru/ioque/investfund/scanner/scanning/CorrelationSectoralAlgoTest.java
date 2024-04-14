@@ -224,7 +224,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId) {
-        scannerManager().createScanner(
+        commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Корреляция сектора с фьючерсом.")
@@ -289,7 +289,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        datasourceManager().integrateInstruments(new IntegrateInstrumentsCommand(datasourceId));
-        datasourceManager().enableUpdate(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 }

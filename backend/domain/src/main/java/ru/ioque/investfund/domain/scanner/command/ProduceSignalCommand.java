@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @AllArgsConstructor
-public class ScanningCommand implements Command {
+public class ProduceSignalCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     UUID datasourceId;
     @NotNull(message = "Не передан watermark.")
