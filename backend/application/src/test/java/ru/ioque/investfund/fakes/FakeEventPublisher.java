@@ -15,8 +15,6 @@ public class FakeEventPublisher implements EventPublisher {
 
     @Override
     public void publish(DomainEvent event) {
-        if (events.stream().filter(row -> row.getId().equals(event.getId())).findFirst().isEmpty()) {
-            events.add(event);
-        }
+        events.add(event);
     }
 }

@@ -18,8 +18,10 @@ import java.time.LocalDateTime;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Signal {
     LocalDateTime dateTime;
+//    Double price;
     String ticker;
     boolean isBuy;
+//    String summary;
 
     public boolean sameByTicker(Signal signal) {
         return signal.getTicker().equals(ticker);

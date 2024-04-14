@@ -5,13 +5,14 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.ScannerLogRepository;
+import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingDataRepository;
 import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.event.SignalEvent;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.List;
@@ -21,22 +22,22 @@ import java.util.List;
 public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalCommand> {
     DateTimeProvider dateTimeProvider;
     ScannerRepository scannerRepository;
-    ScannerLogRepository scannerLogRepository;
     TradingDataRepository tradingDataRepository;
+    EventPublisher eventPublisher;
 
     public ProduceSignalProcessor(
         Validator validator,
         LoggerFacade loggerFacade,
         DateTimeProvider dateTimeProvider,
         ScannerRepository scannerRepository,
-        ScannerLogRepository scannerLogRepository,
-        TradingDataRepository tradingDataRepository
+        TradingDataRepository tradingDataRepository,
+        EventPublisher eventPublisher
     ) {
         super(validator, loggerFacade);
         this.dateTimeProvider = dateTimeProvider;
         this.scannerRepository = scannerRepository;
-        this.scannerLogRepository = scannerLogRepository;
         this.tradingDataRepository = tradingDataRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -52,12 +53,14 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
                     scanner.getDatasourceId(),
                     scanner.getTickers()
                 );
-                final ScannerLog log = scanner.scanning(
+                final List<Signal> newSignals = scanner.scanning(
                     snapshots,
                     command.getWatermark()
                 );
-                scannerLogRepository.save(scanner.getId(), log);
                 scannerRepository.save(scanner);
+                newSignals.forEach(signal -> {
+                    eventPublisher.publish(SignalEvent.from(signal));
+                });
                 loggerFacade.logFinishWorkScanner(scanner);
             });
         loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());

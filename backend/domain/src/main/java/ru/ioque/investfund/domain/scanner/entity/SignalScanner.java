@@ -86,7 +86,7 @@ public class SignalScanner extends Domain {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public ScannerLog scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
+    public List<Signal> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
@@ -96,7 +96,7 @@ public class SignalScanner extends Domain {
         return processResult(result);
     }
 
-    private ScannerLog processResult(ScanningResult scanningResult) {
+    private List<Signal> processResult(ScanningResult scanningResult) {
         List<Signal> oldSignals = List.copyOf(this.signals);
         List<Signal> newSignals = List.copyOf(scanningResult.getSignals());
         List<Signal> finalSignalList = new ArrayList<>(newSignals.stream().filter(Signal::isBuy).toList());
@@ -118,7 +118,7 @@ public class SignalScanner extends Domain {
         signals.clear();
         signals.addAll(finalSignalList);
         lastExecutionDateTime = scanningResult.getDateTime();
-        return scanningResult.toScannerLog();
+        return newSignals;
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.event.FakeEventPublisher;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
@@ -32,7 +31,6 @@ public class ServiceController {
     JpaScannerLogRepository jpaScannerLogRepository;
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
-    FakeEventPublisher eventBus;
     DateTimeProvider dateTimeProvider;
 
     @PostMapping("/api/service/date-time")

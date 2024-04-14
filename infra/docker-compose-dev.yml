@@ -8,37 +8,51 @@ services:
       - "54321:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
-  backend:
-    container_name: backend-dev
-    build:
-      context: ../backend
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper
+    container_name: zookeeper
     ports:
-      - "8080:8080"
+      - "2181:2181"
     environment:
-      DB_HOST: "192.168.0.62"
-      DB_PORT: "54321"
-      SPRING_PROFILES_ACTIVE: "test"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider  http://localhost:8080/actuator/health || exit 1
-      interval: 5s
-      retries: 5
-      start_period: 20s
-      timeout: 10s
-  frontend:
-    container_name: frontend-dev
-    build:
-      context: ../frontend
-    environment:
-      API_HOST: 192.168.0.85
-      API_HTTP_MODE: ${API_HTTP_MODE:-http}
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    image: confluentinc/cp-server:7.4.1
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
     ports:
-      - "4200:4200"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider  http://localhost:4200/ || exit 1
-      interval: 5s
-      retries: 5
-      start_period: 20s
-      timeout: 10s
+      - "9092:9092"
+      - "9997:9997"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9997
+      KAFKA_JMX_HOSTNAME: kafka
+  kafbat-ui:
+    container_name: kafbat-ui
+    image: ghcr.io/kafbat/kafka-ui:latest
+    ports:
+      - 8085:8080
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_METRICS_PORT: 9997
+      KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
+      KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
+
 volumes:
   signal-scanner-db:
     driver: local

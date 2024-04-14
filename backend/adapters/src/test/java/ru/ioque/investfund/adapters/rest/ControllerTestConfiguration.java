@@ -32,6 +32,12 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
+    public EventPublisher mockEventPublisher() {
+        return mock(EventPublisher.class);
+    }
+
+    @Bean
+    @Primary
     public PsqlScannerRepository signalProducerRepo() {
         return mock(PsqlScannerRepository.class);
     }
@@ -100,11 +106,5 @@ public class ControllerTestConfiguration {
     @Primary
     public DateTimeProvider mockDateTimeProvider() {
         return mock(DateTimeProvider.class);
-    }
-
-    @Bean
-    @Primary
-    public EventPublisher mockEventBus() {
-        return mock(EventPublisher.class);
     }
 }
