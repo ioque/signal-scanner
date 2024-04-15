@@ -40,7 +40,7 @@ public class Datasource extends Domain {
         this.instruments = instruments;
     }
 
-    public static Datasource from(UUID id, CreateDatasourceCommand command) {
+    public static Datasource of(UUID id, CreateDatasourceCommand command) {
         return Datasource
             .builder()
             .id(id)

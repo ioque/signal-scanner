@@ -100,7 +100,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                 content()
                     .json(
                         objectMapper
-                            .writeValueAsString(SignalScannerResponse.from(scanner, instruments, logs))
+                            .writeValueAsString(SignalScannerResponse.of(scanner, instruments, logs))
                     )
             );
     }

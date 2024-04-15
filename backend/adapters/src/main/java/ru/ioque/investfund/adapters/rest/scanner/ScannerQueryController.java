@@ -42,6 +42,6 @@ public class ScannerQueryController {
         ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());
         List<ScannerLogEntity> logs = jpaScannerLogRepository.findAllByScannerId(scanner.getId());
-        return SignalScannerResponse.from(scanner, instruments, logs);
+        return SignalScannerResponse.of(scanner, instruments, logs);
     }
 }

@@ -30,6 +30,6 @@ public class RegisterDatasourceProcessor extends CommandProcessor<CreateDatasour
 
     @Override
     protected void handleFor(CreateDatasourceCommand command) {
-        repository.saveDatasource(Datasource.from(uuidProvider.generate(), command));
+        repository.saveDatasource(Datasource.of(uuidProvider.generate(), command));
     }
 }

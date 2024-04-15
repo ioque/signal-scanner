@@ -157,7 +157,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                     .json(
                         objectMapper
                             .writeValueAsString(
-                                InstrumentResponse.from(stock, history, intraday)
+                                InstrumentResponse.of(stock, history, intraday)
                             )
                     )
             );

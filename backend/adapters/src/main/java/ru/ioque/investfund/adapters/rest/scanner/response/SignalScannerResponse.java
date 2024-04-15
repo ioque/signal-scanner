@@ -37,7 +37,7 @@ public class SignalScannerResponse implements Serializable {
     List<ScannerLogResponse> logs;
     List<SignalResponse> signals;
 
-    public static SignalScannerResponse from(
+    public static SignalScannerResponse of(
         ScannerEntity scanner,
         List<InstrumentEntity> instruments,
         List<ScannerLogEntity> logs

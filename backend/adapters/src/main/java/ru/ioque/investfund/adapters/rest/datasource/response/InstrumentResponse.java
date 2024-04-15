@@ -26,7 +26,7 @@ public class InstrumentResponse implements Serializable {
     List<DailyValueResponse> historyValues;
     List<IntradayValueResponse> intradayValues;
 
-    public static InstrumentResponse from(InstrumentEntity instrument, List<HistoryValueEntity> history, List<IntradayValueEntity> intraday) {
+    public static InstrumentResponse of(InstrumentEntity instrument, List<HistoryValueEntity> history, List<IntradayValueEntity> intraday) {
         return InstrumentResponse.builder()
             .id(instrument.getId())
             .ticker(instrument.getTicker())

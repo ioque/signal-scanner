@@ -43,7 +43,7 @@ public class CreateScannerProcessor extends CommandProcessor<CreateScannerComman
 
     @Override
     protected void handleFor(CreateScannerCommand command) {
-        SignalScanner scanner = SignalScanner.from(uuidProvider.generate(), command);
+        SignalScanner scanner = SignalScanner.of(uuidProvider.generate(), command);
         datasourceRepository
             .getBy(command.getDatasourceId())
             .orElseThrow(

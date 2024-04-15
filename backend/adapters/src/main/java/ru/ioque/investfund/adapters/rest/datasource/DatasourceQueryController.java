@@ -49,7 +49,7 @@ public class DatasourceQueryController {
             instrument,
             dateTimeProvider.nowDate().atStartOfDay()
         );
-        return InstrumentResponse.from(instrument, history, intraday);
+        return InstrumentResponse.of(instrument, history, intraday);
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument")

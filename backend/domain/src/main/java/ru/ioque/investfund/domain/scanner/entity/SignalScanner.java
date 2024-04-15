@@ -58,7 +58,7 @@ public class SignalScanner extends Domain {
         this.signals = signals;
     }
 
-    public static SignalScanner from(UUID id, CreateScannerCommand command) {
+    public static SignalScanner of(UUID id, CreateScannerCommand command) {
         return SignalScanner.builder()
             .id(id)
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
