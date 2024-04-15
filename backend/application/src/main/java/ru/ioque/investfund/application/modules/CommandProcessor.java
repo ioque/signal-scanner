@@ -19,47 +19,47 @@ public abstract class CommandProcessor<C> {
     protected Validator validator;
     protected LoggerFacade loggerFacade;
 
+    protected abstract void handleFor(C command);
+
     public void handle(C command) {
         loggerFacade.log(new InfoLog(
             dateTimeProvider.nowDateTime(),
             String.format("Получена команда %s", command)
         ));
         validateCommand(command);
-        handleFor(command);
+        execute(command);
     }
 
-    protected abstract void handleFor(C command);
-
-    protected void validateCommand(C command) {
+    private void validateCommand(C command) {
         Set<ConstraintViolation<C>> violations = validator.validate(command);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
     }
 
-    protected void executeBusinessProcess(Runnable runnable, String description) {
-        long time = timeMeterWrapper(() -> tryWrapper(runnable));
-        loggerFacade.log(
-            new InfoLog(
-                dateTimeProvider.nowDateTime(),
-                String.format("%s, время выполнения составило %s мс", description, time)
-            )
-        );
+    private void execute(C command) {
+        try {
+            long time = timeMeterWrapper(() -> handleFor(command));
+            loggerFacade.log(
+                new InfoLog(
+                    dateTimeProvider.nowDateTime(),
+                    String.format("Комада %s выполнена, время выполнения составило %s мс", command, time)
+                )
+            );
+        } catch (Exception e) {
+            loggerFacade.log(
+                new ErrorLog(
+                    dateTimeProvider.nowDateTime(),
+                    String.format("Выполнение команды %s завершилось с ошибкой, текст ошибки: %s", command, e.getMessage()),
+                    e.getCause())
+            );
+            throw e;
+        }
     }
 
     private long timeMeterWrapper(Runnable runnable) {
         LocalDateTime start = dateTimeProvider.nowDateTime();
         runnable.run();
         return Duration.between(start, dateTimeProvider.nowDateTime()).toMillis();
-    }
-
-    private void tryWrapper(Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (RuntimeException e) {
-            loggerFacade.log(
-                new ErrorLog(dateTimeProvider.nowDateTime(), e.getMessage(), e.getCause())
-            );
-        }
     }
 }

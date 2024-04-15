@@ -35,9 +35,6 @@ public class RegisterDatasourceProcessor extends CommandProcessor<CreateDatasour
     @Override
     protected void handleFor(CreateDatasourceCommand command) {
         UUID newDatasourceId = uuidProvider.generate();
-        executeBusinessProcess(
-            () -> repository.saveDatasource(Datasource.of(newDatasourceId, command)),
-            String.format("Зарегистрирован источник данных[id=%s]", newDatasourceId)
-        );
+        repository.saveDatasource(Datasource.of(newDatasourceId, command));
     }
 }

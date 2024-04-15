@@ -31,17 +31,8 @@ public class EnableUpdateInstrumentProcessor extends CommandProcessor<EnableUpda
     @Override
     protected void handleFor(EnableUpdateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
-        executeBusinessProcess(
-            () -> {
-                datasource.enableUpdate(command.getTickers());
-                repository.saveDatasource(datasource);
-            },
-            String.format(
-                "В источнике данных[id=%s] включено обновление торговых данных для инструментов со следующими тикерами: %s",
-                datasource.getId(),
-                command.getTickers()
-            )
-        );
+        datasource.enableUpdate(command.getTickers());
+        repository.saveDatasource(datasource);
     }
 
     private Datasource getDatasource(UUID datasourceId) {

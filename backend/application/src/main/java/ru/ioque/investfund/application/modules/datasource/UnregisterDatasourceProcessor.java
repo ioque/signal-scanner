@@ -27,9 +27,6 @@ public class UnregisterDatasourceProcessor extends CommandProcessor<UnregisterDa
 
     @Override
     protected void handleFor(UnregisterDatasourceCommand command) {
-        executeBusinessProcess(
-            () -> repository.deleteDatasource(command.getDatasourceId()),
-            "Источник данных[id=%s] удален из системы."
-        );
+        repository.deleteDatasource(command.getDatasourceId());
     }
 }

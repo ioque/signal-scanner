@@ -40,26 +40,17 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
 
     @Override
     protected void handleFor(ProduceSignalCommand command) {
-        executeBusinessProcess(
-            () -> {
-                scannerRepository
-                    .getAllBy(command.getDatasourceId())
-                    .stream()
-                    .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
-                    .forEach(scanner -> {
-                        final List<Signal> newSignals = scanner.scanning(
-                            tradingDataRepository.findBy(scanner.getDatasourceId(), scanner.getTickers()),
-                            command.getWatermark()
-                        );
-                        scannerRepository.save(scanner);
-                        newSignals.forEach(signal -> eventPublisher.publish(SignalEvent.from(signal)));
-                    });
-            },
-            String.format(
-                "Выполнен поиск торговых сигналов в источнике данных[id=%s], время потока %s",
-                command.getDatasourceId(),
-                command.getWatermark()
-            )
-        );
+        scannerRepository
+            .getAllBy(command.getDatasourceId())
+            .stream()
+            .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
+            .forEach(scanner -> {
+                final List<Signal> newSignals = scanner.scanning(
+                    tradingDataRepository.findBy(scanner.getDatasourceId(), scanner.getTickers()),
+                    command.getWatermark()
+                );
+                scannerRepository.save(scanner);
+                newSignals.forEach(signal -> eventPublisher.publish(SignalEvent.from(signal)));
+            });
     }
 }

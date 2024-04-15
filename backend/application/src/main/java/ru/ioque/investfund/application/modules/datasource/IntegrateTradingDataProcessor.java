@@ -13,7 +13,6 @@ import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
@@ -49,24 +48,15 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
     @Override
     protected void handleFor(IntegrateTradingDataCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
-        executeBusinessProcess(
-            () -> {
-                datasource.getUpdatableInstruments().forEach(instrument -> {
-                    final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
-                    final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
-                    intraday.getLastNumber().ifPresent(instrument::updateLastTradingNumber);
-                    history.getLastDate().ifPresent(instrument::updateLastHistoryDate);
-                    repository.saveHistoryValues(history.getUniqueValues());
-                    repository.saveIntradayValues(intraday.getUniqueValues());
-                });
-                repository.saveDatasource(datasource);
-            },
-            String.format(
-                "Для источника данных[id=%s] выполнена интеграция торговых данных по инструментам со следующими тикерами: %s",
-                command.getDatasourceId(),
-                datasource.getUpdatableInstruments().stream().map(Instrument::getTicker).toList()
-            )
-        );
+        datasource.getUpdatableInstruments().forEach(instrument -> {
+            final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
+            final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
+            intraday.getLastNumber().ifPresent(instrument::updateLastTradingNumber);
+            history.getLastDate().ifPresent(instrument::updateLastHistoryDate);
+            repository.saveHistoryValues(history.getUniqueValues());
+            repository.saveIntradayValues(intraday.getUniqueValues());
+        });
+        repository.saveDatasource(datasource);
         eventPublisher.publish(TradingDataUpdatedEvent.builder()
             .id(uuidProvider.generate())
             .dateTime(dateTimeProvider.nowDateTime())

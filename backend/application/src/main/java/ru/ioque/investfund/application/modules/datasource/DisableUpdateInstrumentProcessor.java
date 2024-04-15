@@ -31,17 +31,8 @@ public class DisableUpdateInstrumentProcessor extends CommandProcessor<DisableUp
     @Override
     protected void handleFor(DisableUpdateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
-        executeBusinessProcess(
-            () -> {
-                datasource.disableUpdate(command.getTickers());
-                repository.saveDatasource(datasource);
-            },
-            String.format(
-                "В источнике данных[id=%s] отключено обновление торговых данных для инструментов со следующими тикерами: %s",
-                datasource.getId(),
-                command.getTickers()
-            )
-        );
+        datasource.disableUpdate(command.getTickers());
+        repository.saveDatasource(datasource);
     }
 
     private Datasource getDatasource(UUID datasourceId) {

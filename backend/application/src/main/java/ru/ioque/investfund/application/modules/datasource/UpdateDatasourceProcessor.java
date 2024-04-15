@@ -31,13 +31,8 @@ public class UpdateDatasourceProcessor extends CommandProcessor<UpdateDatasource
     @Override
     protected void handleFor(UpdateDatasourceCommand command) {
         final Datasource datasource = getDatasource(command.getId());
-        executeBusinessProcess(
-            () -> {
-                datasource.update(command);
-                repository.saveDatasource(datasource);
-            },
-            String.format("Источник данных[id=%s] обновлен", command.getId())
-        );
+        datasource.update(command);
+        repository.saveDatasource(datasource);
     }
 
     private Datasource getDatasource(UUID datasourceId) {

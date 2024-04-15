@@ -43,13 +43,8 @@ public class CreateScannerProcessor extends CommandProcessor<CreateScannerComman
         final Datasource datasource = getDatasource(command.getDatasourceId());
         datasource.checkExistsTickers(command.getTickers());
         final UUID newScannerId = uuidProvider.generate();
-        executeBusinessProcess(
-            () -> {
-                SignalScanner scanner = SignalScanner.of(newScannerId, command);
-                scannerRepository.save(scanner);
-            },
-            String.format("Создан сканер сигналов[id=%s]", newScannerId)
-        );
+        SignalScanner scanner = SignalScanner.of(newScannerId, command);
+        scannerRepository.save(scanner);
     }
 
     private Datasource getDatasource(UUID datasourceId) {

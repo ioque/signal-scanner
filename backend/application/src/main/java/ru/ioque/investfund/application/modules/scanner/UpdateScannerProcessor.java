@@ -39,13 +39,8 @@ public class UpdateScannerProcessor extends CommandProcessor<UpdateScannerComman
         final SignalScanner scanner = getScanner(command.getScannerId());
         final Datasource datasource = getDatasource(scanner.getDatasourceId());
         datasource.checkExistsTickers(command.getTickers());
-        executeBusinessProcess(
-            () -> {
-                scanner.update(command);
-                scannerRepository.save(scanner);
-            },
-            String.format("Сканер[id=%s] обновлен", scanner.getId())
-        );
+        scanner.update(command);
+        scannerRepository.save(scanner);
     }
 
     private Datasource getDatasource(UUID datasourceId) {

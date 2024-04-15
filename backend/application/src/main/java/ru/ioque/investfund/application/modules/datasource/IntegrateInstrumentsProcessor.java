@@ -36,16 +36,8 @@ public class IntegrateInstrumentsProcessor extends CommandProcessor<IntegrateIns
     @Override
     protected void handleFor(IntegrateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
-        executeBusinessProcess(
-            () -> {
-                datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
-                repository.saveDatasource(datasource);
-            },
-            String.format(
-                "Для источника данных[id=%s] выполнена интеграция финансовых инструментов",
-                command.getDatasourceId()
-            )
-        );
+        datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
+        repository.saveDatasource(datasource);
     }
 
     private Datasource getDatasource(UUID datasourceId) {
