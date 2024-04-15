@@ -2,11 +2,11 @@ package ru.ioque.investfund.adapters.logger;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.share.logger.ApplicationLog;
-import ru.ioque.investfund.application.share.logger.ErrorLog;
-import ru.ioque.investfund.application.share.logger.InfoLog;
+import ru.ioque.investfund.domain.core.ApplicationLog;
+import ru.ioque.investfund.domain.core.ErrorLog;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.share.logger.WarningLog;
+import ru.ioque.investfund.domain.core.WarningLog;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

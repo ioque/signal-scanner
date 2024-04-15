@@ -6,8 +6,8 @@ import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.share.logger.ErrorLog;
-import ru.ioque.investfund.application.share.logger.InfoLog;
+import ru.ioque.investfund.domain.core.ErrorLog;
+import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

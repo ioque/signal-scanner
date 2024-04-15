@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.share.logger;
+package ru.ioque.investfund.domain.core;
 
 import java.time.LocalDateTime;
 
