@@ -8,9 +8,9 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
@@ -31,13 +31,13 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
     public IntegrateTradingDataProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade,
+        LoggerProvider loggerProvider,
         UUIDProvider uuidProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerProvider);
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;

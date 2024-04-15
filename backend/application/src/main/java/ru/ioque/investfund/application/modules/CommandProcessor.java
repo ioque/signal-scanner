@@ -5,9 +5,9 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.share.logger.ErrorLog;
 import ru.ioque.investfund.application.share.logger.InfoLog;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -17,12 +17,12 @@ import java.util.Set;
 public abstract class CommandProcessor<C> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;
-    protected LoggerFacade loggerFacade;
+    protected LoggerProvider loggerProvider;;
 
     protected abstract void handleFor(C command);
 
     public void handle(C command) {
-        loggerFacade.log(new InfoLog(
+        loggerProvider.log(new InfoLog(
             dateTimeProvider.nowDateTime(),
             String.format("Получена команда %s", command)
         ));
@@ -40,14 +40,14 @@ public abstract class CommandProcessor<C> {
     private void execute(C command) {
         try {
             long time = timeMeterWrapper(() -> handleFor(command));
-            loggerFacade.log(
+            loggerProvider.log(
                 new InfoLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("Комада %s выполнена, время выполнения составило %s мс", command, time)
                 )
             );
         } catch (Exception e) {
-            loggerFacade.log(
+            loggerProvider.log(
                 new ErrorLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("Выполнение команды %s завершилось с ошибкой, текст ошибки: %s", command, e.getMessage()),

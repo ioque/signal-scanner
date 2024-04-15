@@ -6,9 +6,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
@@ -23,11 +23,11 @@ public class RegisterDatasourceProcessor extends CommandProcessor<CreateDatasour
     public RegisterDatasourceProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade,
+        LoggerProvider loggerProvider,
         UUIDProvider uuidProvider,
         DatasourceRepository repository
     ) {
-        super(dateTimeProvider, validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerProvider);
         this.uuidProvider = uuidProvider;
         this.repository = repository;
     }

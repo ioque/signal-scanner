@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
@@ -23,11 +23,11 @@ public class IntegrateInstrumentsProcessor extends CommandProcessor<IntegrateIns
     public IntegrateInstrumentsProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade,
+        LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository repository
     ) {
-        super(dateTimeProvider, validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerProvider);
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
         this.repository = repository;

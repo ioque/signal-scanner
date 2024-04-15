@@ -6,10 +6,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingDataRepository;
 import ru.ioque.investfund.application.modules.CommandProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.event.SignalEvent;
@@ -26,12 +26,12 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
     public ProduceSignalProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade,
+        LoggerProvider loggerProvider,
         ScannerRepository scannerRepository,
         TradingDataRepository tradingDataRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerProvider);
         this.dateTimeProvider = dateTimeProvider;
         this.scannerRepository = scannerRepository;
         this.tradingDataRepository = tradingDataRepository;

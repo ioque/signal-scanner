@@ -6,10 +6,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -26,12 +26,12 @@ public class CreateScannerProcessor extends CommandProcessor<CreateScannerComman
     public CreateScannerProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade,
+        LoggerProvider loggerProvider,
         UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerProvider);
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceRepository = datasourceRepository;

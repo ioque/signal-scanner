@@ -16,7 +16,6 @@ import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceProces
 import ru.ioque.investfund.application.modules.scanner.CreateScannerProcessor;
 import ru.ioque.investfund.application.modules.scanner.ProduceSignalProcessor;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerProcessor;
-import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class FakeDIContainer {
     FakeScannerLogRepository scannerLogRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
-    LoggerFacade loggerFacade;
     FakeEventPublisher eventPublisher;
     DisableUpdateInstrumentProcessor disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentProcessor enableUpdateInstrumentProcessor;
@@ -56,21 +54,80 @@ public class FakeDIContainer {
         loggerProvider = new FakeLoggerProvider();
         uuidProvider = new FakeUUIDProvider();
         scannerLogRepository = new FakeScannerLogRepository();
-        loggerFacade = new LoggerFacade(dateTimeProvider, loggerProvider);
         datasourceRepository = new FakeDatasourceRepository();
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);
 
-        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(dateTimeProvider, validator, loggerFacade, datasourceRepository);
-        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentProcessor(dateTimeProvider, validator, loggerFacade, datasourceRepository);
-        integrateInstrumentsProcessor = new IntegrateInstrumentsProcessor(dateTimeProvider, validator, loggerFacade, exchangeProvider, datasourceRepository);
-        integrateTradingDataProcessor = new IntegrateTradingDataProcessor(dateTimeProvider, validator, loggerFacade, uuidProvider, exchangeProvider, datasourceRepository, eventPublisher);
-        registerDatasourceProcessor = new RegisterDatasourceProcessor(dateTimeProvider, validator, loggerFacade, uuidProvider, datasourceRepository);
-        unregisterDatasourceProcessor = new UnregisterDatasourceProcessor(dateTimeProvider, validator, loggerFacade, datasourceRepository);
-        updateDatasourceProcessor = new UpdateDatasourceProcessor(dateTimeProvider, validator, loggerFacade, datasourceRepository);
-        createScannerProcessor = new CreateScannerProcessor(dateTimeProvider, validator, loggerFacade, uuidProvider, scannerRepository, datasourceRepository);
-        updateScannerProcessor = new UpdateScannerProcessor(dateTimeProvider, validator, loggerFacade, scannerRepository, datasourceRepository);
-        produceSignalProcessor = new ProduceSignalProcessor(dateTimeProvider, validator, loggerFacade, scannerRepository, tradingDataRepository, eventPublisher);
+        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            datasourceRepository
+        );
+        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            datasourceRepository
+        );
+        integrateInstrumentsProcessor = new IntegrateInstrumentsProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            exchangeProvider,
+            datasourceRepository
+        );
+        integrateTradingDataProcessor = new IntegrateTradingDataProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            uuidProvider,
+            exchangeProvider,
+            datasourceRepository,
+            eventPublisher
+        );
+        registerDatasourceProcessor = new RegisterDatasourceProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            uuidProvider,
+            datasourceRepository
+        );
+        unregisterDatasourceProcessor = new UnregisterDatasourceProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            datasourceRepository
+        );
+        updateDatasourceProcessor = new UpdateDatasourceProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            datasourceRepository
+        );
+        createScannerProcessor = new CreateScannerProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            uuidProvider,
+            scannerRepository,
+            datasourceRepository
+        );
+        updateScannerProcessor = new UpdateScannerProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            scannerRepository,
+            datasourceRepository
+        );
+        produceSignalProcessor = new ProduceSignalProcessor(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            scannerRepository,
+            tradingDataRepository,
+            eventPublisher
+        );
 
         commandBus = new CommandBus(
             List.of(

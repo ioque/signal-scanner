@@ -3,5 +3,5 @@ package ru.ioque.investfund.application.adapters;
 import ru.ioque.investfund.application.share.logger.ApplicationLog;
 
 public interface LoggerProvider {
-    void addToLog(ApplicationLog log);
+    void log(ApplicationLog log);
 }

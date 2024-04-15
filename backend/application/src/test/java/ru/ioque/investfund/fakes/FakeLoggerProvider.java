@@ -18,7 +18,7 @@ public class FakeLoggerProvider implements LoggerProvider {
     }
 
     @Override
-    public void addToLog(ApplicationLog logPart) {
+    public void log(ApplicationLog logPart) {
         log.add(logPart);
     }
 }

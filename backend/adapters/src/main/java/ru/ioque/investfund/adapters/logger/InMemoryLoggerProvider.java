@@ -17,7 +17,7 @@ public class InMemoryLoggerProvider implements LoggerProvider {
     public List<ApplicationLog> logList = new CopyOnWriteArrayList<>();
 
     @Override
-    public void addToLog(ApplicationLog logPart) {
+    public void log(ApplicationLog logPart) {
         logList.add(logPart);
         if (logPart instanceof InfoLog infoLog) {
             log.info(infoLog.getMsg());
