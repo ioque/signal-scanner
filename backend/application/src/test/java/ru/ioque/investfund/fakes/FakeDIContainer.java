@@ -70,7 +70,7 @@ public class FakeDIContainer {
         updateDatasourceProcessor = new UpdateDatasourceProcessor(validator, loggerFacade, datasourceRepository);
         createScannerProcessor = new CreateScannerProcessor(validator, loggerFacade, uuidProvider, dateTimeProvider, scannerRepository, scannerLogRepository, datasourceRepository);
         updateScannerProcessor = new UpdateScannerProcessor(validator, loggerFacade, dateTimeProvider, scannerRepository, scannerLogRepository, datasourceRepository);
-        produceSignalProcessor = new ProduceSignalProcessor(validator, loggerFacade, dateTimeProvider, scannerRepository, scannerLogRepository, tradingDataRepository);
+        produceSignalProcessor = new ProduceSignalProcessor(validator, loggerFacade, dateTimeProvider, scannerRepository, tradingDataRepository, eventPublisher);
 
         commandBus = new CommandBus(
             List.of(

@@ -35,5 +35,6 @@ public class DisableUpdateInstrumentProcessor extends CommandProcessor<DisableUp
             );
         datasource.disableUpdate(command.getTickers());
         repository.saveDatasource(datasource);
+        loggerFacade.logDisableUpdate(datasource.getId(), command.getTickers());
     }
 }

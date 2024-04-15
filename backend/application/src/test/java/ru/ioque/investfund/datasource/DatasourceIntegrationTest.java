@@ -311,8 +311,6 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
-
-        commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         initDealDatas(
             buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1),
             buildBuyDealBy(datasourceId, 1L, "AFKS", "11:00:00", 10D, 10D, 1)
@@ -322,10 +320,20 @@ public class DatasourceIntegrationTest extends BaseTest {
             buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
+        commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
+        assertTrue(
+            loggerProvider()
+                .logContainsMessageParts(
+                    String.format(
+                        "В источнике данных[id=%s] отключено обновление торговых данных для инструментов со следующими тикерами: [AFKS]",
+                        datasourceId
+                    )
+                )
+        );
     }
 
     @Test

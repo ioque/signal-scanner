@@ -7,6 +7,7 @@ import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -113,6 +114,18 @@ public class LoggerFacade {
     public void logUpdateSignalScanner(UUID scannerId) {
         log(
             new InfoLog("Обновлен сканер сигналов с идентификатором " + scannerId + ".")
+        );
+    }
+
+    public void logDisableUpdate(UUID id, List<String> tickers) {
+        log(
+            new InfoLog(
+                String.format(
+                    "В источнике данных[id=%s] отключено обновление торговых данных для инструментов со следующими тикерами: %s",
+                    id,
+                    tickers
+                )
+            )
         );
     }
 }
