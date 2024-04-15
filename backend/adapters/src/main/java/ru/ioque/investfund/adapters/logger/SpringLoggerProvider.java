@@ -2,23 +2,17 @@ package ru.ioque.investfund.adapters.logger;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
-import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.domain.core.WarningLog;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Component
-public class InMemoryLoggerProvider implements LoggerProvider {
-    public List<ApplicationLog> logList = new CopyOnWriteArrayList<>();
-
+public class SpringLoggerProvider implements LoggerProvider {
     @Override
     public void log(ApplicationLog logPart) {
-        logList.add(logPart);
         if (logPart instanceof InfoLog infoLog) {
             log.info(infoLog.getMsg());
         }

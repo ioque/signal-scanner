@@ -11,8 +11,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 import java.util.List;
 
@@ -37,33 +37,35 @@ public class DatasourceProviderImpl implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<HistoryValue> fetchHistoryBy(Datasource datasource, Instrument instrument) {
-        return moexClient
-            .fetchHistory(
-                datasource.getUrl(),
-                instrument.getTicker(),
-                instrument.historyLeftBound(dateTimeProvider.nowDate()),
-                instrument.historyRightBound(dateTimeProvider.nowDate())
-            )
-            .stream()
-            .map(row -> row.toDomain(datasource.getId()))
-            .distinct()
-            .toList();
+    public HistoryBatch fetchHistoryBy(Datasource datasource, Instrument instrument) {
+        return new HistoryBatch(
+            moexClient
+                .fetchHistory(
+                    datasource.getUrl(),
+                    instrument.getTicker(),
+                    instrument.historyLeftBound(dateTimeProvider.nowDate()),
+                    instrument.historyRightBound(dateTimeProvider.nowDate())
+                )
+                .stream()
+                .map(row -> row.toDomain(datasource.getId()))
+                .toList()
+        );
     }
 
     @Override
     @SneakyThrows
-    public List<IntradayValue> fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
-        return moexClient
-            .fetchIntradayValues(
-                datasource.getUrl(),
-                instrument.getTicker(),
-                instrument.getLastTradingNumber()
-            )
-            .stream()
-            .map(row -> row.toDomain(datasource.getId()))
-            .filter(row -> row.getNumber() > instrument.getLastTradingNumber())
-            .distinct()
-            .toList();
+    public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
+        return new IntradayBatch(
+            moexClient
+                .fetchIntradayValues(
+                    datasource.getUrl(),
+                    instrument.getTicker(),
+                    instrument.getLastTradingNumber()
+                )
+                .stream()
+                .map(row -> row.toDomain(datasource.getId()))
+                .filter(row -> row.getNumber() > instrument.getLastTradingNumber())
+                .toList()
+        );
     }
 }

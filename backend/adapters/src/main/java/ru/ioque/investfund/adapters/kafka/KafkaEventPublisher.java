@@ -9,7 +9,7 @@ import ru.ioque.investfund.domain.core.DomainEvent;
 
 @Component
 @AllArgsConstructor
-@Profile("!adapters-test")
+@Profile("!adapter-tests")
 public class KafkaEventPublisher implements EventPublisher {
     KafkaTemplate<String, DomainEvent> kafkaTemplate;
 

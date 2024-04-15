@@ -11,7 +11,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
@@ -82,12 +81,6 @@ public class ControllerTestConfiguration {
     @Primary
     public JpaDatasourceRepository mockExchangeEntityRepository() {
         return mock(JpaDatasourceRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public JpaScannerLogRepository mockScannerLogEntityRepository() {
-        return mock(JpaScannerLogRepository.class);
     }
 
     @Bean

@@ -11,7 +11,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 
 import java.io.Serializable;
@@ -34,13 +33,11 @@ public class SignalScannerResponse implements Serializable {
     LocalDateTime lastExecutionDateTime;
     SignalConfigResponse config;
     List<InstrumentInListResponse> instruments;
-    List<ScannerLogResponse> logs;
     List<SignalResponse> signals;
 
     public static SignalScannerResponse of(
         ScannerEntity scanner,
-        List<InstrumentEntity> instruments,
-        List<ScannerLogEntity> logs
+        List<InstrumentEntity> instruments
     ) {
         return SignalScannerResponse.builder()
             .id(scanner.getId())
@@ -49,7 +46,6 @@ public class SignalScannerResponse implements Serializable {
             .lastExecutionDateTime(scanner.getLastExecutionDateTime())
             .config(SignalConfigResponse.from(scanner))
             .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
-            .logs(logs.stream().map(ScannerLogResponse::from).toList())
             .signals(scanner.getSignals()
                 .stream()
                 .map(signal -> SignalResponse

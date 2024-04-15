@@ -22,7 +22,6 @@ import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
-import ru.ioque.investfund.fakes.FakeScannerLogRepository;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
 import ru.ioque.investfund.fakes.FakeTradingDataRepository;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
@@ -59,10 +58,6 @@ public class BaseTest {
 
     protected FakeTradingDataRepository tradingDataRepository() {
         return fakeDIContainer.getTradingDataRepository();
-    }
-
-    protected final FakeScannerLogRepository scannerLogRepository() {
-        return fakeDIContainer.getScannerLogRepository();
     }
 
     protected final FakeLoggerProvider loggerProvider() {

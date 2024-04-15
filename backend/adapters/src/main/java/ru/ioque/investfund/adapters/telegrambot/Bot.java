@@ -1,5 +1,8 @@
 package ru.ioque.investfund.adapters.telegrambot;
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
@@ -14,15 +17,17 @@ import ru.ioque.investfund.domain.scanner.event.SignalEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Component
+@Profile("!adapter-tests")
 public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
-    private final BotConfig config;
+    private final String botToken;
     private final Set<Long> chatIds = new HashSet<>();
     private final TelegramClient telegramClient;
 
-    public Bot(BotConfig config) {
-        this.config = config;
-        this.telegramClient = new OkHttpTelegramClient(config.getToken());
+    public Bot(@Value("${bot.token}") String botToken) {
+        this.botToken = botToken;
+        this.telegramClient = new OkHttpTelegramClient(botToken);
     }
 
 
@@ -45,11 +50,6 @@ public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateC
                 e.printStackTrace();
             }
         });
-    }
-
-    @Override
-    public String getBotToken() {
-        return config.getToken();
     }
 
     @Override

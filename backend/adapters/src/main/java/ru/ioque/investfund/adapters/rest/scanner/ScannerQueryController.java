@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 
 import java.util.List;
@@ -26,7 +24,6 @@ import java.util.UUID;
 public class ScannerQueryController {
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaInstrumentRepository instrumentEntityRepository;
-    JpaScannerLogRepository jpaScannerLogRepository;
 
     @GetMapping("/api/scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {
@@ -41,7 +38,6 @@ public class ScannerQueryController {
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());
-        List<ScannerLogEntity> logs = jpaScannerLogRepository.findAllByScannerId(scanner.getId());
-        return SignalScannerResponse.of(scanner, instruments, logs);
+        return SignalScannerResponse.of(scanner, instruments);
     }
 }

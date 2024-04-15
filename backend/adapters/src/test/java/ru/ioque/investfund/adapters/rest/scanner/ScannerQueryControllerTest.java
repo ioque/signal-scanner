@@ -11,10 +11,8 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerLogEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.adapters.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
@@ -35,8 +33,6 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     JpaSignalScannerRepository signalScannerEntityRepository;
     @Autowired
     JpaInstrumentRepository instrumentEntityRepository;
-    @Autowired
-    JpaScannerLogRepository jpaScannerLogRepository;
 
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final UUID SIGNAL_ID = UUID.randomUUID();
@@ -80,7 +76,6 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     public void testCase2() {
         final ScannerEntity scanner = getSignalScanners().stream().findFirst().orElseThrow();
         final List<InstrumentEntity> instruments = getInstruments();
-        final List<ScannerLogEntity> logs = getLogs();
         Mockito
             .when(signalScannerEntityRepository.findById(scanner.getId()))
             .thenReturn(Optional.of(scanner));
@@ -90,9 +85,6 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                     .findAllByTickerIn(scanner.getTickers())
             )
             .thenReturn(instruments);
-        Mockito
-            .when(jpaScannerLogRepository.findAllByScannerId(SIGNAL_ID))
-            .thenReturn(logs);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/scanner/" + SIGNAL_ID))
             .andExpect(status().isOk())
@@ -100,7 +92,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                 content()
                     .json(
                         objectMapper
-                            .writeValueAsString(SignalScannerResponse.of(scanner, instruments, logs))
+                            .writeValueAsString(SignalScannerResponse.of(scanner, instruments))
                     )
             );
     }
@@ -126,17 +118,6 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                 .annualHigh(1D)
                 .annualLow(1D)
                 .updatable(true)
-                .build()
-        );
-    }
-
-    private List<ScannerLogEntity> getLogs() {
-        return List.of(
-            ScannerLogEntity.builder()
-                .id(1L)
-                .dateTime(LocalDateTime.now())
-                .message("msg")
-                .scannerId(SIGNAL_ID)
                 .build()
         );
     }

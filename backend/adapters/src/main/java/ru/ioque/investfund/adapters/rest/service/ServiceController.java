@@ -13,7 +13,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerLogRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -28,7 +27,6 @@ public class ServiceController {
     JpaInstrumentRepository instrumentEntityRepository;
     JpaHistoryValueRepository jpaHistoryValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
-    JpaScannerLogRepository jpaScannerLogRepository;
     JpaSignalScannerRepository signalScannerEntityRepository;
     JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
     DateTimeProvider dateTimeProvider;
@@ -44,7 +42,6 @@ public class ServiceController {
         jpaHistoryValueRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
         exchangeEntityRepository.deleteAll();
-        jpaScannerLogRepository.deleteAll();
         signalScannerEntityRepository.deleteAll();
         jpaArchivedIntradayValueRepository.deleteAll();
         dateTimeProvider.initToday(null);

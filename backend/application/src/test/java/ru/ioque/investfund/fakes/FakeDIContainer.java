@@ -29,7 +29,6 @@ public class FakeDIContainer {
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
     FakeTradingDataRepository tradingDataRepository;
-    FakeScannerLogRepository scannerLogRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeEventPublisher eventPublisher;
@@ -53,7 +52,6 @@ public class FakeDIContainer {
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
         uuidProvider = new FakeUUIDProvider();
-        scannerLogRepository = new FakeScannerLogRepository();
         datasourceRepository = new FakeDatasourceRepository();
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);

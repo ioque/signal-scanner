@@ -45,8 +45,7 @@ public class SignalScanner extends Domain {
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
         List<String> tickers,
-        List<Signal> signals,
-        List<ScannerLog> scannerLogs
+        List<Signal> signals
     ) {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
