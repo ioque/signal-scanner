@@ -8,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,28 +75,12 @@ public class Instrument extends Domain {
         return Boolean.TRUE.equals(updatable);
     }
 
-    public String printMarketStat() {
-        return String.format(
-            "Номер последней сделки: %s, исторические данные выгружены на %s.",
-            lastTradingNumber,
-            lastHistoryDate
-        );
+    public void updateLastTradingNumber(Long lastTradingNumber) {
+        this.lastTradingNumber = lastTradingNumber;
     }
 
-    public void updateLastTradingNumber(List<IntradayValue> intraday) {
-        intraday
-            .stream()
-            .mapToLong(IntradayValue::getNumber)
-            .max()
-            .ifPresent(this::setLastTradingNumber);
-    }
-
-    public void updateLastHistoryDate(List<HistoryValue> history) {
-        history
-            .stream()
-            .max(HistoryValue::compareTo)
-            .map(HistoryValue::getTradeDate)
-            .ifPresent(this::setLastHistoryDate);
+    public void updateLastHistoryDate(LocalDate lastHistoryDate) {
+        this.lastHistoryDate = lastHistoryDate;
     }
 
     private void setLastHistoryDate(LocalDate lastHistoryDate) {

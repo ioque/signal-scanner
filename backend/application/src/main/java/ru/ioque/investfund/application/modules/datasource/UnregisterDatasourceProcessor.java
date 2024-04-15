@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
@@ -15,15 +16,20 @@ public class UnregisterDatasourceProcessor extends CommandProcessor<UnregisterDa
     DatasourceRepository repository;
 
     public UnregisterDatasourceProcessor(
+        DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerFacade loggerFacade, DatasourceRepository repository
+        LoggerFacade loggerFacade,
+        DatasourceRepository repository
     ) {
-        super(validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerFacade);
         this.repository = repository;
     }
 
     @Override
     protected void handleFor(UnregisterDatasourceCommand command) {
-        repository.deleteDatasource(command.getDatasourceId());
+        executeBusinessProcess(
+            () -> repository.deleteDatasource(command.getDatasourceId()),
+            "Источник данных[id=%s] удален из системы."
+        );
     }
 }

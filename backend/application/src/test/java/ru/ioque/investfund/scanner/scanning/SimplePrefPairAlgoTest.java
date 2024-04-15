@@ -5,12 +5,10 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.entity.ScannerLog;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,7 +78,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(2, getLogs().size());
         assertSignals(getSignals(), 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
@@ -102,7 +99,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(3, getLogs().size());
         assertSignals(getSignals(), 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
@@ -446,9 +442,5 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 251D, 136926D, 1),
             buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
-    }
-
-    private List<ScannerLog> getLogs() {
-        return scannerLogRepository().logs.get(scannerRepository().getAllBy(getDatasourceId()).get(0).getId());
     }
 }

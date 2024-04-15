@@ -13,11 +13,12 @@ import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
-import java.util.List;
+import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -29,15 +30,15 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
     EventPublisher eventPublisher;
 
     public IntegrateTradingDataProcessor(
+        DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerFacade loggerFacade,
         UUIDProvider uuidProvider,
-        DateTimeProvider dateTimeProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
         EventPublisher eventPublisher
     ) {
-        super(validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerFacade);
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
@@ -47,36 +48,39 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
 
     @Override
     protected void handleFor(IntegrateTradingDataCommand command) {
-        final Datasource datasource = repository
-            .getBy(command.getDatasourceId())
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", command.getDatasourceId())
-                )
-            );
-        datasource.getUpdatableInstruments().forEach(instrument -> {
-            loggerFacade.logRunUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
-            final List<HistoryValue> history = datasourceProvider
-                .fetchHistoryBy(datasource, instrument)
-                .stream()
-                .distinct()
-                .toList();
-            final List<IntradayValue> intraday = datasourceProvider
-                .fetchIntradayValuesBy(datasource, instrument)
-                .stream()
-                .distinct()
-                .toList();
-            instrument.updateLastTradingNumber(intraday);
-            instrument.updateLastHistoryDate(history);
-            repository.saveHistoryValues(history);
-            repository.saveIntradayValues(intraday);
-            loggerFacade.logFinishUpdateMarketData(instrument, dateTimeProvider.nowDateTime());
-        });
-        repository.saveDatasource(datasource);
+        final Datasource datasource = getDatasource(command.getDatasourceId());
+        executeBusinessProcess(
+            () -> {
+                datasource.getUpdatableInstruments().forEach(instrument -> {
+                    final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
+                    final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
+                    intraday.getLastNumber().ifPresent(instrument::updateLastTradingNumber);
+                    history.getLastDate().ifPresent(instrument::updateLastHistoryDate);
+                    repository.saveHistoryValues(history.getUniqueValues());
+                    repository.saveIntradayValues(intraday.getUniqueValues());
+                });
+                repository.saveDatasource(datasource);
+            },
+            String.format(
+                "Для источника данных[id=%s] выполнена интеграция торговых данных по инструментам со следующими тикерами: %s",
+                command.getDatasourceId(),
+                datasource.getUpdatableInstruments().stream().map(Instrument::getTicker).toList()
+            )
+        );
         eventPublisher.publish(TradingDataUpdatedEvent.builder()
             .id(uuidProvider.generate())
             .dateTime(dateTimeProvider.nowDateTime())
             .datasourceId(datasource.getId())
             .build());
+    }
+
+    private Datasource getDatasource(UUID datasourceId) {
+        return repository
+            .getBy(datasourceId)
+            .orElseThrow(
+                () -> new IllegalArgumentException(
+                    String.format("Источник данных[id=%s] не существует.", datasourceId)
+                )
+            );
     }
 }

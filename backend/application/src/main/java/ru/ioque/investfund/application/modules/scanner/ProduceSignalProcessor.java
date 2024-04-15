@@ -13,27 +13,25 @@ import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.event.SignalEvent;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalCommand> {
-    DateTimeProvider dateTimeProvider;
     ScannerRepository scannerRepository;
     TradingDataRepository tradingDataRepository;
     EventPublisher eventPublisher;
 
     public ProduceSignalProcessor(
+        DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerFacade loggerFacade,
-        DateTimeProvider dateTimeProvider,
         ScannerRepository scannerRepository,
         TradingDataRepository tradingDataRepository,
         EventPublisher eventPublisher
     ) {
-        super(validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerFacade);
         this.dateTimeProvider = dateTimeProvider;
         this.scannerRepository = scannerRepository;
         this.tradingDataRepository = tradingDataRepository;
@@ -42,27 +40,26 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
 
     @Override
     protected void handleFor(ProduceSignalCommand command) {
-        loggerFacade.logRunScanning(dateTimeProvider.nowDateTime());
-        scannerRepository
-            .getAllBy(command.getDatasourceId())
-            .stream()
-            .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
-            .forEach(scanner -> {
-                loggerFacade.logRunWorkScanner(scanner);
-                final List<TradingSnapshot> snapshots = tradingDataRepository.findBy(
-                    scanner.getDatasourceId(),
-                    scanner.getTickers()
-                );
-                final List<Signal> newSignals = scanner.scanning(
-                    snapshots,
-                    command.getWatermark()
-                );
-                scannerRepository.save(scanner);
-                newSignals.forEach(signal -> {
-                    eventPublisher.publish(SignalEvent.from(signal));
-                });
-                loggerFacade.logFinishWorkScanner(scanner);
-            });
-        loggerFacade.logFinishedScanning(dateTimeProvider.nowDateTime());
+        executeBusinessProcess(
+            () -> {
+                scannerRepository
+                    .getAllBy(command.getDatasourceId())
+                    .stream()
+                    .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
+                    .forEach(scanner -> {
+                        final List<Signal> newSignals = scanner.scanning(
+                            tradingDataRepository.findBy(scanner.getDatasourceId(), scanner.getTickers()),
+                            command.getWatermark()
+                        );
+                        scannerRepository.save(scanner);
+                        newSignals.forEach(signal -> eventPublisher.publish(SignalEvent.from(signal)));
+                    });
+            },
+            String.format(
+                "Выполнен поиск торговых сигналов в источнике данных[id=%s], время потока %s",
+                command.getDatasourceId(),
+                command.getWatermark()
+            )
+        );
     }
 }

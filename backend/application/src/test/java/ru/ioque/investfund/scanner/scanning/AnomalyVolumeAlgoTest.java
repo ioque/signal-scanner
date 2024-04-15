@@ -57,7 +57,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(8, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
@@ -80,7 +79,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(10, loggerProvider().log.size());
         assertSignals(getSignals(), 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);

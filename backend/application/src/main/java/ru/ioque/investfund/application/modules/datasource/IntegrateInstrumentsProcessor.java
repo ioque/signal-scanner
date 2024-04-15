@@ -12,21 +12,22 @@ import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
+import java.util.UUID;
+
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntegrateInstrumentsProcessor extends CommandProcessor<IntegrateInstrumentsCommand> {
-    DateTimeProvider dateTimeProvider;
     DatasourceProvider datasourceProvider;
     DatasourceRepository repository;
 
     public IntegrateInstrumentsProcessor(
+        DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerFacade loggerFacade,
-        DateTimeProvider dateTimeProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository repository
     ) {
-        super(validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerFacade);
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
         this.repository = repository;
@@ -34,16 +35,26 @@ public class IntegrateInstrumentsProcessor extends CommandProcessor<IntegrateIns
 
     @Override
     protected void handleFor(IntegrateInstrumentsCommand command) {
-        final Datasource datasource = repository
-            .getBy(command.getDatasourceId())
+        final Datasource datasource = getDatasource(command.getDatasourceId());
+        executeBusinessProcess(
+            () -> {
+                datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
+                repository.saveDatasource(datasource);
+            },
+            String.format(
+                "Для источника данных[id=%s] выполнена интеграция финансовых инструментов",
+                command.getDatasourceId()
+            )
+        );
+    }
+
+    private Datasource getDatasource(UUID datasourceId) {
+        return repository
+            .getBy(datasourceId)
             .orElseThrow(
                 () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", command.getDatasourceId())
+                    String.format("Источник данных[id=%s] не существует.", datasourceId)
                 )
             );
-        loggerFacade.logRunSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
-        datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
-        repository.saveDatasource(datasource);
-        loggerFacade.logFinishSynchronizeWithDataSource(datasource.getName(), dateTimeProvider.nowDateTime());
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+//разделить
 public interface DatasourceRepository {
     List<Datasource> getAll();
     Optional<Datasource> getBy(UUID datasourceId);

@@ -1,7 +1,9 @@
 package ru.ioque.investfund.application.share.logger;
 
+import java.time.LocalDateTime;
+
 public class WarningLog extends ApplicationLog {
-    public WarningLog(String msg) {
-        super(msg);
+    public WarningLog(LocalDateTime timestamp, String msg) {
+        super(timestamp, msg);
     }
 }

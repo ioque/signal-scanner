@@ -40,10 +40,7 @@ public class DatasourceIntegrationTest extends BaseTest {
     @Test
     @DisplayName("""
         T1. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
-        Запускается интеграция с источником биржевых данных.
-        Дублей по тикерам в данных нет, все записи валидны.
-        Данные представлены по двум инструментам - IMOEX, AFKS.
-        Результат: зарегистрирована биржа, сохранены 2 инструмента.
+        Запускается интеграция с источником биржевых данных. Дублей по тикерам в данных нет, все записи валидны.
         """)
     void testCase1() {
         initTodayDateTime("2023-12-12T10:00:00");
@@ -53,6 +50,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         );
 
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+
         final Optional<Datasource> exchange = datasourceRepository().getBy(getDatasourceId());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
@@ -60,14 +58,6 @@ public class DatasourceIntegrationTest extends BaseTest {
         assertEquals("Московская биржа", exchange.get().getDescription());
         assertEquals(2, exchange.get().getInstruments().size());
         assertEquals(2, getInstruments(getDatasourceId()).size());
-        assertEquals(2, loggerProvider().log.size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    "Начата синхронизация с источником данных \"Московская биржа\". Текущее время: 2023-12-12T10:00.",
-                    "Завершена синхронизация с источником данных \"Московская биржа\". Текущее время: 2023-12-12T10:00."
-                )
-        );
     }
 
     @Test
@@ -124,11 +114,6 @@ public class DatasourceIntegrationTest extends BaseTest {
         ));
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         assertEquals(1, getInstruments(getDatasourceId()).size());
-        assertEquals(2, loggerProvider().log.size());
-        assertTrue(loggerProvider().logContainsMessageParts(
-            "Начата синхронизация с источником данных \"Московская биржа\". Текущее время: 2023-12-12T10:00.",
-            "Завершена синхронизация с источником данных \"Московская биржа\". Текущее время: 2023-12-12T10:00."
-        ));
     }
 
     @Test
@@ -162,7 +147,6 @@ public class DatasourceIntegrationTest extends BaseTest {
         assertEquals(1, getInstruments(datasourceId).size());
         assertEquals(3, getIntradayValues(datasourceId).size());
         assertEquals(4, getHistoryValues(datasourceId).size());
-        assertEquals(2, loggerProvider().log.size());
     }
 
     @Test
@@ -191,7 +175,6 @@ public class DatasourceIntegrationTest extends BaseTest {
             131,
             getHistoryValuesBy(datasourceId, "AFKS").size()
         );
-        assertEquals(2, loggerProvider().log.size());
     }
 
     @Test
@@ -218,7 +201,6 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
-        assertEquals(2, loggerProvider().log.size());
     }
 
     @Test
@@ -325,15 +307,6 @@ public class DatasourceIntegrationTest extends BaseTest {
 
         assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
         assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
-        assertTrue(
-            loggerProvider()
-                .logContainsMessageParts(
-                    String.format(
-                        "В источнике данных[id=%s] отключено обновление торговых данных для инструментов со следующими тикерами: [AFKS]",
-                        datasourceId
-                    )
-                )
-        );
     }
 
     @Test

@@ -5,10 +5,13 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.application.share.logger.LoggerFacade;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+
+import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -16,25 +19,38 @@ public class DisableUpdateInstrumentProcessor extends CommandProcessor<DisableUp
     DatasourceRepository repository;
 
     public DisableUpdateInstrumentProcessor(
+        DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerFacade loggerFacade,
         DatasourceRepository repository
     ) {
-        super(validator, loggerFacade);
+        super(dateTimeProvider, validator, loggerFacade);
         this.repository = repository;
     }
 
     @Override
     protected void handleFor(DisableUpdateInstrumentsCommand command) {
-        final Datasource datasource = repository
-            .getBy(command.getDatasourceId())
+        final Datasource datasource = getDatasource(command.getDatasourceId());
+        executeBusinessProcess(
+            () -> {
+                datasource.disableUpdate(command.getTickers());
+                repository.saveDatasource(datasource);
+            },
+            String.format(
+                "В источнике данных[id=%s] отключено обновление торговых данных для инструментов со следующими тикерами: %s",
+                datasource.getId(),
+                command.getTickers()
+            )
+        );
+    }
+
+    private Datasource getDatasource(UUID datasourceId) {
+        return repository
+            .getBy(datasourceId)
             .orElseThrow(
                 () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", command.getDatasourceId())
+                    String.format("Источник данных[id=%s] не существует.", datasourceId)
                 )
             );
-        datasource.disableUpdate(command.getTickers());
-        repository.saveDatasource(datasource);
-        loggerFacade.logDisableUpdate(datasource.getId(), command.getTickers());
     }
 }
