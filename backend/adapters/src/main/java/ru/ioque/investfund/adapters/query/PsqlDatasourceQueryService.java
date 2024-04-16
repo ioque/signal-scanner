@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.service;
+package ru.ioque.investfund.adapters.query;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -8,7 +8,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEnti
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;

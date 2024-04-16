@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 @Getter
 @Builder
@@ -20,13 +20,13 @@ import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimple
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrefSimplePropertiesDto implements AlgorithmPropertiesDto {
+public class PrefCommonPropertiesDto implements AlgorithmPropertiesDto {
     @NotNull(message = "Не заполнен параметр spreadValue.")
     @DecimalMin(value = "0", inclusive = false, message = "Параметр spreadValue должен быть больше нуля.")
     Double spreadValue;
 
     @Override
     public AlgorithmProperties toDomain() {
-        return new PrefSimpleProperties(spreadValue);
+        return new PrefCommonProperties(spreadValue);
     }
 }

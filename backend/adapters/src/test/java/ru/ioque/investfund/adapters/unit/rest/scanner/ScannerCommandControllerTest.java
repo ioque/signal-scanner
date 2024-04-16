@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.request.AnomalyVolumePropertiesDto;
 import ru.ioque.investfund.adapters.rest.scanner.request.CreateScannerRequest;
-import ru.ioque.investfund.adapters.rest.scanner.request.PrefSimplePropertiesDto;
+import ru.ioque.investfund.adapters.rest.scanner.request.PrefCommonPropertiesDto;
 import ru.ioque.investfund.adapters.rest.scanner.request.SectoralFuturesPropertiesDto;
 import ru.ioque.investfund.adapters.rest.scanner.request.SectoralRetardPropertiesDto;
 
@@ -125,7 +125,7 @@ public class ScannerCommandControllerTest extends BaseControllerTest {
                 .description("desc")
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of("BANE", "BANEP"))
-                .properties(PrefSimplePropertiesDto.builder().spreadValue(1.0).build())
+                .properties(PrefCommonPropertiesDto.builder().spreadValue(1.0).build())
                 .build()
         );
     }
@@ -273,7 +273,7 @@ public class ScannerCommandControllerTest extends BaseControllerTest {
                 .datasourceId(DATASOURCE_ID)
                 .tickers(List.of())
                 .description("desc")
-                .properties(new PrefSimplePropertiesDto(1.0))
+                .properties(new PrefCommonPropertiesDto(1.0))
                 .build(),
             List.of("Не передан список тикеров анализируемых инструментов.")
         );

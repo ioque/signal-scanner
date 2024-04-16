@@ -7,7 +7,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.TradingSnapshotsProvider;
+import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class PsqlTradingSnapshotsProvider implements TradingSnapshotsProvider {
+public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepository {
     JpaHistoryValueRepository jpaHistoryValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     DateTimeProvider dateTimeProvider;

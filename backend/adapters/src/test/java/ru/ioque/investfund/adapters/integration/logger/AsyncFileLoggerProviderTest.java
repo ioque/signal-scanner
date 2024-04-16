@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@DisplayName("ASYNC FILE LOGGER PROVIDER TEST")
 public class AsyncFileLoggerProviderTest extends InfrastructureTest {
     @Autowired
     protected AsyncFileLoggerProvider provider;

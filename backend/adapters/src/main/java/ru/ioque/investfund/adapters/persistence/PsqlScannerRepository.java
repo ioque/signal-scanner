@@ -59,6 +59,6 @@ public class PsqlScannerRepository implements ScannerRepository {
         AlgorithmType.ANOMALY_VOLUME, AnomalyVolumeScannerEntity::from,
         AlgorithmType.SECTORAL_RETARD, SectoralRetardScannerEntity::from,
         AlgorithmType.SECTORAL_FUTURES, SectoralFuturesScannerEntity::from,
-        AlgorithmType.PREF_SIMPLE, PrefSimpleScannerEntity::from
+        AlgorithmType.PREF_COMMON, PrefSimpleScannerEntity::from
     );
 }

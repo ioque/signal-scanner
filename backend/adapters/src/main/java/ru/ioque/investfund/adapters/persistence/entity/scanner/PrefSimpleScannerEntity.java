@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     }
 
     public static ScannerEntity from(SignalScanner scannerDomain) {
-        PrefSimpleProperties properties = (PrefSimpleProperties) scannerDomain.getProperties();
+        PrefCommonProperties properties = (PrefCommonProperties) scannerDomain.getProperties();
         PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
             .id(scannerDomain.getId())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
@@ -69,7 +69,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
         return SignalScanner.builder()
             .id(getId())
             .properties(
-                PrefSimpleProperties
+                PrefCommonProperties
                     .builder()
                     .spreadValue(spreadParam)
                     .build()

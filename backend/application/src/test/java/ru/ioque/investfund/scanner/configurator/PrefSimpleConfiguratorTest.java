@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 import java.util.List;
 
@@ -96,8 +96,8 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
         return "Параметр spreadValue должен быть больше 0.";
     }
 
-    private PrefSimpleProperties.PrefSimplePropertiesBuilder buildPropertiesWith() {
-        return PrefSimpleProperties.builder()
+    private PrefCommonProperties.PrefCommonPropertiesBuilder buildPropertiesWith() {
+        return PrefCommonProperties.builder()
             .spreadValue(1.0);
     }
 
@@ -108,7 +108,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .datasourceId(getDatasourceId())
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .properties(
-                PrefSimpleProperties.builder()
+                PrefCommonProperties.builder()
                     .spreadValue(1.0)
                     .build()
             );
@@ -121,7 +121,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .scannerId(getFirstScannerId())
             .tickers(List.of("TGKN", "TGKB", "IMOEX"))
             .properties(
-                PrefSimpleProperties.builder()
+                PrefCommonProperties.builder()
                     .spreadValue(1.0)
                     .build()
             );

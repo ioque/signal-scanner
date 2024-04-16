@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.TradingSnapshotsProvider;
+import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -20,7 +20,7 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalCommand> {
     ScannerRepository scannerRepository;
-    TradingSnapshotsProvider tradingSnapshotsProvider;
+    TradingSnapshotsRepository tradingSnapshotsRepository;
     EventPublisher eventPublisher;
 
     public ProduceSignalProcessor(
@@ -28,13 +28,13 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
         Validator validator,
         LoggerProvider loggerProvider,
         ScannerRepository scannerRepository,
-        TradingSnapshotsProvider tradingSnapshotsProvider,
+        TradingSnapshotsRepository tradingSnapshotsRepository,
         EventPublisher eventPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.dateTimeProvider = dateTimeProvider;
         this.scannerRepository = scannerRepository;
-        this.tradingSnapshotsProvider = tradingSnapshotsProvider;
+        this.tradingSnapshotsRepository = tradingSnapshotsRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -46,7 +46,7 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
             .forEach(scanner -> {
                 final List<Signal> newSignals = scanner.scanning(
-                    tradingSnapshotsProvider.findBy(scanner.getDatasourceId(), scanner.getTickers()),
+                    tradingSnapshotsRepository.findBy(scanner.getDatasourceId(), scanner.getTickers()),
                     command.getWatermark()
                 );
                 scannerRepository.save(scanner);

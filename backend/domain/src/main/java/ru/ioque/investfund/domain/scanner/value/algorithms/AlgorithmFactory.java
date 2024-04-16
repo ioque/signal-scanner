@@ -2,7 +2,7 @@ package ru.ioque.investfund.domain.scanner.value.algorithms;
 
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
@@ -18,6 +18,6 @@ public class AlgorithmFactory {
         AlgorithmType.ANOMALY_VOLUME, properties -> new AnomalyVolumeAlgorithm((AnomalyVolumeProperties) properties),
         AlgorithmType.SECTORAL_RETARD, properties -> new SectoralRetardAlgorithm((SectoralRetardProperties) properties),
         AlgorithmType.SECTORAL_FUTURES, properties -> new SectoralFuturesAlgorithm((SectoralFuturesProperties) properties),
-        AlgorithmType.PREF_SIMPLE, properties -> new PrefSimpleAlgorithm((PrefSimpleProperties) properties)
+        AlgorithmType.PREF_COMMON, properties -> new PrefCommonAlgorithm((PrefCommonProperties) properties)
     );
 }

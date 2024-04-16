@@ -17,8 +17,8 @@ import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmType;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class PrefSimpleProperties implements AlgorithmProperties {
-    AlgorithmType type = AlgorithmType.PREF_SIMPLE;
+public class PrefCommonProperties implements AlgorithmProperties {
+    AlgorithmType type = AlgorithmType.PREF_COMMON;
     @NotNull(message = "Не передан параметр spreadValue.")
     @DecimalMin(value = "0", inclusive = false, message = "Параметр spreadValue должен быть больше 0.")
     Double spreadValue;

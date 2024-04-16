@@ -4,7 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.service.PsqlDatasourceQueryService;
+import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;

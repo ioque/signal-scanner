@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.integration.service;
+package ru.ioque.investfund.adapters.integration.query;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.integration.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
-import ru.ioque.investfund.adapters.service.PsqlDatasourceQueryService;
+import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;

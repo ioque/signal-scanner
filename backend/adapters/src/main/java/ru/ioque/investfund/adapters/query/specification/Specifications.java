@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.persistence.specification;
+package ru.ioque.investfund.adapters.query.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.CurrencyPairEntity;

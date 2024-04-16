@@ -5,6 +5,6 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import java.util.List;
 import java.util.UUID;
 
-public interface TradingSnapshotsProvider {
+public interface TradingSnapshotsRepository {
     List<TradingSnapshot> findBy(UUID datasourceId, List<String> tickers);
 }

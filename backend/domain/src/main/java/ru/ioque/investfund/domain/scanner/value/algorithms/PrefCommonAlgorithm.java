@@ -11,7 +11,7 @@ import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TickerSummary;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrefSimpleAlgorithm extends ScannerAlgorithm {
+public class PrefCommonAlgorithm extends ScannerAlgorithm {
     Double spreadValue;
 
-    public PrefSimpleAlgorithm(PrefSimpleProperties properties) {
+    public PrefCommonAlgorithm(PrefCommonProperties properties) {
         super(properties.getType().getName());
         setSpreadValue(properties.getSpreadValue());
     }

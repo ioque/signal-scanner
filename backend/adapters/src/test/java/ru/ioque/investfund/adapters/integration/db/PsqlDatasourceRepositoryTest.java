@@ -26,16 +26,17 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
     @DisplayName("Т1. Сохранение данных о бирже без инструментов")
     void testCase1() {
         final Datasource datasource = new Datasource(
-            DATASOURCE_ID,
+            MOEX_DATASOURCE_ID,
             "test",
             "test",
             "test",
             List.of()
         );
+
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(DATASOURCE_ID).isPresent());
-        assertEquals(datasource, datasourceRepository.getBy(DATASOURCE_ID).get());
+        assertTrue(datasourceRepository.getBy(MOEX_DATASOURCE_ID).isPresent());
+        assertEquals(datasource, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get());
     }
 
     @Test
@@ -43,7 +44,7 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
     void testCase2() {
         final Instrument instrument = createTgkn();
         final Datasource datasource = new Datasource(
-            DATASOURCE_ID,
+            MOEX_DATASOURCE_ID,
             "test",
             "test",
             "test",
@@ -51,10 +52,11 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
                 instrument
             )
         );
+
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(DATASOURCE_ID).isPresent());
-        assertEquals(1, datasourceRepository.getBy(DATASOURCE_ID).get().getInstruments().size());
-        assertEquals(instrument, datasourceRepository.getBy(DATASOURCE_ID).get().getInstruments().get(0));
+        assertTrue(datasourceRepository.getBy(MOEX_DATASOURCE_ID).isPresent());
+        assertEquals(1, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get().getInstruments().size());
+        assertEquals(instrument, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get().getInstruments().get(0));
     }
 }

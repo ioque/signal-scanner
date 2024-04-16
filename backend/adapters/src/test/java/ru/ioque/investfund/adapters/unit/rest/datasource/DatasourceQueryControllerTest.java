@@ -17,9 +17,9 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.DealEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.DeltaEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
-import ru.ioque.investfund.adapters.service.PsqlDatasourceQueryService;
+import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.persistence.filter;
+package ru.ioque.investfund.adapters.query.filter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import ru.ioque.investfund.adapters.persistence.specification.Specifications;
+import ru.ioque.investfund.adapters.query.specification.Specifications;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 
 import java.util.ArrayList;

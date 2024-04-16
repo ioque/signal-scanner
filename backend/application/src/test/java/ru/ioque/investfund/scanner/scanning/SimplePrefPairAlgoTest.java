@@ -6,7 +6,7 @@ import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsComm
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefSimpleProperties;
+import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -394,7 +394,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
                 .datasourceId(datasourceId)
                 .tickers(Arrays.asList(tickers))
                 .properties(
-                    PrefSimpleProperties.builder()
+                    PrefCommonProperties.builder()
                         .spreadValue(SPREAD_PARAM)
                         .build()
                 )

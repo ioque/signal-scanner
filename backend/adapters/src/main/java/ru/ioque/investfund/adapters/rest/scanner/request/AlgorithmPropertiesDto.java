@@ -9,7 +9,7 @@ import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmP
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = AnomalyVolumePropertiesDto.class, name = "AnomalyVolumeParameters"),
-    @JsonSubTypes.Type(value = PrefSimplePropertiesDto.class, name = "PrefSimpleParameters"),
+    @JsonSubTypes.Type(value = PrefCommonPropertiesDto.class, name = "PrefSimpleParameters"),
     @JsonSubTypes.Type(value = SectoralFuturesPropertiesDto.class, name = "SectoralFuturesParameters"),
     @JsonSubTypes.Type(value = SectoralRetardPropertiesDto.class, name = "SectoralRetardParameters") }
 )
