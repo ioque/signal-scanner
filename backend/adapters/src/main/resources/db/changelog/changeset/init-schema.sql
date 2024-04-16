@@ -176,6 +176,14 @@ create table if not exists signal
 alter table signal
     owner to postgres;
 
+create table if not exists telegram_chat
+(
+    created_at  timestamp(6),
+    chat_id     bigserial primary key
+);
+alter table telegram_chat
+    owner to postgres;
+
 CREATE INDEX IF NOT EXISTS idx_instrument_ticker ON instrument (ticker);
 CREATE INDEX IF NOT EXISTS idx_instrument_datasource_id ON instrument (datasource_id);
 CREATE INDEX IF NOT EXISTS idx_intraday_value_ticker ON intraday_value (ticker);

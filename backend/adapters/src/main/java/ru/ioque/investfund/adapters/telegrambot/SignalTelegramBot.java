@@ -2,38 +2,46 @@ package ru.ioque.investfund.adapters.telegrambot;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+import ru.ioque.investfund.adapters.persistence.entity.telegrambot.TelegramChatEntity;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepository;
+import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.scanner.event.SignalEvent;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 @Getter
 public class SignalTelegramBot extends TelegramBot {
-    private final Set<Long> chatIds = new HashSet<>();
     private final TelegramClient telegramClient;
+    private final DateTimeProvider dateTimeProvider;
+    private final JpaTelegramChatRepository telegramChatRepository;
 
-    public SignalTelegramBot(String botToken) {
+    public SignalTelegramBot(
+        @Value("${telegram-bot.token}") String botToken,
+        TelegramClient telegramClient,
+        DateTimeProvider dateTimeProvider,
+        JpaTelegramChatRepository telegramChatRepository
+    ) {
         super(botToken);
-        this.telegramClient = new OkHttpTelegramClient(botToken);
+        this.telegramClient = telegramClient;
+        this.dateTimeProvider = dateTimeProvider;
+        this.telegramChatRepository = telegramChatRepository;
     }
 
     @Override
     public void consume(Update update) {
         if(update.hasMessage()) {
-            chatIds.add(update.getMessage().getChatId());
+            telegramChatRepository.save(new TelegramChatEntity(update.getMessage().getChatId(), dateTimeProvider.nowDateTime()));
         }
     }
 
     public void sentToAllChats(SignalEvent event){
-        chatIds.forEach(chatId -> {
+        telegramChatRepository.findAll().forEach(chat -> {
             SendMessage sendMessage = SendMessage.builder()
-                .chatId(String.valueOf(chatId))
+                .chatId(String.valueOf(chat.getChatId()))
                 .text(event.toString())
                 .build();
             try {
