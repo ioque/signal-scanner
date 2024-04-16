@@ -23,7 +23,7 @@ import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
-import ru.ioque.investfund.fakes.FakeTradingDataRepository;
+import ru.ioque.investfund.fakes.FakeTradingSnapshotsProvider;
 import ru.ioque.investfund.fixture.ExchangeDataFixture;
 
 import java.time.DayOfWeek;
@@ -54,7 +54,7 @@ public class BaseTest {
         return fakeDIContainer.getScannerRepository();
     }
 
-    protected FakeTradingDataRepository tradingDataRepository() {
+    protected FakeTradingSnapshotsProvider tradingDataRepository() {
         return fakeDIContainer.getTradingDataRepository();
     }
 

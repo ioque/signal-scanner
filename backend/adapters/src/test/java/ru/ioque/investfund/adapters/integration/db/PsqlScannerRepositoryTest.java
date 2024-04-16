@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.infrastructure.db;
+package ru.ioque.investfund.adapters.integration.db;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +14,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("SCANER REPOSITORY TEST")
-public class ScanerRepoTest extends DatabaseTest {
+@DisplayName("PSQL SCANNER REPOSITORY TEST")
+public class PsqlScannerRepositoryTest extends DatabaseTest {
     PsqlScannerRepository psqlScannerRepository;
 
-    public ScanerRepoTest(
+    public PsqlScannerRepositoryTest(
         @Autowired PsqlScannerRepository psqlScannerRepository
     ) {
         this.psqlScannerRepository = psqlScannerRepository;

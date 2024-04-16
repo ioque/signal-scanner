@@ -1,9 +1,9 @@
-package ru.ioque.investfund.adapters.infrastructure.db;
+package ru.ioque.investfund.adapters.integration.db;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ioque.investfund.adapters.infrastructure.InfrastructureTest;
+import ru.ioque.investfund.adapters.integration.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
@@ -98,30 +98,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
                 createImoex(), createTgkb(), createTgkn()
             )
         );
-    }
-
-    protected Stock.StockBuilder buildStockWith() {
-        return Stock
-            .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(DATASOURCE_ID)
-            .ticker("AFKS")
-            .shortName("ао Система")
-            .name("fasfasfasfasf")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1);
-    }
-
-    protected Index.IndexBuilder buildIndexWith() {
-        return Index
-            .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(DATASOURCE_ID)
-            .ticker("INDEX")
-            .shortName("Какой-то индекс")
-            .name("Какой-то индекс");
     }
 
 

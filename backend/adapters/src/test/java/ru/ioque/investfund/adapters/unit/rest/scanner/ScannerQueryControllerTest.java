@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest.scanner;
+package ru.ioque.investfund.adapters.unit.rest.scanner;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
-import ru.ioque.investfund.adapters.rest.BaseControllerTest;
+import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 

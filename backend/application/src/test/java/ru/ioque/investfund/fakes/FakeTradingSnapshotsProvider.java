@@ -1,7 +1,7 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.TradingDataRepository;
+import ru.ioque.investfund.application.adapters.TradingSnapshotsProvider;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
@@ -12,12 +12,12 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class FakeTradingDataRepository implements TradingDataRepository {
+public class FakeTradingSnapshotsProvider implements TradingSnapshotsProvider {
     FakeIntradayValueRepository intradayValueRepository;
     FakeHistoryValueRepository historyValueRepository;
     DateTimeProvider dateTimeProvider;
 
-    public FakeTradingDataRepository(
+    public FakeTradingSnapshotsProvider(
         FakeIntradayValueRepository intradayValueRepository,
         FakeHistoryValueRepository historyValueRepository,
         DateTimeProvider dateTimeProvider

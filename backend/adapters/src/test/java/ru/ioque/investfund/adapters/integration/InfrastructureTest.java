@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.infrastructure;
+package ru.ioque.investfund.adapters.integration;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

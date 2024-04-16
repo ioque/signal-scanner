@@ -1,13 +1,22 @@
-package ru.ioque.investfund.adapters.infrastructure.db;
+package ru.ioque.investfund.adapters.integration.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.ioque.investfund.adapters.integration.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.service.PsqlDatasourceQueryService;
+import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.Index;
+import ru.ioque.investfund.domain.datasource.entity.Stock;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,17 +24,42 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("DATASOURCE QUERY REPOSITORY TEST")
-public class InstrumentQueryRepositoryTest extends DatabaseTest {
-    DatasourceQueryRepository datasourceQueryRepository;
-    JpaInstrumentRepository instrumentEntityRepository;
+@DisplayName("PSQL DATASOURCE QUERY SERVICE TEST")
+public class InstrumentQueryRepositoryTest extends InfrastructureTest {
+    private static final UUID DATASOURCE_ID = UUID.randomUUID();
+
+    PsqlDatasourceQueryService psqlDatasourceQueryService;
+    UUIDProvider uuidProvider;
+    DatasourceRepository datasourceRepository;
+    JpaDatasourceRepository jpaDatasourceRepository;
+    JpaHistoryValueRepository jpaHistoryValueRepository;
+    JpaIntradayValueRepository jpaIntradayValueRepository;
+    JpaInstrumentRepository jpaInstrumentRepository;
 
     public InstrumentQueryRepositoryTest(
-        @Autowired DatasourceQueryRepository datasourceQueryRepository,
-        @Autowired JpaInstrumentRepository instrumentEntityRepository
+        @Autowired PsqlDatasourceQueryService psqlDatasourceQueryService,
+        @Autowired UUIDProvider uuidProvider,
+        @Autowired DatasourceRepository datasourceRepository,
+        @Autowired JpaDatasourceRepository jpaDatasourceRepository,
+        @Autowired JpaInstrumentRepository jpaInstrumentRepository,
+        @Autowired JpaHistoryValueRepository jpaHistoryValueRepository,
+        @Autowired JpaIntradayValueRepository jpaIntradayValueRepository
     ) {
-        this.datasourceQueryRepository = datasourceQueryRepository;
-        this.instrumentEntityRepository = instrumentEntityRepository;
+        this.psqlDatasourceQueryService = psqlDatasourceQueryService;
+        this.uuidProvider = uuidProvider;
+        this.datasourceRepository = datasourceRepository;
+        this.jpaDatasourceRepository = jpaDatasourceRepository;
+        this.jpaInstrumentRepository = jpaInstrumentRepository;
+        this.jpaHistoryValueRepository = jpaHistoryValueRepository;
+        this.jpaIntradayValueRepository = jpaIntradayValueRepository;
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        this.jpaDatasourceRepository.deleteAll();
+        this.jpaInstrumentRepository.deleteAll();
+        this.jpaHistoryValueRepository.deleteAll();
+        this.jpaIntradayValueRepository.deleteAll();
     }
 
     @Test
@@ -34,7 +68,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         """)
     void testCase1() {
         saveExchangeWithStocks();
-        var list = datasourceQueryRepository.getAllInstruments();
+        var list = psqlDatasourceQueryService.getAllInstruments();
         assertEquals(2, list.size());
         assertTrue(list.stream().map(InstrumentEntity::getTicker).toList().containsAll(List.of("AFKS", "SBER")));
     }
@@ -45,12 +79,12 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         """)
     void testCase2() {
         saveExchangeWithStocks();
-        assertEquals("AFKS", datasourceQueryRepository.findInstrumentBy("AFKS").getTicker());
-        assertEquals("SBER", datasourceQueryRepository.findInstrumentBy("SBER").getTicker());
+        assertEquals("AFKS", psqlDatasourceQueryService.findInstrumentBy("AFKS").getTicker());
+        assertEquals("SBER", psqlDatasourceQueryService.findInstrumentBy("SBER").getTicker());
     }
 
     private void saveExchangeWithStocks() {
-        Datasource datasource = new Datasource(
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -69,8 +103,8 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             T3. Фильтрация инструментов по их типу.
             """)
     void testCase3() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
         Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
@@ -83,11 +117,11 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> stocks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> stocks = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .type("stock")
             .build());
-        List<InstrumentEntity> indexes = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> indexes = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .type("index")
             .build());
@@ -102,11 +136,11 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             T4. Фильтрация инструментов по их тикеру.
             """)
     void testCase4() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        UUID id4 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final UUID id3 = UUID.randomUUID();
+        final UUID id4 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -120,15 +154,15 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> afks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> afks = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("AFKS")
             .build());
-        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("IMOEX")
             .build());
-        List<InstrumentEntity> sbers = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> sbers = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .ticker("SBER")
             .build());
@@ -144,9 +178,9 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             T5. Фильтрация инструментов по их краткому наименованию.
             """)
     void testCase5() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -158,7 +192,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        List<InstrumentEntity> instruments = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .shortName("Сбер")
             .build());
@@ -172,10 +206,10 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             T6. Фильтрация инструментов по их типу и тикеру.
             """)
     void testCase6() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final UUID id3 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -188,9 +222,9 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sber = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> sber = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").type("stock").build());
-        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
             "IMOEX").type("index").build());
 
         assertEquals(1, sber.size());
@@ -204,10 +238,10 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             """
     )
     void testCase7() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final UUID id3 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -220,9 +254,9 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sberp = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> sberp = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").shortName("Сбербанк-п").type("stock").build());
-        List<InstrumentEntity> imoex = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
+        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
             "IMOEX").type("index").build());
 
         assertEquals(1, sberp.size());
@@ -234,11 +268,11 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         T8. Постраничное получение данных
         """)
     void testCase8() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        UUID id4 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final UUID id3 = UUID.randomUUID();
+        final UUID id4 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -251,28 +285,28 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
             )
         );
         datasourceRepository.save(datasource);
-        List<InstrumentEntity> instruments1 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments1 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(1)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments2 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments2 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(1)
             .pageSize(1)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments3 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments3 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(1)
             .pageSize(2)
             .orderField("ticker")
             .orderDirection("ASC")
             .build());
-        List<InstrumentEntity> instruments4 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments4 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(3)
@@ -303,11 +337,11 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         T9. Сортировка данных
         """)
     void testCase9() {
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        UUID id4 = UUID.randomUUID();
-        Datasource datasource = new Datasource(
+        final UUID id1 = UUID.randomUUID();
+        final UUID id2 = UUID.randomUUID();
+        final UUID id3 = UUID.randomUUID();
+        final UUID id4 = UUID.randomUUID();
+        final Datasource datasource = new Datasource(
             UUID.randomUUID(),
             "test",
             "test",
@@ -321,14 +355,14 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(4)
             .orderDirection("DESC")
             .orderField("shortName")
             .build());
-        List<InstrumentEntity> instruments2 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
+        final List<InstrumentEntity> instruments2 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(4)
@@ -345,5 +379,29 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
         assertEquals("SBER", instruments2.get(1).getTicker());
         assertEquals("SBERP", instruments2.get(2).getTicker());
         assertEquals("AFKS", instruments2.get(3).getTicker());
+    }
+
+    protected Stock.StockBuilder buildStockWith() {
+        return Stock
+            .builder()
+            .id(uuidProvider.generate())
+            .datasourceId(DATASOURCE_ID)
+            .ticker("AFKS")
+            .shortName("ао Система")
+            .name("fasfasfasfasf")
+            .lotSize(1000)
+            .regNumber("regNumber")
+            .isin("isin")
+            .listLevel(1);
+    }
+
+    protected Index.IndexBuilder buildIndexWith() {
+        return Index
+            .builder()
+            .id(uuidProvider.generate())
+            .datasourceId(DATASOURCE_ID)
+            .ticker("INDEX")
+            .shortName("Какой-то индекс")
+            .name("Какой-то индекс");
     }
 }

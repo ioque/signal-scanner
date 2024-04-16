@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest;
+package ru.ioque.investfund.adapters.unit.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

@@ -1,11 +1,11 @@
-package ru.ioque.investfund.adapters.rest.scanner;
+package ru.ioque.investfund.adapters.unit.rest.scanner;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.rest.BaseControllerTest;
+import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.request.AnomalyVolumePropertiesDto;
 import ru.ioque.investfund.adapters.rest.scanner.request.CreateScannerRequest;
 import ru.ioque.investfund.adapters.rest.scanner.request.PrefSimplePropertiesDto;

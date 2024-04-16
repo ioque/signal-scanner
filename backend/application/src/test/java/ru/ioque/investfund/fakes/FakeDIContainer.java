@@ -28,7 +28,7 @@ public class FakeDIContainer {
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
-    FakeTradingDataRepository tradingDataRepository;
+    FakeTradingSnapshotsProvider tradingDataRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeIntradayValueRepository intradayValueRepository;
@@ -61,7 +61,7 @@ public class FakeDIContainer {
         intradayValueRepository = new FakeIntradayValueRepository();
         historyValueRepository = new FakeHistoryValueRepository();
         scannerRepository = new FakeScannerRepository();
-        tradingDataRepository = new FakeTradingDataRepository(intradayValueRepository, historyValueRepository, dateTimeProvider);
+        tradingDataRepository = new FakeTradingSnapshotsProvider(intradayValueRepository, historyValueRepository, dateTimeProvider);
 
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(
             dateTimeProvider,

@@ -1,10 +1,10 @@
-package ru.ioque.investfund.adapters.rest;
+package ru.ioque.investfund.adapters.unit.rest;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.persistence.DatasourceQueryRepository;
+import ru.ioque.investfund.adapters.service.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
@@ -73,8 +73,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public DatasourceQueryRepository mockDatasourceQueryService() {
-        return mock(DatasourceQueryRepository.class);
+    public PsqlDatasourceQueryService mockDatasourceQueryService() {
+        return mock(PsqlDatasourceQueryService.class);
     }
 
     @Bean

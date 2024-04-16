@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.persistence;
+package ru.ioque.investfund.adapters.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -23,30 +23,30 @@ import java.util.function.Supplier;
 
 @Component
 @AllArgsConstructor
-public class DatasourceQueryRepository {
-    JpaDatasourceRepository exchangeRepository;
-    JpaInstrumentRepository instrumentRepository;
-    JpaHistoryValueRepository historyValueRepository;
-    JpaIntradayValueRepository intradayValueRepository;
+public class PsqlDatasourceQueryService {
+    JpaDatasourceRepository jpaDatasourceRepository;
+    JpaInstrumentRepository jpaInstrumentRepository;
+    JpaHistoryValueRepository jpaHistoryValueRepository;
+    JpaIntradayValueRepository jpaIntradayValueRepository;
 
     public List<DatasourceEntity> getAllDatasource() {
-        return exchangeRepository.findAll();
+        return jpaDatasourceRepository.findAll();
     }
 
     public DatasourceEntity findDatasourceBy(UUID datasourceId) {
-        return exchangeRepository
+        return jpaDatasourceRepository
             .findById(datasourceId)
             .orElseThrow(notFoundException(notFoundDatasourceMsg()));
     }
 
     public InstrumentEntity findInstrumentBy(String ticker) {
-        return instrumentRepository
+        return jpaInstrumentRepository
             .findByTicker(ticker)
             .orElseThrow(notFoundException(instrumentNotFoundMsg()));
     }
 
     public List<HistoryValueEntity> findHistory(UUID datasourceId, InstrumentEntity instrument, LocalDate date) {
-        return historyValueRepository.findAllBy(
+        return jpaHistoryValueRepository.findAllBy(
             datasourceId,
             instrument.getTicker(),
             date
@@ -58,26 +58,26 @@ public class DatasourceQueryRepository {
         InstrumentEntity instrument,
         LocalDateTime dateTime
     ) {
-        return intradayValueRepository.findAllBy(datasourceId, instrument.getTicker(), dateTime);
+        return jpaIntradayValueRepository.findAllBy(datasourceId, instrument.getTicker(), dateTime);
     }
 
     public List<InstrumentEntity> findInstruments(InstrumentFilterParams filterParams) {
         if (filterParams.specificationIsEmpty() && filterParams.pageRequestIsEmpty()) return getAllInstruments();
         if (filterParams.specificationIsEmpty()) return findInstruments(filterParams.pageRequest());
         if (filterParams.pageRequestIsEmpty()) return findInstruments(filterParams.specification());
-        return instrumentRepository.findAll(filterParams.specification(), filterParams.pageRequest()).toList();
+        return jpaInstrumentRepository.findAll(filterParams.specification(), filterParams.pageRequest()).toList();
     }
 
     public List<InstrumentEntity> findInstruments(Specification<InstrumentEntity> specification) {
-        return instrumentRepository.findAll(specification);
+        return jpaInstrumentRepository.findAll(specification);
     }
 
     public List<InstrumentEntity> findInstruments(PageRequest pageRequest) {
-        return instrumentRepository.findAll(pageRequest).toList();
+        return jpaInstrumentRepository.findAll(pageRequest).toList();
     }
 
     public List<InstrumentEntity> getAllInstruments() {
-        return instrumentRepository.findAll();
+        return jpaInstrumentRepository.findAll();
     }
 
     private String instrumentNotFoundMsg() {

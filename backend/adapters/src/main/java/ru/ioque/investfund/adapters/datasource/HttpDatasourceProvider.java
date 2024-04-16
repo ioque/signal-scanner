@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class DatasourceProviderImpl implements DatasourceProvider {
+public class HttpDatasourceProvider implements DatasourceProvider {
     ExchangeRestClient moexClient;
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.infrastructure.db;
+package ru.ioque.investfund.adapters.integration.db;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("EXCHANGE REPOSITORY TEST")
+@DisplayName("PSQL DATASOURCE REPOSITORY TEST")
 public class PsqlDatasourceRepositoryTest extends DatabaseTest {
     DatasourceRepository datasourceRepository;
 
