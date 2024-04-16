@@ -168,7 +168,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initOilCompanyData(UUID datasourceId) {
-        exchangeDataFixture()
+        datasourceStorage()
             .initInstruments(
                 List.of(
                     rosn(),
@@ -182,7 +182,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initDealsTatnFallOtherRise(UUID datasourceId) {
-        exchangeDataFixture().initDealDatas(
+        datasourceStorage().initDealDatas(
             List.of(
                 buildContractBy(datasourceId, 1L, "BRF4", "10:00:00", 78D, 78000D, 1),
                 buildContractBy(datasourceId,1L, "BRF4", "12:00:00", 96D, 96000D, 1),
@@ -200,7 +200,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initTradingResultsForTestCase2(UUID datasourceId) {
-        exchangeDataFixture().initTradingResults(
+        datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
                 buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),
@@ -222,7 +222,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initTradingResultsForTestCase1(UUID datasourceId) {
-        exchangeDataFixture().initTradingResults(
+        datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
                 buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),

@@ -6,14 +6,13 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.InstrumentBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
-import ru.ioque.investfund.fixture.ExchangeDataFixture;
-
-import java.util.List;
+import ru.ioque.investfund.fixture.DatasourceStorage;
 
 public class FakeDatasourceProvider implements DatasourceProvider {
     @Setter
-    ExchangeDataFixture exchangeDataFixture = new ExchangeDataFixture();
+    DatasourceStorage datasourceStorage = new DatasourceStorage();
     DateTimeProvider dateTimeProvider;
 
     public FakeDatasourceProvider(DateTimeProvider dateTimeProvider) {
@@ -26,7 +25,7 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     ) {
         return new HistoryBatch(
             instrument.getTicker(),
-            exchangeDataFixture.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
+            datasourceStorage.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
         );
     }
 
@@ -34,12 +33,15 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
             instrument.getTicker(),
-            exchangeDataFixture.getDealsByTicker(instrument.getTicker())
+            datasourceStorage.getDealsByTicker(instrument.getTicker())
         );
     }
 
     @Override
-    public List<Instrument> fetchInstruments(Datasource datasource) {
-        return exchangeDataFixture.getInstruments();
+    public InstrumentBatch fetchInstruments(Datasource datasource) {
+        return new InstrumentBatch(
+            datasource.getId(),
+            datasourceStorage.getInstruments()
+        );
     }
 }

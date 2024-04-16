@@ -433,7 +433,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     }
 
     private void initTgknAndTgkbAndImoexIntradayData(UUID datasourceId) {
-        exchangeDataFixture().initDealDatas(
+        datasourceStorage().initDealDatas(
             List.of(
                 buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
                 buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 3100D, 1_200_000D),
@@ -454,7 +454,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     }
 
     private void initTgknAndTgkbAndImoex(UUID datasourceId) {
-        exchangeDataFixture().initInstruments(
+        datasourceStorage().initInstruments(
             List.of(
                 imoex(),
                 tgkb(),

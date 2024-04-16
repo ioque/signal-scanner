@@ -20,8 +20,8 @@ public class Index extends Instrument {
 
     @Builder
     public Index(
-        UUID datasourceId,
         UUID id,
+        UUID datasourceId,
         String ticker,
         String shortName,
         String name,
@@ -31,7 +31,7 @@ public class Index extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasourceId, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setAnnualHigh(annualHigh);
         setAnnualLow(annualLow);
     }

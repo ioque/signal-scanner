@@ -29,5 +29,5 @@ public abstract class InstrumentDto {
     String shortName;
     String name;
 
-    public abstract Instrument toDomain(UUID id);
+    public abstract Instrument toDomain(UUID id, UUID datasourceId);
 }

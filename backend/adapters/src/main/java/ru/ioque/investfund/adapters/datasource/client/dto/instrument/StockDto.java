@@ -41,9 +41,10 @@ public class StockDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID id) {
+    public Instrument toDomain(UUID id, UUID datasourceId) {
         return Stock.builder()
             .id(id)
+            .datasourceId(datasourceId)
             .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())

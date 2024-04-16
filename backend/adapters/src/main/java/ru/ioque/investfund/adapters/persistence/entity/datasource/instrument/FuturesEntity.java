@@ -58,6 +58,7 @@ public class FuturesEntity extends InstrumentEntity {
     public Instrument toDomain() {
         return Futures.builder()
             .id(this.getId())
+            .datasourceId(this.getDatasource().getId())
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())

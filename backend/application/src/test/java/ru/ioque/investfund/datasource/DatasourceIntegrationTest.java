@@ -68,12 +68,13 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
+        initInstruments(afks(), imoex(), brf4());
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         clearLogs();
 
         final var id = datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId();
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        assertEquals(10, getInstruments(getDatasourceId()).size());
+        assertEquals(3, getInstruments(getDatasourceId()).size());
         assertEquals(id, datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId());
     }
 
@@ -102,10 +103,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase4() {
         initTodayDateTime("2023-12-12T10:00:00");
-        exchangeDataFixture().initInstruments(List.of(
+        datasourceStorage().initInstruments(List.of(
             afks(),
             Stock.builder()
                 .id(UUID.randomUUID())
+                .datasourceId(getDatasourceId())
                 .shortName("ао Система")
                 .name("АФК Система1")
                 .ticker("AFKS")
@@ -125,7 +127,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         """)
     void testCase5() {
         final UUID datasourceId = getDatasourceId();
-        exchangeDataFixture().initInstruments(List.of(afks()));
+        datasourceStorage().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
         clearLogs();

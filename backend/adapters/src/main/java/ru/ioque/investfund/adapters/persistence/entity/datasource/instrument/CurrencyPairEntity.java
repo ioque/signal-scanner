@@ -45,6 +45,22 @@ public class CurrencyPairEntity extends InstrumentEntity {
         this.faceUnit = faceUnit;
     }
 
+    @Override
+    public Instrument toDomain() {
+        return CurrencyPair.builder()
+            .id(this.getId())
+            .datasourceId(this.getDatasource().getId())
+            .ticker(this.getTicker())
+            .name(this.getName())
+            .shortName(this.getShortName())
+            .updatable(this.getUpdatable())
+            .lotSize(this.getLotSize())
+            .faceUnit(this.getFaceUnit())
+            .lastHistoryDate(this.getLastHistoryDate())
+            .lastTradingNumber(this.getLastTradingNumber())
+            .build();
+    }
+
     public static InstrumentEntity from(CurrencyPair domain) {
         return CurrencyPairEntity.builder()
             .id(domain.getId())
@@ -56,21 +72,6 @@ public class CurrencyPairEntity extends InstrumentEntity {
             .updatable(domain.getUpdatable())
             .lastHistoryDate(domain.getLastHistoryDate().orElse(null))
             .lastTradingNumber(domain.getLastTradingNumber())
-            .build();
-    }
-
-    @Override
-    public Instrument toDomain() {
-        return CurrencyPair.builder()
-            .id(this.getId())
-            .ticker(this.getTicker())
-            .name(this.getName())
-            .shortName(this.getShortName())
-            .updatable(this.getUpdatable())
-            .lotSize(this.getLotSize())
-            .faceUnit(this.getFaceUnit())
-            .lastHistoryDate(this.getLastHistoryDate())
-            .lastTradingNumber(this.getLastTradingNumber())
             .build();
     }
 }

@@ -8,7 +8,6 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,9 +25,8 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
     @Test
     @DisplayName("Т1. Сохранение данных о бирже без инструментов")
     void testCase1() {
-        final UUID datasourceId = UUID.randomUUID();
         final Datasource datasource = new Datasource(
-            datasourceId,
+            DATASOURCE_ID,
             "test",
             "test",
             "test",
@@ -36,17 +34,16 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(datasourceId).isPresent());
-        assertEquals(datasource, datasourceRepository.getBy(datasourceId).get());
+        assertTrue(datasourceRepository.getBy(DATASOURCE_ID).isPresent());
+        assertEquals(datasource, datasourceRepository.getBy(DATASOURCE_ID).get());
     }
 
     @Test
     @DisplayName("Т2. Сохранение данных о бирже с инструментами")
     void testCase2() {
         final Instrument instrument = createTgkn();
-        final UUID datasourceId = UUID.randomUUID();
         final Datasource datasource = new Datasource(
-            datasourceId,
+            DATASOURCE_ID,
             "test",
             "test",
             "test",
@@ -56,8 +53,8 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
         );
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(datasourceId).isPresent());
-        assertEquals(1, datasourceRepository.getBy(datasourceId).get().getInstruments().size());
-        assertEquals(instrument, datasourceRepository.getBy(datasourceId).get().getInstruments().get(0));
+        assertTrue(datasourceRepository.getBy(DATASOURCE_ID).isPresent());
+        assertEquals(1, datasourceRepository.getBy(DATASOURCE_ID).get().getInstruments().size());
+        assertEquals(instrument, datasourceRepository.getBy(DATASOURCE_ID).get().getInstruments().get(0));
     }
 }

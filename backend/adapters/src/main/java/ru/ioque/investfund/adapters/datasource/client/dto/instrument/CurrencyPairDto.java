@@ -29,9 +29,10 @@ public class CurrencyPairDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID id) {
+    public Instrument toDomain(UUID id, UUID datasourceId) {
         return CurrencyPair.builder()
             .id(id)
+            .datasourceId(datasourceId)
             .faceUnit(faceUnit)
             .lotSize(lotSize)
             .ticker(getTicker())

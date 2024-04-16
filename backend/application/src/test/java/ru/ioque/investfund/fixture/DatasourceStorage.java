@@ -13,127 +13,14 @@ import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
-public class ExchangeDataFixture {
-    public final static Stock AFKS = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("ао Система")
-        .name("АФК \"Система\" ПАО ао")
-        .ticker("AFKS")
-        .lotSize(10000)
-        .listLevel(1)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    public final static Stock NAUK = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("iНПОНаука")
-        .name("НПО Наука ао")
-        .ticker("NAUK")
-        .lotSize(100)
-        .listLevel(3)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    public final static Stock NAUK_positive = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("iНПОНаука ПОЗИТИВ")
-        .name("НПО Наука ао ПОЗИТИВ")
-        .ticker("NAUK_positive")
-        .lotSize(100)
-        .listLevel(3)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    public final static Stock NSVZ = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("iНаукаСвяз")
-        .name("Наука-Связь ПАО ао")
-        .ticker("NSVZ")
-        .lotSize(100)
-        .listLevel(3)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    public final static Stock SBER = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("Сбербанк")
-        .name("Сбербанк России ПАО ао")
-        .ticker("SBER")
-        .lotSize(100)
-        .listLevel(1)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    public final static Stock UNAC = Stock
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("iАвиастКао")
-        .name("Об.авиастр.корп. ПАО ао")
-        .ticker("UNAC")
-        .lotSize(100)
-        .listLevel(3)
-        .isin("isin")
-        .regNumber("regNumber")
-        .build();
-    //фьючерс на нефть
-    public final static Futures BRF4 = Futures
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("BR-1.24")
-        .name("Фьючерсный контракт BR-1.24")
-        .ticker("BRF4")
-        .lotVolume(1000)
-        .initialMargin(100D)
-        .highLimit(100D)
-        .lowLimit(100D)
-        .assetCode("BR")
-        .build();
-    //индекс мосбиржи
-    public final static Index IMOEX = Index
-        .builder()
-        .id(UUID.randomUUID())
-        .ticker("IMOEX")
-        .shortName("Индекс МосБиржи")
-        .name("Индекс МосБиржи")
-        .annualHigh(100D)
-        .annualLow(100D)
-        .build();
-    //фьючерс на курс доллара
-    public final static Futures SiZ3 = Futures
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("Si-12.23")
-        .name("Фьючерсный контракт Si-12.23")
-        .ticker("SiZ3")
-        .lotVolume(1000)
-        .initialMargin(100D)
-        .highLimit(100D)
-        .lowLimit(100D)
-        .assetCode("Si")
-        .build();
-    public final static CurrencyPair USD000UTSTOM = CurrencyPair
-        .builder()
-        .id(UUID.randomUUID())
-        .shortName("USDRUB_TOM")
-        .name("USDRUB_TOM - USD/РУБ")
-        .ticker("USD000UTSTOM")
-        .lotSize(1)
-        .faceUnit("RUB")
-        .build();
-
+public class DatasourceStorage {
     @Getter
     private final List<IntradayValue> intradayValues = new ArrayList<>();
     @Getter
     private final List<HistoryValue> historyValues = new ArrayList<>();
-    private final List<Instrument> instruments = new ArrayList<>(List.of(AFKS, NAUK, NAUK_positive, NSVZ, SBER, UNAC, IMOEX, SiZ3, BRF4, USD000UTSTOM));
+    private final List<Instrument> instruments = new ArrayList<>();
 
     @SneakyThrows
     public List<HistoryValue> getHistoryDataByTicker(String ticker) {
@@ -175,6 +62,7 @@ public class ExchangeDataFixture {
         Futures futures = (Futures) instrument;
         return Futures.builder()
             .id(futures.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(futures.getTicker())
             .name(futures.getName())
             .shortName(futures.getShortName())
@@ -190,6 +78,7 @@ public class ExchangeDataFixture {
         Index index = (Index) instrument;
         return Index.builder()
             .id(index.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(index.getTicker())
             .name(index.getName())
             .shortName(index.getShortName())
@@ -202,6 +91,7 @@ public class ExchangeDataFixture {
         CurrencyPair currencyPair = (CurrencyPair) instrument;
         return CurrencyPair.builder()
             .id(currencyPair.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(currencyPair.getTicker())
             .name(currencyPair.getName())
             .shortName(currencyPair.getShortName())
@@ -214,6 +104,7 @@ public class ExchangeDataFixture {
         Stock stock = (Stock) instrument;
         return Stock.builder()
             .id(stock.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(stock.getTicker())
             .name(stock.getName())
             .shortName(stock.getShortName())

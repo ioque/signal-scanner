@@ -30,7 +30,7 @@ public class IntegrateInstrumentsProcessor extends DatasourceProcessor<Integrate
     @Override
     protected void handleFor(IntegrateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
-        datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
+        datasourceProvider.fetchInstruments(datasource).getUniqueValues().forEach(datasource::addInstrument);
         datasourceRepository.save(datasource);
     }
 }

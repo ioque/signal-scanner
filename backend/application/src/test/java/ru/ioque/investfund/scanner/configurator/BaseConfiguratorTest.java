@@ -40,7 +40,7 @@ public class BaseConfiguratorTest extends BaseTest {
     }
 
     private void prepareDatasource() {
-        exchangeDataFixture().initInstruments(
+        datasourceStorage().initInstruments(
             List.of(imoex(),
                 tgkb(),
                 tgkn(),

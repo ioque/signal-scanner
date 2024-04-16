@@ -242,7 +242,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initPositiveDealResults(UUID datasourceId) {
-        exchangeDataFixture().initTradingResults(
+        datasourceStorage().initTradingResults(
             List.of(
                 buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
                 buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
@@ -282,7 +282,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initInstruments(UUID datasourceId) {
-        exchangeDataFixture()
+        datasourceStorage()
             .initInstruments(
                 List.of(
                     tatn(),

@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Entity(name = "Datasource")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DatasourceEntity extends AbstractEntity {
+    UUID datasourceId;
     String name;
     String url;
     String description;
@@ -38,12 +39,14 @@ public class DatasourceEntity extends AbstractEntity {
     @Builder
     public DatasourceEntity(
         UUID id,
+        UUID datasourceId,
         String name,
         String url,
         String description,
         Set<InstrumentEntity> instruments
     ) {
         super(id);
+        this.datasourceId = datasourceId;
         this.name = name;
         this.url = url;
         this.description = description;

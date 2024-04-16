@@ -24,7 +24,7 @@ import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
 import ru.ioque.investfund.fakes.FakeTradingSnapshotsProvider;
-import ru.ioque.investfund.fixture.ExchangeDataFixture;
+import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -38,8 +38,8 @@ import java.util.UUID;
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
 
-    protected ExchangeDataFixture exchangeDataFixture() {
-        return fakeDIContainer.getExchangeDataFixture();
+    protected DatasourceStorage datasourceStorage() {
+        return fakeDIContainer.getDatasourceStorage();
     }
 
     protected FakeDatasourceRepository datasourceRepository() {
@@ -107,16 +107,16 @@ public class BaseTest {
     }
 
     protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
-        exchangeDataFixture().initInstruments(Arrays.asList(instruments));
+        datasourceStorage().initInstruments(Arrays.asList(instruments));
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
     }
 
     protected void initInstruments(Instrument... instruments) {
-        exchangeDataFixture().initInstruments(Arrays.asList(instruments));
+        datasourceStorage().initInstruments(Arrays.asList(instruments));
     }
 
     protected void initTradingResults(List<HistoryValue> tradingResults) {
-        exchangeDataFixture().initTradingResults(tradingResults);
+        datasourceStorage().initTradingResults(tradingResults);
     }
 
     protected void initTradingResults(HistoryValue... tradingResults) {
@@ -124,7 +124,7 @@ public class BaseTest {
     }
 
     protected void initDealDatas(IntradayValue... intradayValues) {
-        exchangeDataFixture().initDealDatas(Arrays.asList(intradayValues));
+        datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
     protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId, String ticker) {
@@ -315,18 +315,6 @@ public class BaseTest {
             .build();
     }
 
-    protected Index imoex() {
-        return Index
-            .builder()
-            .id(UUID.randomUUID())
-            .ticker("IMOEX")
-            .name("Индекс МосБиржи")
-            .shortName("Индекс МосБиржи")
-            .annualLow(100D)
-            .annualHigh(100D)
-            .build();
-    }
-
     protected HistoryValue.HistoryValueBuilder buildTradingResultWith(
         UUID datasourceId,
         String ticker,
@@ -357,10 +345,24 @@ public class BaseTest {
             .build();
     }
 
+    protected Index imoex() {
+        return Index
+            .builder()
+            .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
+            .ticker("IMOEX")
+            .name("Индекс МосБиржи")
+            .shortName("Индекс МосБиржи")
+            .annualLow(100D)
+            .annualHigh(100D)
+            .build();
+    }
+
     protected Stock afks() {
         return Stock
             .builder()
             .id(fakeDIContainer.getUuidProvider().generate())
+            .datasourceId(getDatasourceId())
             .shortName("ао Система")
             .name("АФК Система")
             .ticker("AFKS")
@@ -375,6 +377,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("SBERP")
             .shortName("Сбер п")
             .name("Сбербанк П")
@@ -389,6 +392,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("SBER")
             .shortName("Сбер")
             .name("Сбербанк")
@@ -403,6 +407,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("SIBN")
             .shortName("Газпромнефть")
             .name("Газпромнефть")
@@ -417,6 +422,7 @@ public class BaseTest {
         return Futures
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("BRF4")
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
@@ -432,6 +438,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("LKOH")
             .shortName("Лукойл")
             .name("Лукойл")
@@ -446,6 +453,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("TATN")
             .shortName("Татнефть")
             .name("Татнефть")
@@ -457,6 +465,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("ROSN")
             .shortName("Роснефть")
             .name("Роснефть")
@@ -468,6 +477,7 @@ public class BaseTest {
         return CurrencyPair
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .ticker("USD000UTSTOM")
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
@@ -480,6 +490,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .name("TGKB")
             .ticker("TGKB")
             .shortName("TGKB")
@@ -491,6 +502,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
+            .datasourceId(getDatasourceId())
             .name("TGKN")
             .ticker("TGKN")
             .shortName("TGKN")

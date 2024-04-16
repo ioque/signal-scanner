@@ -44,9 +44,10 @@ public class FuturesDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID id) {
+    public Instrument toDomain(UUID id, UUID datasourceId) {
         return Futures.builder()
             .id(id)
+            .datasourceId(datasourceId)
             .ticker(getTicker())
             .name(getName())
             .shortName(getShortName())

@@ -16,14 +16,14 @@ import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceProces
 import ru.ioque.investfund.application.modules.scanner.CreateScannerProcessor;
 import ru.ioque.investfund.application.modules.scanner.ProduceSignalProcessor;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerProcessor;
-import ru.ioque.investfund.fixture.ExchangeDataFixture;
+import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FakeDIContainer {
-    ExchangeDataFixture exchangeDataFixture;
+    DatasourceStorage datasourceStorage;
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
@@ -53,7 +53,7 @@ public class FakeDIContainer {
         }
         eventPublisher = new FakeEventPublisher();
         dateTimeProvider = new FakeDateTimeProvider();
-        exchangeDataFixture = new ExchangeDataFixture();
+        datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
         uuidProvider = new FakeUUIDProvider();
@@ -154,7 +154,7 @@ public class FakeDIContainer {
 
     private FakeDatasourceProvider getFakeExchangeProvider() {
         FakeDatasourceProvider fakeExchangeProvider = new FakeDatasourceProvider(dateTimeProvider);
-        fakeExchangeProvider.setExchangeDataFixture(exchangeDataFixture);
+        fakeExchangeProvider.setDatasourceStorage(datasourceStorage);
         return fakeExchangeProvider;
     }
 }
