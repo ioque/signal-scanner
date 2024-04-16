@@ -43,7 +43,7 @@ services:
     container_name: kafbat-ui
     image: ghcr.io/kafbat/kafka-ui:latest
     ports:
-      - 8085:8080
+      - "8085:8080"
     depends_on:
       - kafka
     environment:

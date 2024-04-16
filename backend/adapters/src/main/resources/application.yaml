@@ -35,6 +35,8 @@ spring:
         max.poll.records: 100
         fetch.max.wait.ms: 50
         spring.json.trusted.packages: "ru.ioque.investfund.*"
+  main:
+    banner-mode: off
 
 bot:
   token: 6729611513:AAHXC_l_5sFe0BBvCPAKUJiR46SkRt2LxlI

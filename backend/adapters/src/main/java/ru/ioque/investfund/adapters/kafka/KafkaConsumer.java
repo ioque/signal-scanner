@@ -16,7 +16,7 @@ import ru.ioque.investfund.domain.scanner.event.SignalEvent;
 @Slf4j
 @Service
 @AllArgsConstructor
-@Profile("!adapter-tests")
+@Profile("!tests")
 public class KafkaConsumer {
     private final Bot bot;
     private final CommandBus commandBus;

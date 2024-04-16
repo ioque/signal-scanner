@@ -59,12 +59,12 @@ deploy to stage:
   allow_failure: false
   timeout: 15m
   image: '$NEXUS_URL/ioque/ansible'
-  environment: stage
-  resource_group: stage
+  environment: staging
+  resource_group: staging
   stage: infrastructure
   variables:
     BACKEND_DB_HOST: "192.168.0.85"
-    BACKEND_ENV: "test"
+    BACKEND_ENV: "staging"
     FRONTEND_API_HOST: "192.168.0.85"
     FRONTEND_API_HTTP_MODE: "http"
   script:
@@ -80,14 +80,14 @@ api tests:
     - master
   stage: acceptance
   image: gradle:jdk17-focal
-  environment: stage
-  resource_group: stage
+  environment: staging
+  resource_group: staging
   variables:
     API_HOST: "192.168.0.85"
     API_PORT: "8080"
     DATASOURCE_HOST: "192.168.0.85"
     DATASOURCE_PORT: "8081"
-    SPRING_PROFILES_ACTIVE: stage
+    SPRING_PROFILES_ACTIVE: "staging"
   script:
     - cd acceptance
     - gradle clean api-test:test -D
@@ -104,8 +104,8 @@ prepare data:
     - master
   stage: acceptance
   image: gradle:jdk17-focal
-  environment: stage
-  resource_group: stage
+  environment: staging
+  resource_group: staging
   variables:
     API_HOST: "192.168.0.85"
     API_PORT: "8080"
@@ -121,8 +121,8 @@ ui tests:
   only:
     - master
   stage: acceptance
-  environment: stage
-  resource_group: stage
+  environment: staging
+  resource_group: staging
   image: gradle:jdk17-focal
   services:
     - name: selenium/standalone-chrome:latest

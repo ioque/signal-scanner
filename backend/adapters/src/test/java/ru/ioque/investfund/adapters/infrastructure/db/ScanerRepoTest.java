@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.storage.jpa;
+package ru.ioque.investfund.adapters.infrastructure.db;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SCANER REPOSITORY TEST")
-public class ScanerRepoTest extends BaseJpaTest {
+public class ScanerRepoTest extends DatabaseTest {
     PsqlScannerRepository psqlScannerRepository;
 
     public ScanerRepoTest(

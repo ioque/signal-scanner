@@ -1,10 +1,9 @@
-package ru.ioque.investfund.adapters.storage.jpa;
+package ru.ioque.investfund.adapters.infrastructure.db;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ioque.investfund.adapters.infrastructure.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
@@ -26,9 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Transactional
-@SpringBootTest
-@Import(JpaTestTestConfiguration.class)
-public class BaseJpaTest {
+public abstract class DatabaseTest extends InfrastructureTest {
     protected static final UUID DATASOURCE_ID = UUID.randomUUID();
     protected static final UUID SCANNER_ID = UUID.randomUUID();
     @Autowired

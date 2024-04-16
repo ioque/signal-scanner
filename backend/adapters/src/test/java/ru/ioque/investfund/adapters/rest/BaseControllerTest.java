@@ -13,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@Import(ControllerTestConfiguration.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(ControllerTestConfiguration.class)
 @EnableAutoConfiguration(exclude = {
     DataSourceAutoConfiguration.class,
     DataSourceTransactionManagerAutoConfiguration.class,

@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Getter
 @Component
-@Profile("!adapter-tests")
+@Profile("!tests")
 public class Bot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private final Set<Long> chatIds = new HashSet<>();

@@ -19,7 +19,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 
 @Hidden
 @RestController
-@Profile("test")
+@Profile("!production")
 @AllArgsConstructor
 @Tag(name = "Служебный контролер", description = "Работает в окружении test, позволяет очищать стейт приложения.")
 public class ServiceController {

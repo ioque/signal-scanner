@@ -1,6 +1,7 @@
 package ru.ioque.investfund.adapters.logger;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.domain.core.ApplicationLog;
@@ -8,9 +9,10 @@ import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.core.WarningLog;
 
-@Slf4j
 @Component
-public class SpringLoggerProvider implements LoggerProvider {
+public class AsyncFileLoggerProvider implements LoggerProvider {
+    private final Logger log = LoggerFactory.getLogger("ASYNC_FILE_LOGGER");
+
     @Override
     public void log(ApplicationLog logPart) {
         if (logPart instanceof InfoLog infoLog) {

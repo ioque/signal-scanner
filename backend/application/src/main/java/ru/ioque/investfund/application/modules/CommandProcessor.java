@@ -17,7 +17,7 @@ import java.util.Set;
 public abstract class CommandProcessor<C> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;
-    protected LoggerProvider loggerProvider;;
+    protected LoggerProvider loggerProvider;
 
     protected abstract void handleFor(C command);
 
@@ -51,7 +51,7 @@ public abstract class CommandProcessor<C> {
                 new ErrorLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("Выполнение команды %s завершилось с ошибкой, текст ошибки: %s", command, e.getMessage()),
-                    e.getCause())
+                    e)
             );
             throw e;
         }

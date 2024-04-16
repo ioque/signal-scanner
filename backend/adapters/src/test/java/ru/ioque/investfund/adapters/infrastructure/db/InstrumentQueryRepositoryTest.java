@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.storage.jpa;
+package ru.ioque.investfund.adapters.infrastructure.db;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("DATASOURCE QUERY REPOSITORY TEST")
-public class InstrumentQueryRepositoryTest extends BaseJpaTest {
+public class InstrumentQueryRepositoryTest extends DatabaseTest {
     DatasourceQueryRepository datasourceQueryRepository;
     JpaInstrumentRepository instrumentEntityRepository;
 
