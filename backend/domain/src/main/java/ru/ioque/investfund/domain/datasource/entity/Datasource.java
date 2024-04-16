@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -100,6 +101,6 @@ public class Datasource extends Domain {
     }
 
     public List<Instrument> getInstruments() {
-        return List.copyOf(instruments);
+        return Collections.unmodifiableList(instruments);
     }
 }

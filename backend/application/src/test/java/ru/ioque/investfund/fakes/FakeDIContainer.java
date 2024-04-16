@@ -31,6 +31,8 @@ public class FakeDIContainer {
     FakeTradingDataRepository tradingDataRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
+    FakeIntradayValueRepository intradayValueRepository;
+    FakeHistoryValueRepository historyValueRepository;
     FakeEventPublisher eventPublisher;
     DisableUpdateInstrumentProcessor disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentProcessor enableUpdateInstrumentProcessor;
@@ -43,9 +45,12 @@ public class FakeDIContainer {
     ProduceSignalProcessor produceSignalProcessor;
     UpdateScannerProcessor  updateScannerProcessor;
     CommandBus commandBus;
+    Validator validator;
 
     public FakeDIContainer() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
         eventPublisher = new FakeEventPublisher();
         dateTimeProvider = new FakeDateTimeProvider();
         exchangeDataFixture = new ExchangeDataFixture();
@@ -53,8 +58,10 @@ public class FakeDIContainer {
         loggerProvider = new FakeLoggerProvider();
         uuidProvider = new FakeUUIDProvider();
         datasourceRepository = new FakeDatasourceRepository();
+        intradayValueRepository = new FakeIntradayValueRepository();
+        historyValueRepository = new FakeHistoryValueRepository();
         scannerRepository = new FakeScannerRepository();
-        tradingDataRepository = new FakeTradingDataRepository(datasourceRepository, dateTimeProvider);
+        tradingDataRepository = new FakeTradingDataRepository(intradayValueRepository, historyValueRepository, dateTimeProvider);
 
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(
             dateTimeProvider,
@@ -82,6 +89,8 @@ public class FakeDIContainer {
             uuidProvider,
             exchangeProvider,
             datasourceRepository,
+            historyValueRepository,
+            intradayValueRepository,
             eventPublisher
         );
         registerDatasourceProcessor = new RegisterDatasourceProcessor(

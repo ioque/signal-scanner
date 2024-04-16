@@ -38,6 +38,7 @@ public class DatasourceProviderImpl implements DatasourceProvider {
     @SneakyThrows
     public HistoryBatch fetchHistoryBy(Datasource datasource, Instrument instrument) {
         return new HistoryBatch(
+            instrument.getTicker(),
             moexClient
                 .fetchHistory(
                     datasource.getUrl(),
@@ -55,6 +56,7 @@ public class DatasourceProviderImpl implements DatasourceProvider {
     @SneakyThrows
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
+            instrument.getTicker(),
             moexClient
                 .fetchIntradayValues(
                     datasource.getUrl(),

@@ -9,8 +9,6 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -58,8 +56,8 @@ public abstract class CommandProcessor<C> {
     }
 
     private long timeMeterWrapper(Runnable runnable) {
-        LocalDateTime start = dateTimeProvider.nowDateTime();
+        long start = System.currentTimeMillis();
         runnable.run();
-        return Duration.between(start, dateTimeProvider.nowDateTime()).toMillis();
+        return System.currentTimeMillis() - start;
     }
 }

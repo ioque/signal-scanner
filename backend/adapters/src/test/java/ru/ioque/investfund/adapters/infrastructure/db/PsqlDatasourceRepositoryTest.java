@@ -34,7 +34,7 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
             "test",
             List.of()
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         assertTrue(datasourceRepository.getBy(datasourceId).isPresent());
         assertEquals(datasource, datasourceRepository.getBy(datasourceId).get());
@@ -54,7 +54,7 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
                 instrument
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         assertTrue(datasourceRepository.getBy(datasourceId).isPresent());
         assertEquals(1, datasourceRepository.getBy(datasourceId).get().getInstruments().size());

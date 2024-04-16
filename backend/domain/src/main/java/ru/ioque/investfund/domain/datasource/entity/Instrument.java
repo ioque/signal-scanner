@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -114,5 +116,10 @@ public class Instrument extends Domain {
             throw new DomainException("Не заполнено полное наименование инструмента.");
         }
         this.name = name;
+    }
+
+    public void recalcSummary(HistoryBatch history, IntradayBatch intraday) {
+        intraday.getLastNumber().ifPresent(this::updateLastTradingNumber);
+        history.getLastDate().ifPresent(this::updateLastHistoryDate);
     }
 }

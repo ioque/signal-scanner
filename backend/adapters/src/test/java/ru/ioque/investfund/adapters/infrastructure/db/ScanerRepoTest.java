@@ -46,7 +46,7 @@ public class ScanerRepoTest extends DatabaseTest {
     private SignalScanner createScanner(List<String> tickers, AnomalyVolumeProperties properties) {
         return SignalScanner.builder()
             .id(SCANNER_ID)
-            .datasourceId(exchangeEntityRepository.findAll().get(0).getId())
+            .datasourceId(jpaDatasourceRepository.findAll().get(0).getId())
             .tickers(tickers)
             .properties(properties)
             .description("desc")

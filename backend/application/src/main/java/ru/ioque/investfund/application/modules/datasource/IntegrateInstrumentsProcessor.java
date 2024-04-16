@@ -8,45 +8,29 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
-import java.util.UUID;
-
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateInstrumentsProcessor extends CommandProcessor<IntegrateInstrumentsCommand> {
+public class IntegrateInstrumentsProcessor extends DatasourceProcessor<IntegrateInstrumentsCommand> {
     DatasourceProvider datasourceProvider;
-    DatasourceRepository repository;
 
     public IntegrateInstrumentsProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
-        DatasourceRepository repository
+        DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
-        this.dateTimeProvider = dateTimeProvider;
+        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
         this.datasourceProvider = datasourceProvider;
-        this.repository = repository;
     }
 
     @Override
     protected void handleFor(IntegrateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
         datasourceProvider.fetchInstruments(datasource).forEach(datasource::addInstrument);
-        repository.saveDatasource(datasource);
-    }
-
-    private Datasource getDatasource(UUID datasourceId) {
-        return repository
-            .getBy(datasourceId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", datasourceId)
-                )
-            );
+        datasourceRepository.save(datasource);
     }
 }

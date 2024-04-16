@@ -7,41 +7,25 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
-import java.util.UUID;
-
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class DisableUpdateInstrumentProcessor extends CommandProcessor<DisableUpdateInstrumentsCommand> {
-    DatasourceRepository repository;
-
+public class DisableUpdateInstrumentProcessor extends DatasourceProcessor<DisableUpdateInstrumentsCommand> {
     public DisableUpdateInstrumentProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        DatasourceRepository repository
+        DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
-        this.repository = repository;
+        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
     }
 
     @Override
     protected void handleFor(DisableUpdateInstrumentsCommand command) {
         final Datasource datasource = getDatasource(command.getDatasourceId());
         datasource.disableUpdate(command.getTickers());
-        repository.saveDatasource(datasource);
-    }
-
-    private Datasource getDatasource(UUID datasourceId) {
-        return repository
-            .getBy(datasourceId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", datasourceId)
-                )
-            );
+        datasourceRepository.save(datasource);
     }
 }

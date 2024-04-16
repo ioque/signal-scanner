@@ -7,41 +7,28 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
-import java.util.UUID;
-
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateDatasourceProcessor extends CommandProcessor<UpdateDatasourceCommand> {
-    DatasourceRepository repository;
+public class UpdateDatasourceProcessor extends DatasourceProcessor<UpdateDatasourceCommand> {
+    DatasourceRepository datasourceRepository;
 
     public UpdateDatasourceProcessor(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        DatasourceRepository repository
+        DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
-        this.repository = repository;
+        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
+        this.datasourceRepository = datasourceRepository;
     }
 
     @Override
     protected void handleFor(UpdateDatasourceCommand command) {
         final Datasource datasource = getDatasource(command.getId());
         datasource.update(command);
-        repository.saveDatasource(datasource);
-    }
-
-    private Datasource getDatasource(UUID datasourceId) {
-        return repository
-            .getBy(datasourceId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", datasourceId)
-                )
-            );
+        datasourceRepository.save(datasource);
     }
 }

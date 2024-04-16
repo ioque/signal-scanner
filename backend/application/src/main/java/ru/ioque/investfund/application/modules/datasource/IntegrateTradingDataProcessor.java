@@ -8,24 +8,24 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.HistoryValueRepository;
+import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.CommandProcessor;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
-import java.util.UUID;
-
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTradingDataCommand> {
+public class IntegrateTradingDataProcessor extends DatasourceProcessor<IntegrateTradingDataCommand> {
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     DatasourceProvider datasourceProvider;
-    DatasourceRepository repository;
+    HistoryValueRepository historyValueRepository;
+    IntradayValueRepository intradayValueRepository;
     EventPublisher eventPublisher;
 
     public IntegrateTradingDataProcessor(
@@ -35,13 +35,16 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
         UUIDProvider uuidProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
+        HistoryValueRepository historyValueRepository,
+        IntradayValueRepository intradayValueRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
-        this.repository = datasourceRepository;
+        this.historyValueRepository = historyValueRepository;
+        this.intradayValueRepository = intradayValueRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -51,26 +54,15 @@ public class IntegrateTradingDataProcessor extends CommandProcessor<IntegrateTra
         datasource.getUpdatableInstruments().forEach(instrument -> {
             final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
             final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
-            intraday.getLastNumber().ifPresent(instrument::updateLastTradingNumber);
-            history.getLastDate().ifPresent(instrument::updateLastHistoryDate);
-            repository.saveHistoryValues(history.getUniqueValues());
-            repository.saveIntradayValues(intraday.getUniqueValues());
+            historyValueRepository.saveAll(history.getUniqueValues());
+            intradayValueRepository.saveAll(intraday.getUniqueValues());
+            instrument.recalcSummary(history, intraday);
         });
-        repository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
         eventPublisher.publish(TradingDataUpdatedEvent.builder()
             .id(uuidProvider.generate())
             .dateTime(dateTimeProvider.nowDateTime())
             .datasourceId(datasource.getId())
             .build());
-    }
-
-    private Datasource getDatasource(UUID datasourceId) {
-        return repository
-            .getBy(datasourceId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", datasourceId)
-                )
-            );
     }
 }

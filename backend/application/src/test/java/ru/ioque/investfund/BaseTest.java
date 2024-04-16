@@ -32,10 +32,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -130,35 +128,23 @@ public class BaseTest {
     }
 
     protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId, String ticker) {
-        return datasourceRepository().getIntradayBy(datasourceId, ticker).toList();
+        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId, ticker).toList();
     }
 
     protected UUID getDatasourceId() {
         return datasourceRepository().getAll().get(0).getId();
     }
 
-    protected List<IntradayValue> getIntradayValues(UUID datasourceId) {
-        return datasourceRepository()
-            .getIntradayValues()
-            .getOrDefault(datasourceId, new ConcurrentHashMap<>())
-            .values()
-            .stream()
-            .flatMap(Collection::stream)
-            .toList();
+    protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId) {
+        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId).toList();
     }
 
     protected List<HistoryValue> getHistoryValuesBy(UUID datasourceId, String ticker) {
-        return datasourceRepository().getHistoryBy(datasourceId, ticker).toList();
+        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId, ticker).toList();
     }
 
     protected List<HistoryValue> getHistoryValues(UUID datasourceId) {
-        return datasourceRepository()
-            .getHistoryValues()
-            .getOrDefault(datasourceId, new ConcurrentHashMap<>())
-            .values()
-            .stream()
-            .flatMap(Collection::stream)
-            .toList();
+        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId).toList();
     }
 
     protected void clearLogs() {

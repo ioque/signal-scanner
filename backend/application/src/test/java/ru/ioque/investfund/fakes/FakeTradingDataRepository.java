@@ -13,12 +13,17 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public class FakeTradingDataRepository implements TradingDataRepository {
-    FakeDatasourceRepository datasourceRepository;
+    FakeIntradayValueRepository intradayValueRepository;
+    FakeHistoryValueRepository historyValueRepository;
     DateTimeProvider dateTimeProvider;
 
-    public FakeTradingDataRepository(FakeDatasourceRepository datasourceRepository,
-                                     DateTimeProvider dateTimeProvider) {
-        this.datasourceRepository = datasourceRepository;
+    public FakeTradingDataRepository(
+        FakeIntradayValueRepository intradayValueRepository,
+        FakeHistoryValueRepository historyValueRepository,
+        DateTimeProvider dateTimeProvider
+    ) {
+        this.intradayValueRepository = intradayValueRepository;
+        this.historyValueRepository = historyValueRepository;
         this.dateTimeProvider = dateTimeProvider;
     }
 
@@ -62,10 +67,10 @@ public class FakeTradingDataRepository implements TradingDataRepository {
     }
 
     private Stream<IntradayValue> getIntradayBy(UUID datasourceId, String ticker) {
-        return datasourceRepository.getIntradayBy(datasourceId, ticker);
+        return intradayValueRepository.getAllBy(datasourceId, ticker);
     }
 
     private Stream<HistoryValue> getHistoryBy(UUID datasourceId, String ticker) {
-        return datasourceRepository.getHistoryBy(datasourceId, ticker);
+        return historyValueRepository.getAllBy(datasourceId, ticker);
     }
 }

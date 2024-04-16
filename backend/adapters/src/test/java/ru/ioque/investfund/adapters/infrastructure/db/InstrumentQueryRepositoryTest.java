@@ -60,7 +60,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildStockWith().id(UUID.randomUUID()).ticker("SBER").name("SBER").shortName("SBER").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id2).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> stocks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
@@ -118,7 +118,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> afks = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
@@ -156,7 +156,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id2).ticker("SBERP").name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
@@ -186,7 +186,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> sber = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").type("stock").build());
@@ -218,7 +218,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id3).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> sberp = datasourceQueryRepository.findInstruments(InstrumentFilterParams.builder().ticker(
             "SBER").shortName("Сбербанк-п").type("stock").build());
@@ -250,7 +250,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
         List<InstrumentEntity> instruments1 = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
@@ -319,7 +319,7 @@ public class InstrumentQueryRepositoryTest extends DatabaseTest {
                 buildIndexWith().id(id4).ticker("IMOEX").name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
             )
         );
-        datasourceRepository.saveDatasource(datasource);
+        datasourceRepository.save(datasource);
 
         List<InstrumentEntity> instruments = datasourceQueryRepository.findInstruments(InstrumentFilterParams
             .builder()

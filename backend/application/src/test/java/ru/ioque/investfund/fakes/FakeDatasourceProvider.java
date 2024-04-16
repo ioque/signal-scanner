@@ -24,12 +24,18 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     public HistoryBatch fetchHistoryBy(
         Datasource datasource, Instrument instrument
     ) {
-        return new HistoryBatch(exchangeDataFixture.getHistoryDataByTicker(instrument.getTicker()).stream().toList());
+        return new HistoryBatch(
+            instrument.getTicker(),
+            exchangeDataFixture.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
+        );
     }
 
     @Override
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
-        return new IntradayBatch(exchangeDataFixture.getDealsByTicker(instrument.getTicker()));
+        return new IntradayBatch(
+            instrument.getTicker(),
+            exchangeDataFixture.getDealsByTicker(instrument.getTicker())
+        );
     }
 
     @Override

@@ -10,6 +10,8 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.HistoryValueRepository;
+import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Index;
@@ -35,9 +37,13 @@ public abstract class DatabaseTest extends InfrastructureTest {
     @Autowired
     protected DatasourceRepository datasourceRepository;
     @Autowired
-    protected JpaDatasourceRepository exchangeEntityRepository;
+    protected HistoryValueRepository historyValueRepository;
     @Autowired
-    protected JpaInstrumentRepository instrumentEntityRepository;
+    protected IntradayValueRepository intradayValueRepository;
+    @Autowired
+    protected JpaDatasourceRepository jpaDatasourceRepository;
+    @Autowired
+    protected JpaInstrumentRepository jpaInstrumentRepository;
     @Autowired
     protected JpaHistoryValueRepository jpaHistoryValueRepository;
     @Autowired
@@ -45,16 +51,16 @@ public abstract class DatabaseTest extends InfrastructureTest {
 
     @BeforeEach
     void beforeEach() {
-        exchangeEntityRepository.deleteAll();
-        instrumentEntityRepository.deleteAll();
+        jpaDatasourceRepository.deleteAll();
+        jpaInstrumentRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
         jpaHistoryValueRepository.deleteAll();
     }
 
     protected void prepareState() {
         dateTimeProvider.initToday(LocalDateTime.parse("2024-04-04T12:00:00"));
-        datasourceRepository.saveDatasource(createExchange());
-        datasourceRepository.saveHistoryValues(
+        datasourceRepository.save(createExchange());
+        historyValueRepository.saveAll(
             List.of(
                 createHistoryValue("TGKN", LocalDate.parse("2024-04-01")),
                 createHistoryValue("TGKN", LocalDate.parse("2024-04-02")),
@@ -67,7 +73,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
                 createHistoryValue("IMOEX", LocalDate.parse("2024-04-03"))
             )
         );
-        datasourceRepository.saveIntradayValues(
+        intradayValueRepository.saveAll(
             List.of(
                 createDeal(1L, "TGKN", LocalDateTime.parse("2024-04-04T10:00:00")),
                 createDeal(2L, "TGKN", LocalDateTime.parse("2024-04-04T11:00:00")),

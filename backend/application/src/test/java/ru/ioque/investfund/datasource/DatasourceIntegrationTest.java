@@ -145,7 +145,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(1, getInstruments(datasourceId).size());
-        assertEquals(3, getIntradayValues(datasourceId).size());
+        assertEquals(3, getIntradayValuesBy(datasourceId).size());
         assertEquals(4, getHistoryValues(datasourceId).size());
     }
 
@@ -274,7 +274,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(0, getHistoryValues(datasourceId).size());
-        assertEquals(0, getIntradayValues(datasourceId).size());
+        assertEquals(0, getIntradayValuesBy(datasourceId).size());
     }
 
     @Test
