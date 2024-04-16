@@ -38,6 +38,13 @@ spring:
   main:
     banner-mode: off
 
-bot:
-  token: 6729611513:AAHXC_l_5sFe0BBvCPAKUJiR46SkRt2LxlI
+logging-config:
+  console:
+    level: ${CONSOLE_LOG_LEVEL:-DEBUG}
+  file:
+    level: ${FILE_LOG_LEVEL:-INFO}
+    path: ${FILE_LOG_PATH:-logs}
+
+telegram-bot:
+  token: ${TELEGRAM_BOT_TOKEN}
   name: AlgoMoex_Bot

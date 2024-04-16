@@ -12,3 +12,10 @@ spring:
     generate-ddl: true
   liquibase:
     enabled: false
+
+logging-config:
+  console:
+    level: DEBUG
+  file:
+    level: INFO
+    path: build/logs

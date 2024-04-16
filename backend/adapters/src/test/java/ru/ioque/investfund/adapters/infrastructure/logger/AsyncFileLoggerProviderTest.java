@@ -44,7 +44,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
             .stream(Objects.requireNonNull(new File("build/logs/").listFiles()))
             .map(File::getAbsolutePath)
             .forEach(path -> {
-                try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path))){;
+                try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path))){
                     writer.write("");
                     writer.flush();
                 } catch (IOException ex) {
@@ -78,7 +78,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         );
 
         assertTrue(waitLogCount(2));
-        var logContent = getLogContent();
+        final List<JsonNode> logContent = getLogContent();
         assertNotNull(logContent.get(0).get("time"));
         assertEquals("Test Log 1", logContent.get(0).get("message").asText());
         assertEquals("INFO", logContent.get(0).get("level").asText());
@@ -104,7 +104,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         );
 
         assertTrue(waitLogCount(1));
-        var logContent = getLogContent();
+        final List<JsonNode> logContent = getLogContent();
         assertNotNull(logContent.get(0).get("time"));
         assertEquals("ERROR", logContent.get(0).get("level").asText());
         assertEquals("Test Error Log 1", logContent.get(0).get("message").asText());

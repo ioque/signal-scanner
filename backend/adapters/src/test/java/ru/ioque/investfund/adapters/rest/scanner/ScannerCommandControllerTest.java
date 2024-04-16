@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.rest.configurator;
+package ru.ioque.investfund.adapters.rest.scanner;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("SCANNER CONFIGURATOR COMMAND CONTROLLER TEST")
-public class ScannerConfiguratorCommandControllerTest extends BaseControllerTest {
+public class ScannerCommandControllerTest extends BaseControllerTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     @Test
     @DisplayName("""

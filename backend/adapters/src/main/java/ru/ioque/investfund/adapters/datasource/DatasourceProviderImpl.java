@@ -31,7 +31,6 @@ public class DatasourceProviderImpl implements DatasourceProvider {
             .fetchInstruments(datasource.getUrl())
             .stream()
             .map(dto -> dto.toDomain(uuidProvider.generate()))
-            .distinct()
             .toList();
     }
 

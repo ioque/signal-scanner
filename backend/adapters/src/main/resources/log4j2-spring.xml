@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Properties>
-        <Property name="KAFKA_URL">localhost:9092</Property>
-        <Property name="LOG_FILE_PATH">build/logs</Property>
+        <Property name="LOG_FILE_PATH">${spring:logging-config.file.path}</Property>
+        <Property name="CONSOLE_LOG_LVL">${spring:logging-config.console.level}</Property>
+        <Property name="FILE_LOG_LVL">${spring:logging-config.file.level}</Property>
         <Property name="TECHNICAL_LOG_FILE_NAME">trading-data-processor-technical</Property>
         <Property name="BUSINESS_LOG_FILE_NAME">trading-data-processor-business</Property>
-        <Property name="CONSOLE_LOG_LVL">DEBUG</Property>
-        <Property name="FILE_LOG_LVL">INFO</Property>
     </Properties>
 
     <Appenders>
