@@ -53,7 +53,7 @@
     </Appenders>
 
     <Loggers>
-        <Root level="INFO">
+        <Root level="DEBUG">
             <AppenderRef ref="ConsoleAppender" level="${CONSOLE_LOG_LVL}" />
             <AppenderRef ref="TechnicalRollingFileAppender" level="${FILE_LOG_LVL}" />
         </Root>

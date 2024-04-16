@@ -40,11 +40,10 @@ spring:
 
 logging-config:
   console:
-    level: ${CONSOLE_LOG_LEVEL:-DEBUG}
+    level: ${CONSOLE_LOG_LEVEL:INFO}
   file:
-    level: ${FILE_LOG_LEVEL:-INFO}
-    path: ${FILE_LOG_PATH:-logs}
+    level: ${FILE_LOG_LEVEL:INFO}
+    path: ${FILE_LOG_PATH:logs}
 
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
-  name: AlgoMoex_Bot
