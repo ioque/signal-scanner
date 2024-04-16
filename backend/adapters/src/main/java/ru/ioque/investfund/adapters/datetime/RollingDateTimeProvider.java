@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
-public class DateTimeProviderImpl implements DateTimeProvider {
+public class RollingDateTimeProvider implements DateTimeProvider {
     LocalDateTime today;
     @Override
     public LocalDateTime nowDateTime() {

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.datasource.client.ExchangeRestClient;
+import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class HttpDatasourceProvider implements DatasourceProvider {
-    ExchangeRestClient moexClient;
+    DatasourceRestClient moexClient;
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
 

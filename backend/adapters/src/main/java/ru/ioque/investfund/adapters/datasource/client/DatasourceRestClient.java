@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExchangeRestClient {
+public class DatasourceRestClient {
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     final RestClient defaultClient = RestClient.create();
 

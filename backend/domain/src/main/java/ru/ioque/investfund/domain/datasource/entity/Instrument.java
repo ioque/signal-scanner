@@ -61,7 +61,7 @@ public class Instrument extends Domain {
     }
 
     public LocalDate historyLeftBound(LocalDate now) {
-        return getLastHistoryDate().orElse(now.minusMonths(6));
+        return getLastHistoryDate().map(lastHistoryDate -> lastHistoryDate.plusDays(1)).orElse(now.minusMonths(6));
     }
 
     public Long getLastTradingNumber() {

@@ -98,10 +98,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
     }
 
     @Test
-    @DisplayName(
-        """
-            T3. Фильтрация инструментов по их типу.
-            """)
+    @DisplayName("""
+        T3. Фильтрация инструментов по их типу.
+        """)
     void testCase3() {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
@@ -131,10 +130,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
     }
 
     @Test
-    @DisplayName(
-        """
-            T4. Фильтрация инструментов по их тикеру.
-            """)
+    @DisplayName("""
+        T4. Фильтрация инструментов по их тикеру.
+        """)
     void testCase4() {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
@@ -173,10 +171,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
     }
 
     @Test
-    @DisplayName(
-        """
-            T5. Фильтрация инструментов по их краткому наименованию.
-            """)
+    @DisplayName("""
+        T5. Фильтрация инструментов по их краткому наименованию.
+        """)
     void testCase5() {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
@@ -201,10 +198,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
     }
 
     @Test
-    @DisplayName(
-        """
-            T6. Фильтрация инструментов по их типу и тикеру.
-            """)
+    @DisplayName("""
+        T6. Фильтрация инструментов по их типу и тикеру.
+        """)
     void testCase6() {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
@@ -222,21 +218,27 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sber = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
-            "SBER").type("stock").build());
-        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
-            "IMOEX").type("index").build());
+        List<InstrumentEntity> sber = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
+            .builder()
+            .ticker(
+                "SBER")
+            .type("stock")
+            .build());
+        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
+            .builder()
+            .ticker(
+                "IMOEX")
+            .type("index")
+            .build());
 
         assertEquals(1, sber.size());
         assertEquals(1, imoex.size());
     }
 
     @Test
-    @DisplayName(
-        """
-            T7. Фильтрация инструментов по их тикеру, типу и краткому наименованию.
-            """
-    )
+    @DisplayName("""
+        T7. Фильтрация инструментов по их тикеру, типу и краткому наименованию.
+        """)
     void testCase7() {
         final UUID id1 = UUID.randomUUID();
         final UUID id2 = UUID.randomUUID();
@@ -254,10 +256,19 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sberp = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
-            "SBER").shortName("Сбербанк-п").type("stock").build());
-        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams.builder().ticker(
-            "IMOEX").type("index").build());
+        List<InstrumentEntity> sberp = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
+            .builder()
+            .ticker(
+                "SBER")
+            .shortName("Сбербанк-п")
+            .type("stock")
+            .build());
+        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
+            .builder()
+            .ticker(
+                "IMOEX")
+            .type("index")
+            .build());
 
         assertEquals(1, sberp.size());
         assertEquals(1, imoex.size());
