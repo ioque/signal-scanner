@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.scanner.request.CreateScannerRequest;
 import ru.ioque.investfund.adapters.rest.scanner.request.UpdateScannerRequest;
-import ru.ioque.investfund.application.modules.CommandBus;
+import ru.ioque.investfund.application.command.CommandBus;
 
 import java.util.UUID;
 

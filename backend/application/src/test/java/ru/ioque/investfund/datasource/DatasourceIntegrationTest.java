@@ -13,7 +13,7 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -356,7 +356,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        assertEquals(TradingDataUpdatedEvent.class, eventPublisher().getEvents().get(0).getClass());
+        assertEquals(TradingDataIntegratedEvent.class, eventPublisher().getEvents().get(0).getClass());
     }
 
     @Test

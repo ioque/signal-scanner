@@ -1,34 +1,39 @@
-package ru.ioque.investfund.application.modules.datasource;
+package ru.ioque.investfund.application.command.handlers.datasource;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.command.CommandHandler;
+import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UnregisterDatasourceHandler extends CommandHandler<UnregisterDatasourceCommand> {
+public class IntegrateInstrumentsHandler extends CommandHandler<IntegrateInstrumentsCommand> {
     DatasourceRepository datasourceRepository;
+    DatasourceProvider datasourceProvider;
 
-    public UnregisterDatasourceHandler(
+    public IntegrateInstrumentsHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
+        this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
     }
 
     @Override
-    protected void handleFor(UnregisterDatasourceCommand command) {
+    protected void handleFor(IntegrateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasourceRepository.remove(datasource);
+        datasourceProvider.fetchInstruments(datasource).getUniqueValues().forEach(datasource::addInstrument);
+        datasourceRepository.save(datasource);
     }
 }

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.datasource;
+package ru.ioque.investfund.application.command.handlers.datasource;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -7,34 +7,29 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.command.CommandHandler;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-
-import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RegisterDatasourceHandler extends CommandHandler<CreateDatasourceCommand> {
+public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceCommand> {
     DatasourceRepository datasourceRepository;
-    UUIDProvider uuidProvider;
 
-    public RegisterDatasourceHandler(
+    public UpdateDatasourceHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
         this.datasourceRepository = datasourceRepository;
     }
 
     @Override
-    protected void handleFor(CreateDatasourceCommand command) {
-        final UUID newDatasourceId = uuidProvider.generate();
-        datasourceRepository.save(Datasource.of(newDatasourceId, command));
+    protected void handleFor(UpdateDatasourceCommand command) {
+        final Datasource datasource = datasourceRepository.getById(command.getId());
+        datasource.update(command);
+        datasourceRepository.save(datasource);
     }
 }

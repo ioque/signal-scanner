@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.scanner;
+package ru.ioque.investfund.application.command.handlers.scanner;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -9,10 +9,11 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
-import ru.ioque.investfund.application.modules.CommandHandler;
+import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.event.SignalEvent;
+import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
+import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
 
 import java.util.List;
 
@@ -50,7 +51,21 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
                     command.getWatermark()
                 );
                 scannerRepository.save(scanner);
-                newSignals.forEach(signal -> eventPublisher.publish(SignalEvent.from(signal)));
+                newSignals.forEach(signal -> eventPublisher.publish(
+                    SignalFoundEvent.builder()
+                        .isBuy(signal.isBuy())
+                        .ticker(signal.getTicker())
+                        .watermark(command.getWatermark())
+                        .datasourceId(command.getDatasourceId())
+                        .build()
+                ));
             });
+        eventPublisher.publish(
+            ScanningFinishedEvent.builder()
+                .datasourceId(command.getDatasourceId())
+                .watermark(command.getWatermark())
+                .dateTime(dateTimeProvider.nowDateTime())
+                .build()
+        );
     }
 }

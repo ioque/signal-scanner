@@ -1,6 +1,5 @@
-package ru.ioque.investfund.domain.scanner.command;
+package ru.ioque.investfund.domain.datasource.event;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.domain.core.DomainEvent;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,13 +16,12 @@ import java.util.UUID;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProduceSignalCommand implements Command {
-    @NotNull(message = "Не передан идентификатор источника данных.")
+public class TradingDataIntegratedEvent implements DomainEvent {
     UUID datasourceId;
-    @NotNull(message = "Не передан watermark.")
-    LocalDateTime watermark;
+    Integer updatedCount;
+    LocalDateTime dateTime;
 }

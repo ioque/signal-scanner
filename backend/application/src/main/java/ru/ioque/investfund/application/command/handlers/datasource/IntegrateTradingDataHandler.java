@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.datasource;
+package ru.ioque.investfund.application.command.handlers.datasource;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -11,18 +11,16 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.modules.CommandHandler;
+import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
+import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTradingDataCommand> {
-    UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
@@ -34,7 +32,6 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
         HistoryValueRepository historyValueRepository,
@@ -42,7 +39,6 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         EventPublisher eventPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
@@ -62,10 +58,10 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
             instrument.recalcSummary(history, intraday);
         });
         datasourceRepository.save(datasource);
-        eventPublisher.publish(TradingDataUpdatedEvent.builder()
-            .id(uuidProvider.generate())
-            .dateTime(dateTimeProvider.nowDateTime())
+        eventPublisher.publish(TradingDataIntegratedEvent.builder()
             .datasourceId(datasource.getId())
+            .dateTime(dateTimeProvider.nowDateTime())
+            .updatedCount(datasource.getUpdatableInstruments().size())
             .build());
     }
 }

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.telegrambot;
+package ru.ioque.investfund.application.command.handlers.telegrambot;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

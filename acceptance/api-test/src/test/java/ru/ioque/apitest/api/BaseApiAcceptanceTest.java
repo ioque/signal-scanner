@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
 import ru.ioque.apitest.DatasetManager;
+import ru.ioque.apitest.kafka.DomainEvent;
+import ru.ioque.apitest.kafka.KafkaConsumer;
 import ru.ioque.core.client.datasource.DatasourceRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
@@ -37,11 +39,24 @@ public class BaseApiAcceptanceTest {
     private ClientFacade clientFacade;
     @Autowired
     private DatasetManager datasetManager;
+    @Autowired
+    private KafkaConsumer kafkaConsumer;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
 
     @BeforeEach
     void beforeEach() {
         serviceClient().clearState();
+        kafkaConsumer.clear();
+    }
+
+    protected boolean waitEvent(DomainEvent event) {
+        long start = System.currentTimeMillis();
+        while (!kafkaConsumer.getMessages().contains(event)) {
+            if (System.currentTimeMillis() - start > 1000) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private DatasourceRestClient exchangeClient() {

@@ -1,6 +1,24 @@
 variables:
   api_url: http://${API_HOST:localhost}:${API_PORT:8080}
   datasource_url: http://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:7000}
-  kafka_url: ${KAFKA_HOST:localhost}:9092
 server:
   port: 7000
+
+spring:
+  application:
+    name: "acceptance"
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      group-id: ${spring.application.name}
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      properties:
+        max.poll.records: 100
+        fetch.max.wait.ms: 50
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "ru.ioque.investfund.*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: ru.ioque.apitest.kafka.DomainEvent

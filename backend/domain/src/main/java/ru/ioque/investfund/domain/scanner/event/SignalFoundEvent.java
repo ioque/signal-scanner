@@ -1,25 +1,28 @@
 package ru.ioque.investfund.domain.scanner.event;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainEvent;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
+@Builder
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignalEvent implements DomainEvent {
-    LocalDateTime dateTime;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class SignalFoundEvent implements DomainEvent {
     String ticker;
-
-    public static DomainEvent from(Signal signal) {
-        return new SignalEvent(signal.getDateTime(), signal.getTicker());
-    }
+    Boolean isBuy;
+    UUID datasourceId;
+    LocalDateTime watermark;
 }

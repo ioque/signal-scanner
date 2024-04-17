@@ -5,18 +5,18 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.modules.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.DisableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.modules.datasource.EnableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.modules.datasource.IntegrateInstrumentsHandler;
-import ru.ioque.investfund.application.modules.datasource.IntegrateTradingDataHandler;
-import ru.ioque.investfund.application.modules.datasource.RegisterDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.UnregisterDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceHandler;
-import ru.ioque.investfund.application.modules.scanner.CreateScannerHandler;
-import ru.ioque.investfund.application.modules.scanner.ProduceSignalHandler;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerHandler;
-import ru.ioque.investfund.application.modules.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.command.CommandBus;
+import ru.ioque.investfund.application.command.handlers.datasource.DisableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.EnableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.IntegrateInstrumentsHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.IntegrateTradingDataHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.RegisterDatasourceHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.UnregisterDatasourceHandler;
+import ru.ioque.investfund.application.command.handlers.datasource.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.command.handlers.scanner.CreateScannerHandler;
+import ru.ioque.investfund.application.command.handlers.scanner.ProduceSignalHandler;
+import ru.ioque.investfund.application.command.handlers.scanner.UpdateScannerHandler;
+import ru.ioque.investfund.application.command.handlers.telegrambot.TelegramBotService;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
@@ -92,7 +92,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             exchangeProvider,
             datasourceRepository,
             historyValueRepository,

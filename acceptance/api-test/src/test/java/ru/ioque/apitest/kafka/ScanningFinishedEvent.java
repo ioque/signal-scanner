@@ -1,6 +1,5 @@
-package ru.ioque.investfund.domain.scanner.command;
+package ru.ioque.apitest.kafka;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,9 +19,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProduceSignalCommand implements Command {
-    @NotNull(message = "Не передан идентификатор источника данных.")
+public class ScanningFinishedEvent implements DomainEvent {
     UUID datasourceId;
-    @NotNull(message = "Не передан watermark.")
     LocalDateTime watermark;
+    LocalDateTime dateTime;
 }

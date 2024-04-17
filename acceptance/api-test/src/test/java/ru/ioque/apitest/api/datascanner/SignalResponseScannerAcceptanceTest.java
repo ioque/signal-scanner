@@ -1,14 +1,12 @@
 package ru.ioque.apitest.api.datascanner;
 
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.apitest.kafka.KafkaConsumer;
+import ru.ioque.apitest.kafka.ScanningFinishedEvent;
 import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
@@ -31,8 +29,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,9 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
-    @Autowired
-    KafkaConsumer kafkaConsumer;
-
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
@@ -302,15 +295,8 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData(datasourceId);
 
-        waitMessageCount(2);
+        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
-    }
-
-    @SneakyThrows
-    private void waitMessageCount(int msgCount) {
-        Thread thread = createKafkaThread(msgCount);
-        thread.start();
-        thread.join();
     }
 
     @Test
@@ -409,7 +395,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData(datasourceId);
 
-        waitMessageCount(2);
+        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -546,7 +532,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        waitMessageCount(2);
+        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -630,21 +616,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        waitMessageCount(2);
+        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
-    }
-
-    public Thread createKafkaThread(int msgCount) {
-        return new Thread(() ->
-        {
-            try {
-                kafkaConsumer.setLatch(new CountDownLatch(msgCount));
-                assertTrue(kafkaConsumer.getLatch().await(1000, TimeUnit.SECONDS));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } finally {
-                kafkaConsumer.initDefaultLatch();
-            }
-        });
     }
 }
