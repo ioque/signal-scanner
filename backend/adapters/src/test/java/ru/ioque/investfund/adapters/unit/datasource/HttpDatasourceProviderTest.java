@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@DisplayName("HTTP DATASOURCE PROVIDER TEST")
 public class HttpDatasourceProviderTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final String DATASOURCE_URL = "http://url.com";

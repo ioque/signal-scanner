@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("PSQL TRADING SNAPSHOTS REPOSITORY TEST")
 public class PsqlTradingSnapshotsRepositoryTest extends DatabaseTest {
     private final PsqlTradingSnapshotsRepository tradingSnapshotsRepository;
 
