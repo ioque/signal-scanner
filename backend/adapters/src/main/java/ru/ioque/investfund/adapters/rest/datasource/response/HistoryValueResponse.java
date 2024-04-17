@@ -18,14 +18,14 @@ import java.time.format.DateTimeFormatter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class DailyValueResponse implements Serializable {
+public class HistoryValueResponse implements Serializable {
     String tradeDate;
     String ticker;
     Double value;
     Double openPrice;
     Double closePrice;
-    public static DailyValueResponse fromDomain(HistoryValueEntity historyValue) {
-        return DailyValueResponse.builder()
+    public static HistoryValueResponse fromDomain(HistoryValueEntity historyValue) {
+        return HistoryValueResponse.builder()
             .tradeDate(historyValue.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .ticker(historyValue.getTicker())
             .value(historyValue.getValue())

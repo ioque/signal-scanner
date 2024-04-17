@@ -11,7 +11,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
+import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -27,13 +27,13 @@ public class DatasourceQueryController {
     DateTimeProvider dateTimeProvider;
 
     @GetMapping("/api/datasource")
-    public List<ExchangeResponse> getAllDatasource() {
-        return psqlDatasourceQueryService.getAllDatasource().stream().map(ExchangeResponse::from).toList();
+    public List<DatasourceResponse> getAllDatasource() {
+        return psqlDatasourceQueryService.getAllDatasource().stream().map(DatasourceResponse::from).toList();
     }
 
     @GetMapping("/api/datasource/{datasourceId}")
-    public ExchangeResponse getDatasourceBy(@PathVariable UUID datasourceId) {
-        return ExchangeResponse.from(psqlDatasourceQueryService.findDatasourceBy(datasourceId));
+    public DatasourceResponse getDatasourceBy(@PathVariable UUID datasourceId) {
+        return DatasourceResponse.from(psqlDatasourceQueryService.findDatasourceBy(datasourceId));
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument/{ticker}")

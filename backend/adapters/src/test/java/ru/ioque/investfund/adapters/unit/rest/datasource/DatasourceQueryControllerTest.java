@@ -20,7 +20,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.adapters.rest.datasource.response.ExchangeResponse;
+import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -44,9 +44,9 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T5. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}.
+        T1. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}.
         """)
-    public void testCase5() {
+    public void testCase1() {
         final DatasourceEntity datasource = DatasourceEntity.builder()
             .id(DATASOURCE_ID)
             .name("EXCHANGE")
@@ -65,7 +65,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                     .json(
                         objectMapper
                             .writeValueAsString(
-                                ExchangeResponse.builder()
+                                DatasourceResponse.builder()
                                     .id(DATASOURCE_ID)
                                     .name("EXCHANGE")
                                     .url("http://datasource.ru")
@@ -79,9 +79,9 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T6. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments.
+        T2. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instruments.
         """)
-    public void testCase6() {
+    public void testCase2() {
         List<InstrumentEntity> instrumentInLists = findInstrumentsBy();
 
         Mockito
@@ -117,9 +117,9 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T7. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instrument/{instrumentId}.
+        T3. Выполнение запроса по эндпоинту GET /api/datasource/{datasourceId}/instrument/{instrumentId}.
         """)
-    public void testCase7() {
+    public void testCase3() {
         LocalDate date = LocalDate.parse("2024-01-12");
         LocalDateTime dateTime = date.atStartOfDay();
         InstrumentEntity stock = findInstrumentsBy()

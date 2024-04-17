@@ -39,8 +39,7 @@ spring:
     banner-mode: off
 
 logging-config:
-  console:
-    level: ${CONSOLE_LOG_LEVEL:INFO}
+  level: ${ROOT_LOG_LEVEL:INFO}
   file:
     level: ${FILE_LOG_LEVEL:INFO}
     path: ${FILE_LOG_PATH:logs}

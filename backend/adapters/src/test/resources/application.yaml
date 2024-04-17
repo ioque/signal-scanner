@@ -19,3 +19,6 @@ logging-config:
   file:
     level: INFO
     path: build/logs
+
+telegram-bot:
+  token: token

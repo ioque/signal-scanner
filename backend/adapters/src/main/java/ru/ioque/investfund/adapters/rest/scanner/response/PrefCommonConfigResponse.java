@@ -15,10 +15,10 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScanner
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrefSimpleConfigResponse extends SignalConfigResponse {
+public class PrefCommonConfigResponse extends SignalConfigResponse {
     Double spreadParam;
 
     public static SignalConfigResponse from(PrefSimpleScannerEntity scanner) {
-        return new PrefSimpleConfigResponse(scanner.getSpreadParam());
+        return new PrefCommonConfigResponse(scanner.getSpreadParam());
     }
 }

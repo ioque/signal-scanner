@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Properties>
+        <Property name="ROOT_LOG_LVL">${spring:logging-config.level}</Property>
         <Property name="LOG_FILE_PATH">${spring:logging-config.file.path}</Property>
-        <Property name="CONSOLE_LOG_LVL">${spring:logging-config.console.level}</Property>
-        <Property name="FILE_LOG_LVL">${spring:logging-config.file.level}</Property>
         <Property name="TECHNICAL_LOG_FILE_NAME">trading-data-processor-technical</Property>
         <Property name="BUSINESS_LOG_FILE_NAME">trading-data-processor-business</Property>
     </Properties>
@@ -53,9 +52,9 @@
     </Appenders>
 
     <Loggers>
-        <Root level="DEBUG">
-            <AppenderRef ref="ConsoleAppender" level="${CONSOLE_LOG_LVL}" />
-            <AppenderRef ref="TechnicalRollingFileAppender" level="${FILE_LOG_LVL}" />
+        <Root level="${ROOT_LOG_LVL}">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="TechnicalRollingFileAppender" />
         </Root>
         <Logger name="org.apache.kafka" level="WARN" additivity="false">
             <AppenderRef ref="TechnicalRollingFileAppenderFailover" />

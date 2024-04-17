@@ -24,7 +24,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @DisplayName("""
          T1. Выполнение запроса по эндпоинту POST /api/datasource.
          """)
-    public void testCase8() {
+    public void testCase1() {
         mvc
             .perform(MockMvcRequestBuilders
                 .post("/api/datasource")
@@ -45,7 +45,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @DisplayName("""
         T2. Выполнение запроса по эндпоинту POST /api/datasource/{datasourceId}/instruments.
         """)
-    public void testCase1() {
+    public void testCase2() {
         mvc
             .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/instrument"))
             .andExpect(status().isOk());
@@ -56,7 +56,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @DisplayName("""
         T3. Выполнение запроса по эндпоинту POST /api/datasource/{datasourceId}/trading-data.
         """)
-    public void testCase2() {
+    public void testCase3() {
         mvc
             .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/trading-data"))
             .andExpect(status().isOk());
@@ -67,7 +67,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @DisplayName("""
         T4. Выполнение запроса по эндпоинту PATCH /api/datasource/{datasourceId}/enable-update.
         """)
-    public void testCase3() {
+    public void testCase4() {
         List<String> tickers = List.of("AFKS", "SBER");
         mvc
             .perform(MockMvcRequestBuilders
@@ -83,7 +83,7 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @DisplayName("""
         T5. Выполнение запроса по эндпоинту PATCH /api/datasource/{datasourceId}/disable-update.
         """)
-    public void testCase4() {
+    public void testCase5() {
         List<String> tickers = List.of("AFKS", "SBER");
         mvc
             .perform(MockMvcRequestBuilders

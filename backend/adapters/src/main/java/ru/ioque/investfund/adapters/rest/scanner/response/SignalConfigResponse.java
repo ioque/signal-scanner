@@ -18,6 +18,6 @@ public abstract class SignalConfigResponse {
         AnomalyVolumeScannerEntity.class, config -> AnomalyVolumeSignalScannerConfigResponse.from((AnomalyVolumeScannerEntity) config),
         SectoralFuturesScannerEntity.class, config -> CorrelationSectoralScannerConfigResponse.from((SectoralFuturesScannerEntity) config),
         SectoralRetardScannerEntity.class, config -> SectoralRetardScannerConfigResponse.from((SectoralRetardScannerEntity) config),
-        PrefSimpleScannerEntity.class, config -> PrefSimpleConfigResponse.from((PrefSimpleScannerEntity) config)
+        PrefSimpleScannerEntity.class, config -> PrefCommonConfigResponse.from((PrefSimpleScannerEntity) config)
     );
 }

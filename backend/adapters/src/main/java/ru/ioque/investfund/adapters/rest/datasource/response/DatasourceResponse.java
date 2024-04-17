@@ -18,14 +18,14 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ExchangeResponse implements Serializable {
+public class DatasourceResponse implements Serializable {
     UUID id;
     String name;
     String url;
     String description;
 
-    public static ExchangeResponse from(DatasourceEntity exchange) {
-        return ExchangeResponse.builder()
+    public static DatasourceResponse from(DatasourceEntity exchange) {
+        return DatasourceResponse.builder()
             .id(exchange.getId())
             .name(exchange.getName())
             .url(exchange.getUrl())
