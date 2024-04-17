@@ -3,6 +3,7 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.CommandBus;
+import ru.ioque.investfund.application.modules.telegrambot.TelegramBotService;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
@@ -23,6 +24,8 @@ import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
+import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
+import ru.ioque.investfund.fakes.FakeTelegramMessageSender;
 import ru.ioque.investfund.fakes.FakeTradingSnapshotsRepository;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
@@ -68,6 +71,18 @@ public class BaseTest {
 
     protected final FakeEventPublisher eventPublisher() {
         return fakeDIContainer.getEventPublisher();
+    }
+
+    protected final FakeTelegramChatRepository telegramChatRepository() {
+        return fakeDIContainer.getTelegramChatRepository();
+    }
+
+    protected final FakeTelegramMessageSender telegramMessageSender() {
+        return fakeDIContainer.getTelegramMessageSender();
+    }
+
+    protected final TelegramBotService telegramBotService() {
+        return fakeDIContainer.getTelegramBotService();
     }
 
     protected LocalDate nowMinus1Days() {

@@ -16,6 +16,7 @@ import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceProces
 import ru.ioque.investfund.application.modules.scanner.CreateScannerProcessor;
 import ru.ioque.investfund.application.modules.scanner.ProduceSignalProcessor;
 import ru.ioque.investfund.application.modules.scanner.UpdateScannerProcessor;
+import ru.ioque.investfund.application.modules.telegrambot.TelegramBotService;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
@@ -28,12 +29,15 @@ public class FakeDIContainer {
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
     FakeUUIDProvider uuidProvider;
+    FakeEventPublisher eventPublisher;
     FakeTradingSnapshotsRepository tradingDataRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeIntradayValueRepository intradayValueRepository;
     FakeHistoryValueRepository historyValueRepository;
-    FakeEventPublisher eventPublisher;
+    TelegramBotService telegramBotService;
+    FakeTelegramChatRepository telegramChatRepository;
+    FakeTelegramMessageSender telegramMessageSender;
     DisableUpdateInstrumentProcessor disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentProcessor enableUpdateInstrumentProcessor;
     IntegrateInstrumentsProcessor integrateInstrumentsProcessor;
@@ -62,7 +66,9 @@ public class FakeDIContainer {
         historyValueRepository = new FakeHistoryValueRepository();
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingSnapshotsRepository(intradayValueRepository, historyValueRepository, dateTimeProvider);
-
+        telegramChatRepository = new FakeTelegramChatRepository();
+        telegramMessageSender = new FakeTelegramMessageSender();
+        telegramBotService = new TelegramBotService(dateTimeProvider, telegramChatRepository, telegramMessageSender);
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(
             dateTimeProvider,
             validator,
