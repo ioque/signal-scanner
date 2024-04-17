@@ -2,6 +2,7 @@ package ru.ioque.investfund.fakes;
 
 import lombok.Getter;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class FakeScannerRepository implements ScannerRepository {
     }
 
     @Override
-    public List<SignalScanner> getAllBy(UUID datasourceId) {
+    public List<SignalScanner> findAllBy(UUID datasourceId) {
         return scannerMap
             .values()
             .stream()
@@ -29,7 +30,17 @@ public class FakeScannerRepository implements ScannerRepository {
     }
 
     @Override
-    public Optional<SignalScanner> getBy(UUID scannerId) {
+    public Optional<SignalScanner> findBy(UUID scannerId) {
         return Optional.ofNullable(scannerMap.get(scannerId));
+    }
+
+    @Override
+    public SignalScanner getBy(UUID scannerId) throws EntityNotFoundException {
+        return findBy(scannerId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(
+                    String.format("Сканер[id=%s] не существует.", scannerId)
+                )
+            );
     }
 }

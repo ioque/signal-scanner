@@ -43,7 +43,7 @@ public class BaseScannerTest extends BaseTest {
 
     protected List<Signal> getSignals() {
         return scannerRepository()
-            .getAllBy(getDatasourceId())
+            .findAllBy(getDatasourceId())
             .stream()
             .map(SignalScanner::getSignals)
             .flatMap(Collection::stream)
@@ -88,6 +88,6 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected TradingSnapshot getSnapshotBy(String ticker) {
-        return tradingDataRepository().findBy(getDatasourceId(), List.of(ticker)).get(0);
+        return tradingDataRepository().findAllBy(getDatasourceId(), List.of(ticker)).get(0);
     }
 }

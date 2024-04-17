@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,12 +26,12 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
     DateTimeProvider dateTimeProvider;
 
     @Override
-    public List<TradingSnapshot> findBy(UUID datasourceId, List<String> tickers) {
-        var histories = jpaHistoryValueRepository
+    public List<TradingSnapshot> findAllBy(UUID datasourceId, List<String> tickers) {
+        final Map<String, List<HistoryValueEntity>> histories = jpaHistoryValueRepository
             .findAllByDatasourceIdAndTickerIn(datasourceId, tickers)
             .stream()
             .collect(Collectors.groupingBy(HistoryValueEntity::getTicker));
-        var intradayValues = jpaIntradayValueRepository
+        final Map<String, List<IntradayValueEntity>> intradayValues = jpaIntradayValueRepository
             .findAllBy(datasourceId, tickers, dateTimeProvider.nowDate().atStartOfDay())
             .stream()
             .collect(Collectors.groupingBy(IntradayValueEntity::getTicker));

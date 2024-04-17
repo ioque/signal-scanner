@@ -27,7 +27,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
                 .build()
         );
 
-        Datasource datasource = datasourceRepository().getBy(getDatasourceId()).orElseThrow();
+        Datasource datasource = datasourceRepository().findBy(getDatasourceId()).orElseThrow();
         assertEquals(datasourceName, datasource.getName());
         assertEquals(datasourceName, datasource.getDescription());
         assertEquals(datasourceUrl, datasource.getUrl());
@@ -60,7 +60,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
                 .build()
         );
 
-        Datasource datasource = datasourceRepository().getBy(getDatasourceId()).orElseThrow();
+        Datasource datasource = datasourceRepository().findBy(getDatasourceId()).orElseThrow();
         assertEquals(datasourceName, datasource.getName());
         assertEquals(datasourceDesc, datasource.getDescription());
         assertEquals(datasourceUrl, datasource.getUrl());
@@ -88,6 +88,6 @@ public class DatasourceConfiguratorTest extends BaseTest {
                 .build()
         );
 
-        assertEquals(2, datasourceRepository().getAll().size());
+        assertEquals(2, datasourceRepository().findAll().size());
     }
 }

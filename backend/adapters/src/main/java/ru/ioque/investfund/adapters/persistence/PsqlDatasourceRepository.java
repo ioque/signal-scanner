@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Datasource> getAll() {
+    public List<Datasource> findAll() {
         return jpaDatasourceRepository
             .findAll()
             .stream()
@@ -32,7 +33,7 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Datasource> getBy(UUID datasourceId) {
+    public Optional<Datasource> findBy(UUID datasourceId) {
         return jpaDatasourceRepository
             .findById(datasourceId)
             .map(DatasourceEntity::toDomain);
@@ -48,5 +49,15 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Transactional
     public void remove(Datasource datasource) {
         jpaDatasourceRepository.deleteById(datasource.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Datasource getById(UUID datasourceId) throws EntityNotFoundException {
+        return findBy(datasourceId).orElseThrow(
+            () -> new EntityNotFoundException(
+                String.format("Источник данных[id=%s] не существует.", datasourceId)
+            )
+        );
     }
 }

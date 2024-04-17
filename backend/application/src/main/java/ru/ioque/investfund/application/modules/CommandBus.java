@@ -10,11 +10,11 @@ import java.util.Map;
 
 @Component
 public class CommandBus {
-    Map<Class<? extends Command>, CommandProcessor> commandProcessors = new HashMap<>();
+    Map<Class<? extends Command>, CommandHandler> commandProcessors = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public CommandBus(List<CommandProcessor<? extends Command>> commandProcessors) {
-        commandProcessors.forEach(commandProcessor -> {
+    public CommandBus(List<CommandHandler<? extends Command>> commandHandlers) {
+        commandHandlers.forEach(commandProcessor -> {
             final Class<? extends Command> commandClass =
                 (Class<? extends Command>)
                     ((ParameterizedType) commandProcessor.getClass().getGenericSuperclass())

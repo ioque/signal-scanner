@@ -122,7 +122,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(1, scannerRepository().getAllBy(getDatasourceId()).get(0).getSignals().size());
+        assertEquals(1, scannerRepository().findAllBy(getDatasourceId()).get(0).getSignals().size());
     }
 
     @Test

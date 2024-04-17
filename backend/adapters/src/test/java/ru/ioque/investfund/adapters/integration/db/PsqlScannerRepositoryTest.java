@@ -61,7 +61,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
 
         psqlScannerRepository.save(scanner);
 
-        assertEquals(scanner, psqlScannerRepository.getBy(scannerId).orElseThrow());
+        assertEquals(scanner, psqlScannerRepository.findBy(scannerId).orElseThrow());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
 
         psqlScannerRepository.save(scanner);
 
-        assertEquals(scanner, psqlScannerRepository.getBy(scannerId).orElseThrow());
+        assertEquals(scanner, psqlScannerRepository.findBy(scannerId).orElseThrow());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
 
         psqlScannerRepository.save(scanner);
 
-        assertEquals(scanner, psqlScannerRepository.getBy(scannerId).orElseThrow());
+        assertEquals(scanner, psqlScannerRepository.findBy(scannerId).orElseThrow());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
 
         psqlScannerRepository.save(scanner);
 
-        assertEquals(scanner, psqlScannerRepository.getBy(scannerId).orElseThrow());
+        assertEquals(scanner, psqlScannerRepository.findBy(scannerId).orElseThrow());
     }
 
     private SectoralRetardProperties createSectoralRetardProperties(double historyScale, double intradayScale) {
@@ -172,11 +172,11 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         psqlScannerRepository.save(moexAnomalyVolumeScanner);
         psqlScannerRepository.save(prefCommonNasdaqScanner);
 
-        assertEquals(1, psqlScannerRepository.getAllBy(NASDAQ_DATASOURCE_ID).size());
-        assertTrue(psqlScannerRepository.getAllBy(NASDAQ_DATASOURCE_ID).contains(prefCommonNasdaqScanner));
+        assertEquals(1, psqlScannerRepository.findAllBy(NASDAQ_DATASOURCE_ID).size());
+        assertTrue(psqlScannerRepository.findAllBy(NASDAQ_DATASOURCE_ID).contains(prefCommonNasdaqScanner));
 
-        assertEquals(1, psqlScannerRepository.getAllBy(MOEX_DATASOURCE_ID).size());
-        assertTrue(psqlScannerRepository.getAllBy(MOEX_DATASOURCE_ID).contains(moexAnomalyVolumeScanner));
+        assertEquals(1, psqlScannerRepository.findAllBy(MOEX_DATASOURCE_ID).size());
+        assertTrue(psqlScannerRepository.findAllBy(MOEX_DATASOURCE_ID).contains(moexAnomalyVolumeScanner));
     }
 
     private SignalScanner creatScanner(

@@ -3,6 +3,7 @@ package ru.ioque.investfund.scanner.configurator;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
     void testCase1() {
         final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith().datasourceId(UUID.randomUUID()).build();
 
-        final IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        final EntityNotFoundException exception = assertThrows(
+            EntityNotFoundException.class,
             () -> commandBus().execute(command)
         );
 

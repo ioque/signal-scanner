@@ -8,58 +8,42 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.modules.CommandProcessor;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.modules.CommandHandler;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateScannerProcessor extends CommandProcessor<UpdateScannerCommand> {
+public class CreateScannerHandler extends CommandHandler<CreateScannerCommand> {
+    UUIDProvider uuidProvider;
     ScannerRepository scannerRepository;
     DatasourceRepository datasourceRepository;
 
-    public UpdateScannerProcessor(
+    public CreateScannerHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
+        this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
-        this.scannerRepository = scannerRepository;
         this.datasourceRepository = datasourceRepository;
+        this.scannerRepository = scannerRepository;
     }
 
     @Override
-    protected void handleFor(UpdateScannerCommand command) {
-        final SignalScanner scanner = getScanner(command.getScannerId());
-        final Datasource datasource = getDatasource(scanner.getDatasourceId());
+    protected void handleFor(CreateScannerCommand command) {
+        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.checkExistsTickers(command.getTickers());
-        scanner.update(command);
+        final UUID newScannerId = uuidProvider.generate();
+        final SignalScanner scanner = SignalScanner.of(newScannerId, command);
         scannerRepository.save(scanner);
-    }
-
-    private Datasource getDatasource(UUID datasourceId) {
-        return datasourceRepository
-            .getBy(datasourceId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Источник данных[id=%s] не существует.", datasourceId)
-                )
-            );
-    }
-
-    private SignalScanner getScanner(UUID scannerId) {
-        return scannerRepository
-            .getBy(scannerId)
-            .orElseThrow(
-                () -> new IllegalArgumentException(
-                    String.format("Сканер[id=%s] не существует.", scannerId)
-                )
-            );
     }
 }

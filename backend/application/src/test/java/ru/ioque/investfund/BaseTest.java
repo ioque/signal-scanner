@@ -95,7 +95,7 @@ public class BaseTest {
 
     protected List<Instrument> getInstruments(UUID datasourceId) {
         return datasourceRepository()
-            .getBy(datasourceId)
+            .findBy(datasourceId)
             .map(Datasource::getInstruments)
             .orElse(new ArrayList<>());
     }
@@ -147,7 +147,7 @@ public class BaseTest {
     }
 
     protected UUID getDatasourceId() {
-        return datasourceRepository().getAll().get(0).getId();
+        return datasourceRepository().findAll().get(0).getId();
     }
 
     protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId) {

@@ -28,7 +28,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
     }
 
     @Override
-    public List<TradingSnapshot> findBy(UUID datasourceId, List<String> tickers) {
+    public List<TradingSnapshot> findAllBy(UUID datasourceId, List<String> tickers) {
         if (tickers == null || tickers.isEmpty()) return List.of();
         return tickers
             .stream()

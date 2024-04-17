@@ -36,7 +36,7 @@ public class BaseConfiguratorTest extends BaseTest {
     }
 
     protected SignalScanner getScanner(UUID scannerId) {
-        return scannerRepository().getBy(scannerId).orElseThrow();
+        return scannerRepository().findBy(scannerId).orElseThrow();
     }
 
     private void prepareDatasource() {

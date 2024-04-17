@@ -12,6 +12,7 @@ import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.modules.CommandHandler;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.event.TradingDataUpdatedEvent;
@@ -20,15 +21,16 @@ import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateTradingDataProcessor extends DatasourceProcessor<IntegrateTradingDataCommand> {
+public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTradingDataCommand> {
     UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
     DatasourceProvider datasourceProvider;
+    DatasourceRepository datasourceRepository;
     HistoryValueRepository historyValueRepository;
     IntradayValueRepository intradayValueRepository;
     EventPublisher eventPublisher;
 
-    public IntegrateTradingDataProcessor(
+    public IntegrateTradingDataHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -39,10 +41,11 @@ public class IntegrateTradingDataProcessor extends DatasourceProcessor<Integrate
         IntradayValueRepository intradayValueRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
+        super(dateTimeProvider, validator, loggerProvider);
         this.uuidProvider = uuidProvider;
         this.dateTimeProvider = dateTimeProvider;
         this.datasourceProvider = datasourceProvider;
+        this.datasourceRepository = datasourceRepository;
         this.historyValueRepository = historyValueRepository;
         this.intradayValueRepository = intradayValueRepository;
         this.eventPublisher = eventPublisher;
@@ -50,7 +53,7 @@ public class IntegrateTradingDataProcessor extends DatasourceProcessor<Integrate
 
     @Override
     protected void handleFor(IntegrateTradingDataCommand command) {
-        final Datasource datasource = getDatasource(command.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
             final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
             final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);

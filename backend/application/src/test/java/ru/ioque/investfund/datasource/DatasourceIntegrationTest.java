@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
@@ -51,7 +52,7 @@ public class DatasourceIntegrationTest extends BaseTest {
 
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
 
-        final Optional<Datasource> exchange = datasourceRepository().getBy(getDatasourceId());
+        final Optional<Datasource> exchange = datasourceRepository().findBy(getDatasourceId());
         assertTrue(exchange.isPresent());
         assertEquals("Московская биржа", exchange.get().getName());
         assertEquals("http://localhost:8080", exchange.get().getUrl());
@@ -72,10 +73,10 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         clearLogs();
 
-        final var id = datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId();
+        final var id = datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId();
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         assertEquals(3, getInstruments(getDatasourceId()).size());
-        assertEquals(id, datasourceRepository().getBy(getDatasourceId()).orElseThrow().getId());
+        assertEquals(id, datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId());
     }
 
     @Test
@@ -321,7 +322,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         UUID datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
-            IllegalArgumentException.class,
+            EntityNotFoundException.class,
             () -> commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
         assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());
@@ -337,7 +338,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         UUID datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
-            IllegalArgumentException.class,
+            EntityNotFoundException.class,
             () -> commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")))
         );
         assertEquals(String.format("Источник данных[id=%s] не существует.", datasourceId), error.getMessage());

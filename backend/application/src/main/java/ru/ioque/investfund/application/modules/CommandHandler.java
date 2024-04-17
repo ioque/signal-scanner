@@ -12,7 +12,7 @@ import ru.ioque.investfund.domain.core.InfoLog;
 import java.util.Set;
 
 @AllArgsConstructor
-public abstract class CommandProcessor<C> {
+public abstract class CommandHandler<C> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;
     protected LoggerProvider loggerProvider;

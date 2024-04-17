@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TradingSnapshotsRepository {
-    List<TradingSnapshot> findBy(UUID datasourceId, List<String> tickers);
+    List<TradingSnapshot> findAllBy(UUID datasourceId, List<String> tickers);
 }

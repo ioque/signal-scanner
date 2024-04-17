@@ -35,8 +35,8 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
 
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(MOEX_DATASOURCE_ID).isPresent());
-        assertEquals(datasource, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get());
+        assertTrue(datasourceRepository.findBy(MOEX_DATASOURCE_ID).isPresent());
+        assertEquals(datasource, datasourceRepository.findBy(MOEX_DATASOURCE_ID).get());
     }
 
     @Test
@@ -55,8 +55,8 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
 
         datasourceRepository.save(datasource);
 
-        assertTrue(datasourceRepository.getBy(MOEX_DATASOURCE_ID).isPresent());
-        assertEquals(1, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get().getInstruments().size());
-        assertEquals(instrument, datasourceRepository.getBy(MOEX_DATASOURCE_ID).get().getInstruments().get(0));
+        assertTrue(datasourceRepository.findBy(MOEX_DATASOURCE_ID).isPresent());
+        assertEquals(1, datasourceRepository.findBy(MOEX_DATASOURCE_ID).get().getInstruments().size());
+        assertEquals(instrument, datasourceRepository.findBy(MOEX_DATASOURCE_ID).get().getInstruments().get(0));
     }
 }

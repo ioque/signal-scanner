@@ -27,7 +27,7 @@ public class PsqlTradingSnapshotsRepositoryTest extends DatabaseTest {
         initDatabase();
 
         final List<TradingSnapshot> tradingSnapshots = tradingSnapshotsRepository
-            .findBy(MOEX_DATASOURCE_ID, List.of("TGKN"));
+            .findAllBy(MOEX_DATASOURCE_ID, List.of("TGKN"));
 
         assertEquals(1, tradingSnapshots.size());
         TradingSnapshot tgkn = tradingSnapshots.get(0);

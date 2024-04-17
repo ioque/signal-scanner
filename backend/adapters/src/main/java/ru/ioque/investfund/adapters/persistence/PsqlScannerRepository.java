@@ -12,6 +12,7 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralFuturesSc
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralRetardScannerEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmType;
 
@@ -28,7 +29,7 @@ public class PsqlScannerRepository implements ScannerRepository {
     JpaSignalScannerRepository signalScannerEntityRepository;
 
     @Transactional(readOnly = true)
-    public Optional<SignalScanner> getBy(UUID id) {
+    public Optional<SignalScanner> findBy(UUID id) {
         return signalScannerEntityRepository
             .findById(id)
             .map(ScannerEntity::toDomain);
@@ -36,7 +37,7 @@ public class PsqlScannerRepository implements ScannerRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SignalScanner> getAllBy(UUID datasourceId) {
+    public List<SignalScanner> findAllBy(UUID datasourceId) {
         return signalScannerEntityRepository
             .findAllByDatasourceId(datasourceId)
             .stream()
@@ -50,6 +51,16 @@ public class PsqlScannerRepository implements ScannerRepository {
         signalScannerEntityRepository.save(toEntity(dataScanner));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public SignalScanner getBy(UUID scannerId) throws EntityNotFoundException {
+        return findBy(scannerId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(
+                    String.format("Сканер[id=%s] не существует.", scannerId)
+                )
+            );
+    }
 
     private ScannerEntity toEntity(SignalScanner dataScanner) {
         return mappers.get(dataScanner.getProperties().getType()).apply(dataScanner);

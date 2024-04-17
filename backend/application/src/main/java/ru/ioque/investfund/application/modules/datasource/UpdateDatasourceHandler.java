@@ -7,25 +7,29 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.modules.CommandHandler;
+import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UnregisterDatasourceProcessor extends DatasourceProcessor<UnregisterDatasourceCommand> {
+public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceCommand> {
+    DatasourceRepository datasourceRepository;
 
-    public UnregisterDatasourceProcessor(
+    public UpdateDatasourceHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider, datasourceRepository);
+        super(dateTimeProvider, validator, loggerProvider);
+        this.datasourceRepository = datasourceRepository;
     }
 
     @Override
-    protected void handleFor(UnregisterDatasourceCommand command) {
-        Datasource datasource = getDatasource(command.getDatasourceId());
-        datasourceRepository.remove(datasource);
+    protected void handleFor(UpdateDatasourceCommand command) {
+        final Datasource datasource = datasourceRepository.getById(command.getId());
+        datasource.update(command);
+        datasourceRepository.save(datasource);
     }
 }

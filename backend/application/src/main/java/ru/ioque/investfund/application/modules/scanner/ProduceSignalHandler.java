@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
-import ru.ioque.investfund.application.modules.CommandProcessor;
+import ru.ioque.investfund.application.modules.CommandHandler;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.event.SignalEvent;
@@ -18,12 +18,12 @@ import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalCommand> {
+public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository tradingSnapshotsRepository;
     EventPublisher eventPublisher;
 
-    public ProduceSignalProcessor(
+    public ProduceSignalHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -41,12 +41,12 @@ public class ProduceSignalProcessor extends CommandProcessor<ProduceSignalComman
     @Override
     protected void handleFor(ProduceSignalCommand command) {
         scannerRepository
-            .getAllBy(command.getDatasourceId())
+            .findAllBy(command.getDatasourceId())
             .stream()
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
             .forEach(scanner -> {
                 final List<Signal> newSignals = scanner.scanning(
-                    tradingSnapshotsRepository.findBy(scanner.getDatasourceId(), scanner.getTickers()),
+                    tradingSnapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getTickers()),
                     command.getWatermark()
                 );
                 scannerRepository.save(scanner);

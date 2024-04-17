@@ -6,16 +6,16 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.DisableUpdateInstrumentProcessor;
-import ru.ioque.investfund.application.modules.datasource.EnableUpdateInstrumentProcessor;
-import ru.ioque.investfund.application.modules.datasource.IntegrateInstrumentsProcessor;
-import ru.ioque.investfund.application.modules.datasource.IntegrateTradingDataProcessor;
-import ru.ioque.investfund.application.modules.datasource.RegisterDatasourceProcessor;
-import ru.ioque.investfund.application.modules.datasource.UnregisterDatasourceProcessor;
-import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceProcessor;
-import ru.ioque.investfund.application.modules.scanner.CreateScannerProcessor;
-import ru.ioque.investfund.application.modules.scanner.ProduceSignalProcessor;
-import ru.ioque.investfund.application.modules.scanner.UpdateScannerProcessor;
+import ru.ioque.investfund.application.modules.datasource.DisableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.modules.datasource.EnableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.modules.datasource.IntegrateInstrumentsHandler;
+import ru.ioque.investfund.application.modules.datasource.IntegrateTradingDataHandler;
+import ru.ioque.investfund.application.modules.datasource.RegisterDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.UnregisterDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.modules.scanner.CreateScannerHandler;
+import ru.ioque.investfund.application.modules.scanner.ProduceSignalHandler;
+import ru.ioque.investfund.application.modules.scanner.UpdateScannerHandler;
 import ru.ioque.investfund.application.modules.telegrambot.TelegramBotService;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
@@ -38,16 +38,16 @@ public class FakeDIContainer {
     TelegramBotService telegramBotService;
     FakeTelegramChatRepository telegramChatRepository;
     FakeTelegramMessageSender telegramMessageSender;
-    DisableUpdateInstrumentProcessor disableUpdateInstrumentProcessor;
-    EnableUpdateInstrumentProcessor enableUpdateInstrumentProcessor;
-    IntegrateInstrumentsProcessor integrateInstrumentsProcessor;
-    IntegrateTradingDataProcessor integrateTradingDataProcessor;
-    RegisterDatasourceProcessor registerDatasourceProcessor;
-    UnregisterDatasourceProcessor unregisterDatasourceProcessor;
-    UpdateDatasourceProcessor updateDatasourceProcessor;
-    CreateScannerProcessor createScannerProcessor;
-    ProduceSignalProcessor produceSignalProcessor;
-    UpdateScannerProcessor  updateScannerProcessor;
+    DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
+    EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
+    IntegrateInstrumentsHandler integrateInstrumentsProcessor;
+    IntegrateTradingDataHandler integrateTradingDataProcessor;
+    RegisterDatasourceHandler registerDatasourceProcessor;
+    UnregisterDatasourceHandler unregisterDatasourceProcessor;
+    UpdateDatasourceHandler updateDatasourceProcessor;
+    CreateScannerHandler createScannerProcessor;
+    ProduceSignalHandler produceSignalProcessor;
+    UpdateScannerHandler updateScannerProcessor;
     CommandBus commandBus;
     Validator validator;
 
@@ -69,26 +69,26 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
         telegramBotService = new TelegramBotService(dateTimeProvider, telegramChatRepository, telegramMessageSender);
-        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentProcessor(
+        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentProcessor(
+        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        integrateInstrumentsProcessor = new IntegrateInstrumentsProcessor(
+        integrateInstrumentsProcessor = new IntegrateInstrumentsHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             exchangeProvider,
             datasourceRepository
         );
-        integrateTradingDataProcessor = new IntegrateTradingDataProcessor(
+        integrateTradingDataProcessor = new IntegrateTradingDataHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -99,26 +99,26 @@ public class FakeDIContainer {
             intradayValueRepository,
             eventPublisher
         );
-        registerDatasourceProcessor = new RegisterDatasourceProcessor(
+        registerDatasourceProcessor = new RegisterDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             uuidProvider,
             datasourceRepository
         );
-        unregisterDatasourceProcessor = new UnregisterDatasourceProcessor(
+        unregisterDatasourceProcessor = new UnregisterDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        updateDatasourceProcessor = new UpdateDatasourceProcessor(
+        updateDatasourceProcessor = new UpdateDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        createScannerProcessor = new CreateScannerProcessor(
+        createScannerProcessor = new CreateScannerHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -126,14 +126,14 @@ public class FakeDIContainer {
             scannerRepository,
             datasourceRepository
         );
-        updateScannerProcessor = new UpdateScannerProcessor(
+        updateScannerProcessor = new UpdateScannerHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             scannerRepository,
             datasourceRepository
         );
-        produceSignalProcessor = new ProduceSignalProcessor(
+        produceSignalProcessor = new ProduceSignalHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
