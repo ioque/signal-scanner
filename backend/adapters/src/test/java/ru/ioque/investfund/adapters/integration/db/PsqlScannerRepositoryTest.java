@@ -47,7 +47,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = new Signal(lastExecutionDateTime, tickers.get(0), true);
+        final Signal signal = Signal.builder()
+            .id(UUID.randomUUID())
+            .price(10D)
+            .scannerId(scannerId)
+            .ticker(tickers.get(0))
+            .isOpen(true)
+            .isBuy(true)
+            .dateTime(lastExecutionDateTime)
+            .build();
         SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
@@ -75,7 +83,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = new Signal(lastExecutionDateTime, tickers.get(0), true);
+        final Signal signal = Signal.builder()
+            .id(UUID.randomUUID())
+            .price(10D)
+            .scannerId(scannerId)
+            .ticker(tickers.get(0))
+            .isOpen(true)
+            .isBuy(true)
+            .dateTime(lastExecutionDateTime)
+            .build();
         SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
@@ -103,7 +119,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = new Signal(lastExecutionDateTime, tickers.get(0), true);
+        final Signal signal = Signal.builder()
+            .id(UUID.randomUUID())
+            .scannerId(scannerId)
+            .price(10D)
+            .ticker(tickers.get(0))
+            .isOpen(true)
+            .isBuy(true)
+            .dateTime(lastExecutionDateTime)
+            .build();
         SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
@@ -131,7 +155,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = new Signal(lastExecutionDateTime, tickers.get(0), true);
+        final Signal signal = Signal.builder()
+            .id(UUID.randomUUID())
+            .scannerId(scannerId)
+            .price(10D)
+            .ticker(tickers.get(0))
+            .isOpen(true)
+            .isBuy(true)
+            .dateTime(lastExecutionDateTime)
+            .build();
         SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
@@ -191,7 +223,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .tickers(tickers)
             .properties(properties)
             .description("desc")
-            .signals(new ArrayList<>(List.of(new Signal(LocalDateTime.now(), tickers.get(0), true))))
+            .signals(new ArrayList<>())
             .workPeriodInMinutes(1)
             .lastExecutionDateTime(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();

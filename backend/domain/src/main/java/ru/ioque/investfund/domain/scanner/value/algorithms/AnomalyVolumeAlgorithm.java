@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
-import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
 
@@ -16,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Поисковый алгоритм "Аномальные объемы". Предположительно эффективен для
@@ -45,9 +42,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, final List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
-        final List<Signal> signals = new ArrayList<>();
-        final List<TickerSummary> tickerSummaries = new ArrayList<>();
+    public List<SignalSign> run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
+        final List<SignalSign> signalSigns = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue();
@@ -59,30 +55,37 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 continue;
             }
             final double currentValueToMedianValue = currentValue.get() / medianValue.get();
+            final String summary = String.format(
+                "медиана исторических объемов: %s; текущий объем: %s; отношение текущего объема к медиане: %s; тренд индекса %s.",
+                medianValue.get(),
+                currentValue.get(),
+                currentValueToMedianValue,
+                indexIsRiseToday.get() ? "растущий" : "нисходящий"
+            );
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
-                signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), true));
+                signalSigns.add(
+                    SignalSign.builder()
+                        .isBuy(true)
+                        .summary(summary)
+                        .dateTime(watermark)
+                        .ticker(tradingSnapshot.getTicker())
+                        .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
+                        .build()
+                );
             }
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
-                signals.add(new Signal(dateTimeNow, tradingSnapshot.getTicker(), false));
+                signalSigns.add(
+                    SignalSign.builder()
+                        .isBuy(false)
+                        .dateTime(watermark)
+                        .summary(summary)
+                        .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
+                        .ticker(tradingSnapshot.getTicker())
+                        .build()
+                );
             }
-            tickerSummaries.add(
-                new TickerSummary(
-                    tradingSnapshot.getTicker(),
-                    String.format(
-                        "медиана исторических объемов: %s; текущий объем: %s; отношение текущего объема к медиане: %s; тренд индекса %s.",
-                        medianValue.get(),
-                        currentValue.get(),
-                        currentValueToMedianValue,
-                        indexIsRiseToday.get() ? "растущий" : "нисходящий"
-                    )
-                )
-            );
         }
-        return ScanningResult.builder()
-            .dateTime(dateTimeNow)
-            .signals(signals)
-            .tickerSummaries(tickerSummaries)
-            .build();
+        return signalSigns;
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {

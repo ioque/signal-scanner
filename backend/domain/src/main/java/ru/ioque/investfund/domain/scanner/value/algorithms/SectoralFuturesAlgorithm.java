@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
-import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -36,39 +33,29 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
-        List<Signal> signals = new ArrayList<>();
-        List<TickerSummary> tickerSummaries = new ArrayList<>();
-        boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
-        tickerSummaries.add(
-            new TickerSummary(
-                getFuturesStatistic(tradingSnapshots).getTicker(),
-                String.format(
-                    "тренд %s;",
-                    (futuresIsRiseOvernight ? "растущий" : "нисходящий")
-                )
-            )
-        );
-        for (var finInstrument : analyzeInstruments(tradingSnapshots)) {
-            boolean riseOvernight = finInstrument.isRiseOvernight(stockOvernightScale);
-            if (futuresIsRiseOvernight && riseOvernight) {
-                signals.add(new Signal(dateTimeNow, finInstrument.getTicker(), true));
-            }
-            tickerSummaries.add(
-                new TickerSummary(
-                    finInstrument.getTicker(),
-                    String.format(
-                        "тренд %s;",
-                        (riseOvernight ? "растущий" : "нисходящий")
-                    )
-                )
+    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<SignalSign> signalSigns = new ArrayList<>();
+        final boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
+        for (final TradingSnapshot snapshot : analyzeInstruments(tradingSnapshots)) {
+            final boolean riseOvernight = snapshot.isRiseOvernight(stockOvernightScale);
+            final String summary = String.format(
+                "тренд инструмента %s; тренд фьючерса %s;",
+                (riseOvernight ? "растущий" : "нисходящий"),
+                (futuresIsRiseOvernight ? "растущий" : "нисходящий")
             );
+            if (futuresIsRiseOvernight && riseOvernight) {
+                signalSigns.add(
+                    SignalSign.builder()
+                        .isBuy(true)
+                        .summary(summary)
+                        .dateTime(watermark)
+                        .ticker(snapshot.getTicker())
+                        .price(snapshot.getTodayLastPrice().orElse(0D))
+                        .build()
+                );
+            }
         }
-        return ScanningResult.builder()
-            .dateTime(dateTimeNow)
-            .signals(signals)
-            .tickerSummaries(tickerSummaries)
-            .build();
+        return signalSigns;
     }
 
     private TradingSnapshot getFuturesStatistic(List<TradingSnapshot> tradingSnapshots) {

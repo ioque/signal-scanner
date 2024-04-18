@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScanningResult {
-    LocalDateTime dateTime;
-    List<TickerSummary> tickerSummaries;
-    List<Signal> signals;
+    List<SignalSign> signalSigns;
+    List<Signal> closedSignals;
 }

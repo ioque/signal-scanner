@@ -135,7 +135,16 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             180,
             "IMOEX"
         );
-        scanner.getSignals().add(new SignalEntity(1L, scanner, "AFKS", true, LocalDateTime.now()));
+        scanner.getSignals().add(SignalEntity.builder()
+                .id(UUID.randomUUID())
+                .price(10D)
+                .isOpen(true)
+                .isBuy(true)
+                .summary("summary")
+                .scanner(scanner)
+                .dateTime(LocalDateTime.now())
+                .ticker("AFKS")
+            .build());
         return List.of(scanner);
     }
 }

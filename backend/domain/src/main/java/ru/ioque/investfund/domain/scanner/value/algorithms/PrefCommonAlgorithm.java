@@ -6,17 +6,14 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
-import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -31,31 +28,28 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
-        List<Signal> signals = new ArrayList<>();
-        List<TickerSummary> tickerSummaries = new ArrayList<>();
+    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<SignalSign> signalSigns = new ArrayList<>();
         findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
-            if (multiplier > spreadValue) {
-                signals.add(new Signal(dateTimeNow, pair.getPref().getTicker(), true));
-            }
-            tickerSummaries.add(
-                new TickerSummary(
-                    pair.getPref().getTicker(),
-                    String.format(
-                        "Текущая дельта: %s; историческая дельта: %s; отношение текущей дельты к исторической: %s.",
-                        currentDelta, historyDelta, multiplier
-                    )
-                )
+            final String summary = String.format(
+                "Текущая дельта: %s; историческая дельта: %s; отношение текущей дельты к исторической: %s.",
+                currentDelta, historyDelta, multiplier
             );
+            if (multiplier > spreadValue) {
+                signalSigns.add(SignalSign.builder()
+                    .isBuy(true)
+                    .summary(summary)
+                    .dateTime(watermark)
+                    .ticker(pair.getPref().getTicker())
+                    .price(pair.getPref().getTodayLastPrice().orElse(0D))
+                    .build()
+                );
+            }
         });
-        return ScanningResult.builder()
-            .dateTime(dateTimeNow)
-            .signals(signals)
-            .tickerSummaries(tickerSummaries)
-            .build();
+        return signalSigns;
     }
 
     private List<PrefSimplePair> findAllPrefAndSimplePairs(List<TradingSnapshot> tradingSnapshots) {
@@ -74,7 +68,8 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             .stream()
             .filter(tradingSnapshot::isSimplePair)
             .findFirst()
-            .orElseThrow(() -> new DomainException("Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
+            .orElseThrow(() -> new DomainException(
+                "Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
     }
 
     private void setSpreadValue(Double spreadValue) {

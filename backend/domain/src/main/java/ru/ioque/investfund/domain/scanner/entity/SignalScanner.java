@@ -10,7 +10,7 @@ import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
+import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
@@ -31,10 +31,10 @@ public class SignalScanner extends Domain {
     String description;
     UUID datasourceId;
     List<String> tickers;
-    final List<Signal> signals;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
+    final List<Signal> signals;
 
     @Builder
     public SignalScanner(
@@ -64,8 +64,8 @@ public class SignalScanner extends Domain {
             .description(command.getDescription())
             .datasourceId(command.getDatasourceId())
             .tickers(command.getTickers())
-            .signals(new ArrayList<>())
             .properties(command.getProperties())
+            .signals(new ArrayList<>())
             .lastExecutionDateTime(null)
             .build();
     }
@@ -85,19 +85,22 @@ public class SignalScanner extends Domain {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<Signal> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
+    public List<SignalSign> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
         AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
-        ScanningResult result = algorithm.run(getId(), tradingSnapshots, dateTimeNow);
-        return processResult(result);
+        lastExecutionDateTime = watermark;
+        return algorithm
+            .run(tradingSnapshots, watermark)
+            .stream()
+            .filter(this::signalNotExists)
+            .toList();
     }
 
-    private List<Signal> processResult(ScanningResult scanningResult) {
+    public void addNewSignals(List<Signal> newSignals) {
         List<Signal> oldSignals = List.copyOf(this.signals);
-        List<Signal> newSignals = List.copyOf(scanningResult.getSignals());
         List<Signal> finalSignalList = new ArrayList<>(newSignals.stream().filter(Signal::isBuy).toList());
         newSignals
             .stream()
@@ -116,8 +119,6 @@ public class SignalScanner extends Domain {
         });
         signals.clear();
         signals.addAll(finalSignalList);
-        lastExecutionDateTime = scanningResult.getDateTime();
-        return newSignals;
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
@@ -129,7 +130,12 @@ public class SignalScanner extends Domain {
         return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
-    public List<Signal> getSignals() {
-        return List.copyOf(signals);
+    private boolean signalNotExists(SignalSign newSignal) {
+        return signals
+            .stream()
+            .noneMatch(signal ->
+                signal.getTicker().equals(newSignal.getTicker()) &&
+                    signal.isBuy() == newSignal.isBuy()
+            );
     }
 }

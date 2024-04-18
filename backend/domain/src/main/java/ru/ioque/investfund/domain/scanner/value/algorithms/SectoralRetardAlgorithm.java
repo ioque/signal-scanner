@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
-import ru.ioque.investfund.domain.scanner.value.TickerSummary;
+import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -32,39 +29,28 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(UUID scannerId, List<TradingSnapshot> tradingSnapshots, LocalDateTime dateTimeNow) {
-        List<Signal> signals = new ArrayList<>();
-        List<TickerSummary> tickerSummaries = new ArrayList<>();
+    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        List<SignalSign> signalSigns = new ArrayList<>();
         List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
         List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
-        riseInstruments.forEach(row -> {
-            tickerSummaries.add(
-                new TickerSummary(
-                    row.getTicker(),
-                    "тренд растущий."
-                )
-            );
-        });
-        otherInstruments.forEach(row -> {
-            tickerSummaries.add(
-                new TickerSummary(
-                    row.getTicker(),
-                    "тренд нисходящий."
-                )
-            );
-        });
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
-            otherInstruments.forEach(row -> {
-                signals.add(new Signal(dateTimeNow, row.getTicker(), true));
+            otherInstruments.forEach(snapshot -> {
+                final String summary = String.format(
+                    "Растущие инструменты сектора: %s",
+                    riseInstruments.stream().map(TradingSnapshot::getTicker).toList()
+                );
+                signalSigns.add(
+                    SignalSign.builder()
+                        .isBuy(true)
+                        .summary(summary)
+                        .dateTime(watermark)
+                        .ticker(snapshot.getTicker())
+                        .price(snapshot.getTodayLastPrice().orElse(0D))
+                        .build()
+                );
             });
         }
-
-        return ScanningResult
-            .builder()
-            .dateTime(dateTimeNow)
-            .signals(signals)
-            .tickerSummaries(tickerSummaries)
-            .build();
+        return signalSigns;
     }
 
     private static List<TradingSnapshot> getSectoralRetards(
