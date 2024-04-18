@@ -26,6 +26,7 @@ public class DeltaEntity extends IntradayValueEntity {
 
     @Builder
     public DeltaEntity(
+        Long id,
         UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
@@ -33,7 +34,7 @@ public class DeltaEntity extends IntradayValueEntity {
         Double price,
         Double value
     ) {
-        super(datasourceId, number, dateTime, ticker, price, value);
+        super(id, datasourceId, number, dateTime, ticker, price, value);
     }
 
     @Override

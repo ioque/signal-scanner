@@ -2,17 +2,16 @@ package ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
@@ -20,16 +19,12 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "HistoryValue")
 @Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasource_id", "ticker", "trade_date" }) })
-public class HistoryValueEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class HistoryValueEntity extends GeneratedIdEntity {
     @Column(nullable = false)
     UUID datasourceId;
     @Column(nullable = false)
@@ -72,5 +67,30 @@ public class HistoryValueEntity {
             .value(historyValue.getValue())
             .waPrice(historyValue.getWaPrice())
             .build();
+    }
+
+    @Builder
+    public HistoryValueEntity(
+        Long id,
+        UUID datasourceId,
+        LocalDate tradeDate,
+        String ticker,
+        Double openPrice,
+        Double closePrice,
+        Double lowPrice,
+        Double highPrice,
+        Double waPrice,
+        Double value
+    ) {
+        super(id);
+        this.datasourceId = datasourceId;
+        this.tradeDate = tradeDate;
+        this.ticker = ticker;
+        this.openPrice = openPrice;
+        this.closePrice = closePrice;
+        this.lowPrice = lowPrice;
+        this.highPrice = highPrice;
+        this.waPrice = waPrice;
+        this.value = value;
     }
 }

@@ -28,6 +28,7 @@ public class DealEntity extends IntradayValueEntity {
 
     @Builder
     public DealEntity(
+        Long id,
         UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
@@ -37,7 +38,7 @@ public class DealEntity extends IntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(datasourceId, number, dateTime, ticker, price, value);
+        super(id, datasourceId, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }

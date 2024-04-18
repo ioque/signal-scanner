@@ -4,9 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
@@ -15,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
@@ -34,10 +32,7 @@ import java.util.function.Function;
 @Entity(name = "IntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "INTRADAY_VALUE_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
-public abstract class IntradayValueEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public abstract class IntradayValueEntity extends GeneratedIdEntity {
     @Column(nullable = false)
     UUID datasourceId;
     @Column(nullable = false)
@@ -52,6 +47,7 @@ public abstract class IntradayValueEntity {
     Double value;
 
     public IntradayValueEntity(
+        Long id,
         UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
@@ -59,6 +55,7 @@ public abstract class IntradayValueEntity {
         Double price,
         Double value
     ) {
+        super(id);
         this.datasourceId = datasourceId;
         this.number = number;
         this.dateTime = dateTime;

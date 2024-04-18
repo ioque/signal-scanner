@@ -136,7 +136,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             "IMOEX"
         );
         scanner.getSignals().add(SignalEntity.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
                 .price(10D)
                 .isOpen(true)
                 .isBuy(true)

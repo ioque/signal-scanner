@@ -27,6 +27,7 @@ public class ContractEntity extends IntradayValueEntity {
 
     @Builder
     public ContractEntity(
+        Long id,
         UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
@@ -35,7 +36,7 @@ public class ContractEntity extends IntradayValueEntity {
         Double value,
         Integer qnt
     ) {
-        super(datasourceId, number, dateTime, ticker, price, value);
+        super(id, datasourceId, number, dateTime, ticker, price, value);
         this.qnt = qnt;
     }
 
