@@ -24,7 +24,6 @@ public class FakeDatasourceProvider implements DatasourceProvider {
         Datasource datasource, Instrument instrument
     ) {
         return new HistoryBatch(
-            instrument.getTicker(),
             datasourceStorage.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
         );
     }

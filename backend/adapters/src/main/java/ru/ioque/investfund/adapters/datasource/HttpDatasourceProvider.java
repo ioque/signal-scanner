@@ -39,7 +39,6 @@ public class HttpDatasourceProvider implements DatasourceProvider {
     @SneakyThrows
     public HistoryBatch fetchHistoryBy(Datasource datasource, Instrument instrument) {
         return new HistoryBatch(
-            instrument.getTicker(),
             moexClient
                 .fetchHistory(
                     datasource.getUrl(),
