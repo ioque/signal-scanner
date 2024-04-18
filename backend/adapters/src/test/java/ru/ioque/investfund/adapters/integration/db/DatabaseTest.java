@@ -136,7 +136,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Index createComp() {
         return Index.builder()
             .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
             .ticker("COMP")
             .name("NASDAQ Composite Index")
             .shortName("NASDAQ Composite Index")
@@ -147,7 +146,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Stock createApplp() {
         return Stock.builder()
             .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
             .ticker("APPLP")
             .name("Apple Inc. Pref Stock")
             .shortName("ApplePref")
@@ -162,7 +160,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Stock createAppl() {
         return Stock.builder()
             .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
             .ticker("APPL")
             .name("Apple Inc. Common Stock")
             .shortName("AppleCommon")
@@ -178,7 +175,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
         return Stock
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
             .ticker("TGKN")
             .shortName("TGK НННН")
             .name("fasfasfasfasf")
@@ -193,7 +189,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
         return Stock
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
             .ticker("TGKB")
             .shortName("ТГК ББББ")
             .name("fasfasfasfasf")
@@ -208,7 +203,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
         return Index
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
             .ticker("IMOEX")
             .shortName("ао Система")
             .name("fasfasfasfasf")
@@ -219,7 +213,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
         return Futures
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
             .ticker("BRF4")
             .shortName("Фьючерс Брент")
             .name("Фьючерс Брент")

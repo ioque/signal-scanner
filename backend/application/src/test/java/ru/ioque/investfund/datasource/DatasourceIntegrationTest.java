@@ -109,7 +109,6 @@ public class DatasourceIntegrationTest extends BaseTest {
             afks(),
             Stock.builder()
                 .id(UUID.randomUUID())
-                .datasourceId(getDatasourceId())
                 .shortName("ао Система")
                 .name("АФК Система1")
                 .ticker("AFKS")

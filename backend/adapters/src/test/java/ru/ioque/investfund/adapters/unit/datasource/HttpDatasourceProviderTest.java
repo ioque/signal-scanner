@@ -237,7 +237,6 @@ public class HttpDatasourceProviderTest {
         return Stock.builder()
             .id(INSTRUMENT_ID)
             .ticker(INSTRUMENT_TICKER)
-            .datasourceId(DATASOURCE_ID)
             .name("name")
             .shortName("name")
             .lotSize(100)

@@ -30,7 +30,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
             moexClient
                 .fetchInstruments(datasource.getUrl())
                 .stream()
-                .map(dto -> dto.toDomain(uuidProvider.generate(), datasource.getId()))
+                .map(dto -> dto.toDomain(uuidProvider.generate()))
                 .toList()
         );
     }

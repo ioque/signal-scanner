@@ -54,7 +54,6 @@ public class IndexEntity extends InstrumentEntity {
     public Instrument toDomain() {
         return Index.builder()
             .id(this.getId())
-            .datasourceId(this.getDatasource().getId())
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())

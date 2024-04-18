@@ -55,7 +55,6 @@ public class StockEntity extends InstrumentEntity {
     public Instrument toDomain() {
         return Stock.builder()
             .id(this.getId())
-            .datasourceId(this.getDatasource().getId())
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())

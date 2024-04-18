@@ -29,10 +29,9 @@ public class IndexDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID id, UUID datasourceId) {
+    public Instrument toDomain(UUID id) {
         return Index.builder()
             .id(id)
-            .datasourceId(datasourceId)
             .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())

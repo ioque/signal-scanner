@@ -62,7 +62,6 @@ public class DatasourceStorage {
         Futures futures = (Futures) instrument;
         return Futures.builder()
             .id(futures.getId())
-            .datasourceId(instrument.getDatasourceId())
             .ticker(futures.getTicker())
             .name(futures.getName())
             .shortName(futures.getShortName())
@@ -78,7 +77,6 @@ public class DatasourceStorage {
         Index index = (Index) instrument;
         return Index.builder()
             .id(index.getId())
-            .datasourceId(instrument.getDatasourceId())
             .ticker(index.getTicker())
             .name(index.getName())
             .shortName(index.getShortName())
@@ -91,7 +89,6 @@ public class DatasourceStorage {
         CurrencyPair currencyPair = (CurrencyPair) instrument;
         return CurrencyPair.builder()
             .id(currencyPair.getId())
-            .datasourceId(instrument.getDatasourceId())
             .ticker(currencyPair.getTicker())
             .name(currencyPair.getName())
             .shortName(currencyPair.getShortName())
@@ -104,7 +101,6 @@ public class DatasourceStorage {
         Stock stock = (Stock) instrument;
         return Stock.builder()
             .id(stock.getId())
-            .datasourceId(instrument.getDatasourceId())
             .ticker(stock.getTicker())
             .name(stock.getName())
             .shortName(stock.getShortName())

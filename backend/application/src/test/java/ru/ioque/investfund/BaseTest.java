@@ -364,7 +364,6 @@ public class BaseTest {
         return Index
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("IMOEX")
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
@@ -377,7 +376,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(fakeDIContainer.getUuidProvider().generate())
-            .datasourceId(getDatasourceId())
             .shortName("ао Система")
             .name("АФК Система")
             .ticker("AFKS")
@@ -392,7 +390,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("SBERP")
             .shortName("Сбер п")
             .name("Сбербанк П")
@@ -407,7 +404,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("SBER")
             .shortName("Сбер")
             .name("Сбербанк")
@@ -422,7 +418,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("SIBN")
             .shortName("Газпромнефть")
             .name("Газпромнефть")
@@ -437,7 +432,6 @@ public class BaseTest {
         return Futures
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("BRF4")
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
@@ -453,7 +447,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("LKOH")
             .shortName("Лукойл")
             .name("Лукойл")
@@ -468,7 +461,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("TATN")
             .shortName("Татнефть")
             .name("Татнефть")
@@ -480,7 +472,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("ROSN")
             .shortName("Роснефть")
             .name("Роснефть")
@@ -492,7 +483,6 @@ public class BaseTest {
         return CurrencyPair
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .ticker("USD000UTSTOM")
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
@@ -505,7 +495,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .name("TGKB")
             .ticker("TGKB")
             .shortName("TGKB")
@@ -517,7 +506,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(UUID.randomUUID())
-            .datasourceId(getDatasourceId())
             .name("TGKN")
             .ticker("TGKN")
             .shortName("TGKN")

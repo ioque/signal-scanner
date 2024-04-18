@@ -49,7 +49,6 @@ public class CurrencyPairEntity extends InstrumentEntity {
     public Instrument toDomain() {
         return CurrencyPair.builder()
             .id(this.getId())
-            .datasourceId(this.getDatasource().getId())
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())

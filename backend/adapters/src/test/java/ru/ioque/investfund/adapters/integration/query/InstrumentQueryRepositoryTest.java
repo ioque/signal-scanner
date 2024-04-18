@@ -396,7 +396,6 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         return Stock
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(DATASOURCE_ID)
             .ticker("AFKS")
             .shortName("ао Система")
             .name("fasfasfasfasf")
@@ -410,7 +409,6 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         return Index
             .builder()
             .id(uuidProvider.generate())
-            .datasourceId(DATASOURCE_ID)
             .ticker("INDEX")
             .shortName("Какой-то индекс")
             .name("Какой-то индекс");

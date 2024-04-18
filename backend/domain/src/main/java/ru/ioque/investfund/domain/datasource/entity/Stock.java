@@ -23,7 +23,6 @@ public class Stock extends Instrument {
     @Builder
     public Stock(
         UUID id,
-        UUID datasourceId,
         String ticker,
         String shortName,
         String name,
@@ -35,7 +34,7 @@ public class Stock extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, datasourceId, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setLotSize(lotSize);
         setIsin(isin);
         setRegNumber(regNumber);

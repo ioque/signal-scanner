@@ -21,7 +21,6 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument extends Domain {
-    UUID datasourceId;
     String ticker;
     String shortName;
     String name;
@@ -34,7 +33,6 @@ public class Instrument extends Domain {
 
     public Instrument(
         UUID id,
-        UUID datasourceId,
         String ticker,
         String shortName,
         String name,
@@ -43,7 +41,6 @@ public class Instrument extends Domain {
         Long lastTradingNumber
     ) {
         super(id);
-        setDatasourceId(datasourceId);
         setTicker(ticker);
         setShortName(shortName);
         setName(name);
@@ -94,13 +91,6 @@ public class Instrument extends Domain {
 
     private void setLastTradingNumber(Long lastTradingNumber) {
         this.lastTradingNumber = lastTradingNumber;
-    }
-
-    private void setDatasourceId(UUID datasourceId) {
-        if (datasourceId == null) {
-            throw new DomainException("Не заполнен идентификатор источника данных.");
-        }
-        this.datasourceId = datasourceId;
     }
 
     private void setTicker(String ticker) {

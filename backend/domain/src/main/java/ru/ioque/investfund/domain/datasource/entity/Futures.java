@@ -24,7 +24,6 @@ public class Futures extends Instrument {
     @Builder
     public Futures(
         UUID id,
-        UUID datasourceId,
         String ticker,
         String shortName,
         String name,
@@ -37,7 +36,7 @@ public class Futures extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, datasourceId, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setLotVolume(lotVolume);
         setAssetCode(assetCode);
         setInitialMargin(initialMargin);
