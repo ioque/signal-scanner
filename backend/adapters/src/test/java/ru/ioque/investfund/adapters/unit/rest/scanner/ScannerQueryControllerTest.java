@@ -36,8 +36,8 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
 
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final UUID SIGNAL_ID = UUID.randomUUID();
-    private static final Long AFKS_ID = 3L;
-    private static final Long IMOEX_ID = 4L;
+    private static final UUID AFKS_ID = UUID.randomUUID();
+    private static final UUID IMOEX_ID = UUID.randomUUID();
 
     @Test
     @SneakyThrows

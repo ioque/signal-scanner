@@ -14,7 +14,7 @@ public class HistoryBatch {
     public HistoryBatch(String ticker, List<HistoryValue> values) {
         this.ticker = ticker;
         this.values = values;
-        if (values.stream().anyMatch(row -> !row.getInstrumentId().getTicker().equals(ticker))) {
+        if (values.stream().anyMatch(row -> !row.getTicker().equals(ticker))) {
             throw new IllegalArgumentException("History batch must contain values with same ticker.");
         }
     }

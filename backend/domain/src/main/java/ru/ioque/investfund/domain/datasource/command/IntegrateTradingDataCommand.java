@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
+
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -21,5 +22,5 @@ import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IntegrateTradingDataCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
-    DatasourceId datasourceId;
+    UUID datasourceId;
 }

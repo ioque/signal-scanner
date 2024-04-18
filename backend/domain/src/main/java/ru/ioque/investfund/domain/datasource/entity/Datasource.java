@@ -1,42 +1,54 @@
 package ru.ioque.investfund.domain.datasource.entity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Datasource {
-    DatasourceId id;
+public class Datasource extends Domain {
     String name;
     String url;
     String description;
     final List<Instrument> instruments;
 
-    public static Datasource of(DatasourceId id, CreateDatasourceCommand command) {
+    @Builder
+    public Datasource(
+        UUID id,
+        String name,
+        String url,
+        String description,
+        List<Instrument> instruments
+    ) {
+        super(id);
+        this.name = name;
+        this.url = url;
+        this.description = description;
+        this.instruments = instruments;
+    }
+
+    public static Datasource of(UUID id, CreateDatasourceCommand command) {
         return Datasource
             .builder()
             .id(id)
-            .url(command.getUrl())
             .name(command.getName())
-            .instruments(new ArrayList<>())
+            .url(command.getUrl())
             .description(command.getDescription())
+            .instruments(new ArrayList<>())
             .build();
     }
 

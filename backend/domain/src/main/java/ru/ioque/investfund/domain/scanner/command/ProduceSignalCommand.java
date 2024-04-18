@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProduceSignalCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
-    DatasourceId datasourceId;
+    UUID datasourceId;
     @NotNull(message = "Не передан watermark.")
     LocalDateTime watermark;
 }

@@ -13,14 +13,13 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -109,7 +108,8 @@ public class DatasourceIntegrationTest extends BaseTest {
         datasourceStorage().initInstruments(List.of(
             afks(),
             Stock.builder()
-                .id(InstrumentId.of("AFKS", getDatasourceId()))
+                .id(UUID.randomUUID())
+                .datasourceId(getDatasourceId())
                 .shortName("ао Система")
                 .name("АФК Система1")
                 .ticker("AFKS")
@@ -128,30 +128,29 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: сохранены текущие сделки и история торгов.
         """)
     void testCase5() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         datasourceStorage().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
         clearLogs();
         initDealDatas(
-            buildDealWith(instrumentId, 1L, LocalDateTime.parse("2023-12-08T10:00:00")),
-            buildDealWith(instrumentId, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(instrumentId, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
+            buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(datasourceId, 3L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
         initTradingResults(
-            buildTradingResultWith(instrumentId, LocalDate.parse("2023-12-08")).build(),
-            buildTradingResultWith(instrumentId, LocalDate.parse("2023-12-09")).build(),
-            buildTradingResultWith(instrumentId, LocalDate.parse("2023-12-10")).build(),
-            buildTradingResultWith(instrumentId, LocalDate.parse("2023-12-11")).build()
+            buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-08")).build(),
+            buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-09")).build(),
+            buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-10")).build(),
+            buildTradingResultWith(datasourceId, "AFKS", LocalDate.parse("2023-12-11")).build()
         );
 
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
         assertEquals(1, getInstruments(datasourceId).size());
-        assertEquals(3, getIntradayValuesBy(InstrumentId.of("AFKS", datasourceId)).size());
-        assertEquals(4, getHistoryValuesBy(InstrumentId.of("AFKS", datasourceId)).size());
+        assertEquals(3, getIntradayValuesBy(datasourceId).size());
+        assertEquals(4, getHistoryValues(datasourceId).size());
     }
 
     @Test
@@ -162,13 +161,13 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: Загружены данные итогов торгов.
         """)
     void testCase9() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-19T10:00:00");
         integrateInstruments(datasourceId, afks());
         clearLogs();
         initTradingResults(generateTradingResultsBy(
-            instrumentId,
+            datasourceId,
+            "AFKS",
             dateTimeProvider().monthsAgo(6),
             dateTimeProvider().daysAgo(1)
         ));
@@ -178,7 +177,7 @@ public class DatasourceIntegrationTest extends BaseTest {
 
         assertEquals(
             131,
-            getHistoryValuesBy(instrumentId).size()
+            getHistoryValuesBy(datasourceId, "AFKS").size()
         );
     }
 
@@ -190,23 +189,22 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: дубликаты не сохранены, остальные сделки успешно сохранены.
         """)
     void testCase10() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
         clearLogs();
         initDealDatas(
-            buildDealWith(instrumentId, 1L, LocalDateTime.parse("2023-12-08T10:00:00")),
-            buildDealWith(instrumentId, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(instrumentId, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(instrumentId, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(instrumentId, 5L, LocalDateTime.parse("2023-12-08T10:15:00"))
+            buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-08T10:00:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-08T10:03:00")),
+            buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
-        assertEquals(3, getIntradayValuesBy(instrumentId).size());
+        assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
     @Test
@@ -217,29 +215,28 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: сохранены только новые сделки, прошедшие после 12:00:00.
         """)
     void testCas11() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-07T12:00:00");
         integrateInstruments(datasourceId, afks());
         initDealDatas(
-            buildDealWith(instrumentId,1L, LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith(instrumentId,2L, LocalDateTime.parse("2023-12-07T11:30:00"))
+            buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00"))
         );
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initDealDatas(
-            buildDealWith(instrumentId,1L, LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith(instrumentId,2L, LocalDateTime.parse("2023-12-07T11:30:00")),
-            buildDealWith(instrumentId,3L, LocalDateTime.parse("2023-12-07T12:10:00")),
-            buildDealWith(instrumentId,4L, LocalDateTime.parse("2023-12-07T12:30:00")),
-            buildDealWith(instrumentId,5L, LocalDateTime.parse("2023-12-07T12:40:00"))
+            buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")),
+            buildDealWith(datasourceId, 2L, "AFKS", LocalDateTime.parse("2023-12-07T11:30:00")),
+            buildDealWith(datasourceId, 3L, "AFKS", LocalDateTime.parse("2023-12-07T12:10:00")),
+            buildDealWith(datasourceId, 4L, "AFKS", LocalDateTime.parse("2023-12-07T12:30:00")),
+            buildDealWith(datasourceId, 5L, "AFKS", LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
-        assertEquals(5, getIntradayValuesBy(instrumentId).size());
+        assertEquals(5, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
     @Test
@@ -250,20 +247,19 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: добавлена история торгов за 2023-12-08.
         """)
     void testCas12() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
-        initTradingResults(generateTradingResultsBy(instrumentId, nowMinus3Month(), nowMinus1Days()));
+        initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
-        initTradingResults(generateTradingResultsBy(instrumentId, nowMinus3Month(), nowMinus1Days()));
+        initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
 
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
-        assertEquals(66, getHistoryValuesBy(instrumentId).size());
+        assertEquals(66, getHistoryValuesBy(datasourceId, "AFKS").size());
     }
 
     @Test
@@ -273,17 +269,16 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: торговые данные не загружены.
         """)
     void testCase13() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
-        initDealDatas(buildDealWith(instrumentId, 1L,  LocalDateTime.parse("2023-12-07T11:00:00")));
-        initTradingResults(buildDealResultBy(instrumentId, "2024-01-03", 10D, 10D, 10D, 10D));
+        initDealDatas(buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
+        initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
-        assertEquals(0, getHistoryValuesBy(instrumentId).size());
-        assertEquals(0, getIntradayValuesBy(instrumentId).size());
+        assertEquals(0, getHistoryValues(datasourceId).size());
+        assertEquals(0, getIntradayValuesBy(datasourceId).size());
     }
 
     @Test
@@ -294,29 +289,28 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: новые торговые данные не загружены.
         """)
     void testCase14() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
-        initDealDatas(buildBuyDealBy(instrumentId, 1L,  "10:00:00", 10D, 10D, 1));
-        initTradingResults(buildDealResultBy(instrumentId, "2023-12-07", 10D, 10D, 10D, 10D));
+        initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
+        initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
         initDealDatas(
-            buildBuyDealBy(instrumentId, 1L, "10:00:00", 10D, 10D, 1),
-            buildBuyDealBy(instrumentId, 1L, "11:00:00", 10D, 10D, 1)
+            buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1),
+            buildBuyDealBy(datasourceId, 1L, "AFKS", "11:00:00", 10D, 10D, 1)
         );
         initTradingResults(
-            buildDealResultBy(instrumentId, "2023-12-06", 10D, 10D, 10D, 10D),
-            buildDealResultBy(instrumentId, "2023-12-07", 10D, 10D, 10D, 10D)
+            buildDealResultBy(datasourceId, "AFKS", "2023-12-06", 10D, 10D, 10D, 10D),
+            buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
         commandBus().execute(new DisableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
-        assertEquals(1, getHistoryValuesBy(instrumentId).size());
-        assertEquals(1, getIntradayValuesBy(instrumentId).size());
+        assertEquals(1, getHistoryValuesBy(datasourceId, "AFKS").size());
+        assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
     @Test
@@ -326,7 +320,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase15() {
-        final DatasourceId datasourceId = getDatasourceId();
+        UUID datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
@@ -342,7 +336,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase16() {
-        final DatasourceId datasourceId = getDatasourceId();
+        UUID datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
@@ -356,12 +350,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         T17. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
     void testCase17() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
-        initDealDatas(buildBuyDealBy(instrumentId, 1L, "10:00:00", 10D, 10D, 1));
-        initTradingResults(buildDealResultBy(instrumentId, "2023-12-07", 10D, 10D, 10D, 10D));
+        initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
+        initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         TradingDataIntegratedEvent event = (TradingDataIntegratedEvent) eventPublisher().getEvents().get(0);
@@ -376,19 +369,18 @@ public class DatasourceIntegrationTest extends BaseTest {
         T18. У сделок одинаковое время, но разные номера. Все сделки сохранены.
         """)
     void testCase18() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
-        initTradingResults(buildDealResultBy(instrumentId, "2023-12-07", 10D, 10D, 10D, 10D));
+        initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         initDealDatas(
-            buildBuyDealBy(instrumentId, 1L, "10:00:00", 10D, 10D, 1),
-            buildBuyDealBy(instrumentId, 2L,  "10:00:00", 11D, 10D, 1),
-            buildBuyDealBy(instrumentId, 3L, "10:00:00", 11D, 10D, 2)
+            buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1),
+            buildBuyDealBy(datasourceId, 2L, "AFKS", "10:00:00", 11D, 10D, 1),
+            buildBuyDealBy(datasourceId, 3L, "AFKS", "10:00:00", 11D, 10D, 2)
         );
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        assertEquals(3, getIntradayValuesBy(instrumentId).size());
+        assertEquals(3, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 
     @Test
@@ -396,15 +388,14 @@ public class DatasourceIntegrationTest extends BaseTest {
         T19. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
         """)
     void testCase19() {
-        final DatasourceId datasourceId = getDatasourceId();
-        final InstrumentId instrumentId = InstrumentId.of("AFKS", datasourceId);
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
-        initTradingResults(buildDealResultBy(instrumentId, "2023-12-07", 10D, 10D, 10D, 10D));
-        initDealDatas(buildBuyDealBy(instrumentId, 1L, "10:00:00", 10D, 10D, 1));
+        initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
+        initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        assertEquals(1, getIntradayValuesBy(instrumentId).size());
+        assertEquals(1, getIntradayValuesBy(datasourceId, "AFKS").size());
     }
 }

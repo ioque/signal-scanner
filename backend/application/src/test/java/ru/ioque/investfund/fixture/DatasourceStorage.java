@@ -7,7 +7,6 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
@@ -24,13 +23,13 @@ public class DatasourceStorage {
     private final List<Instrument> instruments = new ArrayList<>();
 
     @SneakyThrows
-    public List<HistoryValue> getHistoryDataBy(InstrumentId instrumentId) {
-        return historyValues.stream().filter(row -> row.getInstrumentId().equals(instrumentId)).toList();
+    public List<HistoryValue> getHistoryDataByTicker(String ticker) {
+        return historyValues.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     @SneakyThrows
-    public List<IntradayValue> getDealsByTicker(InstrumentId instrumentId) {
-        return intradayValues.stream().filter(row -> row.getInstrumentId().equals(instrumentId)).toList();
+    public List<IntradayValue> getDealsByTicker(String ticker) {
+        return intradayValues.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     public void initInstruments(List<Instrument> instruments) {
@@ -63,6 +62,7 @@ public class DatasourceStorage {
         Futures futures = (Futures) instrument;
         return Futures.builder()
             .id(futures.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(futures.getTicker())
             .name(futures.getName())
             .shortName(futures.getShortName())
@@ -78,6 +78,7 @@ public class DatasourceStorage {
         Index index = (Index) instrument;
         return Index.builder()
             .id(index.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(index.getTicker())
             .name(index.getName())
             .shortName(index.getShortName())
@@ -90,6 +91,7 @@ public class DatasourceStorage {
         CurrencyPair currencyPair = (CurrencyPair) instrument;
         return CurrencyPair.builder()
             .id(currencyPair.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(currencyPair.getTicker())
             .name(currencyPair.getName())
             .shortName(currencyPair.getShortName())
@@ -102,6 +104,7 @@ public class DatasourceStorage {
         Stock stock = (Stock) instrument;
         return Stock.builder()
             .id(stock.getId())
+            .datasourceId(instrument.getDatasourceId())
             .ticker(stock.getTicker())
             .name(stock.getName())
             .shortName(stock.getShortName())

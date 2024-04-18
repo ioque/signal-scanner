@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 
 import java.util.List;
@@ -35,8 +34,8 @@ public class UpdateScannerCommand implements Command {
     Integer workPeriodInMinutes;
     @NotBlank(message = "Не передано описание сканера.")
     String description;
-    @NotEmpty(message = "Не передан список идентификаторов анализируемых инструментов.")
-    List<InstrumentId> instrumentIds;
+    @NotEmpty(message = "Не передан список тикеров анализируемых инструментов.")
+    List<@NotBlank(message = "Тикер не может быть пустой строкой.") String> tickers;
     @NotNull(message = "Не переданы параметры алгоритма.")
     @Valid AlgorithmProperties properties;
 }

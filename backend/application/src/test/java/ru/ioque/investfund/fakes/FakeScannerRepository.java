@@ -21,10 +21,11 @@ public class FakeScannerRepository implements ScannerRepository {
     }
 
     @Override
-    public List<SignalScanner> findAll() {
+    public List<SignalScanner> findAllBy(UUID datasourceId) {
         return scannerMap
             .values()
             .stream()
+            .filter(row -> row.getDatasourceId().equals(datasourceId))
             .toList();
     }
 

@@ -246,7 +246,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
     protected List<InstrumentEntity> findInstrumentsBy() {
         return List.of(
             StockEntity.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .ticker("TEST_STOCK")
                 .name("ТЕСТОВАЯ АКЦИЯ")
                 .shortName("АКЦИЯ")
@@ -256,7 +256,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 .regNumber("REG_NUMBER")
                 .build(),
             FuturesEntity.builder()
-                .id(2L)
+                .id(UUID.randomUUID())
                 .ticker("TEST_FUTURES")
                 .name("ТЕСТОВЫЙ ФЬЮЧЕРС")
                 .shortName("ФЬЮЧЕРС")
@@ -266,7 +266,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 .lotVolume(1)
                 .build(),
             IndexEntity.builder()
-                .id(3L)
+                .id(UUID.randomUUID())
                 .name("ТЕСТОВЫЙ ИНДЕКС")
                 .shortName("ИНДЕКС")
                 .ticker("TEST_INDEX")
@@ -274,7 +274,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 .annualLow(1D)
                 .build(),
             CurrencyPairEntity.builder()
-                .id(4L)
+                .id(UUID.randomUUID())
                 .name("ТЕСТОВАЯ ВАЛЮТНАЯ ПАРА")
                 .ticker("TEST_CURRENCY_PAIR")
                 .lotSize(1)

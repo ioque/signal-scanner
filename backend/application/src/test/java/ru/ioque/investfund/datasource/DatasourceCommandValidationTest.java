@@ -11,7 +11,6 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
 
 import java.util.List;
 import java.util.UUID;
@@ -239,7 +238,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 UpdateDatasourceCommand.builder()
-                    .id(new DatasourceId(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .url("http://datasource.ru:8000")
                     .description("description")
                     .build()
@@ -258,7 +257,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 UpdateDatasourceCommand.builder()
-                    .id(new DatasourceId(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .url("http://datasource.ru")
                     .name("name")
                     .build()
@@ -277,7 +276,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 UpdateDatasourceCommand.builder()
-                    .id(new DatasourceId(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .description("description")
                     .name("name")
                     .build()

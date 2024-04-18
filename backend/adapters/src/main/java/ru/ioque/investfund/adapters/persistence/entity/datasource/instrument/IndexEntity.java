@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -32,7 +32,7 @@ public class IndexEntity extends InstrumentEntity {
 
     @Builder
     public IndexEntity(
-        Long id,
+        UUID id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
@@ -53,7 +53,8 @@ public class IndexEntity extends InstrumentEntity {
     @Override
     public Instrument toDomain() {
         return Index.builder()
-            .id(InstrumentId.of(this.getTicker(), this.getDatasource().getId()))
+            .id(this.getId())
+            .datasourceId(this.getDatasource().getId())
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())
@@ -67,6 +68,7 @@ public class IndexEntity extends InstrumentEntity {
 
     public static InstrumentEntity from(Index domain) {
         return IndexEntity.builder()
+            .id(domain.getId())
             .ticker(domain.getTicker())
             .name(domain.getName())
             .shortName(domain.getShortName())

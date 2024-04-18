@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 
 import java.util.UUID;
 
@@ -42,9 +41,10 @@ public class StockDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID datasourceId) {
+    public Instrument toDomain(UUID id, UUID datasourceId) {
         return Stock.builder()
-            .id(InstrumentId.of(getTicker(), datasourceId))
+            .id(id)
+            .datasourceId(datasourceId)
             .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())

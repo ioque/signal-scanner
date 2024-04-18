@@ -6,21 +6,22 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
-@Getter
-@ToString
-@EqualsAndHashCode
+@Getter(AccessLevel.PUBLIC)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Instrument {
-    final InstrumentId id;
+public class Instrument extends Domain {
+    UUID datasourceId;
     String ticker;
     String shortName;
     String name;
@@ -32,7 +33,8 @@ public class Instrument {
     Long lastTradingNumber;
 
     public Instrument(
-        InstrumentId id,
+        UUID id,
+        UUID datasourceId,
         String ticker,
         String shortName,
         String name,
@@ -40,7 +42,8 @@ public class Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        this.id = id;
+        super(id);
+        setDatasourceId(datasourceId);
         setTicker(ticker);
         setShortName(shortName);
         setName(name);
@@ -91,6 +94,13 @@ public class Instrument {
 
     private void setLastTradingNumber(Long lastTradingNumber) {
         this.lastTradingNumber = lastTradingNumber;
+    }
+
+    private void setDatasourceId(UUID datasourceId) {
+        if (datasourceId == null) {
+            throw new DomainException("Не заполнен идентификатор источника данных.");
+        }
+        this.datasourceId = datasourceId;
     }
 
     private void setTicker(String ticker) {

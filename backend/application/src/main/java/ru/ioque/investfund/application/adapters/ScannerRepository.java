@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ScannerRepository {
     void save(SignalScanner scanner);
-    List<SignalScanner> findAll();
+    List<SignalScanner> findAllBy(UUID datasourceId);
     Optional<SignalScanner> findBy(UUID scannerId);
     SignalScanner getBy(UUID scannerId) throws EntityNotFoundException;
 }

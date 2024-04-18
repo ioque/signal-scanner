@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
@@ -19,6 +20,7 @@ import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class HttpDatasourceProvider implements DatasourceProvider {
     DatasourceRestClient moexClient;
+    UUIDProvider uuidProvider;
     DateTimeProvider dateTimeProvider;
 
     @Override
@@ -29,7 +31,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
             moexClient
                 .fetchInstruments(datasource.getUrl())
                 .stream()
-                .map(dto -> dto.toDomain(datasource.getId()))
+                .map(dto -> dto.toDomain(uuidProvider.generate(), datasource.getId()))
                 .toList()
         );
     }

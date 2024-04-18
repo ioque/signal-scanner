@@ -14,6 +14,7 @@ import ru.ioque.investfund.adapters.datasource.client.dto.intraday.ContractDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.DealDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.DeltaDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.adapters.uuid.RandomUUIDGenerator;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
@@ -21,7 +22,6 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
@@ -43,6 +43,7 @@ import static org.mockito.Mockito.when;
 public class HttpDatasourceProviderTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final String DATASOURCE_URL = "http://url.com";
+    private static final UUID INSTRUMENT_ID = UUID.randomUUID();
     private static final String INSTRUMENT_TICKER = "AFKS";
 
     DatasourceRestClient datasourceRestClient = mock(DatasourceRestClient.class);
@@ -50,7 +51,11 @@ public class HttpDatasourceProviderTest {
     HttpDatasourceProvider datasourceProvider;
 
     public HttpDatasourceProviderTest() {
-        this.datasourceProvider = new HttpDatasourceProvider(datasourceRestClient, dateTimeProvider);
+        this.datasourceProvider = new HttpDatasourceProvider(
+            datasourceRestClient,
+            new RandomUUIDGenerator(),
+            dateTimeProvider
+        );
     }
 
     @Test
@@ -230,8 +235,9 @@ public class HttpDatasourceProviderTest {
 
     private Instrument instrument() {
         return Stock.builder()
-            .id(InstrumentId.of(INSTRUMENT_TICKER, DATASOURCE_ID))
+            .id(INSTRUMENT_ID)
             .ticker(INSTRUMENT_TICKER)
+            .datasourceId(DATASOURCE_ID)
             .name("name")
             .shortName("name")
             .lotSize(100)

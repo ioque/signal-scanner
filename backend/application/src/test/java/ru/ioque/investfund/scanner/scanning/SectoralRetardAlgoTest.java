@@ -4,13 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,7 +25,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         3 из 4 позиций не росли в последние дни, сигнала нет.
         """)
     void testCase1() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase1(datasourceId);
@@ -48,7 +47,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         TATN росла вчера, сегодня падает.
         """)
     void testCase2() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -69,7 +68,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T3. С последнего запуска прошло меньше 1 часа, сканер не запущен.
         """)
     void testCase3() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -92,7 +91,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T4. С последнего запуска прошел 1 час, сканер запущен.
         """)
     void testCase4() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -116,7 +115,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase5() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -136,7 +135,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase6() {
-        final DatasourceId datasourceId = getDatasourceId();
+        final UUID datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -151,12 +150,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
-    private void initScanner(DatasourceId datasourceId, String... tickers) {
+    private void initScanner(UUID datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Секторальный отстающий, нефтянка.")
-                .instrumentIds(Arrays.stream(tickers).map(ticker -> new InstrumentId(ticker, datasourceId)).toList())
+                .datasourceId(datasourceId)
+                .tickers(Arrays.asList(tickers))
                 .properties(
                     SectoralRetardProperties.builder()
                         .historyScale(historyScale)
@@ -167,7 +167,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initOilCompanyData(DatasourceId datasourceId) {
+    private void initOilCompanyData(UUID datasourceId) {
         datasourceStorage()
             .initInstruments(
                 List.of(
@@ -181,64 +181,64 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
-    private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
+    private void initDealsTatnFallOtherRise(UUID datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
-                buildContractBy(new InstrumentId("BRF4", datasourceId), 1L, "10:00:00", 78D, 78000D, 1),
-                buildContractBy(new InstrumentId("BRF4", datasourceId),1L, "12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(new InstrumentId("ROSN", datasourceId),1L, "10:00:00", 250.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("ROSN", datasourceId),2L, "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("LKOH", datasourceId),1L, "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("LKOH", datasourceId),2L, "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("SIBN", datasourceId),1L,  "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("SIBN", datasourceId),2L,  "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("TATN", datasourceId),1L, "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("TATN", datasourceId),2L, "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(new InstrumentId("TATN", datasourceId),3L, "13:45:00", 280.1D, 136926D, 1)
+                buildContractBy(datasourceId, 1L, "BRF4", "10:00:00", 78D, 78000D, 1),
+                buildContractBy(datasourceId,1L, "BRF4", "12:00:00", 96D, 96000D, 1),
+                buildBuyDealBy(datasourceId,1L, "ROSN", "10:00:00", 250.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "ROSN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "LKOH", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "LKOH", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "SIBN", "10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "SIBN", "12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId,3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
 
-    private void initTradingResultsForTestCase2(DatasourceId datasourceId) {
+    private void initTradingResultsForTestCase2(UUID datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-21", 80D, 80D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-21", 80D, 80D, 10D),
                 //ROSN
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-21", 250D, 255D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-21", 250D, 255D, 1D, 1D),
                 //TATN
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(datasourceId,"TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(datasourceId,"TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
 
-    private void initTradingResultsForTestCase1(DatasourceId datasourceId) {
+    private void initTradingResultsForTestCase1(UUID datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(new InstrumentId("BRF4", datasourceId), "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(new InstrumentId("BRF4", datasourceId),"2023-12-21", 74D, 74D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(datasourceId,"BRF4", "2023-12-21", 74D, 74D, 10D),
                 //ROSN
-                buildDealResultBy(new InstrumentId("ROSN", datasourceId),"2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("ROSN", datasourceId), "2023-12-21", 250D, 251D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"ROSN", "2023-12-21", 250D, 251D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(new InstrumentId("LKOH", datasourceId), "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("LKOH", datasourceId), "2023-12-21", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"LKOH", "2023-12-21", 250D, 250D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(new InstrumentId("SIBN", datasourceId),"2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("SIBN", datasourceId), "2023-12-21", 250D, 249D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(datasourceId,"SIBN", "2023-12-21", 250D, 249D, 1D, 1D),
                 //TATN
-                buildDealResultBy(new InstrumentId("TATN", datasourceId), "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(new InstrumentId("TATN", datasourceId), "2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(datasourceId,"TATN", "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(datasourceId,"TATN", "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
