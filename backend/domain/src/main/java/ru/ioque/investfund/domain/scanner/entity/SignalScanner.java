@@ -8,13 +8,12 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -85,21 +84,36 @@ public class SignalScanner extends Domain {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<SignalSign> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+    public List<Signal> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
         AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
         lastExecutionDateTime = watermark;
-        return algorithm
-            .run(tradingSnapshots, watermark)
-            .stream()
-            .filter(this::signalNotExists)
-            .toList();
+        List<Signal> newSignals = deduplicationNewSignals(algorithm.run(tradingSnapshots, watermark));
+        registerNewSignals(newSignals);
+        return newSignals;
     }
 
-    public void addNewSignals(List<Signal> newSignals) {
+    public boolean isTimeForExecution(LocalDateTime nowDateTime) {
+        if (getLastExecutionDateTime().isEmpty()) return true;
+        return isTimeForExecution(getLastExecutionDateTime().get(), nowDateTime);
+    }
+
+    private boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
+        return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
+    }
+
+    private List<Signal> deduplicationNewSignals(List<Signal> signals) {
+        return signals.stream().filter(signal -> !containsSignal(signal)).toList();
+    }
+
+    private boolean containsSignal(Signal newSignal) {
+        return signals.stream().anyMatch(newSignal::sameByBusinessKey);
+    }
+
+    private void registerNewSignals(List<Signal> newSignals) {
         List<Signal> oldSignals = List.copyOf(this.signals);
         List<Signal> finalSignalList = new ArrayList<>(newSignals.stream().filter(Signal::isBuy).toList());
         newSignals
@@ -119,23 +133,5 @@ public class SignalScanner extends Domain {
         });
         signals.clear();
         signals.addAll(finalSignalList);
-    }
-
-    public boolean isTimeForExecution(LocalDateTime nowDateTime) {
-        if (getLastExecutionDateTime().isEmpty()) return true;
-        return isTimeForExecution(getLastExecutionDateTime().get(), nowDateTime);
-    }
-
-    private boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
-        return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
-    }
-
-    private boolean signalNotExists(SignalSign newSignal) {
-        return signals
-            .stream()
-            .noneMatch(signal ->
-                signal.getTicker().equals(newSignal.getTicker()) &&
-                    signal.isBuy() == newSignal.isBuy()
-            );
     }
 }

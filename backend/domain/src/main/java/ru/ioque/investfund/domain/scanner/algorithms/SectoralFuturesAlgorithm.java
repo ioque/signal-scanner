@@ -7,7 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
@@ -33,8 +33,8 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final List<SignalSign> signalSigns = new ArrayList<>();
+    public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         final boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
         for (final TradingSnapshot snapshot : analyzeInstruments(tradingSnapshots)) {
             final boolean riseOvernight = snapshot.isRiseOvernight(stockOvernightScale);
@@ -44,8 +44,8 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 (futuresIsRiseOvernight ? "растущий" : "нисходящий")
             );
             if (futuresIsRiseOvernight && riseOvernight) {
-                signalSigns.add(
-                    SignalSign.builder()
+                signals.add(
+                    Signal.builder()
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
@@ -55,7 +55,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 );
             }
         }
-        return signalSigns;
+        return signals;
     }
 
     private TradingSnapshot getFuturesStatistic(List<TradingSnapshot> tradingSnapshots) {

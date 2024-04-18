@@ -9,13 +9,15 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
 import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -82,11 +84,11 @@ public class ProduceSignalCommandTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T4. Зафиксирован сигнал к покупке по тикеру - TGKN, алгоритм - аномальные объемы.
+        T3. Зафиксирован сигнал к покупке по тикеру - TGKN, алгоритм - аномальные объемы.
+        Сгенерированы два события - найден сигнал, завершено сканирование.
         """)
-    void testCase4() {
-        initTodayDateTime("2024-01-10T10:00:00");
-        initTgknSellSignalDataset(getDatasourceId());
+    void testCase3() {
+        prepareTestCase3(getDatasourceId());
 
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
@@ -108,25 +110,79 @@ public class ProduceSignalCommandTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T3. Ранее были зафиксированы сигналы к покупке по двум тикерам - TGKN, TGKB, алгоритм - аномальные объемы.
+        T4. Ранее были зафиксированы сигналы к покупке по двум тикерам - TGKN, TGKB, алгоритм - аномальные объемы.
         По тикеру TGKN зафиксирован повторный сигнал к покупке, по тикеру TGKB зафиксирован сигнал к продаже.
         """)
-    void testCase3() {
-        initDealDatas(
+    void testCase4() {
+        prepareTestCase4();
 
-        );
+        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+
+        SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
+        assertEquals(3, scanner.getSignals().size());
+        assertEquals(2, scanner.getSignals().stream().filter(Signal::isOpen).count());
     }
 
     private UUID getScannerId() {
         return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
     }
 
-    private void prepareState() {
+    private void prepareTestCase4() {
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
-
+        LocalDateTime today = LocalDateTime.parse("2023-12-25T12:00:00");
+        initTodayDateTime("2023-12-25T12:00:00");
+        scanner.getSignals().addAll(
+            List.of(
+                Signal.builder()
+                    .price(10D)
+                    .isBuy(true)
+                    .isOpen(true)
+                    .ticker("TGKB")
+                    .summary("summary")
+                    .dateTime(today)
+                    .build(),
+                Signal.builder()
+                    .price(10D)
+                    .isBuy(true)
+                    .isOpen(true)
+                    .ticker("TGKN")
+                    .summary("summary")
+                    .dateTime(today)
+                    .build()
+            )
+        );
+        initTradingResults(
+            buildDealResultBy(scanner.getDatasourceId(), "TGKB", "2023-12-22", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(scanner.getDatasourceId(), "TGKB", "2023-12-23", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(scanner.getDatasourceId(), "TGKB", "2023-12-24", 100.D, 100.D, 100D, 1400D),
+            buildDealResultBy(scanner.getDatasourceId(), "TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            buildDealResultBy(scanner.getDatasourceId(), "TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy(scanner.getDatasourceId(), "TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            buildDeltaResultBy(scanner.getDatasourceId(), "IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(scanner.getDatasourceId(), "IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(scanner.getDatasourceId(), "IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
+        );
+        initDealDatas(
+            buildDeltaBy(scanner.getDatasourceId(), 1L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(scanner.getDatasourceId(), 2L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(scanner.getDatasourceId(), 1L, "TGKN", "10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), 2L, "TGKN", "10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), 3L, "TGKN", "11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), 4L, "TGKN", "11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), 5L, "TGKN", "11:45:00", 96D, 5000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), 1L, "TGKB", "10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), 2L, "TGKB", "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), 3L, "TGKB", "11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), 4L, "TGKB", "11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), 5L, "TGKB", "11:45:00", 102D, 5000D, 1)
+        );
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        clearLogs();
     }
 
-    private void initTgknSellSignalDataset(UUID datasourceId) {
+    private void prepareTestCase3(UUID datasourceId) {
+        initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
             buildDealResultBy(datasourceId, "TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
             buildDealResultBy(datasourceId, "TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
@@ -136,13 +192,13 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId, 3L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(datasourceId, 4L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(datasourceId, 6L, "TGKN", "10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(datasourceId, 7L, "TGKN", "10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(datasourceId, 8L, "TGKN", "11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(datasourceId, 9L, "TGKN", "11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(datasourceId, 10L, "TGKN", "11:45:00", 96D, 5000D, 1)
+            buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(datasourceId, 1L, "TGKN", "10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(datasourceId, 2L, "TGKN", "10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, 3L, "TGKN", "11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(datasourceId, 4L, "TGKN", "11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, 5L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));

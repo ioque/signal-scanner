@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final List<SignalSign> signalSigns = new ArrayList<>();
+    public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
@@ -39,7 +39,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                 currentDelta, historyDelta, multiplier
             );
             if (multiplier > spreadValue) {
-                signalSigns.add(SignalSign.builder()
+                signals.add(Signal.builder()
                     .isBuy(true)
                     .summary(summary)
                     .dateTime(watermark)
@@ -49,7 +49,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                 );
             }
         });
-        return signalSigns;
+        return signals;
     }
 
     private List<PrefSimplePair> findAllPrefAndSimplePairs(List<TradingSnapshot> tradingSnapshots) {

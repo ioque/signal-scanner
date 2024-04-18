@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<SignalSign> run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
-        final List<SignalSign> signalSigns = new ArrayList<>();
+    public List<Signal> run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue();
@@ -63,8 +63,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 indexIsRiseToday.get() ? "растущий" : "нисходящий"
             );
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
-                signalSigns.add(
-                    SignalSign.builder()
+                signals.add(
+                    Signal.builder()
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
@@ -74,8 +74,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 );
             }
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
-                signalSigns.add(
-                    SignalSign.builder()
+                signals.add(
+                    Signal.builder()
                         .isBuy(false)
                         .dateTime(watermark)
                         .summary(summary)
@@ -85,7 +85,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 );
             }
         }
-        return signalSigns;
+        return signals;
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {

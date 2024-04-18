@@ -7,10 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -19,8 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Signal {
-    UUID id;
-    UUID scannerId;
     LocalDateTime dateTime;
     String ticker;
     Double price;
@@ -28,17 +24,8 @@ public class Signal {
     boolean isBuy;
     boolean isOpen;
 
-    public static Signal of(UUID id, UUID scannerId, SignalSign signalSign) {
-        return Signal.builder()
-            .id(id)
-            .scannerId(scannerId)
-            .dateTime(signalSign.getDateTime())
-            .price(signalSign.getPrice())
-            .ticker(signalSign.getTicker())
-            .summary(signalSign.getSummary())
-            .isBuy(signalSign.isBuy())
-            .isOpen(true)
-            .build();
+    public boolean sameByBusinessKey(Signal signal) {
+        return signal.getTicker().equals(this.getTicker()) && signal.isBuy() == this.isBuy();
     }
 
     public void close() {

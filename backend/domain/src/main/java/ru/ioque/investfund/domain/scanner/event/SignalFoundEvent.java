@@ -23,6 +23,7 @@ import java.util.UUID;
 public class SignalFoundEvent implements DomainEvent {
     UUID id;
     String ticker;
+    Double price;
     boolean isBuy;
     UUID scannerId;
     LocalDateTime watermark;

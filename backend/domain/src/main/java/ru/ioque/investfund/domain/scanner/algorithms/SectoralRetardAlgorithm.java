@@ -7,7 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
-import ru.ioque.investfund.domain.scanner.value.SignalSign;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
@@ -29,8 +29,8 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<SignalSign> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        List<SignalSign> signalSigns = new ArrayList<>();
+    public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        List<Signal> signals = new ArrayList<>();
         List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
         List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
@@ -39,8 +39,8 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                     "Растущие инструменты сектора: %s",
                     riseInstruments.stream().map(TradingSnapshot::getTicker).toList()
                 );
-                signalSigns.add(
-                    SignalSign.builder()
+                signals.add(
+                    Signal.builder()
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
@@ -50,7 +50,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                 );
             });
         }
-        return signalSigns;
+        return signals;
     }
 
     private static List<TradingSnapshot> getSectoralRetards(

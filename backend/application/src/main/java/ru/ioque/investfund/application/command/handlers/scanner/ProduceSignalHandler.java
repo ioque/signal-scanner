@@ -26,7 +26,7 @@ import java.util.List;
 public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
     UUIDProvider uuidProvider;
     ScannerRepository scannerRepository;
-    TradingSnapshotsRepository tradingSnapshotsRepository;
+    TradingSnapshotsRepository snapshotsRepository;
     EventPublisher eventPublisher;
 
     public ProduceSignalHandler(
@@ -35,13 +35,13 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
         LoggerProvider loggerProvider,
         UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
-        TradingSnapshotsRepository tradingSnapshotsRepository,
+        TradingSnapshotsRepository snapshotsRepository,
         EventPublisher eventPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.uuidProvider = uuidProvider;
         this.scannerRepository = scannerRepository;
-        this.tradingSnapshotsRepository = tradingSnapshotsRepository;
+        this.snapshotsRepository = snapshotsRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -63,14 +63,8 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
     }
 
     private void runScanner(SignalScanner scanner, LocalDateTime watermark) {
-        final List<TradingSnapshot> snapshots = tradingSnapshotsRepository
-            .findAllBy(scanner.getDatasourceId(), scanner.getTickers());
-        final List<Signal> newSignals = scanner
-            .scanning(snapshots, watermark)
-            .stream()
-            .map(signalSign -> Signal.of(uuidProvider.generate(), scanner.getId(), signalSign))
-            .toList();
-        scanner.addNewSignals(newSignals);
+        final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getTickers());
+        final List<Signal> newSignals = scanner.scanning(snapshots, watermark);
         scannerRepository.save(scanner);
         newSignals.forEach(signal -> eventPublisher.publish(
             SignalFoundEvent.builder()
