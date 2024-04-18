@@ -94,7 +94,7 @@ public class ProduceSignalCommandTest extends BaseTest {
         final Optional<ScanningFinishedEvent> scanningFinishedEvent = findScanningFinishedEvent();
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get().getId());
-        assertEquals(getDatasourceId(), signalFoundEvent.get().getDatasourceId());
+        assertEquals(getScannerId(), signalFoundEvent.get().getScannerId());
         assertEquals("TGKN", signalFoundEvent.get().getTicker());
         assertFalse(signalFoundEvent.get().isBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
@@ -115,6 +115,10 @@ public class ProduceSignalCommandTest extends BaseTest {
         initDealDatas(
 
         );
+    }
+
+    private UUID getScannerId() {
+        return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
     }
 
     private void prepareState() {

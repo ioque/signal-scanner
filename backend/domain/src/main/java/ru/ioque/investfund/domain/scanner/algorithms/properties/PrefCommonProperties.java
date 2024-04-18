@@ -22,9 +22,4 @@ public class PrefCommonProperties implements AlgorithmProperties {
     @NotNull(message = "Не передан параметр spreadValue.")
     @DecimalMin(value = "0", inclusive = false, message = "Параметр spreadValue должен быть больше 0.")
     Double spreadValue;
-
-    @Override
-    public String prettyPrint() {
-        return "spreadValue = " + spreadValue;
-    }
 }

@@ -24,6 +24,6 @@ public class SignalFoundEvent implements DomainEvent {
     UUID id;
     String ticker;
     boolean isBuy;
-    UUID datasourceId;
+    UUID scannerId;
     LocalDateTime watermark;
 }

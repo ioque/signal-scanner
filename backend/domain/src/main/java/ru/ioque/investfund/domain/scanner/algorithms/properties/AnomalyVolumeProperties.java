@@ -29,8 +29,4 @@ public class AnomalyVolumeProperties implements AlgorithmProperties {
     Integer historyPeriod;
     @NotBlank(message = "Не передан параметр indexTicker.")
     String indexTicker;
-
-    public String prettyPrint() {
-        return "scaleCoefficient = " + scaleCoefficient + ", historyPeriod = " + historyPeriod + ", indexTicker = " + indexTicker;
-    }
 }
