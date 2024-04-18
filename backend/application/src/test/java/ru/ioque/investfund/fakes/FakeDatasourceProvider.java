@@ -40,7 +40,6 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     @Override
     public InstrumentBatch fetchInstruments(Datasource datasource) {
         return new InstrumentBatch(
-            datasource.getId(),
             datasourceStorage.getInstruments()
         );
     }

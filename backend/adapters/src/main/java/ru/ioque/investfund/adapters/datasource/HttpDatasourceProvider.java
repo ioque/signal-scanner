@@ -27,7 +27,6 @@ public class HttpDatasourceProvider implements DatasourceProvider {
     @SneakyThrows
     public InstrumentBatch fetchInstruments(Datasource datasource) {
         return new InstrumentBatch(
-            datasource.getId(),
             moexClient
                 .fetchInstruments(datasource.getUrl())
                 .stream()
