@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -356,7 +357,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of("AFKS")));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        assertEquals(TradingDataIntegratedEvent.class, eventPublisher().getEvents().get(0).getClass());
+        TradingDataIntegratedEvent event = (TradingDataIntegratedEvent) eventPublisher().getEvents().get(0);
+        assertNotNull(event.getId());
+        assertEquals(getDatasourceId(), event.getDatasourceId());
+        assertEquals(1, event.getUpdatedCount());
+        assertEquals(dateTimeProvider().nowDateTime(), event.getDateTime());
     }
 
     @Test

@@ -21,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScanningFinishedEvent implements DomainEvent {
+    UUID id;
     UUID datasourceId;
     LocalDateTime watermark;
     LocalDateTime dateTime;

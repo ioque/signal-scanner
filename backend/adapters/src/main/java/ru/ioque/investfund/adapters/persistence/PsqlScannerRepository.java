@@ -14,7 +14,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRep
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmType;
+import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
 
 import java.util.List;
 import java.util.Map;

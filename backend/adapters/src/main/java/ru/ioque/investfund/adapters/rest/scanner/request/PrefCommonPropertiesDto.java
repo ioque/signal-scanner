@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 @Getter
 @Builder

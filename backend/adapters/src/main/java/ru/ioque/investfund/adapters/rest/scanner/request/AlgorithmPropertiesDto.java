@@ -3,7 +3,7 @@ package ru.ioque.investfund.adapters.rest.scanner.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)

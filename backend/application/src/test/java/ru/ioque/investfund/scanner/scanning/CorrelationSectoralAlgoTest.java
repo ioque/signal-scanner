@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 
 import java.util.List;
 import java.util.UUID;

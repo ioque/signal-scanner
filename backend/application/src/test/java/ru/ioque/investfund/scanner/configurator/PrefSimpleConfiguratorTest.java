@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 import java.util.List;
 

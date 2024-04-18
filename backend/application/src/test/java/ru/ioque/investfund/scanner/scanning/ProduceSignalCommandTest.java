@@ -6,17 +6,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
+import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProduceSignalCommandTest extends BaseTest {
     @BeforeEach
@@ -74,6 +82,32 @@ public class ProduceSignalCommandTest extends BaseTest {
 
     @Test
     @DisplayName("""
+        T4. Зафиксирован сигнал к покупке по тикеру - TGKN, алгоритм - аномальные объемы.
+        """)
+    void testCase4() {
+        initTodayDateTime("2024-01-10T10:00:00");
+        initTgknSellSignalDataset(getDatasourceId());
+
+        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+
+        final Optional<SignalFoundEvent> signalFoundEvent = findSignalFoundEvent();
+        final Optional<ScanningFinishedEvent> scanningFinishedEvent = findScanningFinishedEvent();
+        assertTrue(signalFoundEvent.isPresent());
+        assertNotNull(signalFoundEvent.get().getId());
+        assertEquals(getDatasourceId(), signalFoundEvent.get().getDatasourceId());
+        assertEquals("TGKN", signalFoundEvent.get().getTicker());
+        assertFalse(signalFoundEvent.get().isBuy());
+        assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
+
+        assertTrue(scanningFinishedEvent.isPresent());
+        assertNotNull(scanningFinishedEvent.get().getId());
+        assertEquals(getDatasourceId(), scanningFinishedEvent.get().getDatasourceId());
+        assertEquals(dateTimeProvider().nowDateTime(), scanningFinishedEvent.get().getWatermark());
+        assertEquals(dateTimeProvider().nowDateTime(), scanningFinishedEvent.get().getDateTime());
+    }
+
+    @Test
+    @DisplayName("""
         T3. Ранее были зафиксированы сигналы к покупке по двум тикерам - TGKN, TGKB, алгоритм - аномальные объемы.
         По тикеру TGKN зафиксирован повторный сигнал к покупке, по тикеру TGKB зафиксирован сигнал к продаже.
         """)
@@ -106,5 +140,24 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildSellDealBy(datasourceId, 9L, "TGKN", "11:01:00", 97D, 1000D, 1),
             buildSellDealBy(datasourceId, 10L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        clearLogs();
+    }
+
+    private Optional<SignalFoundEvent> findSignalFoundEvent() {
+        return eventPublisher()
+            .getEvents()
+            .stream().filter(row -> row.getClass().equals(SignalFoundEvent.class))
+            .findFirst()
+            .map(SignalFoundEvent.class::cast);
+    }
+
+    private Optional<ScanningFinishedEvent> findScanningFinishedEvent() {
+        return eventPublisher()
+            .getEvents()
+            .stream().filter(row -> row.getClass().equals(ScanningFinishedEvent.class))
+            .findFirst()
+            .map(ScanningFinishedEvent.class::cast);
     }
 }

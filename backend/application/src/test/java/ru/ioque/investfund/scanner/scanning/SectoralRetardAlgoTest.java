@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.util.Arrays;
 import java.util.List;

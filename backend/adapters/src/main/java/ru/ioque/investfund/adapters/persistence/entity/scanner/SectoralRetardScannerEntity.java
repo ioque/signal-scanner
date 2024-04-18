@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

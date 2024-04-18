@@ -7,7 +7,7 @@ import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsComm
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
 import java.util.Arrays;
 import java.util.List;

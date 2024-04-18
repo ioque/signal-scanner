@@ -12,9 +12,9 @@ import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmFactory;
-import ru.ioque.investfund.domain.scanner.value.algorithms.ScannerAlgorithm;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
+import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

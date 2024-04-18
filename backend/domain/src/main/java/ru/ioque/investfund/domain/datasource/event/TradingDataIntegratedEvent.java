@@ -21,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegratedEvent implements DomainEvent {
+    UUID id;
     UUID datasourceId;
     Integer updatedCount;
     LocalDateTime dateTime;

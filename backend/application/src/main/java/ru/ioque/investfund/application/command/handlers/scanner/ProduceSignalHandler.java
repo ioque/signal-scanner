@@ -61,6 +61,7 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
                 scannerRepository.save(scanner);
                 newSignals.forEach(signal -> eventPublisher.publish(
                     SignalFoundEvent.builder()
+                        .id(uuidProvider.generate())
                         .isBuy(signal.isBuy())
                         .ticker(signal.getTicker())
                         .watermark(command.getWatermark())
@@ -70,6 +71,7 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
             });
         eventPublisher.publish(
             ScanningFinishedEvent.builder()
+                .id(uuidProvider.generate())
                 .datasourceId(command.getDatasourceId())
                 .watermark(command.getWatermark())
                 .dateTime(dateTimeProvider.nowDateTime())

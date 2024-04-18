@@ -1,10 +1,10 @@
-package ru.ioque.investfund.domain.scanner.value.algorithms;
+package ru.ioque.investfund.domain.scanner.algorithms;
 
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.util.Map;
 import java.util.function.Function;

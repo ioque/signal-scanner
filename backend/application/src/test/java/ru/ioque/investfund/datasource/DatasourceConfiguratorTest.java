@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@DisplayName("DATASOURCE CONFIGURATOR TEST")
 public class DatasourceConfiguratorTest extends BaseTest {
     @Test
     @DisplayName("""

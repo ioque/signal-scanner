@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.value.algorithms;
+package ru.ioque.investfund.domain.scanner.algorithms;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -9,7 +9,7 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.SignalSign;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

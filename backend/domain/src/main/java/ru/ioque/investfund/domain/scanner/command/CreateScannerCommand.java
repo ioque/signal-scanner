@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 
 import java.util.List;
 import java.util.UUID;

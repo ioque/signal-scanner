@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.value.algorithms.properties;
+package ru.ioque.investfund.domain.scanner.algorithms.properties;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.value.algorithms.AlgorithmType;
+import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
 
 @Getter
 @Builder

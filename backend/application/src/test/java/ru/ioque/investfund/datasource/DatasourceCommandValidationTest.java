@@ -18,6 +18,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@DisplayName("DATASOURCE COMMAND VALIDATION TEST")
 public class DatasourceCommandValidationTest extends BaseTest {
     @Test
     @DisplayName("""

@@ -21,9 +21,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalFoundEvent implements DomainEvent {
-    //UUID id;
+    UUID id;
     String ticker;
-    Boolean isBuy;
+    boolean isBuy;
     UUID datasourceId;
     LocalDateTime watermark;
 }

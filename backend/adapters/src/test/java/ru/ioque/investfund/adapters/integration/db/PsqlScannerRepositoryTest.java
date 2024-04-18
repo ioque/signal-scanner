@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.PrefCommonProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralFuturesProperties;
-import ru.ioque.investfund.domain.scanner.value.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
