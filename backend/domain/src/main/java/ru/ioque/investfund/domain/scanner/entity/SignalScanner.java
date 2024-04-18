@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
@@ -28,8 +29,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain {
     String description;
-    UUID datasourceId;
-    List<String> tickers;
+    List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
@@ -40,19 +40,17 @@ public class SignalScanner extends Domain {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        UUID datasourceId,
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
-        List<String> tickers,
+        List<InstrumentId> instrumentIds,
         List<Signal> signals
     ) {
         super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
-        this.datasourceId = datasourceId;
         this.properties = properties;
         this.lastExecutionDateTime = lastExecutionDateTime;
-        this.tickers = tickers;
+        this.instrumentIds = instrumentIds;
         this.signals = signals;
     }
 
@@ -61,8 +59,7 @@ public class SignalScanner extends Domain {
             .id(id)
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
             .description(command.getDescription())
-            .datasourceId(command.getDatasourceId())
-            .tickers(command.getTickers())
+            .instrumentIds(command.getInstrumentIds())
             .properties(command.getProperties())
             .signals(new ArrayList<>())
             .lastExecutionDateTime(null)
@@ -75,8 +72,7 @@ public class SignalScanner extends Domain {
         }
         this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
         this.description = command.getDescription();
-        this.datasourceId = command.getScannerId();
-        this.tickers = command.getTickers();
+        this.instrumentIds = command.getInstrumentIds();
         this.properties = command.getProperties();
     }
 

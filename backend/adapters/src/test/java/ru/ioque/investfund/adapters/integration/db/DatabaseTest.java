@@ -17,6 +17,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
@@ -135,8 +136,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
 
     protected Index createComp() {
         return Index.builder()
-            .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
+            .id(InstrumentId.of("COMP", NASDAQ_DATASOURCE_ID))
             .ticker("COMP")
             .name("NASDAQ Composite Index")
             .shortName("NASDAQ Composite Index")
@@ -146,8 +146,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
 
     protected Stock createApplp() {
         return Stock.builder()
-            .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
+            .id(InstrumentId.of("APPLP", NASDAQ_DATASOURCE_ID))
             .ticker("APPLP")
             .name("Apple Inc. Pref Stock")
             .shortName("ApplePref")
@@ -161,8 +160,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
 
     protected Stock createAppl() {
         return Stock.builder()
-            .id(uuidProvider.generate())
-            .datasourceId(NASDAQ_DATASOURCE_ID)
+            .id(InstrumentId.of("APPL", NASDAQ_DATASOURCE_ID))
             .ticker("APPL")
             .name("Apple Inc. Common Stock")
             .shortName("AppleCommon")
@@ -177,8 +175,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Stock createTgkn() {
         return Stock
             .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
+            .id(InstrumentId.of("TGKN", MOEX_DATASOURCE_ID))
             .ticker("TGKN")
             .shortName("TGK НННН")
             .name("fasfasfasfasf")
@@ -192,8 +189,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Stock createTgkb() {
         return Stock
             .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
+            .id(InstrumentId.of("TGKB", MOEX_DATASOURCE_ID))
             .ticker("TGKB")
             .shortName("ТГК ББББ")
             .name("fasfasfasfasf")
@@ -207,8 +203,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Index createImoex() {
         return Index
             .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
+            .id(InstrumentId.of("IMOEX", MOEX_DATASOURCE_ID))
             .ticker("IMOEX")
             .shortName("ао Система")
             .name("fasfasfasfasf")
@@ -218,8 +213,7 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected Futures createBrf4() {
         return Futures
             .builder()
-            .id(uuidProvider.generate())
-            .datasourceId(MOEX_DATASOURCE_ID)
+            .id(InstrumentId.of("BRF4", MOEX_DATASOURCE_ID))
             .ticker("BRF4")
             .shortName("Фьючерс Брент")
             .name("Фьючерс Брент")

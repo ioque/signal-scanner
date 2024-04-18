@@ -4,11 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,7 +27,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Сигнал зафиксирован.
         """)
     void testCase1() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -46,7 +47,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Сигнал не зафиксирован.
         """)
     void testCase2() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initNegativeDeals(datasourceId);
@@ -65,7 +66,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T3. С последнего запуска прошло меньше 24 часов, сканер не запущен.
         """)
     void testCase3() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -86,7 +87,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T4. С последнего запуска прошло 24 часа, сканер запущен.
         """)
     void testCase4() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -109,20 +110,20 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигнал зафиксирован.
         """)
     void testCase5() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(new InstrumentId(TATN, datasourceId), "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(new InstrumentId(TATN, datasourceId), "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
         runWorkPipeline(datasourceId);
 
-        assertEquals(1, scannerRepository().findAllBy(getDatasourceId()).get(0).getSignals().size());
+        assertEquals(1, scannerRepository().findAll().get(0).getSignals().size());
     }
 
     @Test
@@ -132,14 +133,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase6() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 3L, "13:45:00", 280.1D, 136926D, 1)
         );
         initScanner(datasourceId);
 
@@ -157,13 +158,13 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase7() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D)
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-21", 80D, 80D, 10D)
         );
         initScanner(datasourceId);
 
@@ -181,13 +182,13 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase8() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1)
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 1L,"10:00:00", 78D, 78000D, 1),
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 2L,"12:00:00", 96D, 96000D, 1)
         );
         initScanner(datasourceId);
 
@@ -205,14 +206,14 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId), "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId), "2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(new InstrumentId(TATN, datasourceId),"2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
@@ -223,13 +224,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
     }
 
-    private void initScanner(UUID datasourceId) {
+    private void initScanner(DatasourceId datasourceId) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Корреляция сектора с фьючерсом.")
-                .datasourceId(datasourceId)
-                .tickers(getTickers(datasourceId))
+                .instrumentIds(getTickers(datasourceId).stream().map(ticker -> new InstrumentId(ticker, datasourceId)).toList())
                 .properties(
                     SectoralFuturesProperties.builder()
                         .futuresOvernightScale(futuresOvernightScale)
@@ -241,47 +241,47 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initPositiveDealResults(UUID datasourceId) {
+    private void initPositiveDealResults(DatasourceId datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
-                buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 80D, 10D),
-                buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-                buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+                buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId), "2023-12-21", 80D, 80D, 10D),
+                buildDealResultBy(new InstrumentId(TATN, datasourceId),"2023-12-20", 251D, 252D, 1D, 1D),
+                buildDealResultBy(new InstrumentId(TATN, datasourceId),"2023-12-21", 252D, 253D, 1D, 1D)
             )
         );
     }
 
-    private void initNegativeDealResults(UUID datasourceId) {
+    private void initNegativeDealResults(DatasourceId datasourceId) {
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 74D, 10D),
-            buildDealResultBy(datasourceId, TATN, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(datasourceId, TATN, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(new InstrumentId(BRF4, datasourceId),"2023-12-21", 80D, 74D, 10D),
+            buildDealResultBy(new InstrumentId(TATN, datasourceId),"2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(new InstrumentId(TATN, datasourceId),"2023-12-21", 252D, 253D, 1D, 1D)
         );
     }
 
-    private void initNegativeDeals(UUID datasourceId) {
+    private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 73D, 73000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 72D, 73000D, 1),
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 1L,"10:00:00", 73D, 73000D, 1),
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 2L,"12:00:00", 72D, 73000D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 3L,"13:45:00", 280.1D, 136926D, 1)
         );
     }
 
-    private void initPositiveDeals(UUID datasourceId) {
+    private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1),
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 1L,"10:00:00", 78D, 78000D, 1),
+            buildContractBy(new InstrumentId(BRF4, datasourceId), 2L,"12:00:00", 96D, 96000D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(new InstrumentId(TATN, datasourceId), 3L,"13:45:00", 280.1D, 136926D, 1)
         );
     }
 
-    private void initInstruments(UUID datasourceId) {
+    private void initInstruments(DatasourceId datasourceId) {
         datasourceStorage()
             .initInstruments(
                 List.of(

@@ -7,11 +7,11 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 @Builder
 @ToString
@@ -19,9 +19,8 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HistoryValue implements Comparable<HistoryValue>, Serializable {
-    UUID datasourceId;
+    InstrumentId instrumentId;
     LocalDate tradeDate;
-    String ticker;
     Double openPrice;
     Double closePrice;
     Double lowPrice;
@@ -30,9 +29,8 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     Double value;
 
     public HistoryValue(
-        UUID datasourceId,
+        InstrumentId instrumentId,
         LocalDate tradeDate,
-        String ticker,
         Double openPrice,
         Double closePrice,
         Double lowPrice,
@@ -40,9 +38,8 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         Double waPrice,
         Double value
     ) {
-        setDatasourceId(datasourceId);
+        setInstrumentId(instrumentId);
         setTradeDate(tradeDate);
-        setTicker(ticker);
         setOpenPrice(openPrice);
         setClosePrice(closePrice);
         setLowPrice(lowPrice);
@@ -56,11 +53,11 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         return Objects.compare(getTradeDate(), historyValue.getTradeDate(), LocalDate::compareTo);
     }
 
-    private void setDatasourceId(UUID datasourceId) {
-        if(datasourceId == null) {
-            throw new DomainException("Не заполнен идентификатор источника данных.");
+    private void setInstrumentId(InstrumentId instrumentId) {
+        if(instrumentId == null) {
+            throw new DomainException("Не заполнен идентификатор инструмента.");
         }
-        this.datasourceId = datasourceId;
+        this.instrumentId = instrumentId;
     }
 
     private void setTradeDate(LocalDate tradeDate) {
@@ -68,13 +65,6 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
             throw new DomainException("Не заполнена дата.");
         }
         this.tradeDate = tradeDate;
-    }
-
-    private void setTicker(String ticker) {
-        if(ticker == null || ticker.isEmpty()) {
-            throw new DomainException("Не заполнен тикер.");
-        }
-        this.ticker = ticker;
     }
 
     private void setOpenPrice(Double openPrice) {

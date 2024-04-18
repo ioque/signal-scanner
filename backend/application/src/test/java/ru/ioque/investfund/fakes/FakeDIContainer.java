@@ -123,15 +123,13 @@ public class FakeDIContainer {
             validator,
             loggerProvider,
             uuidProvider,
-            scannerRepository,
-            datasourceRepository
+            scannerRepository
         );
         updateScannerProcessor = new UpdateScannerHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            scannerRepository,
-            datasourceRepository
+            scannerRepository
         );
         produceSignalProcessor = new ProduceSignalHandler(
             dateTimeProvider,

@@ -6,36 +6,33 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @ToString
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable, Comparable<IntradayValue> {
-    UUID datasourceId;
+    InstrumentId instrumentId;
     Long number;
     LocalDateTime dateTime;
-    String ticker;
     Double price;
     Double value;
 
     public IntradayValue(
-        UUID datasourceId,
+        InstrumentId instrumentId,
         Long number,
         LocalDateTime dateTime,
-        String ticker,
         Double price,
         Double value
     ) {
-        setDatasourceId(datasourceId);
+        setInstrumentId(instrumentId);
         setNumber(number);
         setDateTime(dateTime);
-        setTicker(ticker);
         setPrice(price);
         setValue(value);
     }
@@ -45,11 +42,11 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
         return Objects.compare(getNumber(), intradayValue.getNumber(), Long::compareTo);
     }
 
-    private void setDatasourceId(UUID datasourceId) {
-        if(datasourceId == null) {
-            throw new DomainException("Не заполнен идентификатор источника данных.");
+    private void setInstrumentId(InstrumentId instrumentId) {
+        if(instrumentId == null) {
+            throw new DomainException("Не заполнен идентификатор инструмента.");
         }
-        this.datasourceId = datasourceId;
+        this.instrumentId = instrumentId;
     }
 
     private void setNumber(Long number) {
@@ -67,13 +64,6 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
             throw new DomainException("Не заполнен время совершения сделки/заключение контракта/фиксации дельты.");
         }
         this.dateTime = dateTime;
-    }
-
-    private void setTicker(String ticker) {
-        if(ticker == null || ticker.isEmpty()) {
-            throw new DomainException("Не заполнен тикер.");
-        }
-        this.ticker = ticker;
     }
 
     private void setPrice(Double price) {

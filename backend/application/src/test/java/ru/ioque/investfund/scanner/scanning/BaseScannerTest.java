@@ -3,6 +3,7 @@ package ru.ioque.investfund.scanner.scanning;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -44,7 +45,7 @@ public class BaseScannerTest extends BaseTest {
 
     protected List<Signal> getSignals() {
         return scannerRepository()
-            .findAllBy(getDatasourceId())
+            .findAll()
             .stream()
             .map(SignalScanner::getSignals)
             .flatMap(Collection::stream)
@@ -89,6 +90,6 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected TradingSnapshot getSnapshotBy(String ticker) {
-        return tradingDataRepository().findAllBy(getDatasourceId(), List.of(ticker)).get(0);
+        return tradingDataRepository().findAllBy(List.of(new InstrumentId(ticker, getDatasourceId()))).get(0);
     }
 }

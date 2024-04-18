@@ -11,7 +11,6 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -19,7 +18,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class InstrumentResponse implements Serializable {
-    UUID id;
+    Long id;
     String name;
     String shortName;
     String ticker;

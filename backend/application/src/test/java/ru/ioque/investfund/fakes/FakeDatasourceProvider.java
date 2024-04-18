@@ -25,7 +25,7 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     ) {
         return new HistoryBatch(
             instrument.getTicker(),
-            datasourceStorage.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
+            datasourceStorage.getHistoryDataBy(instrument.getId()).stream().toList()
         );
     }
 
@@ -33,7 +33,7 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
             instrument.getTicker(),
-            datasourceStorage.getDealsByTicker(instrument.getTicker())
+            datasourceStorage.getDealsByTicker(instrument.getId())
         );
     }
 

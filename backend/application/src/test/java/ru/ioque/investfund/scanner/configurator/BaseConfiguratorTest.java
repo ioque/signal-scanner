@@ -6,6 +6,7 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -13,6 +14,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumePro
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,7 +43,8 @@ public class BaseConfiguratorTest extends BaseTest {
 
     private void prepareDatasource() {
         datasourceStorage().initInstruments(
-            List.of(imoex(),
+            List.of(
+                imoex(),
                 tgkb(),
                 tgkn(),
                 sber(),
@@ -51,7 +54,8 @@ public class BaseConfiguratorTest extends BaseTest {
                 lkoh(),
                 tatn(),
                 brf4(),
-                usdRub())
+                usdRub()
+            )
         );
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
@@ -77,8 +81,11 @@ public class BaseConfiguratorTest extends BaseTest {
         return CreateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(
+                Stream
+                    .of("TGKN", "TGKB", "IMOEX")
+                    .map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList()
+            )
             .properties(
                 AnomalyVolumeProperties.builder()
                     .indexTicker("IMOEX")
@@ -92,7 +99,11 @@ public class BaseConfiguratorTest extends BaseTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(
+                Stream
+                    .of("TGKN", "TGKB", "IMOEX")
+                    .map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList()
+            )
             .properties(
                 AnomalyVolumeProperties.builder()
                     .indexTicker("IMOEX")
@@ -114,8 +125,8 @@ public class BaseConfiguratorTest extends BaseTest {
         return "Не передан период работы сканера.";
     }
 
-    protected String tickersIsEmpty() {
-        return "Не передан список тикеров анализируемых инструментов.";
+    protected String instrumentIdsIsEmpty() {
+        return "Не передан список идентификаторов анализируемых инструментов.";
     }
 
     protected String workPeriodIsNegative() {

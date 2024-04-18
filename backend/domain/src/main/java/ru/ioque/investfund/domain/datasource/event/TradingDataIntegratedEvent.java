@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainEvent;
+import ru.ioque.investfund.domain.datasource.entity.indetity.DatasourceId;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegratedEvent implements DomainEvent {
     UUID id;
-    UUID datasourceId;
+    DatasourceId datasourceId;
     Integer updatedCount;
     LocalDateTime dateTime;
 }

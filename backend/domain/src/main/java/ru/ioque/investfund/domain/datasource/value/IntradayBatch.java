@@ -13,7 +13,7 @@ public class IntradayBatch {
     public IntradayBatch(String ticker, List<IntradayValue> values) {
         this.ticker = ticker;
         this.values = values;
-        if (values.stream().anyMatch(row -> !row.getTicker().equals(ticker))) {
+        if (values.stream().anyMatch(row -> !row.getInstrumentId().getTicker().equals(ticker))) {
             throw new IllegalArgumentException("Intraday batch must contain values with same ticker.");
         }
     }

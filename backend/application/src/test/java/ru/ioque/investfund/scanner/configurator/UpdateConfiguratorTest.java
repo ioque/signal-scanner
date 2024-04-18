@@ -4,9 +4,11 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,21 +39,27 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         Поступила команда на обновление сканера, изменился список тикеров: TGKN, IMOEX.
         """)
     void testCase2() {
+        List<InstrumentId> firstIds = Stream
+            .of("TGKN", "TGKB", "IMOEX").map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList();
         commandBus().execute(
             buildCreateAnomalyVolumeScannerWith()
-                .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+                .instrumentIds(firstIds)
                 .build()
         );
         final UUID scannerId = getFirstScannerId();
 
+        List<InstrumentId> secondIds = Stream
+            .of("TGKN", "IMOEX")
+            .map(ticker -> new InstrumentId(ticker, getDatasourceId()))
+            .toList();
         commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(scannerId)
-                .tickers(List.of("TGKN", "IMOEX"))
+                .instrumentIds(secondIds)
                 .build()
         );
 
-        assertTrue(List.of("TGKN", "IMOEX").containsAll(getScanner(scannerId).getTickers()));
+        assertTrue(secondIds.containsAll(getScanner(scannerId).getInstrumentIds()));
     }
 
     @Test
@@ -166,12 +174,12 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .tickers(null)
+                    .instrumentIds(null)
                     .build()
             )
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 
     @Test
@@ -186,11 +194,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .tickers(List.of())
+                    .instrumentIds(List.of())
                     .build()
             )
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 }

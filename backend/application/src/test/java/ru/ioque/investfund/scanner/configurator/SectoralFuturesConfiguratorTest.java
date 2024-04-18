@@ -2,11 +2,12 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL CORRELATION SCANNER")
 public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
@@ -280,8 +281,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         return CreateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(Stream.of("TGKN", "TGKB", "IMOEX").map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList())
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
@@ -296,7 +296,8 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(Stream
+                .of("TGKN", "TGKB", "IMOEX").map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList())
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)

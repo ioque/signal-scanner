@@ -2,11 +2,12 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.entity.indetity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL RETARD SCANNER")
 public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
@@ -204,8 +205,8 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
         return CreateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(Stream
+                .of("TGKN", "TGKB", "IMOEX").map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList())
             .properties(
                 SectoralRetardProperties.builder()
                     .historyScale(0.015)
@@ -219,7 +220,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(Stream.of("TGKN", "TGKB", "IMOEX").map(ticker -> new InstrumentId(ticker, getDatasourceId())).toList())
             .properties(
                 SectoralRetardProperties.builder()
                     .historyScale(0.015)
