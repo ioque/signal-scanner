@@ -35,4 +35,8 @@ public class Signal {
     public boolean sameByTicker(Signal signal) {
         return signal.getTicker().equals(this.getTicker());
     }
+
+    public boolean isSell() {
+        return !isBuy;
+    }
 }

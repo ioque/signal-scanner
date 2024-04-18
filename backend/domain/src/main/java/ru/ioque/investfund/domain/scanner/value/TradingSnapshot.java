@@ -46,9 +46,9 @@ public class TradingSnapshot {
         setTodayValueSeries(todayValueSeries);
     }
 
-    public Optional<Double> getHistoryMedianValue() {
-        if (valueSeries.size() == 1) return Optional.of(valueSeries.get(0).getValue());
+    public Optional<Double> getHistoryMedianValue(int period) {
         if (valueSeries.isEmpty()) return Optional.empty();
+        if (valueSeries.size() < period) return Optional.empty();
         var sortedValues = valueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sorted().toArray();
         var n = sortedValues.length;
         if (n % 2 != 0)

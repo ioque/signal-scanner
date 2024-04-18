@@ -35,8 +35,9 @@ public class BaseScannerTest extends BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected void assertSignals(List<Signal> signals, int allSize, int buySize, int sellSize) {
+    protected void assertSignals(List<Signal> signals, int allSize, int openSize, int buySize, int sellSize) {
         assertEquals(allSize, signals.size());
+        assertEquals(openSize, signals.stream().filter(Signal::isOpen).count());
         assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());
         assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
     }

@@ -46,7 +46,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
-            final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue();
+            final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue(historyPeriod);
             final Optional<Double> currentValue = tradingSnapshot.getTodayValue();
             if (medianValue.isEmpty() ||
                 currentValue.isEmpty() ||
@@ -65,6 +65,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
+                        .isOpen(true)
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
@@ -76,6 +77,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
+                        .isOpen(true)
                         .isBuy(false)
                         .dateTime(watermark)
                         .summary(summary)

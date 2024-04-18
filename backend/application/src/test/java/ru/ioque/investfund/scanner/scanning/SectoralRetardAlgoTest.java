@@ -34,7 +34,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFalse(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -56,7 +56,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1, 1,1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -79,7 +79,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1, 1,1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -102,7 +102,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1, 1,1, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -124,7 +124,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
@@ -144,7 +144,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));

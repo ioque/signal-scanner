@@ -40,6 +40,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             );
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
+                    .isOpen(true)
                     .isBuy(true)
                     .summary(summary)
                     .dateTime(watermark)

@@ -32,7 +32,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1, 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -57,7 +57,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -78,7 +78,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1, 1, 1, 0);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -99,7 +99,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -128,7 +128,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -157,7 +157,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -185,7 +185,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -213,7 +213,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -240,7 +240,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -267,7 +267,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -291,7 +291,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -314,7 +314,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -338,7 +338,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -361,7 +361,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -381,7 +381,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0, 0, 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }

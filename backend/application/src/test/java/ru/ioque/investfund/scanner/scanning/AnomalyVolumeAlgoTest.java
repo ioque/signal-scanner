@@ -35,7 +35,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 2, 2, 0);
+        assertSignals(getSignals(), 2, 2,2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
         assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
@@ -57,7 +57,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 2, 2, 0);
+        assertSignals(getSignals(), 2, 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
         assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
@@ -79,7 +79,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 2, 2, 0);
+        assertSignals(getSignals(), 2, 2, 2, 0);
         assertFinInstrument(getTgkn(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkb(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
         assertFinInstrument(getImoex(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
@@ -104,7 +104,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 0, 1);
+        assertSignals(getSignals(), 2, 1, 1, 1);
         assertFinInstrument(getTgkn(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
         assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -136,7 +136,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), null, null, null, 1000.0, 100.0, 99.0, null);
         assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -165,7 +165,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), null, null, null, null, null, null, null);
         assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -198,7 +198,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
         assertFinInstrument(getImoex(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -228,7 +228,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, null, null, null);
         assertFinInstrument(getImoex(), null, null, null, 1_500_000.0, 3000.0, 2900.0, null);
     }
@@ -260,7 +260,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
         assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
@@ -290,7 +290,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertEquals(0, getSignals().size());
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0, 0,0, 0);
         assertFinInstrument(getTgkn(), null, null, null, 1000D, 100.D, 99.D, null);
         assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
@@ -300,7 +300,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         T11. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Исторические данные проинтегрированы за один день, внутридневные данные проинтегрированы, объем превышает объем за предыдущий день.
         Исторические и дневные данные по индексу проинтегрированы.
-        Запускается сканер. Ошибок нет, сигнал есть.
+        Запускается сканер. Ошибок нет, сигнала нет, недостаточно данных для расчета медианы (меньше historyPeriod).
         """)
     void testCase19() {
         final UUID datasourceId = getDatasourceId();
@@ -323,8 +323,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
-        assertFinInstrument(getTgkn(), 100D, 103D, 13000D, 1000D, 100.D, null, true);
+        assertSignals(getSignals(), 0, 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 103D, 13000D, null, 100.D, null, true);
         assertFinInstrument(getImoex(), 2900D, 3000D, 3_000_000D, 1_000_000D, 2800D, 2800D, true);
     }
 
@@ -354,9 +354,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
-        assertFinInstrument(getTgkn(), 100D, 100D, 13000D, 1000D, 100.D, null, false);
-        assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, 1_000_000D, 2800D, null, true);
+        assertSignals(getSignals(), 0, 0, 0, 0);
+        assertFinInstrument(getTgkn(), 100D, 100D, 13000D, null, 100.D, null, false);
+        assertFinInstrument(getImoex(), 2800D, 3000D, 3_000_000D, null, 2800D, null, true);
     }
 
     public void assertFinInstrument(
@@ -372,7 +372,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         assertEquals(openPrice, tradingSnapshot.getTodayOpenPrice().orElse(null));
         assertEquals(lastPrice, tradingSnapshot.getTodayLastPrice().orElse(null));
         assertEquals(todayValue, tradingSnapshot.getTodayValue().orElse(null));
-        assertEquals(historyMedianValue, tradingSnapshot.getHistoryMedianValue().orElse(null));
+        assertEquals(historyMedianValue, tradingSnapshot.getHistoryMedianValue(HISTORY_PERIOD).orElse(null));
         assertEquals(prevClosePrice, tradingSnapshot.getPrevClosePrice().orElse(null));
         assertEquals(prevPrevClosePrice, tradingSnapshot.getPrevPrevClosePrice().orElse(null));
         assertEquals(isRiseToday, tradingSnapshot.isRiseToday().orElse(null));
@@ -466,6 +466,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     }
 
     private void initScanner(UUID datasourceId, String... tickers) {
+
+
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
@@ -475,11 +477,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 .properties(
                     AnomalyVolumeProperties.builder()
                         .indexTicker("IMOEX")
-                        .historyPeriod(180)
+                        .historyPeriod(HISTORY_PERIOD)
                         .scaleCoefficient(1.5)
                         .build()
                 )
                 .build()
         );
     }
+
+    private static final int HISTORY_PERIOD = 2;
 }

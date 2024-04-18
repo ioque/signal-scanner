@@ -114,24 +114,17 @@ public class SignalScanner extends Domain {
     }
 
     private void registerNewSignals(List<Signal> newSignals) {
-        List<Signal> oldSignals = List.copyOf(this.signals);
-        List<Signal> finalSignalList = new ArrayList<>(newSignals.stream().filter(Signal::isBuy).toList());
-        newSignals
-            .stream()
-            .filter(newSignal -> !newSignal.isBuy())
-            .forEach(newSignal -> {
-                    if (oldSignals.stream().anyMatch(oldSignal -> newSignal.sameByTicker(oldSignal)
-                        && oldSignal.isBuy())) {
-                        finalSignalList.add(newSignal);
-                    }
-                }
-            );
-        oldSignals.forEach(oldSignal -> {
-            if (newSignals.stream().noneMatch(newSignal -> newSignal.sameByTicker(oldSignal))) {
-                finalSignalList.add(oldSignal);
-            }
-        });
-        signals.clear();
-        signals.addAll(finalSignalList);
+        newSignals.forEach(this::registerNewSignal);
+    }
+
+    private void registerNewSignal(Signal newSignal) {
+        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
+        if (signalSameByTicker.isPresent() && newSignal.isSell()) {
+            signals.add(newSignal);
+        }
+        if (newSignal.isBuy()) {
+            signals.add(newSignal);
+        }
+        signalSameByTicker.ifPresent(Signal::close);
     }
 }
