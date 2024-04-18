@@ -31,7 +31,6 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     @Override
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
-            instrument.getTicker(),
             datasourceStorage.getDealsByTicker(instrument.getTicker())
         );
     }

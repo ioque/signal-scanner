@@ -56,7 +56,6 @@ public class HttpDatasourceProvider implements DatasourceProvider {
     @SneakyThrows
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
-            instrument.getTicker(),
             moexClient
                 .fetchIntradayValues(
                     datasource.getUrl(),
