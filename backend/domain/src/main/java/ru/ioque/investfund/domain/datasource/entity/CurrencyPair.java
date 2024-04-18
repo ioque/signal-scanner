@@ -6,9 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
@@ -20,7 +20,7 @@ public class CurrencyPair extends Instrument {
 
     @Builder
     public CurrencyPair(
-        UUID id,
+        InstrumentId id,
         String ticker,
         String shortName,
         String name,

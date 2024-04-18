@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
+import ru.ioque.investfund.adapters.datasource.client.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
@@ -30,7 +31,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
             moexClient
                 .fetchInstruments(datasource.getUrl())
                 .stream()
-                .map(dto -> dto.toDomain(uuidProvider.generate()))
+                .map(InstrumentDto::toDomain)
                 .toList()
         );
     }

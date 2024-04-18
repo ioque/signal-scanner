@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
-import java.util.UUID;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,5 +27,5 @@ public abstract class InstrumentDto {
     String shortName;
     String name;
 
-    public abstract Instrument toDomain(UUID id);
+    public abstract Instrument toDomain();
 }

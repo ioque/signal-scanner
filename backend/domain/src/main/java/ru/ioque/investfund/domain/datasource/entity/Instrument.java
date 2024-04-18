@@ -6,21 +6,21 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-@Getter(AccessLevel.PUBLIC)
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@ToString
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Instrument extends Domain {
+public class Instrument {
+    InstrumentId id;
     String ticker;
     String shortName;
     String name;
@@ -32,7 +32,7 @@ public class Instrument extends Domain {
     Long lastTradingNumber;
 
     public Instrument(
-        UUID id,
+        InstrumentId id,
         String ticker,
         String shortName,
         String name,
@@ -40,7 +40,7 @@ public class Instrument extends Domain {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id);
+        setId(id);
         setTicker(ticker);
         setShortName(shortName);
         setName(name);
@@ -92,6 +92,14 @@ public class Instrument extends Domain {
     private void setLastTradingNumber(Long lastTradingNumber) {
         this.lastTradingNumber = lastTradingNumber;
     }
+
+    private void setId(InstrumentId id) {
+        if (id == null) {
+            throw new DomainException("Не заполнен тикер инструмента.");
+        }
+        this.id = id;
+    }
+
 
     private void setTicker(String ticker) {
         if (ticker == null || ticker.isBlank()) {

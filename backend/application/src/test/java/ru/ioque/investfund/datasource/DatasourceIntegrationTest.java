@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
 
 import java.time.LocalDate;
@@ -108,7 +109,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         datasourceStorage().initInstruments(List.of(
             afks(),
             Stock.builder()
-                .id(UUID.randomUUID())
+                .id(new InstrumentId("AFKS"))
                 .shortName("ао Система")
                 .name("АФК Система1")
                 .ticker("AFKS")

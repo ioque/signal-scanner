@@ -6,9 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
@@ -23,7 +23,7 @@ public class Futures extends Instrument {
 
     @Builder
     public Futures(
-        UUID id,
+        InstrumentId id,
         String ticker,
         String shortName,
         String name,

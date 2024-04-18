@@ -12,9 +12,9 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -31,7 +31,7 @@ public class StockEntity extends InstrumentEntity {
 
     @Builder
     public StockEntity(
-        UUID id,
+        Long id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
@@ -54,7 +54,7 @@ public class StockEntity extends InstrumentEntity {
     @Override
     public Instrument toDomain() {
         return Stock.builder()
-            .id(this.getId())
+            .id(new InstrumentId(this.getTicker()))
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())
@@ -70,7 +70,6 @@ public class StockEntity extends InstrumentEntity {
 
     public static InstrumentEntity from(Stock domain) {
         return StockEntity.builder()
-            .id(domain.getId())
             .ticker(domain.getTicker())
             .name(domain.getName())
             .shortName(domain.getShortName())

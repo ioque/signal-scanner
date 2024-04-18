@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
@@ -363,7 +364,7 @@ public class BaseTest {
     protected Index imoex() {
         return Index
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("IMOEX"))
             .ticker("IMOEX")
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
@@ -375,7 +376,7 @@ public class BaseTest {
     protected Stock afks() {
         return Stock
             .builder()
-            .id(fakeDIContainer.getUuidProvider().generate())
+            .id(new InstrumentId("IMOEX"))
             .shortName("ао Система")
             .name("АФК Система")
             .ticker("AFKS")
@@ -389,7 +390,7 @@ public class BaseTest {
     protected Stock sberP() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("SBERP"))
             .ticker("SBERP")
             .shortName("Сбер п")
             .name("Сбербанк П")
@@ -403,7 +404,7 @@ public class BaseTest {
     protected Stock sber() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("SBER"))
             .ticker("SBER")
             .shortName("Сбер")
             .name("Сбербанк")
@@ -417,7 +418,7 @@ public class BaseTest {
     protected Stock sibn() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("SIBN"))
             .ticker("SIBN")
             .shortName("Газпромнефть")
             .name("Газпромнефть")
@@ -431,7 +432,7 @@ public class BaseTest {
     protected Futures brf4() {
         return Futures
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("BRF4"))
             .ticker("BRF4")
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
@@ -446,7 +447,7 @@ public class BaseTest {
     protected Stock lkoh() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("LKOH"))
             .ticker("LKOH")
             .shortName("Лукойл")
             .name("Лукойл")
@@ -460,7 +461,7 @@ public class BaseTest {
     protected Stock tatn() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("TATN"))
             .ticker("TATN")
             .shortName("Татнефть")
             .name("Татнефть")
@@ -471,7 +472,7 @@ public class BaseTest {
     protected Stock rosn() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("ROSN"))
             .ticker("ROSN")
             .shortName("Роснефть")
             .name("Роснефть")
@@ -482,7 +483,7 @@ public class BaseTest {
     protected CurrencyPair usdRub() {
         return CurrencyPair
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("USD000UTSTOM"))
             .ticker("USD000UTSTOM")
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
@@ -494,7 +495,7 @@ public class BaseTest {
     protected Stock tgkb() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("TGKB"))
             .name("TGKB")
             .ticker("TGKB")
             .shortName("TGKB")
@@ -505,7 +506,7 @@ public class BaseTest {
     protected Stock tgkn() {
         return Stock
             .builder()
-            .id(UUID.randomUUID())
+            .id(new InstrumentId("TGKN"))
             .name("TGKN")
             .ticker("TGKN")
             .shortName("TGKN")

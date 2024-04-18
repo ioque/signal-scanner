@@ -22,6 +22,7 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
@@ -235,7 +236,7 @@ public class HttpDatasourceProviderTest {
 
     private Instrument instrument() {
         return Stock.builder()
-            .id(INSTRUMENT_ID)
+            .id(new InstrumentId(INSTRUMENT_TICKER))
             .ticker(INSTRUMENT_TICKER)
             .name("name")
             .shortName("name")

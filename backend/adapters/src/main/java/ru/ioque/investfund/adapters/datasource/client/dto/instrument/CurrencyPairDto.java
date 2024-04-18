@@ -9,8 +9,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-
-import java.util.UUID;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 @Getter
 @NoArgsConstructor
@@ -29,9 +28,9 @@ public class CurrencyPairDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain(UUID id) {
+    public Instrument toDomain() {
         return CurrencyPair.builder()
-            .id(id)
+            .id(new InstrumentId(getTicker()))
             .faceUnit(faceUnit)
             .lotSize(lotSize)
             .ticker(getTicker())
