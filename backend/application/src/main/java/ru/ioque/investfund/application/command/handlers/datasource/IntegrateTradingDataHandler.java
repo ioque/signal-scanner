@@ -50,7 +50,7 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
     }
 
     @Override
-    protected void handleFor(IntegrateTradingDataCommand command) {
+    protected void businessProcess(IntegrateTradingDataCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
             final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);

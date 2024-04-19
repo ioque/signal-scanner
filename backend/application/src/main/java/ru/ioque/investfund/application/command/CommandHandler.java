@@ -17,9 +17,7 @@ public abstract class CommandHandler<C> {
     protected Validator validator;
     protected LoggerProvider loggerProvider;
 
-    protected abstract void handleFor(C command);
-
-    public void handle(C command) {
+    public void handleFor(C command) {
         loggerProvider.log(new InfoLog(
             dateTimeProvider.nowDateTime(),
             String.format("Получена команда %s", command)
@@ -28,8 +26,10 @@ public abstract class CommandHandler<C> {
         execute(command);
     }
 
+    protected abstract void businessProcess(C command);
+
     private void validateCommand(C command) {
-        Set<ConstraintViolation<C>> violations = validator.validate(command);
+        final Set<ConstraintViolation<C>> violations = validator.validate(command);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
@@ -37,18 +37,18 @@ public abstract class CommandHandler<C> {
 
     private void execute(C command) {
         try {
-            long time = timeMeterWrapper(() -> handleFor(command));
+            final long time = timeMeterWrapper(() -> businessProcess(command));
             loggerProvider.log(
                 new InfoLog(
                     dateTimeProvider.nowDateTime(),
-                    String.format("Комада %s выполнена, время выполнения составило %s мс", command, time)
+                    String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, time)
                 )
             );
         } catch (Exception e) {
             loggerProvider.log(
                 new ErrorLog(
                     dateTimeProvider.nowDateTime(),
-                    String.format("Выполнение команды %s завершилось с ошибкой, текст ошибки: %s", command, e.getMessage()),
+                    String.format("При обработке команды %s произошла ошибка: %s", command, e.getMessage()),
                     e)
             );
             throw e;
@@ -56,7 +56,7 @@ public abstract class CommandHandler<C> {
     }
 
     private long timeMeterWrapper(Runnable runnable) {
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
         runnable.run();
         return System.currentTimeMillis() - start;
     }

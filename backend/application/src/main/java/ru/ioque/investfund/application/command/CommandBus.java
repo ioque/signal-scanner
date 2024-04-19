@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Component
 public class CommandBus {
-    Map<Class<? extends Command>, CommandHandler> handlers = new HashMap<>();
+    private final Map<Class<? extends Command>, CommandHandler> handlers = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public CommandBus(List<CommandHandler<? extends Command>> commandHandlers) {
@@ -24,6 +24,6 @@ public class CommandBus {
 
     @SuppressWarnings("unchecked")
     public void execute(Command command) {
-        handlers.get(command.getClass()).handle(command);
+        handlers.get(command.getClass()).handleFor(command);
     }
 }

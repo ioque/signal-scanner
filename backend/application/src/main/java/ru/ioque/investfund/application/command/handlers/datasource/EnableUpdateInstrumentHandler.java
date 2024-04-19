@@ -27,7 +27,7 @@ public class EnableUpdateInstrumentHandler extends CommandHandler<EnableUpdateIn
     }
 
     @Override
-    protected void handleFor(EnableUpdateInstrumentsCommand command) {
+    protected void businessProcess(EnableUpdateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.enableUpdate(command.getInstrumentIds());
         datasourceRepository.save(datasource);

@@ -46,7 +46,7 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
     }
 
     @Override
-    protected void handleFor(ProduceSignalCommand command) {
+    protected void businessProcess(ProduceSignalCommand command) {
         scannerRepository
             .findAllBy(command.getDatasourceId())
             .stream()

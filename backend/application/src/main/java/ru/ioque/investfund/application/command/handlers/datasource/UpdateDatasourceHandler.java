@@ -27,7 +27,7 @@ public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceComm
     }
 
     @Override
-    protected void handleFor(UpdateDatasourceCommand command) {
+    protected void businessProcess(UpdateDatasourceCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getId());
         datasource.update(command);
         datasourceRepository.save(datasource);

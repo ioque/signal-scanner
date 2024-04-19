@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Component
 public class EventBus {
-    Map<Class<? extends DomainEvent>, EventHandler> handlers = new HashMap<>();
+    private final Map<Class<? extends DomainEvent>, EventHandler> handlers = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public EventBus(List<EventHandler<? extends DomainEvent>> handlers) {
@@ -24,6 +24,6 @@ public class EventBus {
 
     @SuppressWarnings("unchecked")
     public void process(DomainEvent event) {
-        handlers.get(event.getClass()).handle(event);
+        handlers.get(event.getClass()).handleFor(event);
     }
 }

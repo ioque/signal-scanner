@@ -31,7 +31,7 @@ public class IntegrateInstrumentsHandler extends CommandHandler<IntegrateInstrum
     }
 
     @Override
-    protected void handleFor(IntegrateInstrumentsCommand command) {
+    protected void businessProcess(IntegrateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasourceProvider.fetchInstruments(datasource).getUniqueValues().forEach(datasource::addInstrument);
         datasourceRepository.save(datasource);

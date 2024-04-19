@@ -33,7 +33,7 @@ public class UpdateScannerHandler extends CommandHandler<UpdateScannerCommand> {
     }
 
     @Override
-    protected void handleFor(UpdateScannerCommand command) {
+    protected void businessProcess(UpdateScannerCommand command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Datasource datasource = datasourceRepository.getById(scanner.getDatasourceId());
         datasource.checkExistsInstrument(command.getInstrumentIds());

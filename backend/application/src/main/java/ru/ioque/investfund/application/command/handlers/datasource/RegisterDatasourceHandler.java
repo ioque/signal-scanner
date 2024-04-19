@@ -32,7 +32,7 @@ public class RegisterDatasourceHandler extends CommandHandler<CreateDatasourceCo
     }
 
     @Override
-    protected void handleFor(CreateDatasourceCommand command) {
+    protected void businessProcess(CreateDatasourceCommand command) {
         datasourceRepository.save(Datasource.of(DatasourceId.from(uuidProvider.generate()), command));
     }
 }

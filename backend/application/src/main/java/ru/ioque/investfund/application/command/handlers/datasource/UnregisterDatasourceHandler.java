@@ -27,7 +27,7 @@ public class UnregisterDatasourceHandler extends CommandHandler<UnregisterDataso
     }
 
     @Override
-    protected void handleFor(UnregisterDatasourceCommand command) {
+    protected void businessProcess(UnregisterDatasourceCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasourceRepository.remove(datasource);
     }
