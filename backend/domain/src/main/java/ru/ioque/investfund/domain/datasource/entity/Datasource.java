@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -17,11 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Datasource {
-    final DatasourceId id;
+public class Datasource extends Domain<DatasourceId> {
     String name;
     String url;
     String description;
@@ -35,7 +35,7 @@ public class Datasource {
         String description,
         List<Instrument> instruments
     ) {
-        this.id = id;
+        super(id);
         this.name = name;
         this.url = url;
         this.description = description;

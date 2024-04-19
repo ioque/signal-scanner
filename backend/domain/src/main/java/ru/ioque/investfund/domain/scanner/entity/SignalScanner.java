@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
@@ -23,13 +24,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalScanner {
-    ScannerId id;
+public class SignalScanner extends Domain<ScannerId> {
     String description;
-    DatasourceId datasourceId;
+    final DatasourceId datasourceId;
     List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
@@ -47,7 +47,7 @@ public class SignalScanner {
         List<InstrumentId> instrumentIds,
         List<Signal> signals
     ) {
-        this.id = id;
+        super(id);
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;

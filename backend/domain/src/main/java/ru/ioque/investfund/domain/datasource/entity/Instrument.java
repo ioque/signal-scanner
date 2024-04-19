@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
@@ -13,11 +14,10 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Instrument {
-    final InstrumentId id;
+public class Instrument extends Domain<InstrumentId> {
     final String shortName;
     final String name;
     Boolean updatable;
@@ -32,7 +32,7 @@ public class Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        this.id = id;
+        super(id);
         this.shortName = shortName;
         this.name = name;
         this.updatable = updatable;
