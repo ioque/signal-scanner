@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
-    String ticker;
+    InstrumentId instrumentId;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
@@ -29,7 +30,7 @@ public class TradingSnapshot {
     List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
 
     public TradingSnapshot(
-        String ticker,
+        InstrumentId instrumentId,
         List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
@@ -37,7 +38,7 @@ public class TradingSnapshot {
         List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
         List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
     ) {
-        setTicker(ticker);
+        setInstrumentId(instrumentId);
         setClosePriceSeries(closePriceSeries);
         setOpenPriceSeries(openPriceSeries);
         setValueSeries(valueSeries);
@@ -51,8 +52,9 @@ public class TradingSnapshot {
         if (valueSeries.size() < period) return Optional.empty();
         var sortedValues = valueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sorted().toArray();
         var n = sortedValues.length;
-        if (n % 2 != 0)
+        if (n % 2 != 0) {
             return Optional.of(sortedValues[(n / 2)]);
+        }
         return Optional.of((sortedValues[(n - 1) / 2] + sortedValues[(n / 2)]) / 2.0);
     }
 
@@ -88,7 +90,7 @@ public class TradingSnapshot {
         var prevClosePrice = getPrevClosePrice();
         var prevPrevClosePrice = getPrevPrevClosePrice();
         if (prevPrevClosePrice.isEmpty() || prevClosePrice.isEmpty()) return false;
-        return ((prevClosePrice.get() / prevPrevClosePrice.get()) - 1)  > scale;
+        return ((prevClosePrice.get() / prevPrevClosePrice.get()) - 1) > scale;
     }
 
     public boolean isRiseForToday(double scale) {
@@ -103,7 +105,8 @@ public class TradingSnapshot {
     }
 
     public Optional<Double> getPrevPrevClosePrice() {
-        final Optional<LocalDate> lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getTime).map(LocalDate.class::cast);
+        final Optional<LocalDate> lastTradingDate = closePriceSeries.stream().max(TimeSeriesValue::compareTo).map(
+            TimeSeriesValue::getTime).map(LocalDate.class::cast);
         if (lastTradingDate.isEmpty()) return Optional.empty();
         final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate.get());
         return closePriceSeries.stream()
@@ -129,11 +132,15 @@ public class TradingSnapshot {
     }
 
     public boolean isPref() {
-        return ticker.length() == 5;
+        return instrumentId.getTicker().getValue().length() == 5;
     }
 
     public boolean isSimplePair(TradingSnapshot tradingSnapshot) {
-        return ticker.substring(0, ticker.length() - 1).equals(tradingSnapshot.getTicker());
+        return instrumentId
+            .getTicker()
+            .getValue()
+            .substring(0, instrumentId.getTicker().getValue().length() - 1)
+            .equals(tradingSnapshot.getInstrumentId().getTicker().getValue());
     }
 
     @Override
@@ -141,19 +148,19 @@ public class TradingSnapshot {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         TradingSnapshot that = (TradingSnapshot) object;
-        return Objects.equals(ticker, that.ticker);
+        return Objects.equals(instrumentId, that.instrumentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticker);
+        return Objects.hash(instrumentId);
     }
 
-    private void setTicker(String ticker) {
-        if (ticker == null || ticker.isEmpty()) {
+    private void setInstrumentId(InstrumentId instrumentId) {
+        if (instrumentId == null) {
             throw new DomainException("Не передан тикер.");
         }
-        this.ticker = ticker;
+        this.instrumentId = instrumentId;
     }
 
     private void setClosePriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries) {

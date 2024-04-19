@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -31,7 +32,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
+        initScanner(datasourceId, tgknId, tgkbId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -51,7 +52,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
+        initScanner(datasourceId, tgknId, tgkbId, imoexId);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:00:30");
 
@@ -73,7 +74,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknAndTgkbAndImoexHistoryTradingData(datasourceId);
         initTgknAndTgkbAndImoexIntradayData(datasourceId);
-        initScanner(datasourceId, "TGKN", "TGKB", "IMOEX");
+        initScanner(datasourceId, tgknId, tgkbId, imoexId);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:01:00");
 
@@ -97,7 +98,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTgknBuySignalDataset(datasourceId);
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-24T12:00:00");
         initTgknSellSignalDataset(datasourceId);
@@ -121,18 +122,18 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 99.D, 3000.0, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 99.D, 2900.0, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 100.D, 3000.0, 1_500_000.0)
+            buildDealResultBy(datasourceId,tgknId, "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-10", 99.D, 3000.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-20", 99.D, 2900.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 100.D, 3000.0, 1_500_000.0)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L,"10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 2900.0, 2_000_000D)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -153,15 +154,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 3000.0, 3000.0, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-10", 3000.0, 3000.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-20", 2900.0, 2900.0, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L,"10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(datasourceId, imoexId,2L,"12:00:00", 2900.0, 2_000_000D)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -182,19 +183,19 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2900.0, 2900.0, 1_500_000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.0, 2900.0, 1_500_000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000D)
+            buildDealResultBy(datasourceId,tgknId, "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-10", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-20", 2900.0, 2900.0, 1_500_000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 3000.0, 3000.0, 1_500_000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 3000.0, 1_000_000D),
             buildDeltaBy(datasourceId, imoexId,2L,"12:00:00", 2900.0, 2_000_000D),
             buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 469D, 1)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -215,16 +216,16 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2900.D, 2900.D, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2900.D, 2900.D, 1_500_000.0),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-10", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-20", 2900.D, 2900.D, 1_500_000.0),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
         );
         initDealDatas(
             buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 6000D, 1),
             buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId, tgknId,3L,"11:00:00", 100D, 6000D, 1)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -245,9 +246,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDealResultBy(datasourceId,tgknId, "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
@@ -256,7 +257,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 103D, 6000D, 1)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -277,15 +278,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDealResultBy(datasourceId,tgknId, "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-20", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
             buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 3000D, 2_000_000D)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -307,10 +308,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-10", 2800D, 2800D, 1_000_000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-20", 2800D, 2800D, 1_000_000D),
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-10", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-20", 2800D, 2800D, 1_000_000D),
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 2800D, 2800D, 1_000_000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
@@ -319,7 +320,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId, tgknId,2L, "10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 103D, 6000D, 1)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -340,8 +341,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initTradingResults(
-            buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
+            buildDeltaResultBy(datasourceId,imoexId, "2023-12-21", 2800D, 2800D, 1_000_000D),
+            buildDealResultBy(datasourceId,tgknId, "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2800D, 1_000_000D),
@@ -350,7 +351,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
             buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 100D, 6000D, 1)
         );
-        initScanner(datasourceId, "TGKN", "IMOEX");
+        initScanner(datasourceId, tgknId, imoexId);
 
         runWorkPipeline(datasourceId);
 
@@ -380,12 +381,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknBuySignalDataset(DatasourceId datasourceId) {
         initTradingResults(
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-20", 99.D, 99.D, 99D, 2000D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-21", 100.D, 100.D, 100D, 1400D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-10", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-20", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, tgknId, "2023-12-19", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-20", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-21", 100.D, 100.D, 100D, 1400D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-10", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-20", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-21", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId, 1L, "10:00:00", 2800D, 100D),
@@ -400,12 +401,12 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknSellSignalDataset(DatasourceId datasourceId) {
         initTradingResults(
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-22", 99.D, 99.1D, 97D, 2000D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, tgknId, "2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
             buildDeltaBy(datasourceId, imoexId, 3L,"10:00:00", 3000D, 1_000_000D),
@@ -420,15 +421,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknAndTgkbAndImoexHistoryTradingData(DatasourceId datasourceId) {
         initTradingResults(
-            buildDealResultBy(datasourceId, "TGKB", "2023-12-19", 99.D, 99.D, 1D, 2000D),
-            buildDealResultBy(datasourceId, "TGKB", "2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildDealResultBy(datasourceId, "TGKB", "2023-12-21", 100.D, 100.D, 1D, 1500D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-19", 99.D, 99.D, 1D, 3000D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-20", 99.D, 99.D, 1D, 1150D),
-            buildDealResultBy(datasourceId, "TGKN", "2023-12-21", 100.D, 100.D, 1D, 1100D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-10", 2800D, 2900D, 1_000_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-20", 2800D, 2900D, 1_500_000D),
-            buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-21", 2900D, 3000D, 2_000_000D)
+            buildDealResultBy(datasourceId, tgkbId, "2023-12-19", 99.D, 99.D, 1D, 2000D),
+            buildDealResultBy(datasourceId, tgkbId, "2023-12-20", 99.D, 99.D, 1D, 1000D),
+            buildDealResultBy(datasourceId, tgkbId, "2023-12-21", 100.D, 100.D, 1D, 1500D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-19", 99.D, 99.D, 1D, 3000D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-20", 99.D, 99.D, 1D, 1150D),
+            buildDealResultBy(datasourceId, tgknId, "2023-12-21", 100.D, 100.D, 1D, 1100D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-10", 2800D, 2900D, 1_000_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-20", 2800D, 2900D, 1_500_000D),
+            buildDeltaResultBy(datasourceId, imoexId, "2023-12-21", 2900D, 3000D, 2_000_000D)
         );
     }
 
@@ -465,7 +466,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 
-    private void initScanner(DatasourceId datasourceId, String... tickers) {
+    private void initScanner(DatasourceId datasourceId, InstrumentId... instrumentIds) {
 
 
         commandBus().execute(
@@ -473,10 +474,10 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(datasourceId)
-                .tickers(Arrays.asList(tickers))
+                .instrumentIds(Arrays.asList(instrumentIds))
                 .properties(
                     AnomalyVolumeProperties.builder()
-                        .indexTicker("IMOEX")
+                        .indexId(imoexId)
                         .historyPeriod(HISTORY_PERIOD)
                         .scaleCoefficient(1.5)
                         .build()

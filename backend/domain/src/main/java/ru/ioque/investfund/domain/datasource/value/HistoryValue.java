@@ -8,20 +8,20 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Builder
 @ToString
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     DatasourceId datasourceId;
+    InstrumentId instrumentId;
     LocalDate tradeDate;
-    String ticker;
     Double openPrice;
     Double closePrice;
     Double lowPrice;
@@ -29,10 +29,11 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     Double waPrice;
     Double value;
 
+    @Builder
     public HistoryValue(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         LocalDate tradeDate,
-        String ticker,
         Double openPrice,
         Double closePrice,
         Double lowPrice,
@@ -41,8 +42,8 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         Double value
     ) {
         setDatasourceId(datasourceId);
+        setInstrumentId(instrumentId);
         setTradeDate(tradeDate);
-        setTicker(ticker);
         setOpenPrice(openPrice);
         setClosePrice(closePrice);
         setLowPrice(lowPrice);
@@ -70,11 +71,11 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         this.tradeDate = tradeDate;
     }
 
-    private void setTicker(String ticker) {
-        if(ticker == null || ticker.isEmpty()) {
+    private void setInstrumentId(InstrumentId instrumentId) {
+        if(instrumentId == null) {
             throw new DomainException("Не заполнен тикер.");
         }
-        this.ticker = ticker;
+        this.instrumentId = instrumentId;
     }
 
     private void setOpenPrice(Double openPrice) {

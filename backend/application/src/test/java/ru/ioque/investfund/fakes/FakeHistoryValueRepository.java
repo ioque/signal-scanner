@@ -2,6 +2,7 @@ package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeHistoryValueRepository implements HistoryValueRepository {
-    final Map<DatasourceId, Map<String, List<HistoryValue>>> historyValues = new ConcurrentHashMap<>();
+    final Map<DatasourceId, Map<InstrumentId, List<HistoryValue>>> historyValues = new ConcurrentHashMap<>();
 
     public Stream<HistoryValue> getAllBy(DatasourceId datasourceId) {
         return historyValues
@@ -24,10 +25,10 @@ public class FakeHistoryValueRepository implements HistoryValueRepository {
             .flatMap(Collection::stream);
     }
 
-    public Stream<HistoryValue> getAllBy(DatasourceId datasourceId, String ticker) {
+    public Stream<HistoryValue> getAllBy(DatasourceId datasourceId, InstrumentId instrumentId) {
         return historyValues
             .getOrDefault(datasourceId, new ConcurrentHashMap<>())
-            .getOrDefault(ticker, new ArrayList<>())
+            .getOrDefault(instrumentId, new ArrayList<>())
             .stream();
     }
 
@@ -40,10 +41,10 @@ public class FakeHistoryValueRepository implements HistoryValueRepository {
             if (!this.historyValues.containsKey(datasourceId)) {
                 this.historyValues.put(datasourceId, new ConcurrentHashMap<>());
             }
-            Map<String, List<HistoryValue>> currentTickerToValues = this.historyValues.get(datasourceId);
-            Map<String, List<HistoryValue>> newTickerToValues = values
+            Map<InstrumentId, List<HistoryValue>> currentTickerToValues = this.historyValues.get(datasourceId);
+            Map<InstrumentId, List<HistoryValue>> newTickerToValues = values
                 .stream()
-                .collect(Collectors.groupingBy(HistoryValue::getTicker));
+                .collect(Collectors.groupingBy(HistoryValue::getInstrumentId));
             newTickerToValues.forEach((ticker, history) -> {
                 List<HistoryValue> currentIntraday = currentTickerToValues.getOrDefault(ticker, new ArrayList<>());
                 LocalDate

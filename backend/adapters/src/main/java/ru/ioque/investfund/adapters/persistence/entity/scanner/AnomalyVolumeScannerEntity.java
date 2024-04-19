@@ -56,7 +56,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getTickers())
+            .tickers(scannerDomain.getInstrumentIds())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .scaleCoefficient(properties.getScaleCoefficient())
             .historyPeriod(properties.getHistoryPeriod())

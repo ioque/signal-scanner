@@ -2,6 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
@@ -25,7 +27,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
 
     private SectoralFuturesProperties.SectoralFuturesPropertiesBuilder buildPropertiesWith() {
         return SectoralFuturesProperties.builder()
-            .futuresTicker("BRF4")
+            .futuresId(brf4Id)
             .futuresOvernightScale(0.05)
             .stockOvernightScale(0.05);
     }
@@ -50,9 +52,9 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     void testCase3() {
         testAddNewScannerError(
             buildCreateSectoralFuturesScannerWith()
-                .properties(buildPropertiesWith().futuresTicker(null).build())
+                .properties(buildPropertiesWith().futuresId(null).build())
                 .build(),
-            futuresTickerIsEmpty()
+            futuresIdIsEmpty()
         );
     }
 
@@ -63,9 +65,9 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     void testCase4() {
         testAddNewScannerError(
             buildCreateSectoralFuturesScannerWith()
-                .properties(buildPropertiesWith().futuresTicker("").build())
+                .properties(buildPropertiesWith().futuresId(new InstrumentId(new Ticker(""))).build())
                 .build(),
-            futuresTickerIsEmpty()
+            futuresIdIsNotValid()
         );
     }
 
@@ -165,10 +167,10 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
                 .properties(
-                    buildPropertiesWith().futuresTicker(null).build()
+                    buildPropertiesWith().futuresId(null).build()
                 )
                 .build(),
-            futuresTickerIsEmpty()
+            futuresIdIsEmpty()
         );
     }
 
@@ -182,10 +184,10 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
                 .properties(
-                    buildPropertiesWith().futuresTicker("").build()
+                    buildPropertiesWith().futuresId(new InstrumentId(new Ticker(""))).build()
                 )
                 .build(),
-            futuresTickerIsEmpty()
+            futuresIdIsNotValid()
         );
     }
 
@@ -264,8 +266,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         return "Не передан параметр stockOvernightScale.";
     }
 
-    private String futuresTickerIsEmpty() {
-        return "Не передан параметр futuresTicker.";
+    private String futuresIdIsEmpty() {
+        return "Не передан идентификатор фьючерса на основной товар сектора.";
+    }
+
+    private String futuresIdIsNotValid() {
+        return "Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.";
     }
 
     private String stockOvernightScaleIsNegative() {
@@ -281,12 +287,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresTicker("BRF4")
+                    .futuresId(brf4Id)
                     .build()
             );
     }
@@ -296,12 +302,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresTicker("BRF4")
+                    .futuresId(brf4Id)
                     .build()
             );
     }

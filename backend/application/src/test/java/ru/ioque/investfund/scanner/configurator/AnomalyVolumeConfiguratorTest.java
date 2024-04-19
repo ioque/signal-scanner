@@ -2,6 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE ANOMALY VOLUME SCANNER")
@@ -22,7 +24,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     private AnomalyVolumeProperties.AnomalyVolumePropertiesBuilder buildPropertiesWith() {
         return AnomalyVolumeProperties.builder()
             .historyPeriod(180)
-            .indexTicker("IMOEX")
+            .indexId(imoexId)
             .scaleCoefficient(1.5);
     }
 
@@ -46,9 +48,9 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     void testCase3() {
         testAddNewScannerError(
             buildCreateAnomalyVolumeScannerWith()
-                .properties(buildPropertiesWith().indexTicker(null).build())
+                .properties(buildPropertiesWith().indexId(null).build())
                 .build(),
-            indexTickerIsEmpty()
+            indexIdIsEmpty()
         );
     }
 
@@ -59,9 +61,9 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     void testCase4() {
         testAddNewScannerError(
             buildCreateAnomalyVolumeScannerWith()
-                .properties(buildPropertiesWith().indexTicker("").build())
+                .properties(buildPropertiesWith().indexId(new InstrumentId(new Ticker(""))).build())
                 .build(),
-            indexTickerIsEmpty()
+            indexIdIsNotValid()
         );
     }
 
@@ -156,9 +158,9 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
-                .properties(buildPropertiesWith().indexTicker(null).build())
+                .properties(buildPropertiesWith().indexId(null).build())
                 .build(),
-            indexTickerIsEmpty()
+            indexIdIsEmpty()
         );
     }
 
@@ -171,9 +173,9 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
-                .properties(buildPropertiesWith().indexTicker("").build())
+                .properties(buildPropertiesWith().indexId(new InstrumentId(new Ticker(""))).build())
                 .build(),
-            indexTickerIsEmpty()
+            indexIdIsNotValid()
         );
     }
 
@@ -245,8 +247,12 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         return "Не передан параметр scaleCoefficient.";
     }
     
-    private String indexTickerIsEmpty() {
-        return "Не передан параметр indexTicker.";
+    private String indexIdIsEmpty() {
+        return "Не передан идентификатор индекса.";
+    }
+
+    private String indexIdIsNotValid() {
+        return "Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.";
     }
 
     private String scaleCoefficientIsNegative() {

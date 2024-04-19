@@ -144,7 +144,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of(tgknId, new InstrumentId(new Ticker("")))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
+        assertEquals("Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
 
@@ -201,7 +201,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of(tgknId, new InstrumentId(new Ticker("")))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
+        assertEquals("Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
     @Test

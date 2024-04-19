@@ -39,7 +39,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
     void testCase2() {
         commandBus().execute(
             buildCreateAnomalyVolumeScannerWith()
-                .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+                .instrumentIds(List.of(tgknId, tgkbId, imoexId))
                 .build()
         );
         final UUID scannerId = getFirstScannerId();
@@ -47,11 +47,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(scannerId)
-                .tickers(List.of("TGKN", "IMOEX"))
+                .instrumentIds(List.of(tgknId, imoexId))
                 .build()
         );
-
-        assertTrue(List.of("TGKN", "IMOEX").containsAll(getScanner(scannerId).getTickers()));
+        assertEquals(2, getScanner(scannerId).getInstrumentIds().size());
+        assertTrue(List.of(tgknId, imoexId).containsAll(getScanner(scannerId).getInstrumentIds()));
     }
 
     @Test
@@ -166,12 +166,12 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .tickers(null)
+                    .instrumentIds(null)
                     .build()
             )
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 
     @Test
@@ -186,11 +186,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .tickers(List.of())
+                    .instrumentIds(List.of())
                     .build()
             )
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 }

@@ -44,7 +44,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                     .isBuy(true)
                     .summary(summary)
                     .dateTime(watermark)
-                    .ticker(pair.getPref().getTicker())
+                    .instrumentId(pair.getPref().getInstrumentId())
                     .price(pair.getPref().getTodayLastPrice().orElse(0D))
                     .build()
                 );
@@ -70,7 +70,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             .filter(tradingSnapshot::isSimplePair)
             .findFirst()
             .orElseThrow(() -> new DomainException(
-                "Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
+                "Для привилегированной акции " + tradingSnapshot.getInstrumentId() + " не найдена обычная акция."));
     }
 
     private void setSpreadValue(Double spreadValue) {

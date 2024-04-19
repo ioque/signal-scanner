@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
@@ -30,7 +31,7 @@ import java.util.UUID;
 public class SignalScanner extends Domain {
     String description;
     DatasourceId datasourceId;
-    List<String> tickers;
+    List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
@@ -44,7 +45,7 @@ public class SignalScanner extends Domain {
         DatasourceId datasourceId,
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
-        List<String> tickers,
+        List<InstrumentId> instrumentIds,
         List<Signal> signals
     ) {
         super(id);
@@ -53,7 +54,7 @@ public class SignalScanner extends Domain {
         this.datasourceId = datasourceId;
         this.properties = properties;
         this.lastExecutionDateTime = lastExecutionDateTime;
-        this.tickers = tickers;
+        this.instrumentIds = instrumentIds;
         this.signals = signals;
     }
 
@@ -63,7 +64,7 @@ public class SignalScanner extends Domain {
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
             .description(command.getDescription())
             .datasourceId(command.getDatasourceId())
-            .tickers(command.getTickers())
+            .instrumentIds(command.getInstrumentIds())
             .properties(command.getProperties())
             .signals(new ArrayList<>())
             .lastExecutionDateTime(null)
@@ -76,7 +77,7 @@ public class SignalScanner extends Domain {
         }
         this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
         this.description = command.getDescription();
-        this.tickers = command.getTickers();
+        this.instrumentIds = command.getInstrumentIds();
         this.properties = command.getProperties();
     }
 
@@ -118,7 +119,7 @@ public class SignalScanner extends Domain {
     }
 
     private void registerNewSignal(Signal newSignal) {
-        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
+        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByInstrumentId(newSignal)).findFirst();
         if (signalSameByTicker.isPresent() && newSignal.isSell()) {
             signals.add(newSignal);
         }

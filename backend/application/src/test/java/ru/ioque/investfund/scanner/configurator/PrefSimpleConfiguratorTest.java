@@ -106,7 +106,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 PrefCommonProperties.builder()
                     .spreadValue(1.0)
@@ -119,7 +119,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 PrefCommonProperties.builder()
                     .spreadValue(1.0)

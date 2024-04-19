@@ -63,7 +63,7 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
     }
 
     private void runScanner(SignalScanner scanner, LocalDateTime watermark) {
-        final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getTickers());
+        final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getInstrumentIds());
         final List<Signal> newSignals = scanner.scanning(snapshots, watermark);
         scannerRepository.save(scanner);
         newSignals.forEach(signal -> eventPublisher.publish(
@@ -72,7 +72,7 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
                 .watermark(watermark)
                 .isBuy(signal.isBuy())
                 .scannerId(scanner.getId())
-                .ticker(signal.getTicker())
+                .instrumentId(signal.getInstrumentId())
                 .build()
         ));
     }

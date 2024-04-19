@@ -3,6 +3,7 @@ package ru.ioque.investfund.scanner.scanning;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -52,43 +53,43 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected TradingSnapshot getImoex() {
-        return getSnapshotBy(IMOEX);
+        return getSnapshotBy(imoexId);
     }
 
     protected TradingSnapshot getTgkb() {
-        return getSnapshotBy(TGKB);
+        return getSnapshotBy(tgkbId);
     }
 
     protected TradingSnapshot getTgkn() {
-        return getSnapshotBy(TGKN);
+        return getSnapshotBy(tgknId);
     }
 
     protected TradingSnapshot getTatn() {
-        return getSnapshotBy(TATN);
+        return getSnapshotBy(tatnId);
     }
 
     protected TradingSnapshot getBrf4() {
-        return getSnapshotBy(BRF4);
+        return getSnapshotBy(brf4Id);
     }
     protected TradingSnapshot getRosn() {
-        return getSnapshotBy(ROSN);
+        return getSnapshotBy(rosnId);
     }
     protected TradingSnapshot getLkoh() {
-        return getSnapshotBy(LKOH);
+        return getSnapshotBy(lkohId);
     }
     protected TradingSnapshot getSibn() {
-        return getSnapshotBy(SIBN);
+        return getSnapshotBy(sibnId);
     }
 
     protected TradingSnapshot getSber() {
-        return getSnapshotBy(SBER);
+        return getSnapshotBy(sberId);
     }
 
     protected TradingSnapshot getSberp() {
-        return getSnapshotBy(SBERP);
+        return getSnapshotBy(sberpId);
     }
 
-    protected TradingSnapshot getSnapshotBy(String ticker) {
+    protected TradingSnapshot getSnapshotBy(InstrumentId ticker) {
         return tradingDataRepository().findAllBy(getDatasourceId(), List.of(ticker)).get(0);
     }
 }

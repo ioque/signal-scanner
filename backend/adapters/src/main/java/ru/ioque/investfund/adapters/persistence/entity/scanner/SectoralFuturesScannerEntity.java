@@ -56,7 +56,7 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getTickers())
+            .tickers(scannerDomain.getInstrumentIds())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .futuresOvernightScale(properties.getFuturesOvernightScale())
             .stockOvernightScale(properties.getStockOvernightScale())

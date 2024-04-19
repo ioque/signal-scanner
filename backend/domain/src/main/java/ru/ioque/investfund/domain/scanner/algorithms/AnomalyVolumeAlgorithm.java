@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -31,14 +32,14 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     Double scaleCoefficient;
-    String indexTicker;
+    InstrumentId indexId;
     Integer historyPeriod;
 
     public AnomalyVolumeAlgorithm(AnomalyVolumeProperties properties) {
         super(properties.getType().getName());
         setScaleCoefficient(properties.getScaleCoefficient());
         setHistoryPeriod(properties.getHistoryPeriod());
-        setIndexTicker(properties.getIndexTicker());
+        setIndexId(properties.getIndexId());
     }
 
     @Override
@@ -69,7 +70,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
-                        .ticker(tradingSnapshot.getTicker())
+                        .instrumentId(tradingSnapshot.getInstrumentId())
                         .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );
@@ -82,7 +83,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .dateTime(watermark)
                         .summary(summary)
                         .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
-                        .ticker(tradingSnapshot.getTicker())
+                        .instrumentId(tradingSnapshot.getInstrumentId())
                         .build()
                 );
             }
@@ -91,13 +92,13 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
+        return tradingSnapshots.stream().filter(row -> !row.getInstrumentId().equals(indexId)).toList();
     }
 
     private TradingSnapshot getMarketIndex(final List<TradingSnapshot> tradingSnapshots) {
         return tradingSnapshots
             .stream()
-            .filter(row -> row.getTicker().equals(indexTicker))
+            .filter(row -> row.getInstrumentId().equals(indexId))
             .findFirst()
             .orElseThrow(() -> new DomainException("Не добавлен индекс рынка."));
     }
@@ -112,11 +113,11 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         this.scaleCoefficient = scaleCoefficient;
     }
 
-    private void setIndexTicker(String indexTicker) {
-        if (indexTicker == null || indexTicker.isEmpty()) {
-            throw new DomainException("Не передан параметр indexTicker.");
+    private void setIndexId(InstrumentId indexId) {
+        if (indexId == null) {
+            throw new DomainException("Не передан идентификатор индекса.");
         }
-        this.indexTicker = indexTicker;
+        this.indexId = indexId;
     }
 
     private void setHistoryPeriod(Integer historyPeriod) {

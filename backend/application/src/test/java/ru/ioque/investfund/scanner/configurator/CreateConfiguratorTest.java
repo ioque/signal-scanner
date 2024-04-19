@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.List;
@@ -54,14 +56,14 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
         """)
     void testCase3() {
         final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith()
-            .tickers(List.of("TGKN", "LVHK", "TGKM", "IMOEX"))
+            .instrumentIds(List.of(tgknId, new InstrumentId(new Ticker("LVHK")), new InstrumentId(new Ticker("TGKM")), imoexId))
             .build();
 
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> commandBus().execute(command)
         );
-        assertEquals("В выбранном источнике данных не существует инструментов с тикерами [LVHK, TGKM].", exception.getMessage());
+        assertEquals("В выбранном источнике данных не существует инструментов с идентификаторам [LVHK, TGKM].", exception.getMessage());
     }
 
     @Test
@@ -144,14 +146,14 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
         T9. В команде на создание конфигурации сканера передан пустой список тикеров.
         """)
     void testCase10() {
-        final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith().tickers(List.of()).build();
+        final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith().instrumentIds(List.of()).build();
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(command)
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 
     @Test
@@ -159,13 +161,13 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
         T10. В команде на создание конфигурации сканера не передан список тикеров.
         """)
     void testCase11() {
-        final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith().tickers(null).build();
+        final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith().instrumentIds(null).build();
 
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(command)
         );
 
-        assertEquals(tickersIsEmpty(), getMessage(exception));
+        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
     }
 }

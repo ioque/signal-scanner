@@ -42,7 +42,7 @@ public class CreateScannerRequest {
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)
             .description(description)
-            .tickers(tickers)
+            .instrumentIds(tickers)
             .build();
     }
 }

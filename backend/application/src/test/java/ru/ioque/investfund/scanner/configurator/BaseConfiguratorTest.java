@@ -78,10 +78,10 @@ public class BaseConfiguratorTest extends BaseTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 AnomalyVolumeProperties.builder()
-                    .indexTicker("IMOEX")
+                    .indexId(imoexId)
                     .historyPeriod(180)
                     .scaleCoefficient(1.5)
                     .build()
@@ -92,10 +92,10 @@ public class BaseConfiguratorTest extends BaseTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .tickers(List.of("TGKN", "TGKB", "IMOEX"))
+            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
             .properties(
                 AnomalyVolumeProperties.builder()
-                    .indexTicker("IMOEX")
+                    .indexId(imoexId)
                     .historyPeriod(180)
                     .scaleCoefficient(1.5)
                     .build()
@@ -114,8 +114,8 @@ public class BaseConfiguratorTest extends BaseTest {
         return "Не передан период работы сканера.";
     }
 
-    protected String tickersIsEmpty() {
-        return "Не передан список тикеров анализируемых инструментов.";
+    protected String instrumentIdsIsEmpty() {
+        return "Не передан список идентификаторов анализируемых инструментов.";
     }
 
     protected String workPeriodIsNegative() {

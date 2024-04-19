@@ -36,7 +36,7 @@ public class UpdateScannerHandler extends CommandHandler<UpdateScannerCommand> {
     protected void handleFor(UpdateScannerCommand command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Datasource datasource = datasourceRepository.getById(scanner.getDatasourceId());
-        datasource.checkExistsTickers(command.getTickers());
+        datasource.checkExistsInstrument(command.getInstrumentIds());
         scanner.update(command);
         scannerRepository.save(scanner);
     }

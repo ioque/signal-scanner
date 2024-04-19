@@ -41,7 +41,7 @@ public class CreateScannerHandler extends CommandHandler<CreateScannerCommand> {
     @Override
     protected void handleFor(CreateScannerCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasource.checkExistsTickers(command.getTickers());
+        datasource.checkExistsInstrument(command.getInstrumentIds());
         final UUID newScannerId = uuidProvider.generate();
         final SignalScanner scanner = SignalScanner.of(newScannerId, command);
         scannerRepository.save(scanner);

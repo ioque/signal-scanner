@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -21,7 +22,7 @@ import java.util.List;
 public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     Double futuresOvernightScale;
     Double stockOvernightScale;
-    String futuresTicker;
+    InstrumentId futuresId;
 
     public SectoralFuturesAlgorithm(
         SectoralFuturesProperties properties
@@ -29,7 +30,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
         super(properties.getType().getName());
         setFuturesOvernightScale(properties.getFuturesOvernightScale());
         setStockOvernightScale(properties.getStockOvernightScale());
-        setFuturesTicker(properties.getFuturesTicker());
+        setFuturesId(properties.getFuturesId());
     }
 
     @Override
@@ -50,7 +51,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
-                        .ticker(snapshot.getTicker())
+                        .instrumentId(snapshot.getInstrumentId())
                         .price(snapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );
@@ -62,13 +63,13 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     private TradingSnapshot getFuturesStatistic(List<TradingSnapshot> tradingSnapshots) {
         return tradingSnapshots
             .stream()
-            .filter(row -> futuresTicker.equals(row.getTicker()))
+            .filter(row -> futuresId.equals(row.getInstrumentId()))
             .findFirst()
             .orElseThrow(() -> new DomainException("Не добавлен фьючерс на основной товар сектора."));
     }
 
     private List<TradingSnapshot> analyzeInstruments(List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
+        return tradingSnapshots.stream().filter(row -> !row.getInstrumentId().equals(futuresId)).toList();
     }
 
     private void setFuturesOvernightScale(Double futuresOvernightScale) {
@@ -91,10 +92,10 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
         this.stockOvernightScale = stockOvernightScale;
     }
 
-    private void setFuturesTicker(String futuresTicker) {
-        if (futuresTicker == null || futuresTicker.isEmpty()) {
-            throw new DomainException("Не передан параметр futuresTicker.");
+    private void setFuturesId(InstrumentId futuresId) {
+        if (futuresId == null) {
+            throw new DomainException("Не передан идентификатор фьючерса на основной товар сектора.");
         }
-        this.futuresTicker = futuresTicker;
+        this.futuresId = futuresId;
     }
 }

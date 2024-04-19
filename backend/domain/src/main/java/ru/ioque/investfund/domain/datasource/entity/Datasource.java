@@ -10,7 +10,6 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,17 +65,17 @@ public class Datasource {
         }
     }
 
-    public void checkExistsTickers(List<String> tickers) {
-        List<String> notExistedTickers = tickers
+    public void checkExistsInstrument(List<InstrumentId> instrumentIds) {
+        List<InstrumentId> notExistedInstrument = instrumentIds
             .stream()
-            .filter(ticker -> !getInstrumentIds().contains(new InstrumentId(new Ticker(ticker))))
+            .filter(instrumentId -> !getInstrumentIds().contains(instrumentId))
             .toList();
-        if (!notExistedTickers.isEmpty()) {
+        if (!notExistedInstrument.isEmpty()) {
             throw new IllegalArgumentException(
                 String
                     .format(
-                        "В выбранном источнике данных не существует инструментов с тикерами %s.",
-                        notExistedTickers
+                        "В выбранном источнике данных не существует инструментов с идентификаторам %s.",
+                        notExistedInstrument
                     )
             );
         }

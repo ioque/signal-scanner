@@ -50,7 +50,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getTickers())
+            .tickers(scannerDomain.getInstrumentIds())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .spreadParam(properties.getSpreadValue())
             .build();

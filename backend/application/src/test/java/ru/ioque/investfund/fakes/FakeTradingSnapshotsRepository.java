@@ -6,7 +6,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
@@ -30,18 +29,18 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
     }
 
     @Override
-    public List<TradingSnapshot> findAllBy(DatasourceId datasourceId, List<String> tickers) {
-        if (tickers == null || tickers.isEmpty()) return List.of();
-        return tickers
+    public List<TradingSnapshot> findAllBy(DatasourceId datasourceId, List<InstrumentId> instrumentIds) {
+        if (instrumentIds == null || instrumentIds.isEmpty()) return List.of();
+        return instrumentIds
             .stream()
-            .map(ticker -> TradingSnapshot.builder()
-                .ticker(ticker)
-                .waPriceSeries(getHistoryBy(datasourceId, ticker)
+            .map(instrumentId -> TradingSnapshot.builder()
+                .instrumentId(instrumentId)
+                .waPriceSeries(getHistoryBy(datasourceId, instrumentId)
                     .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                     .toList()
                 )
-                .todayValueSeries(getIntradayBy(datasourceId, new InstrumentId(new Ticker(ticker)))
+                .todayValueSeries(getIntradayBy(datasourceId, instrumentId)
                     .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getValue(),
@@ -49,16 +48,16 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                     ))
                     .toList()
                 )
-                .closePriceSeries(getHistoryBy(datasourceId, ticker)
+                .closePriceSeries(getHistoryBy(datasourceId, instrumentId)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
                     .toList())
-                .openPriceSeries(getHistoryBy(datasourceId, ticker)
+                .openPriceSeries(getHistoryBy(datasourceId, instrumentId)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
                     .toList())
-                .valueSeries(getHistoryBy(datasourceId, ticker)
+                .valueSeries(getHistoryBy(datasourceId, instrumentId)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                     .toList())
-                .todayPriceSeries(getIntradayBy(datasourceId, new InstrumentId(new Ticker(ticker)))
+                .todayPriceSeries(getIntradayBy(datasourceId, instrumentId)
                     .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getPrice(),
@@ -72,7 +71,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
         return intradayValueRepository.getAllBy(datasourceId, instrumentId);
     }
 
-    private Stream<HistoryValue> getHistoryBy(DatasourceId datasourceId, String ticker) {
-        return historyValueRepository.getAllBy(datasourceId, ticker);
+    private Stream<HistoryValue> getHistoryBy(DatasourceId datasourceId, InstrumentId instrumentId) {
+        return historyValueRepository.getAllBy(datasourceId, instrumentId);
     }
 }

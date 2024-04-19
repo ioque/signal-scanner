@@ -53,7 +53,7 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getTickers())
+            .tickers(scannerDomain.getInstrumentIds())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .historyScale(properties.getHistoryScale())
             .intradayScale(properties.getIntradayScale())

@@ -25,7 +25,7 @@ public class DatasourceStorage {
 
     @SneakyThrows
     public List<HistoryValue> getHistoryDataBy(InstrumentId instrumentId) {
-        return historyValues.stream().filter(row -> row.getTicker().equals(instrumentId.getTicker().getValue())).toList();
+        return historyValues.stream().filter(row -> row.getInstrumentId().equals(instrumentId)).toList();
     }
 
     @SneakyThrows

@@ -37,7 +37,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             otherInstruments.forEach(snapshot -> {
                 final String summary = String.format(
                     "Растущие инструменты сектора: %s",
-                    riseInstruments.stream().map(TradingSnapshot::getTicker).toList()
+                    riseInstruments.stream().map(TradingSnapshot::getInstrumentId).toList()
                 );
                 signals.add(
                     Signal.builder()
@@ -45,7 +45,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .dateTime(watermark)
-                        .ticker(snapshot.getTicker())
+                        .instrumentId(snapshot.getInstrumentId())
                         .price(snapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );

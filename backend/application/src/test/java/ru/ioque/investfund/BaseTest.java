@@ -108,7 +108,7 @@ public class BaseTest {
 
     protected List<HistoryValue> generateTradingResultsBy(
         DatasourceId datasourceId,
-        String ticker,
+        InstrumentId instrumentId,
         LocalDate start,
         LocalDate stop
     ) {
@@ -116,7 +116,7 @@ public class BaseTest {
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                historyValues.add(buildTradingResultWith(datasourceId, ticker, cursor).build());
+                historyValues.add(buildTradingResultWith(datasourceId, instrumentId, cursor).build());
             }
             cursor = cursor.plusDays(1);
         }
@@ -156,8 +156,8 @@ public class BaseTest {
         return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId).toList();
     }
 
-    protected List<HistoryValue> getHistoryValuesBy(DatasourceId datasourceId, String ticker) {
-        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId, ticker).toList();
+    protected List<HistoryValue> getHistoryValuesBy(DatasourceId datasourceId, InstrumentId instrumentId) {
+        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId, instrumentId).toList();
     }
 
     protected List<HistoryValue> getHistoryValues(DatasourceId datasourceId) {
@@ -180,10 +180,6 @@ public class BaseTest {
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {
         runWorkPipeline(datasourceId);
         loggerProvider().clearLogs();
-    }
-
-    protected List<String> getTickers(DatasourceId datasourceId) {
-        return getInstruments(datasourceId).stream().map(row -> row.getId().getTicker().getValue()).toList();
     }
 
     protected List<InstrumentId> getInstrumentIds(DatasourceId datasourceId) {
@@ -276,7 +272,7 @@ public class BaseTest {
 
     protected HistoryValue buildFuturesDealResultBy(
         DatasourceId datasourceId,
-        String ticker,
+        InstrumentId instrumentId,
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -284,7 +280,7 @@ public class BaseTest {
     ) {
         return HistoryValue.builder()
             .datasourceId(datasourceId)
-            .ticker(ticker)
+            .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -296,7 +292,7 @@ public class BaseTest {
 
     protected HistoryValue buildDeltaResultBy(
         DatasourceId datasourceId,
-        String ticker,
+        InstrumentId instrumentId,
         String tradeDate,
         double openPrice,
         double closePrice,
@@ -304,7 +300,7 @@ public class BaseTest {
     ) {
         return HistoryValue.builder()
             .datasourceId(datasourceId)
-            .ticker(ticker)
+            .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -316,7 +312,7 @@ public class BaseTest {
 
     protected HistoryValue buildDealResultBy(
         DatasourceId datasourceId,
-        String ticker,
+        InstrumentId instrumentId,
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -325,7 +321,7 @@ public class BaseTest {
     ) {
         return HistoryValue.builder()
             .datasourceId(datasourceId)
-            .ticker(ticker)
+            .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -338,13 +334,13 @@ public class BaseTest {
 
     protected HistoryValue.HistoryValueBuilder buildTradingResultWith(
         DatasourceId datasourceId,
-        String ticker,
+        InstrumentId instrumentId,
         LocalDate localDate
     ) {
         return HistoryValue.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .tradeDate(localDate)
-            .ticker(ticker)
             .openPrice(1.0)
             .closePrice(1.0)
             .lowPrice(1.0)

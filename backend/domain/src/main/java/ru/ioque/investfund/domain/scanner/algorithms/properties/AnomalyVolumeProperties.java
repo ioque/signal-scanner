@@ -1,8 +1,8 @@
 package ru.ioque.investfund.domain.scanner.algorithms.properties;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
 
 @Getter
@@ -27,6 +28,6 @@ public class AnomalyVolumeProperties implements AlgorithmProperties {
     @NotNull(message = "Не передан параметр historyPeriod.")
     @Min(value = 1, message = "Параметр historyPeriod должен быть больше 0.")
     Integer historyPeriod;
-    @NotBlank(message = "Не передан параметр indexTicker.")
-    String indexTicker;
+    @NotNull(message = "Не передан идентификатор индекса.")
+    @Valid InstrumentId indexId;
 }
