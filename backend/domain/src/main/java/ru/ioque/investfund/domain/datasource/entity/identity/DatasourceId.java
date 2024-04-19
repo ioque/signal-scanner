@@ -15,5 +15,5 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DatasourceId {
-    UUID value;
+    UUID uuid;
 }

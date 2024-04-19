@@ -15,6 +15,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,7 +54,7 @@ public class IndexEntity extends InstrumentEntity {
     @Override
     public Instrument toDomain() {
         return Index.builder()
-            .id(new InstrumentId(this.getTicker()))
+            .id(InstrumentId.from(Ticker.from(this.getTicker())))
             .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())

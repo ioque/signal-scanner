@@ -18,6 +18,7 @@ import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.Delta;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
@@ -364,7 +365,7 @@ public class BaseTest {
     protected Index imoex() {
         return Index
             .builder()
-            .id(new InstrumentId("IMOEX"))
+            .id(imoexId)
             .ticker("IMOEX")
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
@@ -376,7 +377,7 @@ public class BaseTest {
     protected Stock afks() {
         return Stock
             .builder()
-            .id(new InstrumentId("IMOEX"))
+            .id(afksId)
             .shortName("ао Система")
             .name("АФК Система")
             .ticker("AFKS")
@@ -390,7 +391,7 @@ public class BaseTest {
     protected Stock sberP() {
         return Stock
             .builder()
-            .id(new InstrumentId("SBERP"))
+            .id(sberpId)
             .ticker("SBERP")
             .shortName("Сбер п")
             .name("Сбербанк П")
@@ -404,7 +405,7 @@ public class BaseTest {
     protected Stock sber() {
         return Stock
             .builder()
-            .id(new InstrumentId("SBER"))
+            .id(sberId)
             .ticker("SBER")
             .shortName("Сбер")
             .name("Сбербанк")
@@ -418,7 +419,7 @@ public class BaseTest {
     protected Stock sibn() {
         return Stock
             .builder()
-            .id(new InstrumentId("SIBN"))
+            .id(sibnId)
             .ticker("SIBN")
             .shortName("Газпромнефть")
             .name("Газпромнефть")
@@ -432,7 +433,7 @@ public class BaseTest {
     protected Futures brf4() {
         return Futures
             .builder()
-            .id(new InstrumentId("BRF4"))
+            .id(brf4Id)
             .ticker("BRF4")
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
@@ -447,7 +448,7 @@ public class BaseTest {
     protected Stock lkoh() {
         return Stock
             .builder()
-            .id(new InstrumentId("LKOH"))
+            .id(lkohId)
             .ticker("LKOH")
             .shortName("Лукойл")
             .name("Лукойл")
@@ -461,7 +462,7 @@ public class BaseTest {
     protected Stock tatn() {
         return Stock
             .builder()
-            .id(new InstrumentId("TATN"))
+            .id(tatnId)
             .ticker("TATN")
             .shortName("Татнефть")
             .name("Татнефть")
@@ -472,7 +473,7 @@ public class BaseTest {
     protected Stock rosn() {
         return Stock
             .builder()
-            .id(new InstrumentId("ROSN"))
+            .id(rosnId)
             .ticker("ROSN")
             .shortName("Роснефть")
             .name("Роснефть")
@@ -483,7 +484,7 @@ public class BaseTest {
     protected CurrencyPair usdRub() {
         return CurrencyPair
             .builder()
-            .id(new InstrumentId("USD000UTSTOM"))
+            .id(usdRubId)
             .ticker("USD000UTSTOM")
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
@@ -495,7 +496,7 @@ public class BaseTest {
     protected Stock tgkb() {
         return Stock
             .builder()
-            .id(new InstrumentId("TGKB"))
+            .id(tgkbId)
             .name("TGKB")
             .ticker("TGKB")
             .shortName("TGKB")
@@ -506,11 +507,24 @@ public class BaseTest {
     protected Stock tgkn() {
         return Stock
             .builder()
-            .id(new InstrumentId("TGKN"))
+            .id(tgknId)
             .name("TGKN")
             .ticker("TGKN")
             .shortName("TGKN")
             .lotSize(100)
             .build();
     }
+
+    protected InstrumentId tgknId = InstrumentId.from(Ticker.from("TGKN"));
+    protected InstrumentId tgkbId = InstrumentId.from(Ticker.from("TGKB"));
+    protected InstrumentId rosnId = InstrumentId.from(Ticker.from("ROSN"));
+    protected InstrumentId tatnId = InstrumentId.from(Ticker.from("TATN"));
+    protected InstrumentId lkohId = InstrumentId.from(Ticker.from("LKOH"));
+    protected InstrumentId sberId = InstrumentId.from(Ticker.from("SBER"));
+    protected InstrumentId sberpId = InstrumentId.from(Ticker.from("SBERP"));
+    protected InstrumentId sibnId = InstrumentId.from(Ticker.from("SIBN"));
+    protected InstrumentId afksId = InstrumentId.from(Ticker.from("AFKS"));
+    protected InstrumentId usdRubId = InstrumentId.from(Ticker.from("USD000UTSTOM"));
+    protected InstrumentId brf4Id = InstrumentId.from(Ticker.from("BRF4"));
+    protected InstrumentId imoexId = InstrumentId.from(Ticker.from("IMOEX"));
 }

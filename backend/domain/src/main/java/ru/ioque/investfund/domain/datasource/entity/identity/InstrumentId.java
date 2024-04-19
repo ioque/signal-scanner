@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 @Getter
 @ToString
@@ -13,5 +14,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InstrumentId {
-    String value;
+    Ticker ticker;
+
+    public static InstrumentId from(Ticker ticker) {
+        return new InstrumentId(ticker);
+    }
 }
