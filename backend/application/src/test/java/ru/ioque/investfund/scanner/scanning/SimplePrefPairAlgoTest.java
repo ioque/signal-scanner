@@ -122,7 +122,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberpId, 1L,"10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -151,7 +151,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -178,8 +178,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, 1L, "SBER", "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId, 1L, "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy(datasourceId, sberpId, 1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -206,8 +206,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -234,7 +234,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBERP", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -261,7 +261,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"SBER", "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -308,7 +308,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBER", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId,1L,"10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -355,7 +355,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId,"SBER", "SBERP");
 
@@ -432,15 +432,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 250.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId, 1L,  "10:55:00", 250.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, sberpId, 1L, "10:54:00", 250D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 251D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy(datasourceId, sberId, 1L,"10:55:00", 251D, 136926D, 1),
+            buildBuyDealBy(datasourceId, sberpId, 1L,"10:54:00", 250D, 136926D, 1)
         );
     }
 }

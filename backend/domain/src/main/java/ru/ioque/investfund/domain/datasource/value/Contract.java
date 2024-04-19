@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class Contract extends IntradayValue {
     @Builder
     public Contract(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -28,7 +30,7 @@ public class Contract extends IntradayValue {
         Double value,
         Integer qnt
     ) {
-        super(datasourceId, number, dateTime, ticker, price, value);
+        super(datasourceId, instrumentId, number, dateTime, price, value);
         setQnt(qnt);
     }
 

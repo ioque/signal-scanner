@@ -30,7 +30,7 @@ public class DatasourceStorage {
 
     @SneakyThrows
     public List<IntradayValue> getDealsByTicker(InstrumentId instrumentId) {
-        return intradayValues.stream().filter(row -> row.getTicker().equals(instrumentId.getTicker().getValue())).toList();
+        return intradayValues.stream().filter(row -> row.getInstrumentId().equals(instrumentId)).toList();
     }
 
     public void initInstruments(List<Instrument> instruments) {

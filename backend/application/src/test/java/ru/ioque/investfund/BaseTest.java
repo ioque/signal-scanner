@@ -144,8 +144,8 @@ public class BaseTest {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId, String ticker) {
-        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId, ticker).toList();
+    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId, InstrumentId instrumentId) {
+        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId, instrumentId).toList();
     }
 
     protected DatasourceId getDatasourceId() {
@@ -196,8 +196,8 @@ public class BaseTest {
 
     protected Deal buildBuyDealBy(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
-        String ticker,
         String localTime,
         Double price,
         Double value,
@@ -205,9 +205,9 @@ public class BaseTest {
     ) {
         return Deal.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
-            .ticker(ticker)
             .value(value)
             .isBuy(true)
             .qnt(qnt)
@@ -217,8 +217,8 @@ public class BaseTest {
 
     protected Deal buildSellDealBy(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
-        String ticker,
         String localTime,
         Double price,
         Double value,
@@ -226,9 +226,9 @@ public class BaseTest {
     ) {
         return Deal.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
-            .ticker(ticker)
             .value(value)
             .isBuy(false)
             .qnt(qnt)
@@ -238,8 +238,8 @@ public class BaseTest {
 
     protected Contract buildContractBy(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
-        String ticker,
         String localTime,
         Double price,
         Double value,
@@ -247,9 +247,9 @@ public class BaseTest {
     ) {
         return Contract.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
-            .ticker(ticker)
             .price(price)
             .qnt(qnt)
             .value(value)
@@ -258,17 +258,17 @@ public class BaseTest {
 
     protected Delta buildDeltaBy(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
-        String ticker,
         String localTime,
         Double price,
         Double value
     ) {
         return Delta.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
-            .ticker(ticker)
             .value(value)
             .price(price)
             .build();
@@ -353,12 +353,12 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected Deal buildDealWith(DatasourceId datasourceId, Long number, String ticker, LocalDateTime dateTime) {
+    protected Deal buildDealWith(DatasourceId datasourceId, InstrumentId instrumentId, Long number, LocalDateTime dateTime) {
         return Deal.builder()
             .datasourceId(datasourceId)
+            .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTime)
-            .ticker(ticker)
             .value(10000.0)
             .isBuy(false)
             .qnt(1)

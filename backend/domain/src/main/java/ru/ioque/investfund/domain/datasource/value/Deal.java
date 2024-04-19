@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.time.LocalDateTime;
 
@@ -22,15 +23,15 @@ public class Deal extends IntradayValue {
     @Builder
     public Deal(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
         LocalDateTime dateTime,
-        String ticker,
         Double price,
         Boolean isBuy,
         Integer qnt,
         Double value
     ) {
-        super(datasourceId, number, dateTime, ticker, price, value);
+        super(datasourceId, instrumentId, number, dateTime, price, value);
         setBuy(isBuy);
         setQnt(qnt);
     }

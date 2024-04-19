@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,24 +19,24 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable, Comparable<IntradayValue> {
     DatasourceId datasourceId;
+    InstrumentId instrumentId;
     Long number;
     LocalDateTime dateTime;
-    String ticker;
     Double price;
     Double value;
 
     public IntradayValue(
         DatasourceId datasourceId,
+        InstrumentId instrumentId,
         Long number,
         LocalDateTime dateTime,
-        String ticker,
         Double price,
         Double value
     ) {
         setDatasourceId(datasourceId);
+        setInstrumentId(instrumentId);
         setNumber(number);
         setDateTime(dateTime);
-        setTicker(ticker);
         setPrice(price);
         setValue(value);
     }
@@ -69,11 +70,11 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
         this.dateTime = dateTime;
     }
 
-    private void setTicker(String ticker) {
-        if(ticker == null || ticker.isEmpty()) {
+    private void setInstrumentId(InstrumentId instrumentId) {
+        if(instrumentId == null) {
             throw new DomainException("Не заполнен тикер.");
         }
-        this.ticker = ticker;
+        this.instrumentId = instrumentId;
     }
 
     private void setPrice(Double price) {

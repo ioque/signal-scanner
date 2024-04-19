@@ -129,8 +129,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 100.D, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
+            buildDeltaBy(datasourceId, imoexId,1L,"10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 2900.0, 2_000_000D)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -158,8 +158,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000.0)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D)
+            buildDeltaBy(datasourceId, imoexId,1L,"10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L,"12:00:00", 2900.0, 2_000_000D)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -190,9 +190,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.0, 3000.0, 1_500_000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 3000.0, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 2900.0, 2_000_000D),
-            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 469D, 1)
+            buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 3000.0, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L,"12:00:00", 2900.0, 2_000_000D),
+            buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 469D, 1)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -220,9 +220,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId,"IMOEX", "2023-12-21", 3000.D, 3000.D, 1_500_000.0)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
+            buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId,3L,"11:00:00", 100D, 6000D, 1)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -250,11 +250,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 103D, 6000D, 1)
+            buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId, tgknId,1L, "10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 103D, 6000D, 1)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -282,8 +282,8 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D)
+            buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 3000D, 2_000_000D)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -313,11 +313,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2900D, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 103D, 6000D, 1)
+            buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2900D, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId, tgknId,2L, "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 103D, 6000D, 1)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -344,11 +344,11 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDealResultBy(datasourceId,"TGKN", "2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId,1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
-            buildDeltaBy(datasourceId,2L, "IMOEX", "12:00:00", 3000D, 2_000_000D),
-            buildBuyDealBy(datasourceId,1L, "TGKN", "10:00:00", 100D, 6000D, 1),
-            buildBuyDealBy(datasourceId,2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(datasourceId,3L, "TGKN", "11:00:00", 100D, 6000D, 1)
+            buildDeltaBy(datasourceId, imoexId,1L, "10:00:00", 2800D, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId,2L, "12:00:00", 3000D, 2_000_000D),
+            buildBuyDealBy(datasourceId, tgknId,1L,"10:00:00", 100D, 6000D, 1),
+            buildBuyDealBy(datasourceId, tgknId,2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId,3L, "11:00:00", 100D, 6000D, 1)
         );
         initScanner(datasourceId, "TGKN", "IMOEX");
 
@@ -388,13 +388,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-21", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 2800D, 100D),
-            buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 3200D, 200D),
-            buildBuyDealBy(datasourceId, 1L, "TGKN", "10:00:00", 100D, 5000D, 1),
-            buildBuyDealBy(datasourceId, 2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(datasourceId, 3L, "TGKN", "11:00:00", 100D, 1000D, 1),
-            buildBuyDealBy(datasourceId, 4L, "TGKN", "11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(datasourceId, 5L, "TGKN", "11:45:00", 102D, 5000D, 1)
+            buildDeltaBy(datasourceId, imoexId, 1L, "10:00:00", 2800D, 100D),
+            buildDeltaBy(datasourceId, imoexId, 2L, "12:00:00", 3200D, 200D),
+            buildBuyDealBy(datasourceId, tgknId, 1L, "10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(datasourceId, tgknId, 2L, "10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId, 3L, "11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(datasourceId, tgknId, 4L, "11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(datasourceId, tgknId, 5L, "11:45:00", 102D, 5000D, 1)
         );
     }
 
@@ -408,13 +408,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
             buildDeltaResultBy(datasourceId, "IMOEX", "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(datasourceId, 3L, "IMOEX", "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(datasourceId, 4L, "IMOEX", "12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(datasourceId, 6L, "TGKN", "10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(datasourceId, 7L, "TGKN", "10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(datasourceId, 8L, "TGKN", "11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(datasourceId, 9L, "TGKN", "11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(datasourceId, 10L, "TGKN", "11:45:00", 96D, 5000D, 1)
+            buildDeltaBy(datasourceId, imoexId, 3L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(datasourceId, imoexId, 4L,"12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(datasourceId, tgknId, 6L,"10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(datasourceId, tgknId, 7L,"10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId, 8L,"11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId, 9L,"11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(datasourceId, tgknId, 10L,"11:45:00", 96D, 5000D, 1)
         );
     }
 
@@ -435,20 +435,20 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     private void initTgknAndTgkbAndImoexIntradayData(DatasourceId datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
-                buildDeltaBy(datasourceId, 1L, "IMOEX", "10:00:00", 2800D, 1_000_000D),
-                buildDeltaBy(datasourceId, 2L, "IMOEX", "12:00:00", 3100D, 1_200_000D),
+                buildDeltaBy(datasourceId, imoexId, 1L, "10:00:00", 2800D, 1_000_000D),
+                buildDeltaBy(datasourceId, imoexId, 2L, "12:00:00", 3100D, 1_200_000D),
                 //TGKB
-                buildBuyDealBy(datasourceId, 1L, "TGKB", "10:00:00", 100D, 6000D, 1),
-                buildBuyDealBy(datasourceId, 2L, "TGKB", "10:16:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 3L, "TGKB", "11:00:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 4L, "TGKB", "11:10:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 5L, "TGKB", "11:50:00", 102D, 6000D, 1),
+                buildBuyDealBy(datasourceId, tgkbId, 1L,"10:00:00", 100D, 6000D, 1),
+                buildBuyDealBy(datasourceId, tgkbId, 2L,"10:16:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgkbId, 3L,"11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgkbId, 4L,"11:10:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgkbId, 5L,"11:50:00", 102D, 6000D, 1),
                 //TGKN
-                buildBuyDealBy(datasourceId, 1L, "TGKN", "10:00:00", 100D, 5000D, 1),
-                buildBuyDealBy(datasourceId, 2L, "TGKN", "10:03:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 3L, "TGKN", "11:00:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 4L, "TGKN", "11:01:00", 100D, 1000D, 1),
-                buildBuyDealBy(datasourceId, 5L, "TGKN", "11:45:00", 102D, 5000D, 1)
+                buildBuyDealBy(datasourceId, tgknId, 1L,"10:00:00", 100D, 5000D, 1),
+                buildBuyDealBy(datasourceId, tgknId, 2L,"10:03:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgknId, 3L,"11:00:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgknId, 4L,"11:01:00", 100D, 1000D, 1),
+                buildBuyDealBy(datasourceId, tgknId, 5L,"11:45:00", 102D, 5000D, 1)
             )
         );
     }

@@ -3,8 +3,10 @@ package ru.ioque.investfund.fakes;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
@@ -39,7 +41,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                     .toList()
                 )
-                .todayValueSeries(getIntradayBy(datasourceId, ticker)
+                .todayValueSeries(getIntradayBy(datasourceId, new InstrumentId(new Ticker(ticker)))
                     .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getValue(),
@@ -56,7 +58,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                 .valueSeries(getHistoryBy(datasourceId, ticker)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                     .toList())
-                .todayPriceSeries(getIntradayBy(datasourceId, ticker)
+                .todayPriceSeries(getIntradayBy(datasourceId, new InstrumentId(new Ticker(ticker)))
                     .filter(row -> row.getDateTime().toLocalDate().equals(dateTimeProvider.nowDate()))
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getPrice(),
@@ -66,8 +68,8 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                 .build()).toList();
     }
 
-    private Stream<IntradayValue> getIntradayBy(DatasourceId datasourceId, String ticker) {
-        return intradayValueRepository.getAllBy(datasourceId, ticker);
+    private Stream<IntradayValue> getIntradayBy(DatasourceId datasourceId, InstrumentId instrumentId) {
+        return intradayValueRepository.getAllBy(datasourceId, instrumentId);
     }
 
     private Stream<HistoryValue> getHistoryBy(DatasourceId datasourceId, String ticker) {

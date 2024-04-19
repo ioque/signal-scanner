@@ -137,9 +137,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildBuyDealBy(datasourceId, tatnId, 1L, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 2L, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
         );
         initScanner(datasourceId);
 
@@ -186,8 +186,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1)
+            buildContractBy(datasourceId, brf4Id, 1L, "10:00:00", 78D, 78000D, 1),
+            buildContractBy(datasourceId, brf4Id, 2L, "12:00:00", 96D, 96000D, 1)
         );
         initScanner(datasourceId);
 
@@ -263,21 +263,21 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 73D, 73000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 72D, 73000D, 1),
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 73D, 73000D, 1),
+            buildContractBy(datasourceId, brf4Id, 2L,"12:00:00", 72D, 73000D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1),
-            buildBuyDealBy(datasourceId, 1L, TATN, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 2L, TATN, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, 3L, TATN, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
+            buildContractBy(datasourceId, brf4Id, 2L,"12:00:00", 96D, 96000D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(datasourceId, tatnId, 3L, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 

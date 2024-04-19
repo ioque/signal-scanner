@@ -184,17 +184,17 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
-                buildContractBy(datasourceId, 1L, "BRF4", "10:00:00", 78D, 78000D, 1),
-                buildContractBy(datasourceId,1L, "BRF4", "12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(datasourceId,1L, "ROSN", "10:00:00", 250.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,2L, "ROSN", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,1L, "LKOH", "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,2L, "LKOH", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,1L, "SIBN", "10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,2L, "SIBN", "12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,1L, "TATN", "10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,2L, "TATN", "12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId,3L, "TATN", "13:45:00", 280.1D, 136926D, 1)
+                buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
+                buildContractBy(datasourceId, brf4Id,1L,"12:00:00", 96D, 96000D, 1),
+                buildBuyDealBy(datasourceId, rosnId,1L,"10:00:00", 250.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, rosnId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, lkohId,1L,"10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, lkohId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, sibnId,1L,"10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, sibnId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, tatnId,1L,"10:00:00", 251.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, tatnId,2L,"12:00:00", 247.1D, 136926D, 1),
+                buildBuyDealBy(datasourceId, tatnId,3L,"13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
