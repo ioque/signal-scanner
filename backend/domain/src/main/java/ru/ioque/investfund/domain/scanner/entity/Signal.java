@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Signal {
-    LocalDateTime dateTime;
+    LocalDateTime watermark;
     InstrumentId instrumentId;
     Double price;
     String summary;

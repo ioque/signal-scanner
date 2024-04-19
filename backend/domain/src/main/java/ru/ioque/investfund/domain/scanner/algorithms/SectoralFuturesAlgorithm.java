@@ -50,7 +50,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                         .isOpen(true)
                         .isBuy(true)
                         .summary(summary)
-                        .dateTime(watermark)
+                        .watermark(watermark)
                         .instrumentId(snapshot.getInstrumentId())
                         .price(snapshot.getTodayLastPrice().orElse(0D))
                         .build()

@@ -12,10 +12,8 @@ import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
-import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
@@ -64,16 +62,8 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
 
     private void runScanner(SignalScanner scanner, LocalDateTime watermark) {
         final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getInstrumentIds());
-        final List<Signal> newSignals = scanner.scanning(snapshots, watermark);
+        scanner.scanning(snapshots, watermark);
         scannerRepository.save(scanner);
-        newSignals.forEach(signal -> eventPublisher.publish(
-            SignalFoundEvent.builder()
-                .id(uuidProvider.generate())
-                .watermark(watermark)
-                .isBuy(signal.isBuy())
-                .scannerId(scanner.getId())
-                .instrumentId(signal.getInstrumentId())
-                .build()
-        ));
+        scanner.getEvents().forEach(eventPublisher::publish);
     }
 }

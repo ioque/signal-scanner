@@ -38,7 +38,7 @@ public class SignalEntity extends GeneratedIdEntity {
 
     public Signal toDomain() {
         return Signal.builder()
-            .dateTime(getDateTime())
+            .watermark(getDateTime())
             .instrumentId(InstrumentId.from(Ticker.from(getTicker())))
             .price(getPrice())
             .summary(getSummary())
@@ -49,7 +49,7 @@ public class SignalEntity extends GeneratedIdEntity {
 
     public static SignalEntity from(Signal signal) {
         return SignalEntity.builder()
-            .dateTime(signal.getDateTime())
+            .dateTime(signal.getWatermark())
             .price(signal.getPrice())
             .ticker(signal.getInstrumentId().getTicker().getValue())
             .summary(signal.getSummary())

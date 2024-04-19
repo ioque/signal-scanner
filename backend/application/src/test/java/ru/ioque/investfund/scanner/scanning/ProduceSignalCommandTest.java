@@ -164,7 +164,7 @@ public class ProduceSignalCommandTest extends BaseTest {
                 .isOpen(true)
                 .instrumentId(tgknId)
                 .summary("summary")
-                .dateTime(today)
+                .watermark(today)
                 .build()
         );
         initTradingResults(
@@ -205,7 +205,7 @@ public class ProduceSignalCommandTest extends BaseTest {
                     .isOpen(true)
                     .instrumentId(tgkbId)
                     .summary("summary")
-                    .dateTime(today)
+                    .watermark(today)
                     .build(),
                 Signal.builder()
                     .price(10D)
@@ -213,7 +213,7 @@ public class ProduceSignalCommandTest extends BaseTest {
                     .isOpen(true)
                     .instrumentId(tgknId)
                     .summary("summary")
-                    .dateTime(today)
+                    .watermark(today)
                     .build()
             )
         );
