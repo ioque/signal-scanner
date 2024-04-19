@@ -15,7 +15,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
+import ru.ioque.investfund.domain.scanner.event.SignalRegisteredEvent;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
@@ -125,7 +125,7 @@ public class SignalScanner extends Domain<ScannerId> {
         Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByInstrumentId(newSignal)).findFirst();
         if (signalSameByTicker.isPresent() && newSignal.isSell() || newSignal.isBuy()) {
             signals.add(newSignal);
-            addEvent(SignalFoundEvent.of(getId(), newSignal));
+            addEvent(SignalRegisteredEvent.of(getId(), newSignal));
         }
         signalSameByTicker.ifPresent(Signal::close);
     }

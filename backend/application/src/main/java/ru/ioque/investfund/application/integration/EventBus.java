@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.event;
+package ru.ioque.investfund.application.integration;
 
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.domain.core.DomainEvent;

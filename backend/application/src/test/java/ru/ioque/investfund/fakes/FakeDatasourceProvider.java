@@ -6,9 +6,10 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.InstrumentBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 import ru.ioque.investfund.fixture.DatasourceStorage;
+
+import java.util.List;
 
 public class FakeDatasourceProvider implements DatasourceProvider {
     @Setter
@@ -36,9 +37,7 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public InstrumentBatch fetchInstruments(Datasource datasource) {
-        return new InstrumentBatch(
-            datasourceStorage.getInstruments()
-        );
+    public List<Instrument> fetchInstruments(Datasource datasource) {
+        return datasourceStorage.getInstruments();
     }
 }

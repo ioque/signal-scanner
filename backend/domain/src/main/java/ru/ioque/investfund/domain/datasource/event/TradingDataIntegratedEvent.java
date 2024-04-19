@@ -12,7 +12,6 @@ import ru.ioque.investfund.domain.core.DomainEvent;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -22,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegratedEvent implements DomainEvent {
-    UUID id;
     DatasourceId datasourceId;
     Integer updatedCount;
     LocalDateTime dateTime;

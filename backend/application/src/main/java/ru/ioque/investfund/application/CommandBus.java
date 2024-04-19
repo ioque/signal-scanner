@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.command;
+package ru.ioque.investfund.application;
 
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.domain.core.Command;

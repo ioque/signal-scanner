@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.event;
+package ru.ioque.investfund.application.integration;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

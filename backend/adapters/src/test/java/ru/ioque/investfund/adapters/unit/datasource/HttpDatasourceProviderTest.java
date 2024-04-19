@@ -28,7 +28,6 @@ import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.InstrumentBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.Ticker;
@@ -106,9 +105,9 @@ public class HttpDatasourceProviderTest {
 
         when(datasourceRestClient.fetchInstruments(DATASOURCE_URL)).thenReturn(instruments);
 
-        InstrumentBatch batch = datasourceProvider.fetchInstruments(datasource());
+        List<Instrument> batch = datasourceProvider.fetchInstruments(datasource());
 
-        assertEquals(4, batch.getUniqueValues().size());
+        assertEquals(4, batch.size());
         assertEqualsStock(stockDto, getInstrumentFromBatchByTicker(batch, stockDto.getTicker()));
         assertEqualsCurrencyPair(currencyPairDto, getInstrumentFromBatchByTicker(batch, currencyPairDto.getTicker()));
         assertEqualsIndex(indexDto, getInstrumentFromBatchByTicker(batch, indexDto.getTicker()));
@@ -255,9 +254,8 @@ public class HttpDatasourceProviderTest {
             .orElseThrow();
     }
 
-    private Instrument getInstrumentFromBatchByTicker(InstrumentBatch batch, String ticker) {
+    private Instrument getInstrumentFromBatchByTicker(List<Instrument> batch, String ticker) {
         return batch
-            .getUniqueValues()
             .stream()
             .filter(row -> row.getId().getTicker().getValue().equals(ticker))
             .findFirst()

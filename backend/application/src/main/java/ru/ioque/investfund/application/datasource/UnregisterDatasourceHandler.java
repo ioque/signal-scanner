@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.command.handlers.datasource;
+package ru.ioque.investfund.application.datasource;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.command.CommandHandler;
+import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 

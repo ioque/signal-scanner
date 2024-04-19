@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.command.handlers.scanner;
+package ru.ioque.investfund.application.scanner;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.command.CommandHandler;
+import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
@@ -17,12 +17,12 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class CreateScannerHandler extends CommandHandler<CreateScannerCommand> {
+public class CreateScannerCommandHandler extends CommandHandler<CreateScannerCommand> {
     UUIDProvider uuidProvider;
     ScannerRepository scannerRepository;
     DatasourceRepository datasourceRepository;
 
-    public CreateScannerHandler(
+    public CreateScannerCommandHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,

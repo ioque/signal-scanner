@@ -5,18 +5,18 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.command.CommandBus;
-import ru.ioque.investfund.application.command.handlers.datasource.DisableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.EnableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.IntegrateInstrumentsHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.IntegrateTradingDataHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.RegisterDatasourceHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.UnregisterDatasourceHandler;
-import ru.ioque.investfund.application.command.handlers.datasource.UpdateDatasourceHandler;
-import ru.ioque.investfund.application.command.handlers.scanner.CreateScannerHandler;
-import ru.ioque.investfund.application.command.handlers.scanner.ProduceSignalHandler;
-import ru.ioque.investfund.application.command.handlers.scanner.UpdateScannerHandler;
-import ru.ioque.investfund.application.command.handlers.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.datasource.DisableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.datasource.EnableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.datasource.IntegrateInstrumentsHandler;
+import ru.ioque.investfund.application.datasource.IntegrateTradingDataHandler;
+import ru.ioque.investfund.application.datasource.RegisterDatasourceHandler;
+import ru.ioque.investfund.application.datasource.UnregisterDatasourceHandler;
+import ru.ioque.investfund.application.datasource.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.scanner.CreateScannerCommandHandler;
+import ru.ioque.investfund.application.scanner.ProduceSignalCommandHandler;
+import ru.ioque.investfund.application.scanner.UpdateScannerCommandHandler;
+import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
@@ -45,9 +45,9 @@ public class FakeDIContainer {
     RegisterDatasourceHandler registerDatasourceProcessor;
     UnregisterDatasourceHandler unregisterDatasourceProcessor;
     UpdateDatasourceHandler updateDatasourceProcessor;
-    CreateScannerHandler createScannerProcessor;
-    ProduceSignalHandler produceSignalProcessor;
-    UpdateScannerHandler updateScannerProcessor;
+    CreateScannerCommandHandler createScannerProcessor;
+    ProduceSignalCommandHandler produceSignalProcessor;
+    UpdateScannerCommandHandler updateScannerProcessor;
     CommandBus commandBus;
     Validator validator;
 
@@ -92,7 +92,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             exchangeProvider,
             datasourceRepository,
             historyValueRepository,
@@ -118,7 +117,7 @@ public class FakeDIContainer {
             loggerProvider,
             datasourceRepository
         );
-        createScannerProcessor = new CreateScannerHandler(
+        createScannerProcessor = new CreateScannerCommandHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -126,18 +125,17 @@ public class FakeDIContainer {
             scannerRepository,
             datasourceRepository
         );
-        updateScannerProcessor = new UpdateScannerHandler(
+        updateScannerProcessor = new UpdateScannerCommandHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             scannerRepository,
             datasourceRepository
         );
-        produceSignalProcessor = new ProduceSignalHandler(
+        produceSignalProcessor = new ProduceSignalCommandHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             scannerRepository,
             tradingDataRepository,
             eventPublisher

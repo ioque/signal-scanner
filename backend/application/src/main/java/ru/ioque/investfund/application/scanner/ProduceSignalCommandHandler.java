@@ -1,16 +1,15 @@
-package ru.ioque.investfund.application.command.handlers.scanner;
+package ru.ioque.investfund.application.scanner;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
@@ -21,23 +20,20 @@ import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
-    UUIDProvider uuidProvider;
+public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCommand> {
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository snapshotsRepository;
     EventPublisher eventPublisher;
 
-    public ProduceSignalHandler(
+    public ProduceSignalCommandHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         TradingSnapshotsRepository snapshotsRepository,
         EventPublisher eventPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
         this.scannerRepository = scannerRepository;
         this.snapshotsRepository = snapshotsRepository;
         this.eventPublisher = eventPublisher;
@@ -52,7 +48,6 @@ public class ProduceSignalHandler extends CommandHandler<ProduceSignalCommand> {
             .forEach(scanner -> runScanner(scanner, command.getWatermark()));
         eventPublisher.publish(
             ScanningFinishedEvent.builder()
-                .id(uuidProvider.generate())
                 .datasourceId(command.getDatasourceId())
                 .watermark(command.getWatermark())
                 .dateTime(dateTimeProvider.nowDateTime())

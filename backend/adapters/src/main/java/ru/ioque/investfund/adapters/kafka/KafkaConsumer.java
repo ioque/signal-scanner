@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-import ru.ioque.investfund.application.command.CommandBus;
-import ru.ioque.investfund.application.event.EventBus;
+import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.integration.EventBus;
 import ru.ioque.investfund.domain.core.Command;
 import ru.ioque.investfund.domain.core.DomainEvent;
 

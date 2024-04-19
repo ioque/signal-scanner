@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalFoundEvent implements DomainEvent {
+public class SignalRegisteredEvent implements DomainEvent {
     InstrumentId instrumentId;
     Double price;
     boolean isBuy;
@@ -30,7 +30,7 @@ public class SignalFoundEvent implements DomainEvent {
     LocalDateTime watermark;
 
     public static DomainEvent of(ScannerId scannerId, Signal newSignal) {
-        return SignalFoundEvent.builder()
+        return SignalRegisteredEvent.builder()
             .instrumentId(newSignal.getInstrumentId())
             .price(newSignal.getPrice())
             .isBuy(newSignal.isBuy())

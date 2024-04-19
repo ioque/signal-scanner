@@ -2,8 +2,8 @@ package ru.ioque.investfund;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import ru.ioque.investfund.application.command.CommandBus;
-import ru.ioque.investfund.application.command.handlers.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;

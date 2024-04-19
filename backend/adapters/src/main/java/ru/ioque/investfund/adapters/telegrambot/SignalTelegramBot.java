@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.ioque.investfund.application.command.handlers.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.domain.telegrambot.TelegramCommand;
 
 @Slf4j

@@ -15,15 +15,13 @@ import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
-import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
+import ru.ioque.investfund.domain.scanner.event.SignalRegisteredEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -84,27 +82,21 @@ public class ProduceSignalCommandTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T3. Зафиксирован сигнал к покупке по тикеру - TGKN, алгоритм - аномальные объемы.
-        Сгенерированы два события - найден сигнал, завершено сканирование.
+        T3. Зарегистрирован сигнал к покупке по тикеру - TGKN, алгоритм - аномальные объемы.
+        Сгенерировано события - зарегистрирован сигнал по тикеру TGKN.
         """)
     void testCase3() {
         prepareTestCase3();
 
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
-        final Optional<SignalFoundEvent> signalFoundEvent = findSignalFoundEvent();
-        final Optional<ScanningFinishedEvent> scanningFinishedEvent = findScanningFinishedEvent();
+        final Optional<SignalRegisteredEvent> signalFoundEvent = findSignalFoundEvent();
         assertTrue(signalFoundEvent.isPresent());
-        assertNotNull(signalFoundEvent.get().getId());
+        assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId(), signalFoundEvent.get().getScannerId());
         assertEquals(tgknId, signalFoundEvent.get().getInstrumentId());
-        assertFalse(signalFoundEvent.get().isBuy());
+        assertTrue(signalFoundEvent.get().isBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
-        assertTrue(scanningFinishedEvent.isPresent());
-        assertNotNull(scanningFinishedEvent.get().getId());
-        assertEquals(getDatasourceId(), scanningFinishedEvent.get().getDatasourceId());
-        assertEquals(dateTimeProvider().nowDateTime(), scanningFinishedEvent.get().getWatermark());
-        assertEquals(dateTimeProvider().nowDateTime(), scanningFinishedEvent.get().getDateTime());
     }
 
     @Test
@@ -128,7 +120,7 @@ public class ProduceSignalCommandTest extends BaseTest {
         T5. В данных найден сигнал к продаже TGKN, сигнала к покупке по инструменту не было. Сигнал не зарегистрирован.
         """)
     void testCase5() {
-        prepareTestCase3();
+        prepareTestCase5();
 
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
@@ -153,20 +145,13 @@ public class ProduceSignalCommandTest extends BaseTest {
         assertEquals(1, scanner.getSignals().stream().filter(Signal::isSell).count());
     }
 
-    private void prepareTestCase6() {
-        initTodayDateTime("2023-12-25T12:00:00");
-        final LocalDateTime today = LocalDateTime.parse("2023-12-25T12:00:00");
+    private ScannerId getScannerId() {
+        return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
+    }
+
+    private void prepareTestCase3() {
         final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
-        scanner.getSignals().add(
-            Signal.builder()
-                .price(10D)
-                .isBuy(false)
-                .isOpen(true)
-                .instrumentId(tgknId)
-                .summary("summary")
-                .watermark(today)
-                .build()
-        );
+        initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
             buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
             buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
@@ -176,21 +161,17 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId,  1L,"10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 3100D, 2_000_000D),
+            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L, "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L, "12:00:00", 3100D, 2_000_000D),
             buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 100D, 5000D, 1),
             buildBuyDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 100D, 1000D, 1),
             buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 100D, 1000D, 1),
             buildBuyDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 5L,"11:45:00", 102D, 5000D, 1)
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 5L, "11:45:00", 102D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
-    }
-
-    private ScannerId getScannerId() {
-        return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
     }
 
     private void prepareTestCase4() {
@@ -247,7 +228,7 @@ public class ProduceSignalCommandTest extends BaseTest {
         clearLogs();
     }
 
-    private void prepareTestCase3() {
+    private void prepareTestCase5() {
         final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
@@ -259,12 +240,12 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L, "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L, "12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L, "10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 2L, "10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L, "11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 4L,  "11:01:00", 97D, 1000D, 1),
+            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 97D, 1000D, 1),
             buildSellDealBy(scanner.getDatasourceId(), tgknId, 5L, "11:45:00", 96D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
@@ -272,19 +253,47 @@ public class ProduceSignalCommandTest extends BaseTest {
         clearLogs();
     }
 
-    private Optional<SignalFoundEvent> findSignalFoundEvent() {
-        return eventPublisher()
-            .getEvents()
-            .stream().filter(row -> row.getClass().equals(SignalFoundEvent.class))
-            .findFirst()
-            .map(SignalFoundEvent.class::cast);
+    private void prepareTestCase6() {
+        initTodayDateTime("2023-12-25T12:00:00");
+        final LocalDateTime today = LocalDateTime.parse("2023-12-25T12:00:00");
+        final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
+        scanner.getSignals().add(
+            Signal.builder()
+                .price(10D)
+                .isBuy(false)
+                .isOpen(true)
+                .instrumentId(tgknId)
+                .summary("summary")
+                .watermark(today)
+                .build()
+        );
+        initTradingResults(
+            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
+            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
+        );
+        initDealDatas(
+            buildDeltaBy(scanner.getDatasourceId(), imoexId,  1L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 3100D, 2_000_000D),
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 5L,"11:45:00", 102D, 5000D, 1)
+        );
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        clearLogs();
     }
 
-    private Optional<ScanningFinishedEvent> findScanningFinishedEvent() {
+    private Optional<SignalRegisteredEvent> findSignalFoundEvent() {
         return eventPublisher()
             .getEvents()
-            .stream().filter(row -> row.getClass().equals(ScanningFinishedEvent.class))
+            .stream().filter(row -> row.getClass().equals(SignalRegisteredEvent.class))
             .findFirst()
-            .map(ScanningFinishedEvent.class::cast);
+            .map(SignalRegisteredEvent.class::cast);
     }
 }

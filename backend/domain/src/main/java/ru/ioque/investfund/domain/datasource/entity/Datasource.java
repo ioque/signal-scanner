@@ -13,7 +13,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,10 +58,8 @@ public class Datasource extends Domain<DatasourceId> {
         this.description = command.getDescription();
     }
 
-    public void addInstrument(Instrument instrument) {
-        if (findBy(instrument.getId()).isEmpty()) {
-            instruments.add(instrument);
-        }
+    public void integrateInstruments(List<Instrument> instruments) {
+        instruments.forEach(this::addInstrument);
     }
 
     public void checkExistsInstrument(List<InstrumentId> instrumentIds) {
@@ -86,22 +83,24 @@ public class Datasource extends Domain<DatasourceId> {
     }
 
     public void enableUpdate(List<InstrumentId> instrumentIds) {
-        instrumentIds.forEach(id -> findBy(id).ifPresent(Instrument::enableUpdate));
-    }
-
-    private Optional<Instrument> findBy(InstrumentId instrumentId) {
-        return instruments.stream().filter(row -> row.getId().equals(instrumentId)).findFirst();
+        instrumentIds.forEach(id -> findInstrumentBy(id).ifPresent(Instrument::enableUpdate));
     }
 
     public void disableUpdate(List<InstrumentId> instrumentIds) {
-        instrumentIds.forEach(id -> findBy(id).ifPresent(Instrument::disableUpdate));
+        instrumentIds.forEach(id -> findInstrumentBy(id).ifPresent(Instrument::disableUpdate));
     }
 
-    public List<InstrumentId> getInstrumentIds() {
+    private List<InstrumentId> getInstrumentIds() {
         return getInstruments().stream().map(Instrument::getId).toList();
     }
 
-    public List<Instrument> getInstruments() {
-        return Collections.unmodifiableList(instruments);
+    private Optional<Instrument> findInstrumentBy(InstrumentId instrumentId) {
+        return instruments.stream().filter(row -> row.getId().equals(instrumentId)).findFirst();
+    }
+
+    private void addInstrument(Instrument instrument) {
+        if (findInstrumentBy(instrument.getId()).isEmpty()) {
+            instruments.add(instrument);
+        }
     }
 }
