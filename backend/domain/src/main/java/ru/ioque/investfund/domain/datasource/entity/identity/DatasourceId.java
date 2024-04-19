@@ -16,4 +16,8 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DatasourceId {
     UUID uuid;
+
+    public static DatasourceId from(UUID uuid) {
+        return new DatasourceId(uuid);
+    }
 }

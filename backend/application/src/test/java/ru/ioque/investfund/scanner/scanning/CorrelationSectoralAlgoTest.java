@@ -4,11 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,7 +26,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Сигнал зафиксирован.
         """)
     void testCase1() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -46,7 +46,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Сигнал не зафиксирован.
         """)
     void testCase2() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initNegativeDeals(datasourceId);
@@ -65,7 +65,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T3. С последнего запуска прошло меньше 24 часов, сканер не запущен.
         """)
     void testCase3() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -86,7 +86,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         T4. С последнего запуска прошло 24 часа, сканер запущен.
         """)
     void testCase4() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -109,7 +109,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигнал зафиксирован.
         """)
     void testCase5() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -132,7 +132,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase6() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
@@ -157,7 +157,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase7() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -181,7 +181,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase8() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
@@ -205,7 +205,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
@@ -223,7 +223,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
     }
 
-    private void initScanner(UUID datasourceId) {
+    private void initScanner(DatasourceId datasourceId) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
@@ -241,7 +241,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initPositiveDealResults(UUID datasourceId) {
+    private void initPositiveDealResults(DatasourceId datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
                 buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
@@ -252,7 +252,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initNegativeDealResults(UUID datasourceId) {
+    private void initNegativeDealResults(DatasourceId datasourceId) {
         initTradingResults(
             buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-20", 75D, 75D, 10D),
             buildFuturesDealResultBy(datasourceId, BRF4, "2023-12-21", 80D, 74D, 10D),
@@ -261,7 +261,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initNegativeDeals(UUID datasourceId) {
+    private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
             buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 73D, 73000D, 1),
             buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 72D, 73000D, 1),
@@ -271,7 +271,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initPositiveDeals(UUID datasourceId) {
+    private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
             buildContractBy(datasourceId, 1L, BRF4, "10:00:00", 78D, 78000D, 1),
             buildContractBy(datasourceId, 2L, BRF4, "12:00:00", 96D, 96000D, 1),
@@ -281,7 +281,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initInstruments(UUID datasourceId) {
+    private void initInstruments(DatasourceId datasourceId) {
         datasourceStorage()
             .initInstruments(
                 List.of(

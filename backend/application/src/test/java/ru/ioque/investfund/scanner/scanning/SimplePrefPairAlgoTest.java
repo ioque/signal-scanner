@@ -4,12 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,7 +23,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигнал есть.
         """)
     void testCase4() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
@@ -48,7 +48,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Сигналов нет.
         """)
     void testCase5() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
@@ -67,7 +67,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         T6. С последнего запуска прошло меньше минуты, сканер не запущен.
         """)
     void testCase6() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
@@ -88,7 +88,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         T7. С последнего запуска прошла минута, сканер запущен.
         """)
     void testCase7() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
@@ -112,7 +112,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase8() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -141,7 +141,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase9() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -170,7 +170,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase10() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -198,7 +198,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase11() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -226,7 +226,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase12() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -253,7 +253,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase13() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -280,7 +280,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase14() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -304,7 +304,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase15() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
@@ -327,7 +327,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase16() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
@@ -351,7 +351,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase17() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
@@ -374,7 +374,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         Запускается сканер. Ошибок нет, сигналов нет.
         """)
     void testCase18() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initScanner(datasourceId, "SBER", "SBERP");
@@ -386,7 +386,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
-    private void initScanner(UUID datasourceId, String... tickers) {
+    private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
@@ -402,7 +402,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initSberSberp(UUID datasourceId) {
+    private void initSberSberp(DatasourceId datasourceId) {
         initInstruments(
             sber(),
             sberP()
@@ -411,7 +411,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 
-    private void initSberAndSberpHistory(UUID datasourceId) {
+    private void initSberAndSberpHistory(DatasourceId datasourceId) {
         initTradingResults(
             buildDealResultBy(datasourceId, "SBER", "2023-12-15", 1D, 1D, 259.2, 1D),
             buildDealResultBy(datasourceId, "SBER", "2023-12-16", 1D, 1D, 260.58, 1D),
@@ -430,14 +430,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initNegativeDeals(UUID datasourceId) {
+    private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
             buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 250.1D, 136926D, 1),
             buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)
         );
     }
 
-    private void initPositiveDeals(UUID datasourceId) {
+    private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
             buildBuyDealBy(datasourceId, 1L, "SBER", "10:55:00", 251D, 136926D, 1),
             buildBuyDealBy(datasourceId, 1L, "SBERP", "10:54:00", 250D, 136926D, 1)

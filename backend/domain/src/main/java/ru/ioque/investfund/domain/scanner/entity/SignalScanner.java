@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain {
     String description;
-    UUID datasourceId;
+    DatasourceId datasourceId;
     List<String> tickers;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
@@ -40,7 +41,7 @@ public class SignalScanner extends Domain {
         UUID id,
         Integer workPeriodInMinutes,
         String description,
-        UUID datasourceId,
+        DatasourceId datasourceId,
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,
         List<String> tickers,
@@ -75,7 +76,6 @@ public class SignalScanner extends Domain {
         }
         this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
         this.description = command.getDescription();
-        this.datasourceId = command.getScannerId();
         this.tickers = command.getTickers();
         this.properties = command.getProperties();
     }

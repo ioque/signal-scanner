@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
-
-import java.util.UUID;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 @Getter
 @Builder
@@ -22,5 +21,5 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UnregisterDatasourceCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
-    UUID datasourceId;
+    DatasourceId datasourceId;
 }

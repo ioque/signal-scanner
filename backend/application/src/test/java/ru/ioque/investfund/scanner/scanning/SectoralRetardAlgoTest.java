@@ -4,12 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +25,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         3 из 4 позиций не росли в последние дни, сигнала нет.
         """)
     void testCase1() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase1(datasourceId);
@@ -47,7 +47,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         TATN росла вчера, сегодня падает.
         """)
     void testCase2() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -68,7 +68,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T3. С последнего запуска прошло меньше 1 часа, сканер не запущен.
         """)
     void testCase3() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -91,7 +91,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         T4. С последнего запуска прошел 1 час, сканер запущен.
         """)
     void testCase4() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -115,7 +115,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase5() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -135,7 +135,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         Сигнала нет, ошибки нет.
         """)
     void testCase6() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
@@ -150,7 +150,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
-    private void initScanner(UUID datasourceId, String... tickers) {
+    private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
@@ -167,7 +167,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initOilCompanyData(UUID datasourceId) {
+    private void initOilCompanyData(DatasourceId datasourceId) {
         datasourceStorage()
             .initInstruments(
                 List.of(
@@ -181,7 +181,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 
-    private void initDealsTatnFallOtherRise(UUID datasourceId) {
+    private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
                 buildContractBy(datasourceId, 1L, "BRF4", "10:00:00", 78D, 78000D, 1),
@@ -199,7 +199,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initTradingResultsForTestCase2(UUID datasourceId) {
+    private void initTradingResultsForTestCase2(DatasourceId datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
@@ -221,7 +221,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initTradingResultsForTestCase1(UUID datasourceId) {
+    private void initTradingResultsForTestCase1(DatasourceId datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4

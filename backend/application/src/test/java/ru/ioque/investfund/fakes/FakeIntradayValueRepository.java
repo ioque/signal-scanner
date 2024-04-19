@@ -1,21 +1,21 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeIntradayValueRepository implements IntradayValueRepository {
-    final Map<UUID, Map<String, List<IntradayValue>>> intradayValues = new ConcurrentHashMap<>();
+    final Map<DatasourceId, Map<String, List<IntradayValue>>> intradayValues = new ConcurrentHashMap<>();
 
-    public Stream<IntradayValue> getAllBy(UUID datasourceId) {
+    public Stream<IntradayValue> getAllBy(DatasourceId datasourceId) {
         return intradayValues
             .getOrDefault(datasourceId, new ConcurrentHashMap<>())
             .values()
@@ -23,7 +23,7 @@ public class FakeIntradayValueRepository implements IntradayValueRepository {
             .flatMap(Collection::stream);
     }
 
-    public Stream<IntradayValue> getAllBy(UUID datasourceId, String ticker) {
+    public Stream<IntradayValue> getAllBy(DatasourceId datasourceId, String ticker) {
         return intradayValues
             .getOrDefault(datasourceId, new ConcurrentHashMap<>())
             .getOrDefault(ticker, new ArrayList<>())
@@ -32,7 +32,7 @@ public class FakeIntradayValueRepository implements IntradayValueRepository {
 
     @Override
     public void saveAll(List<IntradayValue> newValues) {
-        Map<UUID, List<IntradayValue>> datasourceIdToValues = newValues
+        Map<DatasourceId, List<IntradayValue>> datasourceIdToValues = newValues
             .stream()
             .collect(Collectors.groupingBy(IntradayValue::getDatasourceId));
         datasourceIdToValues.forEach((datasourceId, values) -> {

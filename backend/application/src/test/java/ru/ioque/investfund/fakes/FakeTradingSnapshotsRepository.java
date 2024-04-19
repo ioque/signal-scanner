@@ -2,6 +2,7 @@ package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
@@ -9,7 +10,6 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepository {
@@ -28,7 +28,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
     }
 
     @Override
-    public List<TradingSnapshot> findAllBy(UUID datasourceId, List<String> tickers) {
+    public List<TradingSnapshot> findAllBy(DatasourceId datasourceId, List<String> tickers) {
         if (tickers == null || tickers.isEmpty()) return List.of();
         return tickers
             .stream()
@@ -66,11 +66,11 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                 .build()).toList();
     }
 
-    private Stream<IntradayValue> getIntradayBy(UUID datasourceId, String ticker) {
+    private Stream<IntradayValue> getIntradayBy(DatasourceId datasourceId, String ticker) {
         return intradayValueRepository.getAllBy(datasourceId, ticker);
     }
 
-    private Stream<HistoryValue> getHistoryBy(UUID datasourceId, String ticker) {
+    private Stream<HistoryValue> getHistoryBy(DatasourceId datasourceId, String ticker) {
         return historyValueRepository.getAllBy(datasourceId, ticker);
     }
 }

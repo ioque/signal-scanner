@@ -11,8 +11,7 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-
-import java.util.UUID;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -34,7 +33,6 @@ public class RegisterDatasourceHandler extends CommandHandler<CreateDatasourceCo
 
     @Override
     protected void handleFor(CreateDatasourceCommand command) {
-        final UUID newDatasourceId = uuidProvider.generate();
-        datasourceRepository.save(Datasource.of(newDatasourceId, command));
+        datasourceRepository.save(Datasource.of(DatasourceId.from(uuidProvider.generate()), command));
     }
 }

@@ -13,13 +13,13 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -126,7 +126,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: сохранены текущие сделки и история торгов.
         """)
     void testCase5() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         datasourceStorage().initInstruments(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
@@ -159,7 +159,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: Загружены данные итогов торгов.
         """)
     void testCase9() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-19T10:00:00");
         integrateInstruments(datasourceId, afks());
         clearLogs();
@@ -187,7 +187,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: дубликаты не сохранены, остальные сделки успешно сохранены.
         """)
     void testCase10() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
         clearLogs();
@@ -213,7 +213,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: сохранены только новые сделки, прошедшие после 12:00:00.
         """)
     void testCas11() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-07T12:00:00");
         integrateInstruments(datasourceId, afks());
         initDealDatas(
@@ -245,7 +245,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: добавлена история торгов за 2023-12-08.
         """)
     void testCas12() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initTradingResults(generateTradingResultsBy(datasourceId, "AFKS", nowMinus3Month(), nowMinus1Days()));
@@ -267,7 +267,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: торговые данные не загружены.
         """)
     void testCase13() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildDealWith(datasourceId, 1L, "AFKS", LocalDateTime.parse("2023-12-07T11:00:00")));
@@ -287,7 +287,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: новые торговые данные не загружены.
         """)
     void testCase14() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
@@ -318,7 +318,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase15() {
-        UUID datasourceId = getDatasourceId();
+        DatasourceId datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
@@ -334,7 +334,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
     void testCase16() {
-        UUID datasourceId = getDatasourceId();
+        DatasourceId datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
@@ -348,7 +348,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         T17. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
     void testCase17() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initDealDatas(buildBuyDealBy(datasourceId, 1L, "AFKS", "10:00:00", 10D, 10D, 1));
@@ -367,7 +367,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         T18. У сделок одинаковое время, но разные номера. Все сделки сохранены.
         """)
     void testCase18() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));
@@ -386,7 +386,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         T19. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
         """)
     void testCase19() {
-        final UUID datasourceId = getDatasourceId();
+        final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
         initTradingResults(buildDealResultBy(datasourceId, "AFKS", "2023-12-07", 10D, 10D, 10D, 10D));

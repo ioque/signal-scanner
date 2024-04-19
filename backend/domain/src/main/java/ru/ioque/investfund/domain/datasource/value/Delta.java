@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class Delta extends IntradayValue {
     @Builder
     public Delta(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,

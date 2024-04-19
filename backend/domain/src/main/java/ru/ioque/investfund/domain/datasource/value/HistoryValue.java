@@ -7,11 +7,11 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 @Builder
 @ToString
@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HistoryValue implements Comparable<HistoryValue>, Serializable {
-    UUID datasourceId;
+    DatasourceId datasourceId;
     LocalDate tradeDate;
     String ticker;
     Double openPrice;
@@ -30,7 +30,7 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     Double value;
 
     public HistoryValue(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         LocalDate tradeDate,
         String ticker,
         Double openPrice,
@@ -56,7 +56,7 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         return Objects.compare(getTradeDate(), historyValue.getTradeDate(), LocalDate::compareTo);
     }
 
-    private void setDatasourceId(UUID datasourceId) {
+    private void setDatasourceId(DatasourceId datasourceId) {
         if(datasourceId == null) {
             throw new DomainException("Не заполнен идентификатор источника данных.");
         }

@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @ToString(callSuper = true)
@@ -21,7 +21,7 @@ public class Deal extends IntradayValue {
 
     @Builder
     public Deal(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,

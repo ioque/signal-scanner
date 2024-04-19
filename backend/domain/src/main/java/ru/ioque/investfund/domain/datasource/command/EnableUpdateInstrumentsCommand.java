@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -26,7 +26,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EnableUpdateInstrumentsCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
-    UUID datasourceId;
+    DatasourceId datasourceId;
     @NotEmpty(message = "Не передан список идентификаторов инструментов для активации обновления торговых данных.")
     List<@Valid InstrumentId> instrumentIds;
 }

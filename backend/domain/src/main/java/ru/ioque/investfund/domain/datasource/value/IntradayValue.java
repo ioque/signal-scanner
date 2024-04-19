@@ -6,18 +6,18 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @ToString
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class IntradayValue implements Serializable, Comparable<IntradayValue> {
-    UUID datasourceId;
+    DatasourceId datasourceId;
     Long number;
     LocalDateTime dateTime;
     String ticker;
@@ -25,7 +25,7 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
     Double value;
 
     public IntradayValue(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -45,7 +45,7 @@ public abstract class IntradayValue implements Serializable, Comparable<Intraday
         return Objects.compare(getNumber(), intradayValue.getNumber(), Long::compareTo);
     }
 
-    private void setDatasourceId(UUID datasourceId) {
+    private void setDatasourceId(DatasourceId datasourceId) {
         if(datasourceId == null) {
             throw new DomainException("Не заполнен идентификатор источника данных.");
         }

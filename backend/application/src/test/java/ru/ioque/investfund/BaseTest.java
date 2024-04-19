@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
@@ -38,7 +39,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -95,7 +95,7 @@ public class BaseTest {
         return dateTimeProvider().nowDateTime().minusMonths(3).toLocalDate();
     }
 
-    protected List<Instrument> getInstruments(UUID datasourceId) {
+    protected List<Instrument> getInstruments(DatasourceId datasourceId) {
         return datasourceRepository()
             .findBy(datasourceId)
             .map(Datasource::getInstruments)
@@ -107,7 +107,7 @@ public class BaseTest {
     }
 
     protected List<HistoryValue> generateTradingResultsBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         String ticker,
         LocalDate start,
         LocalDate stop
@@ -123,7 +123,7 @@ public class BaseTest {
         return historyValues;
     }
 
-    protected void integrateInstruments(UUID datasourceId, Instrument... instruments) {
+    protected void integrateInstruments(DatasourceId datasourceId, Instrument... instruments) {
         datasourceStorage().initInstruments(Arrays.asList(instruments));
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
     }
@@ -144,23 +144,23 @@ public class BaseTest {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId, String ticker) {
+    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId, String ticker) {
         return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId, ticker).toList();
     }
 
-    protected UUID getDatasourceId() {
+    protected DatasourceId getDatasourceId() {
         return datasourceRepository().findAll().get(0).getId();
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(UUID datasourceId) {
+    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId) {
         return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId).toList();
     }
 
-    protected List<HistoryValue> getHistoryValuesBy(UUID datasourceId, String ticker) {
+    protected List<HistoryValue> getHistoryValuesBy(DatasourceId datasourceId, String ticker) {
         return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId, ticker).toList();
     }
 
-    protected List<HistoryValue> getHistoryValues(UUID datasourceId) {
+    protected List<HistoryValue> getHistoryValues(DatasourceId datasourceId) {
         return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId).toList();
     }
 
@@ -172,21 +172,21 @@ public class BaseTest {
         return dateTimeProvider().nowDateTime();
     }
 
-    protected void runWorkPipeline(UUID datasourceId) {
+    protected void runWorkPipeline(DatasourceId datasourceId) {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         commandBus().execute(new ProduceSignalCommand(datasourceId, getToday()));
     }
 
-    protected void runWorkPipelineAndClearLogs(UUID datasourceId) {
+    protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {
         runWorkPipeline(datasourceId);
         loggerProvider().clearLogs();
     }
 
-    protected List<String> getTickers(UUID datasourceId) {
+    protected List<String> getTickers(DatasourceId datasourceId) {
         return getInstruments(datasourceId).stream().map(row -> row.getId().getTicker().getValue()).toList();
     }
 
-    protected List<InstrumentId> getInstrumentIds(UUID datasourceId) {
+    protected List<InstrumentId> getInstrumentIds(DatasourceId datasourceId) {
         return getInstruments(datasourceId).stream().map(Instrument::getId).toList();
     }
 
@@ -195,7 +195,7 @@ public class BaseTest {
     }
 
     protected Deal buildBuyDealBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         String ticker,
         String localTime,
@@ -216,7 +216,7 @@ public class BaseTest {
     }
 
     protected Deal buildSellDealBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         String ticker,
         String localTime,
@@ -237,7 +237,7 @@ public class BaseTest {
     }
 
     protected Contract buildContractBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         String ticker,
         String localTime,
@@ -257,7 +257,7 @@ public class BaseTest {
     }
 
     protected Delta buildDeltaBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         Long number,
         String ticker,
         String localTime,
@@ -275,7 +275,7 @@ public class BaseTest {
     }
 
     protected HistoryValue buildFuturesDealResultBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -295,7 +295,7 @@ public class BaseTest {
     }
 
     protected HistoryValue buildDeltaResultBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         String ticker,
         String tradeDate,
         double openPrice,
@@ -315,7 +315,7 @@ public class BaseTest {
     }
 
     protected HistoryValue buildDealResultBy(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -337,7 +337,7 @@ public class BaseTest {
     }
 
     protected HistoryValue.HistoryValueBuilder buildTradingResultWith(
-        UUID datasourceId,
+        DatasourceId datasourceId,
         String ticker,
         LocalDate localDate
     ) {
@@ -353,7 +353,7 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected Deal buildDealWith(UUID datasourceId, Long number, String ticker, LocalDateTime dateTime) {
+    protected Deal buildDealWith(DatasourceId datasourceId, Long number, String ticker, LocalDateTime dateTime) {
         return Deal.builder()
             .datasourceId(datasourceId)
             .number(number)
