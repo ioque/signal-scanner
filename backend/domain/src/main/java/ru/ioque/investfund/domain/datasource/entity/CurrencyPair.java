@@ -21,7 +21,6 @@ public class CurrencyPair extends Instrument {
     @Builder
     public CurrencyPair(
         InstrumentId id,
-        String ticker,
         String shortName,
         String name,
         Boolean updatable,
@@ -30,7 +29,7 @@ public class CurrencyPair extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setFaceUnit(faceUnit);
         setLotSize(lotSize);
     }

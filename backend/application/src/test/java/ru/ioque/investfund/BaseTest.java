@@ -183,7 +183,11 @@ public class BaseTest {
     }
 
     protected List<String> getTickers(UUID datasourceId) {
-        return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
+        return getInstruments(datasourceId).stream().map(row -> row.getId().getTicker().getValue()).toList();
+    }
+
+    protected List<InstrumentId> getInstrumentIds(UUID datasourceId) {
+        return getInstruments(datasourceId).stream().map(Instrument::getId).toList();
     }
 
     protected String getMessage(ConstraintViolationException exception) {
@@ -366,7 +370,6 @@ public class BaseTest {
         return Index
             .builder()
             .id(imoexId)
-            .ticker("IMOEX")
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
             .annualLow(100D)
@@ -380,7 +383,6 @@ public class BaseTest {
             .id(afksId)
             .shortName("ао Система")
             .name("АФК Система")
-            .ticker("AFKS")
             .lotSize(10000)
             .regNumber("regNumber")
             .isin("isin")
@@ -392,7 +394,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sberpId)
-            .ticker("SBERP")
             .shortName("Сбер п")
             .name("Сбербанк П")
             .lotSize(100)
@@ -406,7 +407,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sberId)
-            .ticker("SBER")
             .shortName("Сбер")
             .name("Сбербанк")
             .lotSize(100)
@@ -420,7 +420,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sibnId)
-            .ticker("SIBN")
             .shortName("Газпромнефть")
             .name("Газпромнефть")
             .lotSize(100)
@@ -434,7 +433,6 @@ public class BaseTest {
         return Futures
             .builder()
             .id(brf4Id)
-            .ticker("BRF4")
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
             .assetCode("BR")
@@ -449,7 +447,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(lkohId)
-            .ticker("LKOH")
             .shortName("Лукойл")
             .name("Лукойл")
             .lotSize(100)
@@ -463,7 +460,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(tatnId)
-            .ticker("TATN")
             .shortName("Татнефть")
             .name("Татнефть")
             .lotSize(100)
@@ -474,7 +470,6 @@ public class BaseTest {
         return Stock
             .builder()
             .id(rosnId)
-            .ticker("ROSN")
             .shortName("Роснефть")
             .name("Роснефть")
             .lotSize(100)
@@ -485,7 +480,6 @@ public class BaseTest {
         return CurrencyPair
             .builder()
             .id(usdRubId)
-            .ticker("USD000UTSTOM")
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
             .faceUnit("RUB")
@@ -498,7 +492,6 @@ public class BaseTest {
             .builder()
             .id(tgkbId)
             .name("TGKB")
-            .ticker("TGKB")
             .shortName("TGKB")
             .lotSize(100)
             .build();
@@ -509,7 +502,6 @@ public class BaseTest {
             .builder()
             .id(tgknId)
             .name("TGKN")
-            .ticker("TGKN")
             .shortName("TGKN")
             .lotSize(100)
             .build();

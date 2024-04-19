@@ -21,7 +21,6 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument {
     InstrumentId id;
-    String ticker;
     String shortName;
     String name;
     @NonFinal
@@ -33,7 +32,6 @@ public class Instrument {
 
     public Instrument(
         InstrumentId id,
-        String ticker,
         String shortName,
         String name,
         Boolean updatable,
@@ -41,7 +39,6 @@ public class Instrument {
         Long lastTradingNumber
     ) {
         setId(id);
-        setTicker(ticker);
         setShortName(shortName);
         setName(name);
         setUpdatable(updatable);
@@ -98,14 +95,6 @@ public class Instrument {
             throw new DomainException("Не заполнен тикер инструмента.");
         }
         this.id = id;
-    }
-
-
-    private void setTicker(String ticker) {
-        if (ticker == null || ticker.isBlank()) {
-            throw new DomainException("Не заполнен тикер инструмента.");
-        }
-        this.ticker = ticker;
     }
 
     private void setShortName(String shortName) {

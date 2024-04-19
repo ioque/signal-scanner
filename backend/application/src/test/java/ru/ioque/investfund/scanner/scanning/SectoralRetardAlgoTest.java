@@ -178,7 +178,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 
     private void initDealsTatnFallOtherRise(UUID datasourceId) {

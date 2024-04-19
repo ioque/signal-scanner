@@ -29,7 +29,7 @@ public class EnableUpdateInstrumentHandler extends CommandHandler<EnableUpdateIn
     @Override
     protected void handleFor(EnableUpdateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasource.enableUpdate(command.getTickers());
+        datasource.enableUpdate(command.getInstrumentIds());
         datasourceRepository.save(datasource);
     }
 }

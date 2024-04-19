@@ -184,7 +184,7 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildBuyDealBy(scanner.getDatasourceId(), 4L, "TGKN", "11:01:00", 100D, 1000D, 1),
             buildBuyDealBy(scanner.getDatasourceId(), 5L, "TGKN", "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }
@@ -242,7 +242,7 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildBuyDealBy(scanner.getDatasourceId(), 4L, "TGKB", "11:01:00", 100D, 1000D, 1),
             buildBuyDealBy(scanner.getDatasourceId(), 5L, "TGKB", "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }
@@ -267,7 +267,7 @@ public class ProduceSignalCommandTest extends BaseTest {
             buildSellDealBy(scanner.getDatasourceId(), 4L, "TGKN", "11:01:00", 97D, 1000D, 1),
             buildSellDealBy(scanner.getDatasourceId(), 5L, "TGKN", "11:45:00", 96D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }

@@ -24,14 +24,14 @@ public class FakeDatasourceProvider implements DatasourceProvider {
         Datasource datasource, Instrument instrument
     ) {
         return new HistoryBatch(
-            datasourceStorage.getHistoryDataByTicker(instrument.getTicker()).stream().toList()
+            datasourceStorage.getHistoryDataBy(instrument.getId()).stream().toList()
         );
     }
 
     @Override
     public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
         return new IntradayBatch(
-            datasourceStorage.getDealsByTicker(instrument.getTicker())
+            datasourceStorage.getDealsByTicker(instrument.getId())
         );
     }
 

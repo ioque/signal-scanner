@@ -408,7 +408,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sberP()
         );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 
     private void initSberAndSberpHistory(UUID datasourceId) {

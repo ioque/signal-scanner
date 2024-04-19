@@ -11,6 +11,8 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.List;
 import java.util.UUID;
@@ -96,7 +98,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(null, List.of("TGKN")))
+            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(null, List.of(tgknId)))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -113,7 +115,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of()))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не передан список тикеров для активации обновления.", getMessage(exception));
+        assertEquals("Не передан список идентификаторов инструментов для активации обновления торговых данных.", getMessage(exception));
     }
 
     @Test
@@ -127,7 +129,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не передан список тикеров для активации обновления.", getMessage(exception));
+        assertEquals("Не передан список идентификаторов инструментов для активации обновления торговых данных.", getMessage(exception));
     }
 
     @Test
@@ -138,10 +140,10 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of("TGKN", "")))
+            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of(tgknId, new InstrumentId(new Ticker("")))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Тикер не может быть пустым.", getMessage(exception));
+        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
 
@@ -153,7 +155,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(null, List.of("TGKN")))
+            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(null, List.of(tgknId)))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -170,7 +172,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of()))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не передан список тикеров для активации обновления.", getMessage(exception));
+        assertEquals("Не передан список идентификаторов инструментов для активации обновления торговых данных.", getMessage(exception));
     }
 
     @Test
@@ -184,7 +186,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
             () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не передан список тикеров для активации обновления.", getMessage(exception));
+        assertEquals("Не передан список идентификаторов инструментов для активации обновления торговых данных.", getMessage(exception));
     }
 
     @Test
@@ -195,10 +197,10 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of("TGKN", "")))
+            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of(tgknId, new InstrumentId(new Ticker("")))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Тикер не может быть пустым.", getMessage(exception));
+        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
     @Test

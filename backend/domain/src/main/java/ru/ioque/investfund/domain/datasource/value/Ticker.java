@@ -1,20 +1,19 @@
 package ru.ioque.investfund.domain.datasource.value;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
-import java.util.regex.Pattern;
-
+@Getter
 @ToString
 @EqualsAndHashCode
 public class Ticker {
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String value;
 
     public Ticker(String value) {
         this.value = value;
-        if (!Pattern.matches("^[A-Za-z0-9]+$",value)) {
-            throw new IllegalArgumentException("Ticker must be contains latin charters or number.");
-        }
     }
 
     public static Ticker from(String value) {

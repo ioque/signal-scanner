@@ -54,7 +54,7 @@ public class BaseConfiguratorTest extends BaseTest {
                 usdRub())
         );
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScannerCommand command, String msg) {

@@ -290,6 +290,6 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
     }
 }

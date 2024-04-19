@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +61,7 @@ public class Datasource extends Domain {
     }
 
     public void addInstrument(Instrument instrument) {
-        if (findBy(instrument.getTicker()).isEmpty()) {
+        if (findBy(instrument.getId()).isEmpty()) {
             instruments.add(instrument);
         }
     }
@@ -67,7 +69,7 @@ public class Datasource extends Domain {
     public void checkExistsTickers(List<String> tickers) {
         List<String> notExistedTickers = tickers
             .stream()
-            .filter(ticker -> !getTickers().contains(ticker))
+            .filter(ticker -> !getInstrumentIds().contains(new InstrumentId(new Ticker(ticker))))
             .toList();
         if (!notExistedTickers.isEmpty()) {
             throw new IllegalArgumentException(
@@ -84,20 +86,20 @@ public class Datasource extends Domain {
         return instruments.stream().filter(Instrument::isUpdatable).toList();
     }
 
-    public void enableUpdate(List<String> tickers) {
-        tickers.forEach(ticker -> findBy(ticker).ifPresent(Instrument::enableUpdate));
+    public void enableUpdate(List<InstrumentId> instrumentIds) {
+        instrumentIds.forEach(id -> findBy(id).ifPresent(Instrument::enableUpdate));
     }
 
-    private Optional<Instrument> findBy(String ticker) {
-        return instruments.stream().filter(row -> row.getTicker().equals(ticker)).findFirst();
+    private Optional<Instrument> findBy(InstrumentId instrumentId) {
+        return instruments.stream().filter(row -> row.getId().equals(instrumentId)).findFirst();
     }
 
-    public void disableUpdate(List<String> tickers) {
-        tickers.forEach(ticker -> findBy(ticker).ifPresent(Instrument::disableUpdate));
+    public void disableUpdate(List<InstrumentId> instrumentIds) {
+        instrumentIds.forEach(id -> findBy(id).ifPresent(Instrument::disableUpdate));
     }
 
-    public List<String> getTickers() {
-        return getInstruments().stream().map(Instrument::getTicker).toList();
+    public List<InstrumentId> getInstrumentIds() {
+        return getInstruments().stream().map(Instrument::getId).toList();
     }
 
     public List<Instrument> getInstruments() {
