@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 
@@ -52,15 +56,15 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
     public static ScannerEntity from(SignalScanner scannerDomain) {
         SectoralFuturesProperties properties = (SectoralFuturesProperties) scannerDomain.getProperties();
         SectoralFuturesScannerEntity scannerEntity = SectoralFuturesScannerEntity.builder()
-            .id(scannerDomain.getId())
+            .id(scannerDomain.getId().getUuid())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
-            .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getInstrumentIds())
+            .datasourceId(scannerDomain.getDatasourceId().getUuid())
+            .tickers(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getTicker).map(Ticker::getValue).toList())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .futuresOvernightScale(properties.getFuturesOvernightScale())
             .stockOvernightScale(properties.getStockOvernightScale())
-            .futuresTicker(properties.getFuturesTicker())
+            .futuresTicker(properties.getFuturesId().getTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
             .getSignals()
@@ -75,19 +79,19 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
     @Override
     public SignalScanner toDomain() {
         return SignalScanner.builder()
-            .id(getId())
+            .id(ScannerId.from(getId()))
             .properties(
                 SectoralFuturesProperties
                     .builder()
                     .futuresOvernightScale(futuresOvernightScale)
                     .stockOvernightScale(stockOvernightScale)
-                    .futuresTicker(futuresTicker)
+                    .futuresId(new InstrumentId(new Ticker(futuresTicker)))
                     .build()
             )
-            .datasourceId(getDatasourceId())
+            .datasourceId(DatasourceId.from(getDatasourceId()))
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .tickers(getTickers())
+            .instrumentIds(getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();

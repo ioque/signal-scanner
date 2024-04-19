@@ -19,13 +19,16 @@ import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsComm
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@Tag(name="DatasourceCommandController", description="Контроллер команд к модулю \"DATASOURCE\"")
+@Tag(name = "DatasourceCommandController", description = "Контроллер команд к модулю \"DATASOURCE\"")
 public class DatasourceCommandController {
     CommandBus commandBus;
 
@@ -44,7 +47,7 @@ public class DatasourceCommandController {
     public void registerDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
         commandBus.execute(
             UpdateDatasourceCommand.builder()
-                .id(datasourceId)
+                .id(DatasourceId.from(datasourceId))
                 .name(request.getName())
                 .description(request.getDescription())
                 .url(request.getUrl())
@@ -54,21 +57,29 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        commandBus.execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus.execute(new IntegrateInstrumentsCommand(DatasourceId.from(datasourceId)));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        commandBus.execute(new IntegrateTradingDataCommand(datasourceId));
+        commandBus.execute(new IntegrateTradingDataCommand(DatasourceId.from(datasourceId)));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
-        commandBus.execute(new EnableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
+        commandBus.execute(new EnableUpdateInstrumentsCommand(
+                DatasourceId.from(datasourceId),
+                request.getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList()
+            )
+        );
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/disable-update")
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
-        commandBus.execute(new DisableUpdateInstrumentsCommand(datasourceId, request.getTickers()));
+        commandBus.execute(new DisableUpdateInstrumentsCommand(
+                DatasourceId.from(datasourceId),
+                request.getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList()
+            )
+        );
     }
 }

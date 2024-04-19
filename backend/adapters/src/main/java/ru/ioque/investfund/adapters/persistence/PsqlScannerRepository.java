@@ -13,13 +13,14 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralRetardSca
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -29,17 +30,17 @@ public class PsqlScannerRepository implements ScannerRepository {
     JpaSignalScannerRepository signalScannerEntityRepository;
 
     @Transactional(readOnly = true)
-    public Optional<SignalScanner> findBy(UUID id) {
+    public Optional<SignalScanner> findBy(ScannerId id) {
         return signalScannerEntityRepository
-            .findById(id)
+            .findById(id.getUuid())
             .map(ScannerEntity::toDomain);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<SignalScanner> findAllBy(UUID datasourceId) {
+    public List<SignalScanner> findAllBy(DatasourceId datasourceId) {
         return signalScannerEntityRepository
-            .findAllByDatasourceId(datasourceId)
+            .findAllByDatasourceId(datasourceId.getUuid())
             .stream()
             .map(ScannerEntity::toDomain)
             .toList();
@@ -53,7 +54,7 @@ public class PsqlScannerRepository implements ScannerRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public SignalScanner getBy(UUID scannerId) throws EntityNotFoundException {
+    public SignalScanner getBy(ScannerId scannerId) throws EntityNotFoundException {
         return findBy(scannerId)
             .orElseThrow(
                 () -> new EntityNotFoundException(

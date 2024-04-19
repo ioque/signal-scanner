@@ -22,6 +22,7 @@ import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.Deal;
@@ -30,6 +31,7 @@ import ru.ioque.investfund.domain.datasource.value.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.InstrumentBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,10 +44,10 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("HTTP DATASOURCE PROVIDER TEST")
 public class HttpDatasourceProviderTest {
-    private static final UUID DATASOURCE_ID = UUID.randomUUID();
+    private static final DatasourceId DATASOURCE_ID = DatasourceId.from(UUID.randomUUID());
     private static final String DATASOURCE_URL = "http://url.com";
-    private static final UUID INSTRUMENT_ID = UUID.randomUUID();
     private static final String INSTRUMENT_TICKER = "AFKS";
+    private static final InstrumentId INSTRUMENT_ID = InstrumentId.from(new Ticker(INSTRUMENT_TICKER));
 
     DatasourceRestClient datasourceRestClient = mock(DatasourceRestClient.class);
     DateTimeProvider dateTimeProvider = mock(DateTimeProvider.class);
@@ -217,7 +219,7 @@ public class HttpDatasourceProviderTest {
     }
 
     private void asserIntraday(IntradayValueDto intradayValueDto, IntradayValue intradayValue) {
-        assertEquals(intradayValueDto.getTicker(), intradayValue.getTicker());
+        assertEquals(intradayValueDto.getTicker(), intradayValue.getInstrumentId().getTicker().getValue());
         assertEquals(intradayValueDto.getValue(), intradayValue.getValue());
         assertEquals(intradayValueDto.getPrice(), intradayValue.getPrice());
         assertEquals(intradayValueDto.getNumber(), intradayValue.getNumber());
@@ -236,8 +238,7 @@ public class HttpDatasourceProviderTest {
 
     private Instrument instrument() {
         return Stock.builder()
-            .id(new InstrumentId(INSTRUMENT_TICKER))
-            .ticker(INSTRUMENT_TICKER)
+            .id(INSTRUMENT_ID)
             .name("name")
             .shortName("name")
             .lotSize(100)
@@ -249,7 +250,7 @@ public class HttpDatasourceProviderTest {
         return batch
             .getUniqueValues()
             .stream()
-            .filter(row -> row.getTicker().equals(ticker))
+            .filter(row -> row.getInstrumentId().getTicker().getValue().equals(ticker))
             .findFirst()
             .orElseThrow();
     }
@@ -258,7 +259,7 @@ public class HttpDatasourceProviderTest {
         return batch
             .getUniqueValues()
             .stream()
-            .filter(row -> row.getTicker().equals(ticker))
+            .filter(row -> row.getId().getTicker().getValue().equals(ticker))
             .findFirst()
             .orElseThrow();
     }
@@ -297,13 +298,13 @@ public class HttpDatasourceProviderTest {
     }
 
     private void assertInstrument(InstrumentDto instrumentDto, Instrument instrument) {
-        assertEquals(instrumentDto.getTicker(), instrument.getTicker());
+        assertEquals(instrumentDto.getTicker(), instrument.getId().getTicker().getValue());
         assertEquals(instrumentDto.getName(), instrument.getName());
         assertEquals(instrumentDto.getShortName(), instrument.getShortName());
     }
 
     private void assertHistory(HistoryValueDto historyDto, HistoryValue historyValue) {
-        assertEquals(historyDto.getTicker(), historyValue.getTicker());
+        assertEquals(historyDto.getTicker(), historyValue.getInstrumentId().getTicker().getValue());
         assertEquals(historyDto.getTradeDate(), historyValue.getTradeDate());
         assertEquals(historyDto.getClosePrice(), historyValue.getClosePrice());
         assertEquals(historyDto.getOpenPrice(), historyValue.getOpenPrice());

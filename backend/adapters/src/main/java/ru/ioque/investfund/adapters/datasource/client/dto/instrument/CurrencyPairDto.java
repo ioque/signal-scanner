@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 @Getter
 @NoArgsConstructor
@@ -30,10 +31,9 @@ public class CurrencyPairDto extends InstrumentDto {
     @Override
     public Instrument toDomain() {
         return CurrencyPair.builder()
-            .id(new InstrumentId(getTicker()))
+            .id(new InstrumentId(new Ticker(getTicker())))
             .faceUnit(faceUnit)
             .lotSize(lotSize)
-            .ticker(getTicker())
             .shortName(getShortName())
             .name(getName())
             .build();

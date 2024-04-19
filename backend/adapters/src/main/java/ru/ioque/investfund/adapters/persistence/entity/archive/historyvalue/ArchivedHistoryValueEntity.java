@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -70,7 +73,8 @@ public class ArchivedHistoryValueEntity {
 
     public HistoryValue toDomain() {
         return HistoryValue.builder()
-            .ticker(ticker)
+            .datasourceId(DatasourceId.from(datasourceId))
+            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -83,7 +87,8 @@ public class ArchivedHistoryValueEntity {
 
     public static ArchivedHistoryValueEntity fromDomain(HistoryValue historyValue) {
         return ArchivedHistoryValueEntity.builder()
-            .ticker(historyValue.getTicker())
+            .datasourceId(historyValue.getDatasourceId().getUuid())
+            .ticker(historyValue.getInstrumentId().getTicker().getValue())
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())

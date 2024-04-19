@@ -9,10 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -24,10 +28,12 @@ import java.time.LocalDateTime;
 public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
     Boolean isBuy;
     Integer qnt;
-    Double value;
 
     @Builder
     public ArchivedDealEntity(
+        Long id,
+        UUID datasourceId,
+        Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
@@ -35,17 +41,18 @@ public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(dateTime, ticker, price);
+        super(id, datasourceId, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
-        this.value = value;
     }
 
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
+            .datasourceId(DatasourceId.from(datasourceId))
+            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .number(number)
             .dateTime(dateTime)
-            .ticker(ticker)
             .price(price)
             .isBuy(isBuy)
             .qnt(qnt)
@@ -55,8 +62,10 @@ public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
 
     public static ArchivedIntradayValueEntity from(Deal deal) {
         return ArchivedDealEntity.builder()
+            .datasourceId(deal.getDatasourceId().getUuid())
+            .ticker(deal.getInstrumentId().getTicker().getValue())
+            .number(deal.getNumber())
             .dateTime(deal.getDateTime())
-            .ticker(deal.getTicker())
             .price(deal.getPrice())
             .isBuy(deal.getIsBuy())
             .qnt(deal.getQnt())

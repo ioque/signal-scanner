@@ -10,10 +10,10 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -33,9 +33,9 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Datasource> findBy(UUID datasourceId) {
+    public Optional<Datasource> findBy(DatasourceId datasourceId) {
         return jpaDatasourceRepository
-            .findById(datasourceId)
+            .findById(datasourceId.getUuid())
             .map(DatasourceEntity::toDomain);
     }
 
@@ -48,12 +48,12 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Override
     @Transactional
     public void remove(Datasource datasource) {
-        jpaDatasourceRepository.deleteById(datasource.getId());
+        jpaDatasourceRepository.deleteById(datasource.getId().getUuid());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Datasource getById(UUID datasourceId) throws EntityNotFoundException {
+    public Datasource getById(DatasourceId datasourceId) throws EntityNotFoundException {
         return findBy(datasourceId).orElseThrow(
             () -> new EntityNotFoundException(
                 String.format("Источник данных[id=%s] не существует.", datasourceId)

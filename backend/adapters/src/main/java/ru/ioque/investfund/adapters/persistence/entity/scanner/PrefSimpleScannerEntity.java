@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
@@ -46,11 +50,11 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     public static ScannerEntity from(SignalScanner scannerDomain) {
         PrefCommonProperties properties = (PrefCommonProperties) scannerDomain.getProperties();
         PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
-            .id(scannerDomain.getId())
+            .id(scannerDomain.getId().getUuid())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
-            .datasourceId(scannerDomain.getDatasourceId())
-            .tickers(scannerDomain.getInstrumentIds())
+            .datasourceId(scannerDomain.getDatasourceId().getUuid())
+            .tickers(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getTicker).map(Ticker::getValue).toList())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .spreadParam(properties.getSpreadValue())
             .build();
@@ -67,17 +71,17 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     @Override
     public SignalScanner toDomain() {
         return SignalScanner.builder()
-            .id(getId())
+            .id(ScannerId.from(getId()))
             .properties(
                 PrefCommonProperties
                     .builder()
                     .spreadValue(spreadParam)
                     .build()
             )
-            .datasourceId(getDatasourceId())
+            .datasourceId(DatasourceId.from(getDatasourceId()))
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .tickers(getTickers())
+            .instrumentIds(getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();

@@ -25,7 +25,6 @@ public class Contract extends IntradayValue {
         InstrumentId instrumentId,
         Long number,
         LocalDateTime dateTime,
-        String ticker,
         Double price,
         Double value,
         Integer qnt

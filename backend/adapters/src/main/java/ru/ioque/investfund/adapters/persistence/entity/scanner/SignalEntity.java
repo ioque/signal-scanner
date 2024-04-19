@@ -12,6 +12,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.time.LocalDateTime;
@@ -37,7 +39,7 @@ public class SignalEntity extends GeneratedIdEntity {
     public Signal toDomain() {
         return Signal.builder()
             .dateTime(getDateTime())
-            .ticker(getTicker())
+            .instrumentId(InstrumentId.from(Ticker.from(getTicker())))
             .price(getPrice())
             .summary(getSummary())
             .isBuy(isBuy())
@@ -49,7 +51,7 @@ public class SignalEntity extends GeneratedIdEntity {
         return SignalEntity.builder()
             .dateTime(signal.getDateTime())
             .price(signal.getPrice())
-            .ticker(signal.getTicker())
+            .ticker(signal.getInstrumentId().getTicker().getValue())
             .summary(signal.getSummary())
             .isBuy(signal.isBuy())
             .isOpen(signal.isOpen())

@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 @Getter
 @NoArgsConstructor
@@ -45,8 +46,7 @@ public class FuturesDto extends InstrumentDto {
     @Override
     public Instrument toDomain() {
         return Futures.builder()
-            .id(new InstrumentId(getTicker()))
-            .ticker(getTicker())
+            .id(new InstrumentId(new Ticker(getTicker())))
             .name(getName())
             .shortName(getShortName())
             .lotVolume(lotVolume)

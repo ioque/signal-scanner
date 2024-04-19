@@ -8,10 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -31,5 +31,5 @@ public abstract class IntradayValueDto {
     Double value;
     Double price;
 
-    public abstract IntradayValue toDomain(UUID datasourceId);
+    public abstract IntradayValue toDomain(DatasourceId datasourceId);
 }

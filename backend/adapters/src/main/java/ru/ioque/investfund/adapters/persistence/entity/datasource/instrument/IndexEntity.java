@@ -55,7 +55,6 @@ public class IndexEntity extends InstrumentEntity {
     public Instrument toDomain() {
         return Index.builder()
             .id(InstrumentId.from(Ticker.from(this.getTicker())))
-            .ticker(this.getTicker())
             .name(this.getName())
             .shortName(this.getShortName())
             .updatable(this.getUpdatable())
@@ -68,7 +67,7 @@ public class IndexEntity extends InstrumentEntity {
 
     public static InstrumentEntity from(Index domain) {
         return IndexEntity.builder()
-            .ticker(domain.getTicker())
+            .ticker(domain.getId().getTicker().getValue())
             .name(domain.getName())
             .shortName(domain.getShortName())
             .updatable(domain.getUpdatable())

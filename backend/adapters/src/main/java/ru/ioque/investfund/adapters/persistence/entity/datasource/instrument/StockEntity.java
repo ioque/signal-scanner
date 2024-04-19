@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEnti
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.Stock;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 
@@ -54,8 +55,7 @@ public class StockEntity extends InstrumentEntity {
     @Override
     public Instrument toDomain() {
         return Stock.builder()
-            .id(new InstrumentId(this.getTicker()))
-            .ticker(this.getTicker())
+            .id(InstrumentId.from(Ticker.from(this.getTicker())))
             .name(this.getName())
             .shortName(this.getShortName())
             .updatable(this.getUpdatable())
@@ -70,7 +70,7 @@ public class StockEntity extends InstrumentEntity {
 
     public static InstrumentEntity from(Stock domain) {
         return StockEntity.builder()
-            .ticker(domain.getTicker())
+            .ticker(domain.getId().getTicker().getValue())
             .name(domain.getName())
             .shortName(domain.getShortName())
             .lotSize(domain.getLotSize())

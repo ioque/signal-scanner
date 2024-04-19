@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Contract;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -43,10 +46,10 @@ public class ContractEntity extends IntradayValueEntity {
     @Override
     public IntradayValue toDomain() {
         return Contract.builder()
-            .datasourceId(datasourceId)
+            .datasourceId(DatasourceId.from(datasourceId))
+            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
             .number(number)
             .dateTime(dateTime)
-            .ticker(ticker)
             .price(price)
             .value(value)
             .qnt(qnt)
@@ -55,10 +58,10 @@ public class ContractEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Contract contract) {
         return ContractEntity.builder()
-            .datasourceId(contract.getDatasourceId())
+            .datasourceId(contract.getDatasourceId().getUuid())
+            .ticker(contract.getInstrumentId().getTicker().getValue())
             .number(contract.getNumber())
             .dateTime(contract.getDateTime())
-            .ticker(contract.getTicker())
             .price(contract.getPrice())
             .value(contract.getValue())
             .qnt(contract.getQnt())

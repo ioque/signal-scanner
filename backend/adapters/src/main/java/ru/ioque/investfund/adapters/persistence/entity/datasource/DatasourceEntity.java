@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class DatasourceEntity extends AbstractEntity {
 
     public Datasource toDomain() {
         return Datasource.builder()
-            .id(getId())
+            .id(DatasourceId.from(getId()))
             .name(name)
             .url(url)
             .description(description)
@@ -67,7 +68,7 @@ public class DatasourceEntity extends AbstractEntity {
 
     public static DatasourceEntity from(Datasource datasource) {
         final DatasourceEntity datasourceEntity = DatasourceEntity.builder()
-            .id(datasource.getId())
+            .id(datasource.getId().getUuid())
             .name(datasource.getName())
             .url(datasource.getUrl())
             .description(datasource.getDescription())

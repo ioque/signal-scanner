@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEnti
 import ru.ioque.investfund.domain.datasource.entity.Futures;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 
@@ -57,8 +58,7 @@ public class FuturesEntity extends InstrumentEntity {
     @Override
     public Instrument toDomain() {
         return Futures.builder()
-            .id(new InstrumentId(this.getTicker()))
-            .ticker(this.getTicker())
+            .id(InstrumentId.from(Ticker.from(this.getTicker())))
             .name(this.getName())
             .shortName(this.getShortName())
             .updatable(this.getUpdatable())
@@ -74,7 +74,7 @@ public class FuturesEntity extends InstrumentEntity {
 
     public static InstrumentEntity from(Futures domain) {
         return FuturesEntity.builder()
-            .ticker(domain.getTicker())
+            .ticker(domain.getId().getTicker().getValue())
             .name(domain.getName())
             .shortName(domain.getShortName())
             .updatable(domain.getUpdatable())

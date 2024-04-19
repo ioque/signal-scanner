@@ -43,7 +43,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
             moexClient
                 .fetchHistory(
                     datasource.getUrl(),
-                    instrument.getTicker(),
+                    instrument.getId().getTicker().getValue(),
                     instrument.historyLeftBound(dateTimeProvider.nowDate()),
                     instrument.historyRightBound(dateTimeProvider.nowDate())
                 )
@@ -60,7 +60,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
             moexClient
                 .fetchIntradayValues(
                     datasource.getUrl(),
-                    instrument.getTicker(),
+                    instrument.getId().getTicker().getValue(),
                     instrument.getLastTradingNumber()
                 )
                 .stream()

@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Deal;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -38,11 +40,11 @@ public class DealDto extends IntradayValueDto {
     }
 
     @Override
-    public IntradayValue toDomain(UUID datasourceId) {
+    public IntradayValue toDomain(DatasourceId datasourceId) {
         return Deal.builder()
+            .instrumentId(InstrumentId.from(Ticker.from(getTicker())))
             .datasourceId(datasourceId)
             .number(getNumber())
-            .ticker(getTicker())
             .dateTime(getDateTime())
             .value(getValue())
             .price(getPrice())

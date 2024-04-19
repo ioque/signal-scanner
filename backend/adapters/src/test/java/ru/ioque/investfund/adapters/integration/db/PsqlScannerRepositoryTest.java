@@ -5,6 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
@@ -41,23 +44,23 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         T1. Сохранение сканера аномальных объемов
         """)
     void testCase1() {
-        final UUID scannerId = UUID.randomUUID();
-        final List<String> tickers = List.of("TGKN", "TGKB", "IMOEX");
-        final AnomalyVolumeProperties properties = createAnomalyVolumeProperties(1.5, 180, "IMOEX");
+        final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
+        final List<InstrumentId> instrumentIds = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
+        final AnomalyVolumeProperties properties = createAnomalyVolumeProperties(1.5, 180, IMOEX_ID);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .dateTime(lastExecutionDateTime)
             .build();
-        SignalScanner scanner = SignalScanner.builder()
+        final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .tickers(tickers)
+            .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))
@@ -75,23 +78,23 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         T2. Сохранение сканера преф-обычка
         """)
     void testCase2() {
-        final UUID scannerId = UUID.randomUUID();
-        final List<String> tickers = List.of("TGKN", "TGKB", "IMOEX");
+        final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
+        final List<InstrumentId> instrumentIds = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
         final PrefCommonProperties properties = createPrefCommonProperties(1.5);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .dateTime(lastExecutionDateTime)
             .build();
-        SignalScanner scanner = SignalScanner.builder()
+        final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .tickers(tickers)
+            .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))
@@ -109,23 +112,23 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         T3. Сохранение сканера фьючерс сектора
         """)
     void testCase3() {
-        final UUID scannerId = UUID.randomUUID();
-        final List<String> tickers = List.of("TGKB", "BRF4");
-        final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, "BRF4");
+        final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
+        final List<InstrumentId> tickers = List.of(TGKB_ID, BRF4_ID);
+        final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, BRF4_ID);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .instrumentId(tickers.get(0))
             .isOpen(true)
             .isBuy(true)
             .dateTime(lastExecutionDateTime)
             .build();
-        SignalScanner scanner = SignalScanner.builder()
+        final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .tickers(tickers)
+            .instrumentIds(tickers)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))
@@ -143,23 +146,23 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         T4. Сохранение сканера секторальный отстающий
         """)
     void testCase4() {
-        final UUID scannerId = UUID.randomUUID();
-        final List<String> tickers = List.of("TGKN", "TGKB", "IMOEX");
+        final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
+        final List<InstrumentId> tickers = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
         final SectoralRetardProperties properties = createSectoralRetardProperties(0.015, 0.015);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .instrumentId(tickers.get(0))
             .isOpen(true)
             .isBuy(true)
             .dateTime(lastExecutionDateTime)
             .build();
-        SignalScanner scanner = SignalScanner.builder()
+        final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .tickers(tickers)
+            .instrumentIds(tickers)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))
@@ -182,15 +185,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         """)
     void testCase5() {
         final SignalScanner moexAnomalyVolumeScanner = creatScanner(
-            UUID.randomUUID(),
+            ScannerId.from(UUID.randomUUID()),
             MOEX_DATASOURCE_ID,
-            List.of("TGKN", "TGKB", "IMOEX"),
-            createAnomalyVolumeProperties(1.5, 180, "IMOEX")
+            List.of(TGKN_ID, TGKB_ID, IMOEX_ID),
+            createAnomalyVolumeProperties(1.5, 180, IMOEX_ID)
         );
         final SignalScanner prefCommonNasdaqScanner = creatScanner(
-            UUID.randomUUID(),
+            ScannerId.from(UUID.randomUUID()),
             NASDAQ_DATASOURCE_ID,
-            List.of("APPL", "APPLP"),
+            List.of(APPL_ID, APPLP_ID),
             createPrefCommonProperties(1.0)
         );
         psqlScannerRepository.save(moexAnomalyVolumeScanner);
@@ -204,15 +207,15 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     }
 
     private SignalScanner creatScanner(
-        UUID scannerId,
-        UUID datasourceId,
-        List<String> tickers,
+        ScannerId scannerId,
+        DatasourceId datasourceId,
+        List<InstrumentId> instrumentIds,
         AlgorithmProperties properties
     ) {
         return SignalScanner.builder()
             .id(scannerId)
             .datasourceId(datasourceId)
-            .tickers(tickers)
+            .instrumentIds(instrumentIds)
             .properties(properties)
             .description("desc")
             .signals(new ArrayList<>())
@@ -228,16 +231,16 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     private AnomalyVolumeProperties createAnomalyVolumeProperties(
         double scaleCoefficient,
         int historyPeriod,
-        String indexTicker
+        InstrumentId indexId
     ) {
-        return new AnomalyVolumeProperties(scaleCoefficient, historyPeriod, indexTicker);
+        return new AnomalyVolumeProperties(scaleCoefficient, historyPeriod, indexId);
     }
 
     private SectoralFuturesProperties createSectoralFuturesProperties(
         double futuresOvernightScale,
         double stockOvernightScale,
-        String futuresTicker
+        InstrumentId futuresId
     ) {
-        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, futuresTicker);
+        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, futuresId);
     }
 }

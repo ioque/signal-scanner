@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
 import java.util.List;
@@ -38,11 +41,11 @@ public class CreateScannerRequest {
 
     public CreateScannerCommand toCommand() {
         return CreateScannerCommand.builder()
-            .datasourceId(datasourceId)
+            .datasourceId(DatasourceId.from(datasourceId))
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)
             .description(description)
-            .instrumentIds(tickers)
+            .instrumentIds(tickers.stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
             .build();
     }
 }

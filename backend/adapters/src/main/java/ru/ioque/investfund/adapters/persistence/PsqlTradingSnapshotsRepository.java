@@ -8,6 +8,9 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepo
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,19 +28,20 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
     DateTimeProvider dateTimeProvider;
 
     @Override
-    public List<TradingSnapshot> findAllBy(UUID datasourceId, List<String> tickers) {
+    public List<TradingSnapshot> findAllBy(DatasourceId datasourceId, List<InstrumentId> instrumentIds) {
+        final List<String> tickers = instrumentIds.stream().map(id -> id.getTicker().getValue()).toList();
         final Map<String, List<HistoryValueEntity>> histories = jpaHistoryValueRepository
-            .findAllByDatasourceIdAndTickerIn(datasourceId, tickers)
+            .findAllByDatasourceIdAndTickerIn(datasourceId.getUuid(), tickers)
             .stream()
             .collect(Collectors.groupingBy(HistoryValueEntity::getTicker));
         final Map<String, List<IntradayValueEntity>> intradayValues = jpaIntradayValueRepository
-            .findAllBy(datasourceId, tickers, dateTimeProvider.nowDate().atStartOfDay())
+            .findAllBy(datasourceId.getUuid(), tickers, dateTimeProvider.nowDate().atStartOfDay())
             .stream()
             .collect(Collectors.groupingBy(IntradayValueEntity::getTicker));
         return tickers
             .stream()
             .map(ticker -> TradingSnapshot.builder()
-                .ticker(ticker)
+                .instrumentId(InstrumentId.from(Ticker.from(ticker)))
                 .waPriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
                     .stream()
                     .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
