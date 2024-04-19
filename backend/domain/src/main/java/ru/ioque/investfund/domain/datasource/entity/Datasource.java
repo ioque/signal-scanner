@@ -22,7 +22,7 @@ import java.util.Optional;
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Datasource {
-    DatasourceId id;
+    final DatasourceId id;
     String name;
     String url;
     String description;

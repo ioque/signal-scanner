@@ -5,14 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
 
 @Getter
@@ -20,14 +17,11 @@ import java.util.Optional;
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument {
-    InstrumentId id;
-    String shortName;
-    String name;
-    @NonFinal
+    final InstrumentId id;
+    final String shortName;
+    final String name;
     Boolean updatable;
-    @NonFinal
     LocalDate lastHistoryDate;
-    @NonFinal
     Long lastTradingNumber;
 
     public Instrument(
@@ -38,12 +32,12 @@ public class Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        setId(id);
-        setShortName(shortName);
-        setName(name);
-        setUpdatable(updatable);
-        setLastHistoryDate(lastHistoryDate);
-        setLastTradingNumber(lastTradingNumber);
+        this.id = id;
+        this.shortName = shortName;
+        this.name = name;
+        this.updatable = updatable;
+        this.lastHistoryDate = lastHistoryDate;
+        this.lastTradingNumber = lastTradingNumber;
     }
 
     public Optional<LocalDate> getLastHistoryDate() {
@@ -80,39 +74,6 @@ public class Instrument {
 
     public void updateLastHistoryDate(LocalDate lastHistoryDate) {
         this.lastHistoryDate = lastHistoryDate;
-    }
-
-    private void setLastHistoryDate(LocalDate lastHistoryDate) {
-        this.lastHistoryDate = lastHistoryDate;
-    }
-
-    private void setLastTradingNumber(Long lastTradingNumber) {
-        this.lastTradingNumber = lastTradingNumber;
-    }
-
-    private void setId(InstrumentId id) {
-        if (id == null) {
-            throw new DomainException("Не заполнен тикер инструмента.");
-        }
-        this.id = id;
-    }
-
-    private void setShortName(String shortName) {
-        if (shortName == null || shortName.isBlank()) {
-            throw new DomainException("Не заполнено краткое наименование инструмента.");
-        }
-        this.shortName = shortName;
-    }
-
-    private void setUpdatable(Boolean updatable) {
-        this.updatable = !Objects.isNull(updatable) && updatable;
-    }
-
-    private void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new DomainException("Не заполнено полное наименование инструмента.");
-        }
-        this.name = name;
     }
 
     public void recalcSummary(HistoryBatch history, IntradayBatch intraday) {
