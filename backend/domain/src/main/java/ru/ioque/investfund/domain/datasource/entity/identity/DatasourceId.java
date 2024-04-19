@@ -4,13 +4,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
 @Getter
-@ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -19,5 +17,10 @@ public class DatasourceId {
 
     public static DatasourceId from(UUID uuid) {
         return new DatasourceId(uuid);
+    }
+
+    @Override
+    public String toString() {
+        return uuid.toString();
     }
 }

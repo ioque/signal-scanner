@@ -12,9 +12,8 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.command.CommandHandler;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-
-import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -42,8 +41,7 @@ public class CreateScannerHandler extends CommandHandler<CreateScannerCommand> {
     protected void handleFor(CreateScannerCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.checkExistsInstrument(command.getInstrumentIds());
-        final UUID newScannerId = uuidProvider.generate();
-        final SignalScanner scanner = SignalScanner.of(newScannerId, command);
+        final SignalScanner scanner = SignalScanner.of(ScannerId.from(uuidProvider.generate()), command);
         scannerRepository.save(scanner);
     }
 }

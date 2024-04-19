@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         T1. Попытка обновить конфигурацию несуществующего сканера.
         """)
     void testCase1() {
-        final UUID scannerId = UUID.randomUUID();
+        final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
         final EntityNotFoundException exception = assertThrows(
             EntityNotFoundException.class,
             () -> commandBus().execute(buildUpdateAnomalyVolumeScannerWith().scannerId(scannerId).build())
@@ -42,7 +43,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
                 .instrumentIds(List.of(tgknId, tgkbId, imoexId))
                 .build()
         );
-        final UUID scannerId = getFirstScannerId();
+        final ScannerId scannerId = getFirstScannerId();
 
         commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()

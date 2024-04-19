@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
@@ -20,7 +21,6 @@ import ru.ioque.investfund.domain.scanner.event.SignalFoundEvent;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -189,7 +189,7 @@ public class ProduceSignalCommandTest extends BaseTest {
         clearLogs();
     }
 
-    private UUID getScannerId() {
+    private ScannerId getScannerId() {
         return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
     }
 

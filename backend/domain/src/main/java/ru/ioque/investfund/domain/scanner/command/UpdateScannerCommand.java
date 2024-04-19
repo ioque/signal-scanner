@@ -16,9 +16,9 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
@@ -29,7 +29,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateScannerCommand implements Command {
     @NotNull(message = "Не передан идентификатор сканера.")
-    UUID scannerId;
+    ScannerId scannerId;
     @NotNull(message = "Не передан период работы сканера.")
     @Min(value = 1, message = "Период работы сканера должен быть больше 0.")
     Integer workPeriodInMinutes;

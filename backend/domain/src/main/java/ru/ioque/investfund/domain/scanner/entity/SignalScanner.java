@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
@@ -22,13 +21,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@ToString
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalScanner extends Domain {
+public class SignalScanner {
+    ScannerId id;
     String description;
     DatasourceId datasourceId;
     List<InstrumentId> instrumentIds;
@@ -39,7 +38,7 @@ public class SignalScanner extends Domain {
 
     @Builder
     public SignalScanner(
-        UUID id,
+        ScannerId id,
         Integer workPeriodInMinutes,
         String description,
         DatasourceId datasourceId,
@@ -48,7 +47,7 @@ public class SignalScanner extends Domain {
         List<InstrumentId> instrumentIds,
         List<Signal> signals
     ) {
-        super(id);
+        this.id = id;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;
@@ -58,7 +57,7 @@ public class SignalScanner extends Domain {
         this.signals = signals;
     }
 
-    public static SignalScanner of(UUID id, CreateScannerCommand command) {
+    public static SignalScanner of(ScannerId id, CreateScannerCommand command) {
         return SignalScanner.builder()
             .id(id)
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
@@ -72,6 +71,9 @@ public class SignalScanner extends Domain {
     }
 
     public void update(UpdateScannerCommand command) {
+        if (!this.getId().equals(command.getScannerId())) {
+            throw new IllegalArgumentException("Передан невалидный идентификатор.");
+        }
         if (!command.getProperties().getType().equals(getProperties().getType())) {
             throw new IllegalArgumentException("Невозможно изменить тип алгоритма.");
         }

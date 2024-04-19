@@ -6,13 +6,13 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,11 +31,11 @@ public class BaseConfiguratorTest extends BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected UUID getFirstScannerId() {
+    protected ScannerId getFirstScannerId() {
         return scannerRepository().getScannerMap().keySet().iterator().next();
     }
 
-    protected SignalScanner getScanner(UUID scannerId) {
+    protected SignalScanner getScanner(ScannerId scannerId) {
         return scannerRepository().findBy(scannerId).orElseThrow();
     }
 
