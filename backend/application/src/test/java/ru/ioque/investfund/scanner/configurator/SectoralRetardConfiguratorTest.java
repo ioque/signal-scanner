@@ -1,7 +1,9 @@
 package ru.ioque.investfund.scanner.configurator;
 
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
@@ -205,13 +207,8 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of(TGKN, TGKB, IMOEX))
-            .properties(
-                SectoralRetardProperties.builder()
-                    .historyScale(0.015)
-                    .intradayScale(0.015)
-                    .build()
-            );
+            .tickers(getTickers())
+            .properties(getDefaultProperties());
     }
 
     private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralRetardScannerWith() {
@@ -219,12 +216,18 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of(TGKN, TGKB, IMOEX))
-            .properties(
-                SectoralRetardProperties.builder()
-                    .historyScale(0.015)
-                    .intradayScale(0.015)
-                    .build()
-            );
+            .tickers(getTickers())
+            .properties(getDefaultProperties());
+    }
+
+    private SectoralRetardProperties getDefaultProperties() {
+        return SectoralRetardProperties.builder()
+            .historyScale(0.015)
+            .intradayScale(0.015)
+            .build();
+    }
+
+    private List<@Valid Ticker> getTickers() {
+        return List.of(TGKN, TGKB, IMOEX);
     }
 }

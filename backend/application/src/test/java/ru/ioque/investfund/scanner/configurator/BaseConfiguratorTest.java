@@ -1,11 +1,13 @@
 package ru.ioque.investfund.scanner.configurator;
 
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
@@ -78,13 +80,9 @@ public class BaseConfiguratorTest extends BaseTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of(TGKN, TGKB, IMOEX))
+            .tickers(getAnomalyVolumeTickers())
             .properties(
-                AnomalyVolumeProperties.builder()
-                    .indexTicker(IMOEX)
-                    .historyPeriod(180)
-                    .scaleCoefficient(1.5)
-                    .build()
+                getDefaultAnomalyVolumeProperties()
             );
     }
 
@@ -92,14 +90,22 @@ public class BaseConfiguratorTest extends BaseTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .tickers(List.of(TGKN, TGKB, IMOEX))
+            .tickers(getAnomalyVolumeTickers())
             .properties(
-                AnomalyVolumeProperties.builder()
-                    .indexTicker(IMOEX)
-                    .historyPeriod(180)
-                    .scaleCoefficient(1.5)
-                    .build()
+                getDefaultAnomalyVolumeProperties()
             );
+    }
+
+    private List<@Valid Ticker> getAnomalyVolumeTickers() {
+        return List.of(TGKN, TGKB, IMOEX);
+    }
+
+    private AnomalyVolumeProperties getDefaultAnomalyVolumeProperties() {
+        return AnomalyVolumeProperties.builder()
+            .indexTicker(IMOEX)
+            .historyPeriod(180)
+            .scaleCoefficient(1.5)
+            .build();
     }
 
     protected String descIsEmpty() {

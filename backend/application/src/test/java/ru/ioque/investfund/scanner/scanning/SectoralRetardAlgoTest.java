@@ -185,17 +185,17 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
-                buildContractBy(brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
-                buildContractBy(brf4Id,1L,"12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(rosnId,1L,"10:00:00", 250.1D, 136926D, 1),
-                buildBuyDealBy(rosnId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(lkohId,1L,"10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(lkohId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(sibnId,1L,"10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(sibnId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(tatnId,1L,"10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(tatnId,2L,"12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(tatnId,3L,"13:45:00", 280.1D, 136926D, 1)
+                buildBrf4Contract(1L,"10:00:00", 78D, 78000D, 1),
+                buildBrf4Contract(1L,"12:00:00", 96D, 96000D, 1),
+                buildRosnBuyDeal(1L,"10:00:00", 250.1D, 136926D, 1),
+                buildRosnBuyDeal(2L,"12:00:00", 255.1D, 136926D, 1),
+                buildLkohBuyDeal(1L,"10:00:00", 248.1D, 136926D, 1),
+                buildLkohBuyDeal(2L,"12:00:00", 255.1D, 136926D, 1),
+                buildSibnBuyDeal(1L,"10:00:00", 248.1D, 136926D, 1),
+                buildSibnBuyDeal(2L,"12:00:00", 255.1D, 136926D, 1),
+                buildTatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
+                buildTatnBuyDeal(2L,"12:00:00", 247.1D, 136926D, 1),
+                buildTatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
@@ -204,20 +204,20 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D),
+                buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+                buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
                 //ROSN
-                buildDealResultBy(rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(rosnId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildRosnHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildRosnHistoryValue("2023-12-21", 250D, 255D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(lkohId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildLkohHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildLkohHistoryValue("2023-12-21", 250D, 255D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(sibnId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildSibnHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildSibnHistoryValue("2023-12-21", 250D, 255D, 1D, 1D),
                 //TATN
-                buildDealResultBy(tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
+                buildTatnHistoryValue("2023-12-20", 250D, 252D, 1D, 1D),
+                buildTatnHistoryValue("2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
@@ -226,20 +226,20 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(brf4Id, "2023-12-21", 74D, 74D, 10D),
+                buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+                buildBrf4HistoryValue("2023-12-21", 74D, 74D, 10D),
                 //ROSN
-                buildDealResultBy(rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(rosnId, "2023-12-21", 250D, 251D, 1D, 1D),
+                buildRosnHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildRosnHistoryValue("2023-12-21", 250D, 251D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(lkohId, "2023-12-21", 250D, 250D, 1D, 1D),
+                buildLkohHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildLkohHistoryValue("2023-12-21", 250D, 250D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(sibnId, "2023-12-21", 250D, 249D, 1D, 1D),
+                buildSibnHistoryValue("2023-12-20", 250D, 250D, 1D, 1D),
+                buildSibnHistoryValue("2023-12-21", 250D, 249D, 1D, 1D),
                 //TATN
-                buildDealResultBy(tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
+                buildTatnHistoryValue("2023-12-20", 250D, 252D, 1D, 1D),
+                buildTatnHistoryValue("2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }

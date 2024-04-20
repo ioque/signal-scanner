@@ -1,7 +1,9 @@
 package ru.ioque.investfund.scanner.configurator;
 
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
@@ -106,11 +108,9 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of(TGKN, TGKB, IMOEX))
+            .tickers(getTickers())
             .properties(
-                PrefCommonProperties.builder()
-                    .spreadValue(1.0)
-                    .build()
+                getDefaultProperties()
             );
     }
 
@@ -119,11 +119,19 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of(TGKN, TGKB, IMOEX))
+            .tickers(getTickers())
             .properties(
-                PrefCommonProperties.builder()
-                    .spreadValue(1.0)
-                    .build()
+                getDefaultProperties()
             );
+    }
+
+    private PrefCommonProperties getDefaultProperties() {
+        return PrefCommonProperties.builder()
+            .spreadValue(1.0)
+            .build();
+    }
+
+    private List<@Valid Ticker> getTickers() {
+        return List.of(TGKN, TGKB, IMOEX);
     }
 }

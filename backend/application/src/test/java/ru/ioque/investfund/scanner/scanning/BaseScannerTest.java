@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -81,5 +83,93 @@ public class BaseScannerTest extends BaseTest {
 
     protected TradingSnapshot getSnapshotBy(InstrumentId instrumentId) {
         return tradingDataRepository().findAllBy(List.of(instrumentId)).get(0);
+    }
+
+    protected IntradayValue buildImoexDelta(Long number, String localTime, Double price, Double value) {
+        return buildDeltaBy(imoexId, number,localTime, price, value);
+    }
+
+    protected IntradayValue buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildSellDealBy(tgknId, number,localTime, price, value, qnt);
+    }
+
+    protected IntradayValue buildTgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(tgkbId, number,localTime, price, value, qnt);
+    }
+
+    protected IntradayValue buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildSellDealBy(tgkbId, number,localTime, price, value, qnt);
+    }
+
+    protected IntradayValue buildTgknBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(tgknId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+        return buildDeltaResultBy(imoexId, tradeDate, openPrice, closePrice, value);
+    }
+
+    protected HistoryValue buildTgkbHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(tgkbId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected HistoryValue buildTgknHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(tgknId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(tatnId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildTatnHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(tatnId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildContractBy(brf4Id, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+        return buildFuturesDealResultBy(brf4Id, tradeDate, openPrice, closePrice, value);
+    }
+
+    protected IntradayValue buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(lkohId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildLkohHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(lkohId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(sibnId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildSibnHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(sibnId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(rosnId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildRosnHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(rosnId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(sberId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildSberHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(sberId, tradeDate, openPrice, closePrice, waPrice, value);
+    }
+
+    protected IntradayValue buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+        return buildBuyDealBy(sberpId, number,localTime, price, value, qnt);
+    }
+
+    protected HistoryValue buildSberpHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double waPrice, Double value) {
+        return buildDealResultBy(sberpId, tradeDate, openPrice, closePrice, waPrice, value);
     }
 }

@@ -281,12 +281,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         return "Параметр futuresOvernightScale должен быть больше 0.";
     }
 
-    protected CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralFuturesScannerWith() {
+    private CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralFuturesScannerWith() {
         return CreateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .tickers(List.of(TGKN,TGKB,IMOEX))
+            .tickers(getTickers())
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
@@ -296,12 +296,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             );
     }
 
-    protected UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralFuturesScannerWith() {
+    private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralFuturesScannerWith() {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .tickers(List.of(TGKN,TGKB,IMOEX))
+            .tickers(getTickers())
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
@@ -309,5 +309,9 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
                     .futuresTicker(BRF4)
                     .build()
             );
+    }
+
+    private List<Ticker> getTickers() {
+        return List.of(TGKN, TGKB, IMOEX);
     }
 }
