@@ -64,7 +64,7 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .futuresOvernightScale(properties.getFuturesOvernightScale())
             .stockOvernightScale(properties.getStockOvernightScale())
-            .futuresTicker(properties.getFuturesId().getTicker().getValue())
+            .futuresTicker(properties.getFuturesTicker().getTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
             .getSignals()
@@ -85,7 +85,7 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
                     .builder()
                     .futuresOvernightScale(futuresOvernightScale)
                     .stockOvernightScale(stockOvernightScale)
-                    .futuresId(new InstrumentId(new Ticker(futuresTicker)))
+                    .futuresTicker(new InstrumentId(new Ticker(futuresTicker)))
                     .build()
             )
             .datasourceId(DatasourceId.from(getDatasourceId()))

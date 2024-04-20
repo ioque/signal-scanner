@@ -19,8 +19,9 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEvent implements DomainEvent {
-    UUID datasourceId;
+public class TradingDataIntegratedEvent implements IntegrationEvent {
+    UUID id;
+    DatasourceId datasourceId;
     Integer updatedCount;
     LocalDateTime dateTime;
 }

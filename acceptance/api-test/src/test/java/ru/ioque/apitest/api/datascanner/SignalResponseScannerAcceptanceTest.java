@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.api.BaseApiAcceptanceTest;
-import ru.ioque.apitest.kafka.ScanningFinishedEvent;
 import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
@@ -295,7 +294,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData(datasourceId);
 
-        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
+        assertTrue(waitScanningFinishedEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -395,7 +394,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData(datasourceId);
 
-        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
+        assertTrue(waitScanningFinishedEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -532,7 +531,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
+        assertTrue(waitScanningFinishedEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -616,7 +615,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitEvent(new ScanningFinishedEvent(datasourceId, getDateTimeNow(), getDateTimeNow())));
+        assertTrue(waitScanningFinishedEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 }

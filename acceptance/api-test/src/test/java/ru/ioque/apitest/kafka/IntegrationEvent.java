@@ -13,5 +13,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     @JsonSubTypes.Type(value = SignalFoundEvent.class, name = "SignalFoundEvent"),
     @JsonSubTypes.Type(value = TradingDataIntegratedEvent.class, name = "TradingDataIntegratedEvent") }
 )
-public interface DomainEvent {
+public interface IntegrationEvent {
 }

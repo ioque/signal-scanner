@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 import java.io.Serializable;
@@ -19,7 +18,6 @@ import java.util.Objects;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HistoryValue implements Comparable<HistoryValue>, Serializable {
-    DatasourceId datasourceId;
     InstrumentId instrumentId;
     LocalDate tradeDate;
     Double openPrice;
@@ -31,7 +29,6 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
 
     @Builder
     public HistoryValue(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         LocalDate tradeDate,
         Double openPrice,
@@ -41,7 +38,6 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
         Double waPrice,
         Double value
     ) {
-        setDatasourceId(datasourceId);
         setInstrumentId(instrumentId);
         setTradeDate(tradeDate);
         setOpenPrice(openPrice);
@@ -55,13 +51,6 @@ public class HistoryValue implements Comparable<HistoryValue>, Serializable {
     @Override
     public int compareTo(HistoryValue historyValue) {
         return Objects.compare(getTradeDate(), historyValue.getTradeDate(), LocalDate::compareTo);
-    }
-
-    private void setDatasourceId(DatasourceId datasourceId) {
-        if(datasourceId == null) {
-            throw new DomainException("Не заполнен идентификатор источника данных.");
-        }
-        this.datasourceId = datasourceId;
     }
 
     private void setTradeDate(LocalDate tradeDate) {

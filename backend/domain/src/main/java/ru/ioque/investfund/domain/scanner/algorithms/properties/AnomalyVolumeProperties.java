@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
 
 @Getter
@@ -29,5 +29,6 @@ public class AnomalyVolumeProperties implements AlgorithmProperties {
     @Min(value = 1, message = "Параметр historyPeriod должен быть больше 0.")
     Integer historyPeriod;
     @NotNull(message = "Не передан идентификатор индекса.")
-    @Valid InstrumentId indexId;
+    @Valid
+    Ticker indexTicker;
 }

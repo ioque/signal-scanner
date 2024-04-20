@@ -114,9 +114,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(datasourceId, tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(datasourceId, tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
@@ -137,9 +137,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId, tatnId, 1L, "10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 2L, "12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
+            buildBuyDealBy(tatnId, 1L, "10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 2L, "12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
         );
         initScanner(datasourceId);
 
@@ -162,8 +162,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 80D, 10D)
+            buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D)
         );
         initScanner(datasourceId);
 
@@ -186,8 +186,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults(datasourceId);
         initDealDatas(
-            buildContractBy(datasourceId, brf4Id, 1L, "10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, brf4Id, 2L, "12:00:00", 96D, 96000D, 1)
+            buildContractBy(brf4Id, 1L, "10:00:00", 78D, 78000D, 1),
+            buildContractBy(brf4Id, 2L, "12:00:00", 96D, 96000D, 1)
         );
         initScanner(datasourceId);
 
@@ -210,9 +210,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals(datasourceId);
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 80D, 10D),
-            buildDealResultBy(datasourceId, tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D),
+            buildDealResultBy(tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
@@ -229,12 +229,12 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                 .workPeriodInMinutes(1)
                 .description("Корреляция сектора с фьючерсом.")
                 .datasourceId(datasourceId)
-                .instrumentIds(getInstrumentIds(datasourceId))
+                .tickers(getTickers(datasourceId))
                 .properties(
                     SectoralFuturesProperties.builder()
                         .futuresOvernightScale(futuresOvernightScale)
                         .stockOvernightScale(stockOvernightScale)
-                        .futuresId(brf4Id)
+                        .futuresTicker(BRF4)
                         .build()
                 )
                 .build()
@@ -244,40 +244,40 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initPositiveDealResults(DatasourceId datasourceId) {
         datasourceStorage().initTradingResults(
             List.of(
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 80D, 10D),
-                buildDealResultBy(datasourceId, tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
-                buildDealResultBy(datasourceId, tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
+                buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D),
+                buildDealResultBy(tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
+                buildDealResultBy(tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
             )
         );
     }
 
     private void initNegativeDealResults(DatasourceId datasourceId) {
         initTradingResults(
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-            buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 74D, 10D),
-            buildDealResultBy(datasourceId, tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
-            buildDealResultBy(datasourceId, tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
+            buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+            buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 74D, 10D),
+            buildDealResultBy(tatnId, "2023-12-20", 251D, 252D, 1D, 1D),
+            buildDealResultBy(tatnId, "2023-12-21", 252D, 253D, 1D, 1D)
         );
     }
 
     private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 73D, 73000D, 1),
-            buildContractBy(datasourceId, brf4Id, 2L,"12:00:00", 72D, 73000D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(brf4Id, 1L,"10:00:00", 73D, 73000D, 1),
+            buildContractBy(brf4Id, 2L,"12:00:00", 72D, 73000D, 1),
+            buildBuyDealBy(tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 3L,"13:45:00", 280.1D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
-            buildContractBy(datasourceId, brf4Id, 2L,"12:00:00", 96D, 96000D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, tatnId, 3L, "13:45:00", 280.1D, 136926D, 1)
+            buildContractBy(brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
+            buildContractBy(brf4Id, 2L,"12:00:00", 96D, 96000D, 1),
+            buildBuyDealBy(tatnId, 1L,"10:00:00", 251.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 2L,"12:00:00", 247.1D, 136926D, 1),
+            buildBuyDealBy(tatnId, 3L, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 
@@ -290,6 +290,6 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 }

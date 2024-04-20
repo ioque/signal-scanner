@@ -11,9 +11,12 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Getter
@@ -62,44 +65,50 @@ public class Datasource extends Domain<DatasourceId> {
         instruments.forEach(this::addInstrument);
     }
 
-    public void checkExistsInstrument(List<InstrumentId> instrumentIds) {
-        List<InstrumentId> notExistedInstrument = instrumentIds
+    public List<InstrumentId> findInstrumentIds(List<Ticker> tickers) {
+        Map<Ticker, InstrumentId> tickerToIdsMap = getTickerToIdsMap();
+        List<Ticker> notExistedInstrument = tickers
             .stream()
-            .filter(instrumentId -> !getInstrumentIds().contains(instrumentId))
+            .filter(ticker -> !tickerToIdsMap.containsKey(ticker))
             .toList();
         if (!notExistedInstrument.isEmpty()) {
             throw new IllegalArgumentException(
                 String
                     .format(
-                        "В выбранном источнике данных не существует инструментов с идентификаторам %s.",
+                        "В выбранном источнике данных не существует инструментов с тикерами %s.",
                         notExistedInstrument
                     )
             );
         }
+        return tickers.stream().map(tickerToIdsMap::get).toList();
     }
 
     public List<Instrument> getUpdatableInstruments() {
         return instruments.stream().filter(Instrument::isUpdatable).toList();
     }
 
-    public void enableUpdate(List<InstrumentId> instrumentIds) {
-        instrumentIds.forEach(id -> findInstrumentBy(id).ifPresent(Instrument::enableUpdate));
+    public void enableUpdate(List<Ticker> tickers) {
+        tickers.forEach(ticker -> findInstrumentBy(ticker).ifPresent(Instrument::enableUpdate));
     }
 
-    public void disableUpdate(List<InstrumentId> instrumentIds) {
-        instrumentIds.forEach(id -> findInstrumentBy(id).ifPresent(Instrument::disableUpdate));
+    public void disableUpdate(List<Ticker> tickers) {
+        tickers.forEach(ticker -> findInstrumentBy(ticker).ifPresent(Instrument::disableUpdate));
     }
 
-    private List<InstrumentId> getInstrumentIds() {
-        return getInstruments().stream().map(Instrument::getId).toList();
+    private Map<Ticker, InstrumentId> getTickerToIdsMap() {
+        Map<Ticker, InstrumentId> tickerToIdsMap = new HashMap<>();
+        for (Instrument instrument : instruments) {
+            tickerToIdsMap.put(instrument.getTicker(), instrument.getId());
+        }
+        return tickerToIdsMap;
     }
 
-    private Optional<Instrument> findInstrumentBy(InstrumentId instrumentId) {
-        return instruments.stream().filter(row -> row.getId().equals(instrumentId)).findFirst();
+    private Optional<Instrument> findInstrumentBy(Ticker ticker) {
+        return instruments.stream().filter(row -> row.getTicker().equals(ticker)).findFirst();
     }
 
     private void addInstrument(Instrument instrument) {
-        if (findInstrumentBy(instrument.getId()).isEmpty()) {
+        if (findInstrumentBy(instrument.getTicker()).isEmpty()) {
             instruments.add(instrument);
         }
     }

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.datasource.event;
+package ru.ioque.investfund.application.integration.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,20 +8,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainEvent;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEvent implements DomainEvent {
+public class ScanningFinishedEvent implements IntegrationEvent {
+    UUID id;
     DatasourceId datasourceId;
-    Integer updatedCount;
+    LocalDateTime watermark;
     LocalDateTime dateTime;
 }

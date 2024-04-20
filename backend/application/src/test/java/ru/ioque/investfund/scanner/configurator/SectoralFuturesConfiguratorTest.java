@@ -2,11 +2,10 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
 
     private SectoralFuturesProperties.SectoralFuturesPropertiesBuilder buildPropertiesWith() {
         return SectoralFuturesProperties.builder()
-            .futuresId(brf4Id)
+            .futuresTicker(BRF4)
             .futuresOvernightScale(0.05)
             .stockOvernightScale(0.05);
     }
@@ -52,7 +51,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     void testCase3() {
         testAddNewScannerError(
             buildCreateSectoralFuturesScannerWith()
-                .properties(buildPropertiesWith().futuresId(null).build())
+                .properties(buildPropertiesWith().futuresTicker(null).build())
                 .build(),
             futuresIdIsEmpty()
         );
@@ -65,7 +64,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     void testCase4() {
         testAddNewScannerError(
             buildCreateSectoralFuturesScannerWith()
-                .properties(buildPropertiesWith().futuresId(new InstrumentId(new Ticker(""))).build())
+                .properties(buildPropertiesWith().futuresTicker(new Ticker("")).build())
                 .build(),
             futuresIdIsNotValid()
         );
@@ -167,7 +166,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
                 .properties(
-                    buildPropertiesWith().futuresId(null).build()
+                    buildPropertiesWith().futuresTicker(null).build()
                 )
                 .build(),
             futuresIdIsEmpty()
@@ -184,7 +183,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             buildUpdateSectoralFuturesScannerWith()
                 .scannerId(getFirstScannerId())
                 .properties(
-                    buildPropertiesWith().futuresId(new InstrumentId(new Ticker(""))).build()
+                    buildPropertiesWith().futuresTicker(new Ticker("")).build()
                 )
                 .build(),
             futuresIdIsNotValid()
@@ -287,12 +286,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN,TGKB,IMOEX))
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresId(brf4Id)
+                    .futuresTicker(BRF4)
                     .build()
             );
     }
@@ -302,12 +301,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN,TGKB,IMOEX))
             .properties(
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresId(brf4Id)
+                    .futuresTicker(BRF4)
                     .build()
             );
     }

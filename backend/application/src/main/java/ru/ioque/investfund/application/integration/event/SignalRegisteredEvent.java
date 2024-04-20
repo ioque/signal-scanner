@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.event;
+package ru.ioque.investfund.application.integration.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainEvent;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -22,15 +22,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalRegisteredEvent implements DomainEvent {
+public class SignalRegisteredEvent implements IntegrationEvent {
+    UUID id;
     InstrumentId instrumentId;
     Double price;
     boolean isBuy;
     ScannerId scannerId;
     LocalDateTime watermark;
 
-    public static DomainEvent of(ScannerId scannerId, Signal newSignal) {
+    public static IntegrationEvent of(UUID id, ScannerId scannerId, Signal newSignal) {
         return SignalRegisteredEvent.builder()
+            .id(id)
             .instrumentId(newSignal.getInstrumentId())
             .price(newSignal.getPrice())
             .isBuy(newSignal.isBuy())

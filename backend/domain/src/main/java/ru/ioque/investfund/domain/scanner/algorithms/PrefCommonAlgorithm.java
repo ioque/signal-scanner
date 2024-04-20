@@ -18,13 +18,13 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PrefCommonAlgorithm extends ScannerAlgorithm {
-    Double spreadValue;
+    final Double spreadValue;
 
     public PrefCommonAlgorithm(PrefCommonProperties properties) {
         super(properties.getType().getName());
-        setSpreadValue(properties.getSpreadValue());
+        this.spreadValue = properties.getSpreadValue();
     }
 
     @Override
@@ -71,15 +71,5 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             .findFirst()
             .orElseThrow(() -> new DomainException(
                 "Для привилегированной акции " + tradingSnapshot.getInstrumentId() + " не найдена обычная акция."));
-    }
-
-    private void setSpreadValue(Double spreadValue) {
-        if (spreadValue == null) {
-            throw new DomainException("Не передан параметр spreadParam.");
-        }
-        if (spreadValue <= 0) {
-            throw new DomainException("Параметр spreadParam должен быть больше нуля.");
-        }
-        this.spreadValue = spreadValue;
     }
 }

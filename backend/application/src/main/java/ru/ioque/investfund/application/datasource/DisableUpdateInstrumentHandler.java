@@ -29,7 +29,7 @@ public class DisableUpdateInstrumentHandler extends CommandHandler<DisableUpdate
     @Override
     protected void businessProcess(DisableUpdateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasource.disableUpdate(command.getInstrumentIds());
+        datasource.disableUpdate(command.getTickers());
         datasourceRepository.save(datasource);
     }
 }

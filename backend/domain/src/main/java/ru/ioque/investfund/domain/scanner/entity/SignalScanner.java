@@ -13,14 +13,11 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
-import ru.ioque.investfund.domain.scanner.event.SignalRegisteredEvent;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,20 +55,7 @@ public class SignalScanner extends Domain<ScannerId> {
         this.signals = signals;
     }
 
-    public static SignalScanner of(ScannerId id, CreateScannerCommand command) {
-        return SignalScanner.builder()
-            .id(id)
-            .workPeriodInMinutes(command.getWorkPeriodInMinutes())
-            .description(command.getDescription())
-            .datasourceId(command.getDatasourceId())
-            .instrumentIds(command.getInstrumentIds())
-            .properties(command.getProperties())
-            .signals(new ArrayList<>())
-            .lastExecutionDateTime(null)
-            .build();
-    }
-
-    public void update(UpdateScannerCommand command) {
+    public void update(List<InstrumentId> instrumentIds, UpdateScannerCommand command) {
         if (!this.getId().equals(command.getScannerId())) {
             throw new IllegalArgumentException("Передан невалидный идентификатор.");
         }
@@ -80,7 +64,7 @@ public class SignalScanner extends Domain<ScannerId> {
         }
         this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
         this.description = command.getDescription();
-        this.instrumentIds = command.getInstrumentIds();
+        this.instrumentIds = instrumentIds;
         this.properties = command.getProperties();
     }
 
@@ -96,8 +80,7 @@ public class SignalScanner extends Domain<ScannerId> {
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
         lastExecutionDateTime = watermark;
         List<Signal> newSignals = deduplicationNewSignals(algorithm.run(tradingSnapshots, watermark));
-        registerNewSignals(newSignals);
-        return newSignals;
+        return registerNewSignals(newSignals);
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
@@ -117,16 +100,29 @@ public class SignalScanner extends Domain<ScannerId> {
         return signals.stream().anyMatch(newSignal::sameByBusinessKey);
     }
 
-    private void registerNewSignals(List<Signal> newSignals) {
-        newSignals.forEach(this::registerNewSignal);
+    private List<Signal> registerNewSignals(List<Signal> newSignals) {
+        return newSignals.stream().filter(this::registerNewSignal).toList();
     }
 
-    private void registerNewSignal(Signal newSignal) {
+    private boolean registerNewSignal(Signal newSignal) {
         Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByInstrumentId(newSignal)).findFirst();
-        if (signalSameByTicker.isPresent() && newSignal.isSell() || newSignal.isBuy()) {
-            signals.add(newSignal);
-            addEvent(SignalRegisteredEvent.of(getId(), newSignal));
+        if (signalSameByTicker.isPresent()) {
+            if (signalSameByTicker.get().isBuy() && newSignal.isSell()) {
+                signalSameByTicker.get().close();
+                signals.add(newSignal);
+                return true;
+            }
+            if (signalSameByTicker.get().isSell() && newSignal.isBuy()) {
+                signalSameByTicker.get().close();
+                signals.add(newSignal);
+                return true;
+            }
+            return false;
         }
-        signalSameByTicker.ifPresent(Signal::close);
+        if (newSignal.isBuy()) {
+            signals.add(newSignal);
+            return true;
+        }
+        return false;
     }
 }

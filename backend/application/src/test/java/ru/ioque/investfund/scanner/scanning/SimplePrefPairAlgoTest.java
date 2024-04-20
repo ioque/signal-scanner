@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
@@ -29,7 +29,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
         initPositiveDeals(datasourceId);
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -54,7 +54,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
         initNegativeDeals(datasourceId);
-        initScanner(datasourceId, sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -73,7 +73,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
         initPositiveDeals(datasourceId);
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-21T11:00:30");
 
@@ -94,7 +94,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initSberSberp(datasourceId);
         initSberAndSberpHistory(datasourceId);
         initNegativeDeals(datasourceId);
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-21T11:01:00");
 
@@ -117,15 +117,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberId, "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(sberId, "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 252.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberpId, 1L,"10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberpId, 1L,"10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -146,15 +146,15 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberId, "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 252.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-14", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(sberId, "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 252.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-14", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId,1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -175,14 +175,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId, 1L, "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(datasourceId, sberpId, 1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId, 1L, "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy( sberpId, 1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -203,14 +203,14 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 251.2, 1D),
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 252.2, 1D)
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 251.2, 1D),
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1),
-            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId,1L, "10:54:00", 250D, 136926D, 1),
+            buildBuyDealBy( sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -231,13 +231,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -258,13 +258,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId,1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId,1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -285,10 +285,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy(datasourceId,sberpId, "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(sberpId, "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -309,9 +309,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId,1L,"10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId,1L,"10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -332,10 +332,10 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initTradingResults(
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy(datasourceId,sberId, "2023-12-15", 1D, 1D, 254.2, 1D)
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy(sberId, "2023-12-15", 1D, 1D, 254.2, 1D)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -356,9 +356,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberpId,1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberpId,1L, "10:54:00", 250D, 136926D, 1)
         );
-        initScanner(datasourceId,sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -378,7 +378,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
-        initScanner(datasourceId, sberId, sberpId);
+        initScanner(datasourceId, SBER, SBERP);
 
         runWorkPipeline(datasourceId);
 
@@ -387,13 +387,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
 
-    private void initScanner(DatasourceId datasourceId, InstrumentId... instrumentIds) {
+    private void initScanner(DatasourceId datasourceId, Ticker... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Анализ пар преф-обычка.")
                 .datasourceId(datasourceId)
-                .instrumentIds(Arrays.asList(instrumentIds))
+                .tickers(Arrays.asList(tickers))
                 .properties(
                     PrefCommonProperties.builder()
                         .spreadValue(SPREAD_PARAM)
@@ -409,39 +409,39 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sberP()
         );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initSberAndSberpHistory(DatasourceId datasourceId) {
         initTradingResults(
-            buildDealResultBy(datasourceId, sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-16", 1D, 1D, 260.58, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-17", 1D, 1D, 263.49, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-18", 1D, 1D, 268.47, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-19", 1D, 1D, 267.19, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-20", 1D, 1D, 267.89, 1D),
-            buildDealResultBy(datasourceId, sberId, "2023-12-21", 1D, 1D, 265.09, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-15", 1D, 1D, 258.95, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-16", 1D, 1D, 260.27, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-17", 1D, 1D, 263.05, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-18", 1D, 1D, 268.13, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-19", 1D, 1D, 267.02, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-20", 1D, 1D, 267.63, 1D),
-            buildDealResultBy(datasourceId, sberpId, "2023-12-21", 1D, 1D, 264.87, 1D)
+            buildDealResultBy( sberId, "2023-12-15", 1D, 1D, 259.2, 1D),
+            buildDealResultBy( sberId, "2023-12-16", 1D, 1D, 260.58, 1D),
+            buildDealResultBy( sberId, "2023-12-17", 1D, 1D, 263.49, 1D),
+            buildDealResultBy( sberId, "2023-12-18", 1D, 1D, 268.47, 1D),
+            buildDealResultBy( sberId, "2023-12-19", 1D, 1D, 267.19, 1D),
+            buildDealResultBy( sberId, "2023-12-20", 1D, 1D, 267.89, 1D),
+            buildDealResultBy( sberId, "2023-12-21", 1D, 1D, 265.09, 1D),
+            buildDealResultBy( sberpId, "2023-12-15", 1D, 1D, 258.95, 1D),
+            buildDealResultBy( sberpId, "2023-12-16", 1D, 1D, 260.27, 1D),
+            buildDealResultBy( sberpId, "2023-12-17", 1D, 1D, 263.05, 1D),
+            buildDealResultBy( sberpId, "2023-12-18", 1D, 1D, 268.13, 1D),
+            buildDealResultBy( sberpId, "2023-12-19", 1D, 1D, 267.02, 1D),
+            buildDealResultBy( sberpId, "2023-12-20", 1D, 1D, 267.63, 1D),
+            buildDealResultBy( sberpId, "2023-12-21", 1D, 1D, 264.87, 1D)
         );
     }
 
     private void initNegativeDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId, 1L,  "10:55:00", 250.1D, 136926D, 1),
-            buildBuyDealBy(datasourceId, sberpId, 1L, "10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId, 1L,  "10:55:00", 250.1D, 136926D, 1),
+            buildBuyDealBy( sberpId, 1L, "10:54:00", 250D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals(DatasourceId datasourceId) {
         initDealDatas(
-            buildBuyDealBy(datasourceId, sberId, 1L,"10:55:00", 251D, 136926D, 1),
-            buildBuyDealBy(datasourceId, sberpId, 1L,"10:54:00", 250D, 136926D, 1)
+            buildBuyDealBy( sberId, 1L,"10:55:00", 251D, 136926D, 1),
+            buildBuyDealBy( sberpId, 1L,"10:54:00", 250D, 136926D, 1)
         );
     }
 }

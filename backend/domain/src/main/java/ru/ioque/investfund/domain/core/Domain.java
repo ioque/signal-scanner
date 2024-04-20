@@ -5,29 +5,16 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @ToString
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Domain<Identity> {
     final Identity id;
-    @ToString.Exclude
-    final Set<DomainEvent> events = new HashSet<>();
 
     protected Domain(Identity id) {
         this.id = id;
-    }
-
-    protected void addEvent(DomainEvent event) {
-        this.events.add(event);
-    }
-
-    public List<DomainEvent> getEvents() {
-        return List.copyOf(events);
     }
 
     @Override

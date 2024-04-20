@@ -10,9 +10,12 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.integration.event.SignalRegisteredEvent;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.event.ScanningFinishedEvent;
+import ru.ioque.investfund.application.integration.event.ScanningFinishedEvent;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
@@ -21,6 +24,7 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCommand> {
+    UUIDProvider uuidProvider;
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository snapshotsRepository;
     EventPublisher eventPublisher;
@@ -29,11 +33,13 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         TradingSnapshotsRepository snapshotsRepository,
         EventPublisher eventPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
+        this.uuidProvider = uuidProvider;
         this.scannerRepository = scannerRepository;
         this.snapshotsRepository = snapshotsRepository;
         this.eventPublisher = eventPublisher;
@@ -48,6 +54,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .forEach(scanner -> runScanner(scanner, command.getWatermark()));
         eventPublisher.publish(
             ScanningFinishedEvent.builder()
+                .id(uuidProvider.generate())
                 .datasourceId(command.getDatasourceId())
                 .watermark(command.getWatermark())
                 .dateTime(dateTimeProvider.nowDateTime())
@@ -56,9 +63,12 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
     }
 
     private void runScanner(SignalScanner scanner, LocalDateTime watermark) {
-        final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getDatasourceId(), scanner.getInstrumentIds());
-        scanner.scanning(snapshots, watermark);
+        final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getInstrumentIds());
+        List<Signal> signals = scanner.scanning(snapshots, watermark);
         scannerRepository.save(scanner);
-        scanner.getEvents().forEach(eventPublisher::publish);
+        signals
+            .stream()
+            .map(signal -> SignalRegisteredEvent.of(uuidProvider.generate(), scanner.getId(), signal))
+            .forEach(eventPublisher::publish);
     }
 }

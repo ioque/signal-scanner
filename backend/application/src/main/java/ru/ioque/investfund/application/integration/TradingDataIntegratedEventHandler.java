@@ -3,7 +3,7 @@ package ru.ioque.investfund.application.integration;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
-import ru.ioque.investfund.domain.datasource.event.TradingDataIntegratedEvent;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 
 @Component

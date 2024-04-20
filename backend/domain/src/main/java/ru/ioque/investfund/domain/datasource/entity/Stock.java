@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 
@@ -23,6 +24,7 @@ public class Stock extends Instrument {
     @Builder
     public Stock(
         InstrumentId id,
+        Ticker ticker,
         String shortName,
         String name,
         Boolean updatable,
@@ -33,7 +35,7 @@ public class Stock extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setLotSize(lotSize);
         setIsin(isin);
         setRegNumber(regNumber);

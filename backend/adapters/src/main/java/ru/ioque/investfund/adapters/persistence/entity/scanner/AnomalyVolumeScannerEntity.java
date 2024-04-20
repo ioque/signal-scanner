@@ -64,7 +64,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .scaleCoefficient(properties.getScaleCoefficient())
             .historyPeriod(properties.getHistoryPeriod())
-            .indexTicker(properties.getIndexId().getTicker().getValue())
+            .indexTicker(properties.getIndexTicker().getTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
                 .getSignals()
@@ -85,7 +85,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
                     .builder()
                     .scaleCoefficient(scaleCoefficient)
                     .historyPeriod(historyPeriod)
-                    .indexId(new InstrumentId(new Ticker(indexTicker)))
+                    .indexTicker(new InstrumentId(new Ticker(indexTicker)))
                     .build()
             )
             .datasourceId(DatasourceId.from(getDatasourceId()))

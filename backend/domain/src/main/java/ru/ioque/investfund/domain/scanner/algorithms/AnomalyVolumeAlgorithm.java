@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -29,17 +29,17 @@ import java.util.Optional;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     Double scaleCoefficient;
-    InstrumentId indexId;
+    Ticker indexTicker;
     Integer historyPeriod;
 
     public AnomalyVolumeAlgorithm(AnomalyVolumeProperties properties) {
         super(properties.getType().getName());
-        setScaleCoefficient(properties.getScaleCoefficient());
-        setHistoryPeriod(properties.getHistoryPeriod());
-        setIndexId(properties.getIndexId());
+        this.scaleCoefficient = properties.getScaleCoefficient();
+        this.historyPeriod = properties.getHistoryPeriod();
+        this.indexTicker = properties.getIndexTicker();
     }
 
     @Override
@@ -92,41 +92,14 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots.stream().filter(row -> !row.getInstrumentId().equals(indexId)).toList();
+        return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
     }
 
     private TradingSnapshot getMarketIndex(final List<TradingSnapshot> tradingSnapshots) {
         return tradingSnapshots
             .stream()
-            .filter(row -> row.getInstrumentId().equals(indexId))
+            .filter(row -> row.getTicker().equals(indexTicker))
             .findFirst()
             .orElseThrow(() -> new DomainException("Не добавлен индекс рынка."));
-    }
-
-    private void setScaleCoefficient(Double scaleCoefficient) {
-        if (scaleCoefficient == null) {
-            throw new DomainException("Не передан параметр scaleCoefficient.");
-        }
-        if (scaleCoefficient <= 0) {
-            throw new DomainException("Параметр scaleCoefficient должен быть больше нуля.");
-        }
-        this.scaleCoefficient = scaleCoefficient;
-    }
-
-    private void setIndexId(InstrumentId indexId) {
-        if (indexId == null) {
-            throw new DomainException("Не передан идентификатор индекса.");
-        }
-        this.indexId = indexId;
-    }
-
-    private void setHistoryPeriod(Integer historyPeriod) {
-        if (historyPeriod == null) {
-            throw new DomainException("Не передан параметр historyPeriod.");
-        }
-        if (historyPeriod <= 0) {
-            throw new DomainException("Параметр historyPeriod должен быть больше нуля.");
-        }
-        this.historyPeriod = historyPeriod;
     }
 }

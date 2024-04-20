@@ -8,8 +8,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import ru.ioque.investfund.application.CommandBus;
 import ru.ioque.investfund.application.integration.EventBus;
+import ru.ioque.investfund.application.integration.event.IntegrationEvent;
 import ru.ioque.investfund.domain.core.Command;
-import ru.ioque.investfund.domain.core.DomainEvent;
 
 @Slf4j
 @Service
@@ -25,7 +25,7 @@ public class KafkaConsumer {
     }
 
     @KafkaListener(topics = "events")
-    public void process(@Payload DomainEvent event) {
+    public void process(@Payload IntegrationEvent event) {
         eventBus.process(event);
     }
 }

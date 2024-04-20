@@ -6,8 +6,11 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,5 +48,14 @@ public class FakeDatasourceRepository implements DatasourceRepository {
                 String.format("Источник данных[id=%s] не существует.", datasourceId)
             )
         );
+    }
+
+    public Instrument getInstrumentBy(InstrumentId instrumentId) {
+        return exchanges.values()
+            .stream()
+            .map(Datasource::getInstruments)
+            .flatMap(Collection::stream).filter(row -> row.getId().equals(instrumentId))
+            .findFirst()
+            .orElseThrow();
     }
 }

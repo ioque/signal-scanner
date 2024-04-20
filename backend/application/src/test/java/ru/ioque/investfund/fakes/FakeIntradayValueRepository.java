@@ -1,55 +1,36 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.IntradayValue;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeIntradayValueRepository implements IntradayValueRepository {
-    final Map<DatasourceId, Map<InstrumentId, List<IntradayValue>>> intradayValues = new ConcurrentHashMap<>();
+    final Map<InstrumentId, Set<IntradayValue>> intradayValues = new ConcurrentHashMap<>();
 
-    public Stream<IntradayValue> getAllBy(DatasourceId datasourceId) {
+    public Stream<IntradayValue> getAllBy(InstrumentId instrumentId) {
         return intradayValues
-            .getOrDefault(datasourceId, new ConcurrentHashMap<>())
-            .values()
-            .stream()
-            .flatMap(Collection::stream);
-    }
-
-    public Stream<IntradayValue> getAllBy(DatasourceId datasourceId, InstrumentId instrumentId) {
-        return intradayValues
-            .getOrDefault(datasourceId, new ConcurrentHashMap<>())
-            .getOrDefault(instrumentId, new ArrayList<>())
+            .getOrDefault(instrumentId, new HashSet<>())
             .stream();
     }
 
     @Override
     public void saveAll(List<IntradayValue> newValues) {
-        Map<DatasourceId, List<IntradayValue>> datasourceIdToValues = newValues
+        Map<InstrumentId, List<IntradayValue>> instrumentIdToValues = newValues
             .stream()
-            .collect(Collectors.groupingBy(IntradayValue::getDatasourceId));
-        datasourceIdToValues.forEach((datasourceId, values) -> {
-            if (!this.intradayValues.containsKey(datasourceId)) {
-                this.intradayValues.put(datasourceId, new ConcurrentHashMap<>());
+            .collect(Collectors.groupingBy(IntradayValue::getInstrumentId));
+        instrumentIdToValues.forEach((instrumentId, values) -> {
+            if (!this.intradayValues.containsKey(instrumentId)) {
+                this.intradayValues.put(instrumentId, new HashSet<>());
             }
-            Map<InstrumentId, List<IntradayValue>> currentTickerToValues = this.intradayValues.get(datasourceId);
-            Map<InstrumentId, List<IntradayValue>> newTickerToValues = values
-                .stream()
-                .collect(Collectors.groupingBy(IntradayValue::getInstrumentId));
-            newTickerToValues.forEach((ticker, intraday) -> {
-                List<IntradayValue> currentIntraday = currentTickerToValues.getOrDefault(ticker, new ArrayList<>());
-                Long lastNumber = currentIntraday.stream().mapToLong(IntradayValue::getNumber).max().orElse(0);
-                currentIntraday.addAll(intraday.stream().filter(row -> row.getNumber() > lastNumber).toList());
-                currentTickerToValues.put(ticker, currentIntraday);
-            });
+            this.intradayValues.get(instrumentId).addAll(values);
         });
     }
 }

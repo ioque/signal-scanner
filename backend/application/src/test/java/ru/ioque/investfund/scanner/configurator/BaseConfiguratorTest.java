@@ -54,7 +54,7 @@ public class BaseConfiguratorTest extends BaseTest {
                 usdRub())
         );
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScannerCommand command, String msg) {
@@ -78,10 +78,10 @@ public class BaseConfiguratorTest extends BaseTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN, TGKB, IMOEX))
             .properties(
                 AnomalyVolumeProperties.builder()
-                    .indexId(imoexId)
+                    .indexTicker(IMOEX)
                     .historyPeriod(180)
                     .scaleCoefficient(1.5)
                     .build()
@@ -92,10 +92,10 @@ public class BaseConfiguratorTest extends BaseTest {
         return UpdateScannerCommand.builder()
             .workPeriodInMinutes(1)
             .description("description")
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN, TGKB, IMOEX))
             .properties(
                 AnomalyVolumeProperties.builder()
-                    .indexId(imoexId)
+                    .indexTicker(IMOEX)
                     .historyPeriod(180)
                     .scaleCoefficient(1.5)
                     .build()
@@ -114,8 +114,8 @@ public class BaseConfiguratorTest extends BaseTest {
         return "Не передан период работы сканера.";
     }
 
-    protected String instrumentIdsIsEmpty() {
-        return "Не передан список идентификаторов анализируемых инструментов.";
+    protected String tickersIsEmpty() {
+        return "Не передан список тикеров анализируемых инструментов.";
     }
 
     protected String workPeriodIsNegative() {

@@ -205,7 +205,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN, TGKB, IMOEX))
             .properties(
                 SectoralRetardProperties.builder()
                     .historyScale(0.015)
@@ -219,7 +219,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())
-            .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+            .tickers(List.of(TGKN, TGKB, IMOEX))
             .properties(
                 SectoralRetardProperties.builder()
                     .historyScale(0.015)

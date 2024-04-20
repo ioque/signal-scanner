@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument extends Domain<InstrumentId> {
+    final Ticker ticker;
     final String shortName;
     final String name;
     Boolean updatable;
@@ -26,6 +28,7 @@ public class Instrument extends Domain<InstrumentId> {
 
     public Instrument(
         InstrumentId id,
+        Ticker ticker,
         String shortName,
         String name,
         Boolean updatable,
@@ -33,11 +36,16 @@ public class Instrument extends Domain<InstrumentId> {
         Long lastTradingNumber
     ) {
         super(id);
+        this.ticker = ticker;
         this.shortName = shortName;
         this.name = name;
         this.updatable = updatable;
         this.lastHistoryDate = lastHistoryDate;
         this.lastTradingNumber = lastTradingNumber;
+    }
+
+    public boolean sameByBusinessKey(Instrument instrument) {
+        return ticker.equals(instrument.ticker);
     }
 
     public Optional<LocalDate> getLastHistoryDate() {

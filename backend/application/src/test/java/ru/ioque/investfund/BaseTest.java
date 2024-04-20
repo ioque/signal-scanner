@@ -39,6 +39,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -107,7 +108,6 @@ public class BaseTest {
     }
 
     protected List<HistoryValue> generateTradingResultsBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         LocalDate start,
         LocalDate stop
@@ -116,7 +116,7 @@ public class BaseTest {
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                historyValues.add(buildTradingResultWith(datasourceId, instrumentId, cursor).build());
+                historyValues.add(buildTradingResultWith(instrumentId, cursor).build());
             }
             cursor = cursor.plusDays(1);
         }
@@ -144,24 +144,16 @@ public class BaseTest {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId, InstrumentId instrumentId) {
-        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId, instrumentId).toList();
+    protected List<IntradayValue> getIntradayValuesBy(InstrumentId instrumentId) {
+        return fakeDIContainer.getIntradayValueRepository().getAllBy(instrumentId).toList();
+    }
+
+    protected List<HistoryValue> getHistoryValuesBy(InstrumentId instrumentId) {
+        return fakeDIContainer.getHistoryValueRepository().getAllBy(instrumentId).toList();
     }
 
     protected DatasourceId getDatasourceId() {
         return datasourceRepository().findAll().get(0).getId();
-    }
-
-    protected List<IntradayValue> getIntradayValuesBy(DatasourceId datasourceId) {
-        return fakeDIContainer.getIntradayValueRepository().getAllBy(datasourceId).toList();
-    }
-
-    protected List<HistoryValue> getHistoryValuesBy(DatasourceId datasourceId, InstrumentId instrumentId) {
-        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId, instrumentId).toList();
-    }
-
-    protected List<HistoryValue> getHistoryValues(DatasourceId datasourceId) {
-        return fakeDIContainer.getHistoryValueRepository().getAllBy(datasourceId).toList();
     }
 
     protected void clearLogs() {
@@ -182,8 +174,8 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected List<InstrumentId> getInstrumentIds(DatasourceId datasourceId) {
-        return getInstruments(datasourceId).stream().map(Instrument::getId).toList();
+    protected List<Ticker> getTickers(DatasourceId datasourceId) {
+        return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
     }
 
     protected String getMessage(ConstraintViolationException exception) {
@@ -191,7 +183,6 @@ public class BaseTest {
     }
 
     protected Deal buildBuyDealBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         Long number,
         String localTime,
@@ -200,7 +191,6 @@ public class BaseTest {
         Integer qnt
     ) {
         return Deal.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -212,7 +202,6 @@ public class BaseTest {
     }
 
     protected Deal buildSellDealBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         Long number,
         String localTime,
@@ -221,7 +210,6 @@ public class BaseTest {
         Integer qnt
     ) {
         return Deal.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -233,7 +221,6 @@ public class BaseTest {
     }
 
     protected Contract buildContractBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         Long number,
         String localTime,
@@ -242,7 +229,6 @@ public class BaseTest {
         Integer qnt
     ) {
         return Contract.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -253,7 +239,6 @@ public class BaseTest {
     }
 
     protected Delta buildDeltaBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         Long number,
         String localTime,
@@ -261,7 +246,6 @@ public class BaseTest {
         Double value
     ) {
         return Delta.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -271,7 +255,6 @@ public class BaseTest {
     }
 
     protected HistoryValue buildFuturesDealResultBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         String tradeDate,
         Double openPrice,
@@ -279,7 +262,6 @@ public class BaseTest {
         Double value
     ) {
         return HistoryValue.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -291,7 +273,6 @@ public class BaseTest {
     }
 
     protected HistoryValue buildDeltaResultBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         String tradeDate,
         double openPrice,
@@ -299,7 +280,6 @@ public class BaseTest {
         double value
     ) {
         return HistoryValue.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -311,7 +291,6 @@ public class BaseTest {
     }
 
     protected HistoryValue buildDealResultBy(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         String tradeDate,
         Double openPrice,
@@ -320,7 +299,6 @@ public class BaseTest {
         Double value
     ) {
         return HistoryValue.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -333,12 +311,10 @@ public class BaseTest {
     }
 
     protected HistoryValue.HistoryValueBuilder buildTradingResultWith(
-        DatasourceId datasourceId,
         InstrumentId instrumentId,
         LocalDate localDate
     ) {
         return HistoryValue.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .tradeDate(localDate)
             .openPrice(1.0)
@@ -349,9 +325,8 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected Deal buildDealWith(DatasourceId datasourceId, InstrumentId instrumentId, Long number, LocalDateTime dateTime) {
+    protected Deal buildDealWith(InstrumentId instrumentId, Long number, LocalDateTime dateTime) {
         return Deal.builder()
-            .datasourceId(datasourceId)
             .instrumentId(instrumentId)
             .number(number)
             .dateTime(dateTime)
@@ -366,6 +341,7 @@ public class BaseTest {
         return Index
             .builder()
             .id(imoexId)
+            .ticker(IMOEX)
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
             .annualLow(100D)
@@ -377,6 +353,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(afksId)
+            .ticker(AFKS)
             .shortName("ао Система")
             .name("АФК Система")
             .lotSize(10000)
@@ -390,6 +367,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sberpId)
+            .ticker(SBERP)
             .shortName("Сбер п")
             .name("Сбербанк П")
             .lotSize(100)
@@ -403,6 +381,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sberId)
+            .ticker(SBER)
             .shortName("Сбер")
             .name("Сбербанк")
             .lotSize(100)
@@ -416,6 +395,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(sibnId)
+            .ticker(SIBN)
             .shortName("Газпромнефть")
             .name("Газпромнефть")
             .lotSize(100)
@@ -429,6 +409,7 @@ public class BaseTest {
         return Futures
             .builder()
             .id(brf4Id)
+            .ticker(BRF4)
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
             .assetCode("BR")
@@ -443,6 +424,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(lkohId)
+            .ticker(LKOH)
             .shortName("Лукойл")
             .name("Лукойл")
             .lotSize(100)
@@ -456,6 +438,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(tatnId)
+            .ticker(TATN)
             .shortName("Татнефть")
             .name("Татнефть")
             .lotSize(100)
@@ -466,6 +449,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(rosnId)
+            .ticker(ROSN)
             .shortName("Роснефть")
             .name("Роснефть")
             .lotSize(100)
@@ -476,6 +460,7 @@ public class BaseTest {
         return CurrencyPair
             .builder()
             .id(usdRubId)
+            .ticker(USD000UTSTOM)
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
             .faceUnit("RUB")
@@ -487,6 +472,7 @@ public class BaseTest {
         return Stock
             .builder()
             .id(tgkbId)
+            .ticker(TGKB)
             .name("TGKB")
             .shortName("TGKB")
             .lotSize(100)
@@ -497,22 +483,35 @@ public class BaseTest {
         return Stock
             .builder()
             .id(tgknId)
+            .ticker(TGKN)
             .name("TGKN")
             .shortName("TGKN")
             .lotSize(100)
             .build();
     }
 
-    protected InstrumentId tgknId = InstrumentId.from(Ticker.from("TGKN"));
-    protected InstrumentId tgkbId = InstrumentId.from(Ticker.from("TGKB"));
-    protected InstrumentId rosnId = InstrumentId.from(Ticker.from("ROSN"));
-    protected InstrumentId tatnId = InstrumentId.from(Ticker.from("TATN"));
-    protected InstrumentId lkohId = InstrumentId.from(Ticker.from("LKOH"));
-    protected InstrumentId sberId = InstrumentId.from(Ticker.from("SBER"));
-    protected InstrumentId sberpId = InstrumentId.from(Ticker.from("SBERP"));
-    protected InstrumentId sibnId = InstrumentId.from(Ticker.from("SIBN"));
-    protected InstrumentId afksId = InstrumentId.from(Ticker.from("AFKS"));
-    protected InstrumentId usdRubId = InstrumentId.from(Ticker.from("USD000UTSTOM"));
-    protected InstrumentId brf4Id = InstrumentId.from(Ticker.from("BRF4"));
-    protected InstrumentId imoexId = InstrumentId.from(Ticker.from("IMOEX"));
+    protected final Ticker TGKN = Ticker.from("TGKN");
+    protected final Ticker TGKB = Ticker.from("TGKB");
+    protected final Ticker ROSN = Ticker.from("ROSN");
+    protected final Ticker TATN = Ticker.from("TATN");
+    protected final Ticker LKOH = Ticker.from("LKOH");
+    protected final Ticker SBER = Ticker.from("SBER");
+    protected final Ticker SBERP = Ticker.from("SBERP");
+    protected final Ticker SIBN = Ticker.from("SIBN");
+    protected final Ticker AFKS = Ticker.from("AFKS");
+    protected final Ticker USD000UTSTOM = Ticker.from("USD000UTSTOM");
+    protected final Ticker BRF4 = Ticker.from("BRF4");
+    protected final Ticker IMOEX = Ticker.from("IMOEX");
+    protected InstrumentId tgknId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId tgkbId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId rosnId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId tatnId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId lkohId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId sberId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId sberpId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId sibnId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId afksId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId usdRubId = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId brf4Id = InstrumentId.from(UUID.randomUUID());
+    protected InstrumentId imoexId = InstrumentId.from(UUID.randomUUID());
 }

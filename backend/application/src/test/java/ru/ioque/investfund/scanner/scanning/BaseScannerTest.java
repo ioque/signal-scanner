@@ -14,16 +14,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseScannerTest extends BaseTest {
-    protected static final String BRF4 = "BRF4";
-    protected static final String TATN = "TATN";
-    protected static final String TGKN = "TGKN";
-    protected static final String TGKB = "TGKB";
-    protected static final String IMOEX = "IMOEX";
-    protected static final String ROSN = "ROSN";
-    protected static final String LKOH = "LKOH";
-    protected static final String SIBN = "SIBN";
-    protected static final String SBER = "SBER";
-    protected static final String SBERP = "SBERP";
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
@@ -89,7 +79,7 @@ public class BaseScannerTest extends BaseTest {
         return getSnapshotBy(sberpId);
     }
 
-    protected TradingSnapshot getSnapshotBy(InstrumentId ticker) {
-        return tradingDataRepository().findAllBy(getDatasourceId(), List.of(ticker)).get(0);
+    protected TradingSnapshot getSnapshotBy(InstrumentId instrumentId) {
+        return tradingDataRepository().findAllBy(List.of(instrumentId)).get(0);
     }
 }

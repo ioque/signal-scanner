@@ -65,7 +65,7 @@ public class FakeDIContainer {
         intradayValueRepository = new FakeIntradayValueRepository();
         historyValueRepository = new FakeHistoryValueRepository();
         scannerRepository = new FakeScannerRepository();
-        tradingDataRepository = new FakeTradingSnapshotsRepository(intradayValueRepository, historyValueRepository, dateTimeProvider);
+        tradingDataRepository = new FakeTradingSnapshotsRepository(datasourceRepository, intradayValueRepository, historyValueRepository, dateTimeProvider);
         telegramChatRepository = new FakeTelegramChatRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
         telegramBotService = new TelegramBotService(dateTimeProvider, telegramChatRepository, telegramMessageSender);
@@ -92,6 +92,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             exchangeProvider,
             datasourceRepository,
             historyValueRepository,
@@ -136,6 +137,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             scannerRepository,
             tradingDataRepository,
             eventPublisher

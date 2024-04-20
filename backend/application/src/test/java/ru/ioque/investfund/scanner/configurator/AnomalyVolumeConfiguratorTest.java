@@ -2,7 +2,6 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
@@ -24,7 +23,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     private AnomalyVolumeProperties.AnomalyVolumePropertiesBuilder buildPropertiesWith() {
         return AnomalyVolumeProperties.builder()
             .historyPeriod(180)
-            .indexId(imoexId)
+            .indexTicker(IMOEX)
             .scaleCoefficient(1.5);
     }
 
@@ -48,7 +47,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     void testCase3() {
         testAddNewScannerError(
             buildCreateAnomalyVolumeScannerWith()
-                .properties(buildPropertiesWith().indexId(null).build())
+                .properties(buildPropertiesWith().indexTicker(null).build())
                 .build(),
             indexIdIsEmpty()
         );
@@ -61,7 +60,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     void testCase4() {
         testAddNewScannerError(
             buildCreateAnomalyVolumeScannerWith()
-                .properties(buildPropertiesWith().indexId(new InstrumentId(new Ticker(""))).build())
+                .properties(buildPropertiesWith().indexTicker(new Ticker("")).build())
                 .build(),
             indexIdIsNotValid()
         );
@@ -158,7 +157,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
-                .properties(buildPropertiesWith().indexId(null).build())
+                .properties(buildPropertiesWith().indexTicker(null).build())
                 .build(),
             indexIdIsEmpty()
         );
@@ -173,7 +172,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
         testUpdateScannerError(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(getFirstScannerId())
-                .properties(buildPropertiesWith().indexId(new InstrumentId(new Ticker(""))).build())
+                .properties(buildPropertiesWith().indexTicker(new Ticker("")).build())
                 .build(),
             indexIdIsNotValid()
         );

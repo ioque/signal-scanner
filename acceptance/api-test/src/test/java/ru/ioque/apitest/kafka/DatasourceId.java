@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.datasource.entity.identity;
+package ru.ioque.apitest.kafka;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,12 +12,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class InstrumentId {
+public class DatasourceId {
     UUID uuid;
-
-    public static InstrumentId from(UUID uuid) {
-        return new InstrumentId(uuid);
-    }
 
     @Override
     public String toString() {

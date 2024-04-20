@@ -19,9 +19,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalFoundEvent implements DomainEvent {
-    String ticker;
-    Boolean isBuy;
-    UUID datasourceId;
+public class SignalFoundEvent implements IntegrationEvent {
+    UUID id;
+    InstrumentId instrumentId;
+    Double price;
+    boolean isBuy;
+    ScannerId scannerId;
     LocalDateTime watermark;
 }

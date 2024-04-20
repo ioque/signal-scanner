@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.LocalDate;
 
@@ -21,6 +22,7 @@ public class CurrencyPair extends Instrument {
     @Builder
     public CurrencyPair(
         InstrumentId id,
+        Ticker ticker,
         String shortName,
         String name,
         Boolean updatable,
@@ -29,7 +31,7 @@ public class CurrencyPair extends Instrument {
         LocalDate lastHistoryDate,
         Long lastTradingNumber
     ) {
-        super(id, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
         setFaceUnit(faceUnit);
         setLotSize(lotSize);
     }

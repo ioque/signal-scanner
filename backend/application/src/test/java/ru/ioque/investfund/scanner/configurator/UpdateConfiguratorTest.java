@@ -40,7 +40,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
     void testCase2() {
         commandBus().execute(
             buildCreateAnomalyVolumeScannerWith()
-                .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+                .tickers(List.of(TGKN, TGKB, IMOEX))
                 .build()
         );
         final ScannerId scannerId = getFirstScannerId();
@@ -48,7 +48,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(scannerId)
-                .instrumentIds(List.of(tgknId, imoexId))
+                .tickers(List.of(TGKN, IMOEX))
                 .build()
         );
         assertEquals(2, getScanner(scannerId).getInstrumentIds().size());
@@ -167,12 +167,12 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .instrumentIds(null)
+                    .tickers(null)
                     .build()
             )
         );
 
-        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
+        assertEquals(tickersIsEmpty(), getMessage(exception));
     }
 
     @Test
@@ -187,11 +187,11 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
             () -> commandBus().execute(
                 buildUpdateAnomalyVolumeScannerWith()
                     .scannerId(getFirstScannerId())
-                    .instrumentIds(List.of())
+                    .tickers(List.of())
                     .build()
             )
         );
 
-        assertEquals(instrumentIdsIsEmpty(), getMessage(exception));
+        assertEquals(tickersIsEmpty(), getMessage(exception));
     }
 }

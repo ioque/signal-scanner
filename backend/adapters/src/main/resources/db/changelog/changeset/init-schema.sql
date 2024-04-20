@@ -57,8 +57,7 @@ create table if not exists history_value
     trade_date    date             not null,
     value         double precision not null,
     wa_price      double precision,
-    id            bigserial
-        primary key,
+    id            bigserial primary key,
     ticker        varchar(255)     not null,
     datasource_id uuid             not null,
     unique(datasource_id, trade_date, ticker)
@@ -83,7 +82,7 @@ create table if not exists instrument
     datasource_id       uuid
         constraint fko12pnddmjd9f5v3u21t3ydro8
             references datasource,
-    id                  uuid not null primary key,
+    id            bigserial primary key,
     instrument_type     varchar(255) not null,
     asset_code          varchar(255),
     face_unit           varchar(255),
@@ -138,18 +137,6 @@ create table if not exists scanner
 alter table scanner
     owner to postgres;
 
-create table if not exists scanner_log
-(
-    date_time  timestamp(6),
-    id         bigserial
-        primary key,
-    scanner_id uuid,
-    message    varchar(255)
-);
-
-alter table scanner_log
-    owner to postgres;
-
 create table if not exists scanner_entity_tickers
 (
     scanner_entity_id uuid not null
@@ -163,7 +150,10 @@ alter table scanner_entity_tickers
 
 create table if not exists signal
 (
+    price             double precision,
     is_buy     boolean not null,
+    is_open     boolean not null,
+    summary varchar(500),
     date_time  timestamp(6),
     id         bigserial
         primary key,

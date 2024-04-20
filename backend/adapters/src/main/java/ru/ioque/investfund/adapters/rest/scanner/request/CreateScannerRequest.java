@@ -45,7 +45,7 @@ public class CreateScannerRequest {
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)
             .description(description)
-            .instrumentIds(tickers.stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
+            .tickers(tickers.stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
             .build();
     }
 }

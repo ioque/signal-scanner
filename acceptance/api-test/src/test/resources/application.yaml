@@ -21,4 +21,4 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: "ru.ioque.investfund.*"
         spring.json.use.type.headers: false
-        spring.json.value.default.type: ru.ioque.apitest.kafka.DomainEvent
+        spring.json.value.default.type: ru.ioque.apitest.kafka.IntegrationEvent

@@ -19,8 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ScanningFinishedEvent implements DomainEvent {
-    UUID datasourceId;
+public class ScanningFinishedEvent implements IntegrationEvent {
+    UUID id;
+    DatasourceId datasourceId;
     LocalDateTime watermark;
     LocalDateTime dateTime;
 }

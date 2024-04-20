@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
@@ -31,7 +31,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase1(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, lkohId, sibnId, tatnId);
+        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
 
         runWorkPipeline(datasourceId);
 
@@ -53,7 +53,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, lkohId, sibnId, tatnId);
+        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
 
         runWorkPipeline(datasourceId);
 
@@ -74,7 +74,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, lkohId, sibnId, tatnId);
+        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:30:00");
 
@@ -97,7 +97,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, lkohId, sibnId, tatnId);
+        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T14:00:00");
 
@@ -121,7 +121,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, tatnId);
+        initScanner(datasourceId, ROSN, TATN);
 
         runWorkPipeline(datasourceId);
 
@@ -141,7 +141,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         initOilCompanyData(datasourceId);
         initTradingResultsForTestCase2(datasourceId);
         initDealsTatnFallOtherRise(datasourceId);
-        initScanner(datasourceId,rosnId, tatnId, sibnId);
+        initScanner(datasourceId, ROSN, TATN, SIBN);
 
         runWorkPipeline(datasourceId);
 
@@ -151,13 +151,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
-    private void initScanner(DatasourceId datasourceId, InstrumentId... instrumentIds) {
+    private void initScanner(DatasourceId datasourceId, Ticker... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Секторальный отстающий, нефтянка.")
                 .datasourceId(datasourceId)
-                .instrumentIds(Arrays.asList(instrumentIds))
+                .tickers(Arrays.asList(tickers))
                 .properties(
                     SectoralRetardProperties.builder()
                         .historyScale(historyScale)
@@ -179,23 +179,23 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getInstrumentIds(datasourceId)));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
         datasourceStorage().initDealDatas(
             List.of(
-                buildContractBy(datasourceId, brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
-                buildContractBy(datasourceId, brf4Id,1L,"12:00:00", 96D, 96000D, 1),
-                buildBuyDealBy(datasourceId, rosnId,1L,"10:00:00", 250.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, rosnId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, lkohId,1L,"10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, lkohId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, sibnId,1L,"10:00:00", 248.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, sibnId,2L,"12:00:00", 255.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, tatnId,1L,"10:00:00", 251.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, tatnId,2L,"12:00:00", 247.1D, 136926D, 1),
-                buildBuyDealBy(datasourceId, tatnId,3L,"13:45:00", 280.1D, 136926D, 1)
+                buildContractBy(brf4Id, 1L,"10:00:00", 78D, 78000D, 1),
+                buildContractBy(brf4Id,1L,"12:00:00", 96D, 96000D, 1),
+                buildBuyDealBy(rosnId,1L,"10:00:00", 250.1D, 136926D, 1),
+                buildBuyDealBy(rosnId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(lkohId,1L,"10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(lkohId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(sibnId,1L,"10:00:00", 248.1D, 136926D, 1),
+                buildBuyDealBy(sibnId,2L,"12:00:00", 255.1D, 136926D, 1),
+                buildBuyDealBy(tatnId,1L,"10:00:00", 251.1D, 136926D, 1),
+                buildBuyDealBy(tatnId,2L,"12:00:00", 247.1D, 136926D, 1),
+                buildBuyDealBy(tatnId,3L,"13:45:00", 280.1D, 136926D, 1)
             )
         );
     }
@@ -204,20 +204,20 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 80D, 80D, 10D),
+                buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(brf4Id, "2023-12-21", 80D, 80D, 10D),
                 //ROSN
-                buildDealResultBy(datasourceId, rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, rosnId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(rosnId, "2023-12-21", 250D, 255D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(datasourceId, lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, lkohId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(lkohId, "2023-12-21", 250D, 255D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(datasourceId, sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, sibnId, "2023-12-21", 250D, 255D, 1D, 1D),
+                buildDealResultBy(sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(sibnId, "2023-12-21", 250D, 255D, 1D, 1D),
                 //TATN
-                buildDealResultBy(datasourceId, tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(datasourceId, tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }
@@ -226,20 +226,20 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         datasourceStorage().initTradingResults(
             List.of(
                 //BRF4
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-20", 75D, 75D, 10D),
-                buildFuturesDealResultBy(datasourceId, brf4Id, "2023-12-21", 74D, 74D, 10D),
+                buildFuturesDealResultBy(brf4Id, "2023-12-20", 75D, 75D, 10D),
+                buildFuturesDealResultBy(brf4Id, "2023-12-21", 74D, 74D, 10D),
                 //ROSN
-                buildDealResultBy(datasourceId, rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, rosnId, "2023-12-21", 250D, 251D, 1D, 1D),
+                buildDealResultBy(rosnId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(rosnId, "2023-12-21", 250D, 251D, 1D, 1D),
                 //LKOH
-                buildDealResultBy(datasourceId, lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, lkohId, "2023-12-21", 250D, 250D, 1D, 1D),
+                buildDealResultBy(lkohId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(lkohId, "2023-12-21", 250D, 250D, 1D, 1D),
                 //SIBN
-                buildDealResultBy(datasourceId, sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
-                buildDealResultBy(datasourceId, sibnId, "2023-12-21", 250D, 249D, 1D, 1D),
+                buildDealResultBy(sibnId, "2023-12-20", 250D, 250D, 1D, 1D),
+                buildDealResultBy(sibnId, "2023-12-21", 250D, 249D, 1D, 1D),
                 //TATN
-                buildDealResultBy(datasourceId, tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
-                buildDealResultBy(datasourceId, tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
+                buildDealResultBy(tatnId, "2023-12-20", 250D, 252D, 1D, 1D),
+                buildDealResultBy(tatnId, "2023-12-21", 250D, 253D, 1D, 1D)
             )
         );
     }

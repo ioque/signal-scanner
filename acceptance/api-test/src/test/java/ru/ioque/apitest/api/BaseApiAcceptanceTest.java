@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
 import ru.ioque.apitest.DatasetManager;
-import ru.ioque.apitest.kafka.DomainEvent;
 import ru.ioque.apitest.kafka.KafkaConsumer;
+import ru.ioque.apitest.kafka.ScanningFinishedEvent;
 import ru.ioque.core.client.datasource.DatasourceRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
@@ -49,9 +49,9 @@ public class BaseApiAcceptanceTest {
         kafkaConsumer.clear();
     }
 
-    protected boolean waitEvent(DomainEvent event) {
+    protected boolean waitScanningFinishedEvent() {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.getMessages().contains(event)) {
+        while (kafkaConsumer.getMessages().stream().anyMatch(row -> row.getClass().equals(ScanningFinishedEvent.class))) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }

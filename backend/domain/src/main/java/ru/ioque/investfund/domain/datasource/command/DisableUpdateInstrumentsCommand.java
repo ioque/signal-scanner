@@ -13,7 +13,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.util.List;
 
@@ -27,6 +27,6 @@ import java.util.List;
 public class DisableUpdateInstrumentsCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
-    @NotEmpty(message = "Не передан список идентификаторов инструментов для активации обновления торговых данных.")
-    List<@Valid InstrumentId> instrumentIds;
+    @NotEmpty(message = "Не передан список тикеров инструментов для активации обновления торговых данных.")
+    List<@Valid Ticker> tickers;
 }

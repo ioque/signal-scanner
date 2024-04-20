@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -22,6 +22,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
     InstrumentId instrumentId;
+    Ticker ticker;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
@@ -31,6 +32,7 @@ public class TradingSnapshot {
 
     public TradingSnapshot(
         InstrumentId instrumentId,
+        Ticker ticker,
         List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
@@ -38,13 +40,14 @@ public class TradingSnapshot {
         List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
         List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
     ) {
-        setInstrumentId(instrumentId);
-        setClosePriceSeries(closePriceSeries);
-        setOpenPriceSeries(openPriceSeries);
-        setValueSeries(valueSeries);
-        setWaPriceSeries(waPriceSeries);
-        setTodayPriceSeries(todayPriceSeries);
-        setTodayValueSeries(todayValueSeries);
+        this.instrumentId = instrumentId;
+        this.ticker = ticker;
+        this.closePriceSeries = closePriceSeries;
+        this.openPriceSeries = openPriceSeries;
+        this.valueSeries = valueSeries;
+        this.waPriceSeries = waPriceSeries;
+        this.todayPriceSeries = todayPriceSeries;
+        this.todayValueSeries = todayValueSeries;
     }
 
     public Optional<Double> getHistoryMedianValue(int period) {
@@ -132,15 +135,14 @@ public class TradingSnapshot {
     }
 
     public boolean isPref() {
-        return instrumentId.getTicker().getValue().length() == 5;
+        return ticker.getValue().length() == 5;
     }
 
     public boolean isSimplePair(TradingSnapshot tradingSnapshot) {
-        return instrumentId
-            .getTicker()
+        return ticker
             .getValue()
-            .substring(0, instrumentId.getTicker().getValue().length() - 1)
-            .equals(tradingSnapshot.getInstrumentId().getTicker().getValue());
+            .substring(0, ticker.getValue().length() - 1)
+            .equals(tradingSnapshot.getTicker().getValue());
     }
 
     @Override
@@ -148,42 +150,11 @@ public class TradingSnapshot {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         TradingSnapshot that = (TradingSnapshot) object;
-        return Objects.equals(instrumentId, that.instrumentId);
+        return Objects.equals(ticker, that.ticker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instrumentId);
-    }
-
-    private void setInstrumentId(InstrumentId instrumentId) {
-        if (instrumentId == null) {
-            throw new DomainException("Не передан тикер.");
-        }
-        this.instrumentId = instrumentId;
-    }
-
-    private void setClosePriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries) {
-        this.closePriceSeries = closePriceSeries;
-    }
-
-    private void setOpenPriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries) {
-        this.openPriceSeries = openPriceSeries;
-    }
-
-    private void setValueSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries) {
-        this.valueSeries = valueSeries;
-    }
-
-    private void setWaPriceSeries(List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries) {
-        this.waPriceSeries = waPriceSeries;
-    }
-
-    private void setTodayPriceSeries(List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries) {
-        this.todayPriceSeries = todayPriceSeries;
-    }
-
-    private void setTodayValueSeries(List<TimeSeriesValue<Double, LocalTime>> todayValueSeries) {
-        this.todayValueSeries = todayValueSeries;
+        return Objects.hash(ticker);
     }
 }

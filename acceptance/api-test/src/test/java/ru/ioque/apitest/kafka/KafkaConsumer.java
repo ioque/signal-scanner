@@ -12,10 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Setter
 @Component
 public class KafkaConsumer {
-    ConcurrentLinkedQueue<DomainEvent> messages = new ConcurrentLinkedQueue<>();
+    ConcurrentLinkedQueue<IntegrationEvent> messages = new ConcurrentLinkedQueue<>();
 
     @KafkaListener(topics = "events", groupId = "acceptance")
-    public void consume(@Payload DomainEvent event) {
+    public void consume(@Payload IntegrationEvent event) {
         messages.add(event);
     }
 

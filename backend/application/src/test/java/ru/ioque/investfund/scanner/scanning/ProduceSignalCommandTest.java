@@ -15,7 +15,7 @@ import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.event.SignalRegisteredEvent;
+import ru.ioque.investfund.application.integration.event.SignalRegisteredEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,12 +42,12 @@ public class ProduceSignalCommandTest extends BaseTest {
             CreateScannerCommand.builder()
                 .datasourceId(getDatasourceId())
                 .workPeriodInMinutes(1)
-                .instrumentIds(List.of(tgknId, tgkbId, imoexId))
+                .tickers(List.of(TGKN, TGKB, IMOEX))
                 .description("description")
                 .properties(
                     AnomalyVolumeProperties.builder()
                         .scaleCoefficient(1.5)
-                        .indexId(imoexId)
+                        .indexTicker(IMOEX)
                         .historyPeriod(3)
                         .build()
                 )
@@ -153,23 +153,23 @@ public class ProduceSignalCommandTest extends BaseTest {
         final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(tgknId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
+            buildDeltaResultBy(imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L, "10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L, "12:00:00", 3100D, 2_000_000D),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 100D, 5000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 5L, "11:45:00", 102D, 5000D, 1)
+            buildDeltaBy(imoexId, 1L, "10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(imoexId, 2L, "12:00:00", 3100D, 2_000_000D),
+            buildBuyDealBy(tgknId, 1L,"10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(tgknId, 2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(tgknId, 3L,"11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgknId, 4L,"11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgknId, 5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }
@@ -199,31 +199,31 @@ public class ProduceSignalCommandTest extends BaseTest {
             )
         );
         initTradingResults(
-            buildDealResultBy(scanner.getDatasourceId(), tgkbId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgkbId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgkbId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.1D, 97D, 2000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(tgkbId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(tgkbId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(tgkbId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
+            buildDealResultBy(tgknId, "2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            buildDealResultBy(tgknId, "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy(tgknId, "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            buildDeltaResultBy(imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L,"10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 5L, "11:45:00", 96D, 5000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgkbId, 1L,"10:00:00", 100D, 5000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgkbId, 2L,"10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgkbId, 3L,"11:00:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgkbId, 4L,"11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgkbId, 5L, "11:45:00", 102D, 5000D, 1)
+            buildDeltaBy(imoexId, 1L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(imoexId, 2L,"12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(tgknId, 1L,"10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(tgknId, 2L,"10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(tgknId, 3L,"11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(tgknId, 4L,"11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(tgknId, 5L, "11:45:00", 96D, 5000D, 1),
+            buildBuyDealBy(tgkbId, 1L,"10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(tgkbId, 2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(tgkbId, 3L,"11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgkbId, 4L,"11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgkbId, 5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }
@@ -232,23 +232,23 @@ public class ProduceSignalCommandTest extends BaseTest {
         final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.1D, 97D, 2000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(tgknId, "2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            buildDealResultBy(tgknId, "2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            buildDealResultBy(tgknId, "2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            buildDeltaResultBy(imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 1L,"10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 2900D, 2_000_000D),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 98D, 5000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 97D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 98D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 97D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 5L, "11:45:00", 96D, 5000D, 1)
+            buildDeltaBy(imoexId, 1L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(imoexId, 2L,"12:00:00", 2900D, 2_000_000D),
+            buildBuyDealBy(tgknId, 1L,"10:00:00", 98D, 5000D, 1),
+            buildSellDealBy(tgknId, 2L,"10:03:00", 97D, 1000D, 1),
+            buildSellDealBy(tgknId, 3L,"11:00:00", 98D, 1000D, 1),
+            buildSellDealBy(tgknId, 4L,"11:01:00", 97D, 1000D, 1),
+            buildSellDealBy(tgknId, 5L, "11:45:00", 96D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }
@@ -268,23 +268,23 @@ public class ProduceSignalCommandTest extends BaseTest {
                 .build()
         );
         initTradingResults(
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
-            buildDealResultBy(scanner.getDatasourceId(), tgknId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildDeltaResultBy(scanner.getDatasourceId(), imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
+            buildDealResultBy(tgknId, "2023-12-22", 99.D, 99.D, 99D, 1000D),
+            buildDealResultBy(tgknId, "2023-12-23", 99.D, 99.D, 99D, 2000D),
+            buildDealResultBy(tgknId, "2023-12-24", 100.D, 100.D, 100D, 1400D),
+            buildDeltaResultBy(imoexId, "2023-12-22", 2900D, 2900D, 1_000_000D),
+            buildDeltaResultBy(imoexId, "2023-12-23", 2900D, 2900D, 1_500_000D),
+            buildDeltaResultBy(imoexId, "2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initDealDatas(
-            buildDeltaBy(scanner.getDatasourceId(), imoexId,  1L,"10:00:00", 3000D, 1_000_000D),
-            buildDeltaBy(scanner.getDatasourceId(), imoexId, 2L,"12:00:00", 3100D, 2_000_000D),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 1L,"10:00:00", 100D, 5000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 2L,"10:03:00", 100D, 1000D, 1),
-            buildSellDealBy(scanner.getDatasourceId(), tgknId, 3L,"11:00:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 4L,"11:01:00", 100D, 1000D, 1),
-            buildBuyDealBy(scanner.getDatasourceId(), tgknId, 5L,"11:45:00", 102D, 5000D, 1)
+            buildDeltaBy(imoexId,  1L,"10:00:00", 3000D, 1_000_000D),
+            buildDeltaBy(imoexId, 2L,"12:00:00", 3100D, 2_000_000D),
+            buildBuyDealBy(tgknId, 1L,"10:00:00", 100D, 5000D, 1),
+            buildBuyDealBy(tgknId, 2L,"10:03:00", 100D, 1000D, 1),
+            buildSellDealBy(tgknId, 3L,"11:00:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgknId, 4L,"11:01:00", 100D, 1000D, 1),
+            buildBuyDealBy(tgknId, 5L,"11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getInstrumentIds(getDatasourceId())));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         clearLogs();
     }

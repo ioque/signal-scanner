@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -17,15 +16,15 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     Double historyScale;
     Double intradayScale;
 
     public SectoralRetardAlgorithm(SectoralRetardProperties properties) {
         super(properties.getType().getName());
-        setHistoryScale(properties.getHistoryScale());
-        setIntradayScale(properties.getIntradayScale());
+        this.historyScale = properties.getHistoryScale();
+        this.intradayScale = properties.getIntradayScale();
     }
 
     @Override
@@ -69,25 +68,5 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             .stream()
             .filter(row -> row.isRiseInLastTwoDay(historyScale, intradayScale))
             .toList();
-    }
-
-    private void setIntradayScale(Double intradayScale) {
-        if (intradayScale == null) {
-            throw new DomainException("Не передан параметр intradayScale.");
-        }
-        if (intradayScale <= 0) {
-            throw new DomainException("Параметр intradayScale должен быть больше нуля.");
-        }
-        this.intradayScale = intradayScale;
-    }
-
-    private void setHistoryScale(Double historyScale) {
-        if (historyScale == null) {
-            throw new DomainException("Не передан параметр historyScale.");
-        }
-        if (historyScale <= 0) {
-            throw new DomainException("Параметр historyScale должен быть больше нуля.");
-        }
-        this.historyScale = historyScale;
     }
 }

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
 
 @Getter
@@ -28,5 +28,6 @@ public class SectoralFuturesProperties implements AlgorithmProperties {
     @DecimalMin(value = "0", inclusive = false, message = "Параметр stockOvernightScale должен быть больше 0.")
     Double stockOvernightScale;
     @NotNull(message = "Не передан идентификатор фьючерса на основной товар сектора.")
-    @Valid InstrumentId futuresId;
+    @Valid
+    Ticker futuresTicker;
 }
