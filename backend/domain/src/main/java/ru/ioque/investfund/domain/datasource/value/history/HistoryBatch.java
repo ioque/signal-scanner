@@ -3,18 +3,14 @@ package ru.ioque.investfund.domain.datasource.value.history;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 public class HistoryBatch {
-    private final List<@Valid HistoryValue> values;
+    private final TreeSet<@Valid HistoryValue> values;
 
-    public HistoryBatch(List<HistoryValue> values) {
+    public HistoryBatch(TreeSet<HistoryValue> values) {
         this.values = values;
-    }
-
-    public List<HistoryValue> getUniqueValues() {
-        return values.stream().distinct().toList();
     }
 
     public Optional<LocalDate> getLastDate() {

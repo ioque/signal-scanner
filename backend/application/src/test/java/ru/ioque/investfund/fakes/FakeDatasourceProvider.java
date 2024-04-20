@@ -6,11 +6,12 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
+import java.util.TreeSet;
 
 public class FakeDatasourceProvider implements DatasourceProvider {
     @Setter
@@ -22,13 +23,13 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public HistoryBatch fetchHistoryBy(Datasource datasource, Instrument instrument) {
-        return new HistoryBatch(datasourceStorage.getHistoryDataBy(instrument.getTicker()).stream().toList());
+    public TreeSet<HistoryValue> fetchHistoryBy(Datasource datasource, Instrument instrument) {
+        return new TreeSet<>(datasourceStorage.getHistoryDataBy(instrument.getTicker()).stream().toList());
     }
 
     @Override
-    public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
-        return new IntradayBatch(datasourceStorage.getDealsByTicker(instrument.getTicker()));
+    public TreeSet<IntradayValue> fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
+        return new TreeSet<>(datasourceStorage.getDealsByTicker(instrument.getTicker()));
     }
 
     @Override

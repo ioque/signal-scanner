@@ -354,7 +354,7 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, List.of(AFKS)));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         TradingDataIntegratedEvent event = (TradingDataIntegratedEvent) eventPublisher().getEvents().get(0);
-        assertEquals(getDatasourceId(), event.getDatasourceId());
+        assertEquals(getDatasourceId().getUuid(), event.getDatasourceId());
         assertEquals(1, event.getUpdatedCount());
         assertEquals(dateTimeProvider().nowDateTime(), event.getDateTime());
     }

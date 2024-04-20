@@ -1,5 +1,6 @@
 package ru.ioque.investfund.application.datasource;
 
+import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -13,11 +14,13 @@ import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+
+import java.util.TreeSet;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -53,13 +56,14 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
     protected void businessProcess(IntegrateTradingDataCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
-            final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
+            final TreeSet<@Valid HistoryValue> history = datasourceProvider.fetchHistoryBy(datasource, instrument);
+            final TreeSet<@Valid IntradayValue> intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
             validate(history);
-            final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
             validate(intraday);
-            historyValueRepository.saveAll(history.getUniqueValues());
-            intradayValueRepository.saveAll(intraday.getUniqueValues());
-            instrument.recalcSummary(history, intraday);
+            historyValueRepository.saveAll(history.stream().distinct().toList());
+            intradayValueRepository.saveAll(intraday.stream().distinct().toList());
+            instrument.updateTradingState(intraday);
+            instrument.updateAggregateHistory(history);
         });
         datasourceRepository.save(datasource);
         eventPublisher.publish(TradingDataIntegratedEvent.builder()

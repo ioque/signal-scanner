@@ -14,10 +14,11 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.util.List;
+import java.util.TreeSet;
 
 @Component
 @RequiredArgsConstructor
@@ -38,8 +39,8 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public HistoryBatch fetchHistoryBy(Datasource datasource, Instrument instrument) {
-        return new HistoryBatch(
+    public TreeSet<HistoryValue> fetchHistoryBy(Datasource datasource, Instrument instrument) {
+        return new TreeSet<>(
             moexClient
                 .fetchHistory(
                     datasource.getUrl(),
@@ -55,8 +56,8 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public IntradayBatch fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
-        return new IntradayBatch(
+    public TreeSet<IntradayValue> fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
+        return new TreeSet<>(
             moexClient
                 .fetchIntradayValues(
                     datasource.getUrl(),

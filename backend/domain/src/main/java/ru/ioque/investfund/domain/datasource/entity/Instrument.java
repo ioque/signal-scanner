@@ -8,17 +8,18 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
+import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 @Getter
 @ToString(callSuper = true)
@@ -27,9 +28,8 @@ import java.util.Optional;
 public class Instrument extends Domain<InstrumentId> {
     InstrumentDetails details;
     Boolean updatable;
-    Long lastTradingNumber;
-    LocalDate lastHistoryDate;
-    final List<HistoryValue> aggregateHistory;
+    TradingState tradingState;
+    final TreeSet<AggregateHistory> aggregateHistory;
 
     @Builder
     public Instrument(
@@ -38,14 +38,14 @@ public class Instrument extends Domain<InstrumentId> {
         Boolean updatable,
         Long lastTradingNumber,
         LocalDate lastHistoryDate,
-        List<HistoryValue> aggregateHistory
+        TradingState tradingState,
+        TreeSet<AggregateHistory> aggregateHistory
     ) {
         super(id);
         this.details = details;
         this.updatable = updatable;
-        this.lastHistoryDate = lastHistoryDate;
+        this.tradingState = tradingState;
         this.aggregateHistory = aggregateHistory;
-        this.lastTradingNumber = lastTradingNumber;
     }
 
     public static Instrument of(InstrumentId id, InstrumentDetails details) {
@@ -53,12 +53,45 @@ public class Instrument extends Domain<InstrumentId> {
             .id(id)
             .details(details)
             .updatable(false)
-            .aggregateHistory(new ArrayList<>())
+            .aggregateHistory(new TreeSet<>())
             .build();
     }
 
     public void updateDetails(InstrumentDetails details) {
         this.details = details;
+    }
+
+    public void updateTradingState(TreeSet<IntradayValue> intradayValues) {
+        if (intradayValues.isEmpty()) {
+            return;
+        }
+        if (tradingState == null) {
+            tradingState = TradingState.from(intradayValues);
+            addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
+            return;
+        }
+        tradingState = TradingState.of(tradingState, intradayValues);
+        addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
+    }
+
+    public void updateAggregateHistory(TreeSet<HistoryValue> historyValues) {
+        if (historyValues.isEmpty()) {
+            return;
+        }
+        if (aggregateHistory.isEmpty()) {
+            aggregateHistory.addAll(
+                historyValues.stream().map(AggregateHistory::from).toList()
+            );
+            return;
+        }
+        Optional<LocalDate> lastHistoryDate = getLastHistoryDate();
+        aggregateHistory.addAll(
+            historyValues
+                .stream()
+                .filter(historyValue -> historyValue.getTradeDate().isAfter(lastHistoryDate.get()))
+                .map(AggregateHistory::from)
+                .toList()
+        );
     }
 
     public Ticker getTicker() {
@@ -70,7 +103,7 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public Optional<LocalDate> getLastHistoryDate() {
-        return Optional.ofNullable(lastHistoryDate);
+        return Optional.ofNullable(aggregateHistory.last()).map(AggregateHistory::getDate);
     }
 
     public LocalDate historyRightBound(LocalDate now) {
@@ -82,7 +115,7 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public Long getLastTradingNumber() {
-        return Optional.ofNullable(lastTradingNumber).orElse(0L);
+        return Optional.ofNullable(tradingState).map(TradingState::getLastNumber).orElse(0L);
     }
 
     public void enableUpdate() {
@@ -95,18 +128,5 @@ public class Instrument extends Domain<InstrumentId> {
 
     public boolean isUpdatable() {
         return Boolean.TRUE.equals(updatable);
-    }
-
-    public void updateLastTradingNumber(Long lastTradingNumber) {
-        this.lastTradingNumber = lastTradingNumber;
-    }
-
-    public void updateLastHistoryDate(LocalDate lastHistoryDate) {
-        this.lastHistoryDate = lastHistoryDate;
-    }
-
-    public void recalcSummary(HistoryBatch history, IntradayBatch intraday) {
-        intraday.getLastNumber().ifPresent(this::updateLastTradingNumber);
-        history.getLastDate().ifPresent(this::updateLastHistoryDate);
     }
 }

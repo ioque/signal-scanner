@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @ToString
@@ -12,9 +14,14 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class Domain<Identity> {
     final Identity id;
+    final List<DomainEvent> events = new ArrayList<>();
 
     protected Domain(Identity id) {
         this.id = id;
+    }
+
+    public void addEvent(DomainEvent event) {
+        events.add(event);
     }
 
     @Override
