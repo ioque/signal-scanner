@@ -1,10 +1,12 @@
-package ru.ioque.investfund.domain.datasource.value;
+package ru.ioque.investfund.domain.datasource.value.intraday;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.OptionalLong;
 
 public class IntradayBatch {
-    private final List<IntradayValue> values;
+    private final List<@Valid IntradayValue> values;
 
     public IntradayBatch(List<IntradayValue> values) {
         this.values = values;

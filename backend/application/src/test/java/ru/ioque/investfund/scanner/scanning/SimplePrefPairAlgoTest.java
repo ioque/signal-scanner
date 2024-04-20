@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
@@ -39,7 +39,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private PrefSimplePair getPrefSimplePair() {
-        return new PrefSimplePair(getSberp(), getSber());
+        return new PrefSimplePair(getSberpSnapshot(), getSberSnapshot());
     }
 
 
@@ -404,9 +404,9 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private void initSberSberp(DatasourceId datasourceId) {
-        initInstruments(
-            sber(),
-            sberP()
+        initInstrumentDetails(
+            sberDetails(),
+            sberpDetails()
         );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
         commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));

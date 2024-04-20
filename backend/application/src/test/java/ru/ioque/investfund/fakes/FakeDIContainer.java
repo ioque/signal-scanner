@@ -85,6 +85,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             exchangeProvider,
             datasourceRepository
         );

@@ -35,7 +35,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        initInstruments(imoex(), tgkb(), tgkn());
+        initInstrumentDetails(imoexDetails(), tgkbDetails(), tgknDetails());
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(
             CreateScannerCommand.builder()
@@ -93,7 +93,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId(), signalFoundEvent.get().getScannerId());
-        assertEquals(tgknId, signalFoundEvent.get().getInstrumentId());
+        assertEquals(TGKN, signalFoundEvent.get().getTicker());
         assertTrue(signalFoundEvent.get().isBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
     }
@@ -183,7 +183,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                     .price(10D)
                     .isBuy(true)
                     .isOpen(true)
-                    .instrumentId(tgkbId)
+                    .ticker(TGKB)
                     .summary("summary")
                     .watermark(today)
                     .build(),
@@ -191,7 +191,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                     .price(10D)
                     .isBuy(true)
                     .isOpen(true)
-                    .instrumentId(tgknId)
+                    .ticker(TGKN)
                     .summary("summary")
                     .watermark(today)
                     .build()
@@ -228,7 +228,6 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     }
 
     private void prepareTestCase5() {
-        final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
         initTradingResults(
             buildTgknHistoryValue("2023-12-22", 99.D, 99.1D, 97D, 2000D),
@@ -261,7 +260,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 .price(10D)
                 .isBuy(false)
                 .isOpen(true)
-                .instrumentId(tgknId)
+                .ticker(TGKN)
                 .summary("summary")
                 .watermark(today)
                 .build()

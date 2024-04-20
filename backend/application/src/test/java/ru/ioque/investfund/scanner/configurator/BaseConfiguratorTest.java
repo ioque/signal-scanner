@@ -7,7 +7,7 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
@@ -42,18 +42,19 @@ public class BaseConfiguratorTest extends BaseTest {
     }
 
     private void prepareDatasource() {
-        datasourceStorage().initInstruments(
-            List.of(imoex(),
-                tgkb(),
-                tgkn(),
-                sber(),
-                sberP(),
-                rosn(),
-                sibn(),
-                lkoh(),
-                tatn(),
-                brf4(),
-                usdRub())
+        datasourceStorage().initInstrumentDetails(
+            List.of(
+                imoexDetails(),
+                tgkbDetails(),
+                tgknDetails(),
+                sberDetails(),
+                sberpDetails(),
+                rosnDetails(),
+                sibnDetails(),
+                lkohDetails(),
+                tatnDetails(),
+                brf4Details(),
+                usdRubDetails())
         );
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));

@@ -22,14 +22,14 @@ public abstract class CommandHandler<C> {
             dateTimeProvider.nowDateTime(),
             String.format("Получена команда %s", command)
         ));
-        validateCommand(command);
+        validate(command);
         execute(command);
     }
 
     protected abstract void businessProcess(C command);
 
-    private void validateCommand(C command) {
-        final Set<ConstraintViolation<C>> violations = validator.validate(command);
+    protected <V> void validate(V value) {
+        final Set<ConstraintViolation<V>> violations = validator.validate(value);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }

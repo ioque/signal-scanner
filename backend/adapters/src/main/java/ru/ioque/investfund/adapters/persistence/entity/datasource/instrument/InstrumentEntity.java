@@ -16,11 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
-import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
-import ru.ioque.investfund.domain.datasource.entity.Futures;
-import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.Stock;
 
 import java.time.LocalDate;
 import java.util.Map;

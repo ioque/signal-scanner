@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -70,7 +70,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
-                        .instrumentId(tradingSnapshot.getInstrumentId())
+                        .ticker(tradingSnapshot.getTicker())
                         .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );
@@ -83,7 +83,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .watermark(watermark)
                         .summary(summary)
                         .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
-                        .instrumentId(tradingSnapshot.getInstrumentId())
+                        .ticker(tradingSnapshot.getTicker())
                         .build()
                 );
             }

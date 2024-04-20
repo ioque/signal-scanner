@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.datasource.value;
+package ru.ioque.investfund.domain.datasource.value.types;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;

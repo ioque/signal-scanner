@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -51,7 +51,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
-                        .instrumentId(snapshot.getInstrumentId())
+                        .ticker(snapshot.getTicker())
                         .price(snapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );

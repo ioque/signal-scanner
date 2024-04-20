@@ -1,8 +1,8 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,24 +13,23 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeIntradayValueRepository implements IntradayValueRepository {
-    final Map<InstrumentId, Set<IntradayValue>> intradayValues = new ConcurrentHashMap<>();
+    final Map<Ticker, Set<IntradayValue>> intradayValues = new ConcurrentHashMap<>();
 
-    public Stream<IntradayValue> getAllBy(InstrumentId instrumentId) {
+    public Stream<IntradayValue> getAllBy(Ticker ticker) {
         return intradayValues
-            .getOrDefault(instrumentId, new HashSet<>())
+            .getOrDefault(ticker, new HashSet<>())
             .stream();
     }
-
     @Override
     public void saveAll(List<IntradayValue> newValues) {
-        Map<InstrumentId, List<IntradayValue>> instrumentIdToValues = newValues
+        Map<Ticker, List<IntradayValue>> tickerToValues = newValues
             .stream()
-            .collect(Collectors.groupingBy(IntradayValue::getInstrumentId));
-        instrumentIdToValues.forEach((instrumentId, values) -> {
-            if (!this.intradayValues.containsKey(instrumentId)) {
-                this.intradayValues.put(instrumentId, new HashSet<>());
+            .collect(Collectors.groupingBy(IntradayValue::getTicker));
+        tickerToValues.forEach((ticker, values) -> {
+            if (!this.intradayValues.containsKey(ticker)) {
+                this.intradayValues.put(ticker, new HashSet<>());
             }
-            this.intradayValues.get(instrumentId).addAll(values);
+            this.intradayValues.get(ticker).addAll(values);
         });
     }
 }

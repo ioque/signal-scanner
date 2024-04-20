@@ -36,8 +36,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -56,8 +56,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -98,8 +98,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 1, 0);
-        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -146,8 +146,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -170,8 +170,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0, 0);
-        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -194,8 +194,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0, 0);
-        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -219,8 +219,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     private void initScanner(DatasourceId datasourceId) {
@@ -283,10 +283,10 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     private void initInstruments(DatasourceId datasourceId) {
         datasourceStorage()
-            .initInstruments(
+            .initInstrumentDetails(
                 List.of(
-                    tatn(),
-                    brf4()
+                    tatnDetails(),
+                    brf4Details()
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));

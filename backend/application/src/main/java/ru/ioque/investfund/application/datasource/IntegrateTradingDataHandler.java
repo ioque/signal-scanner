@@ -16,8 +16,8 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
-import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -54,7 +54,9 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
         datasource.getUpdatableInstruments().forEach(instrument -> {
             final HistoryBatch history = datasourceProvider.fetchHistoryBy(datasource, instrument);
+            validate(history);
             final IntradayBatch intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
+            validate(intraday);
             historyValueRepository.saveAll(history.getUniqueValues());
             intradayValueRepository.saveAll(intraday.getUniqueValues());
             instrument.recalcSummary(history, intraday);

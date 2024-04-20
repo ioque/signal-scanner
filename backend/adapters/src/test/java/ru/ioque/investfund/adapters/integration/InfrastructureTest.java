@@ -2,7 +2,7 @@ package ru.ioque.investfund.adapters.integration;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @SpringBootTest
 public abstract class InfrastructureTest {

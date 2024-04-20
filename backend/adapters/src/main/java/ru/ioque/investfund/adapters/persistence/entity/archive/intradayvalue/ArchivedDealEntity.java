@@ -11,9 +11,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.Deal;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

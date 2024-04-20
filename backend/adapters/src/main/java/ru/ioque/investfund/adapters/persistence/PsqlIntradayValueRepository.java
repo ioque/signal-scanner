@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.util.List;
 

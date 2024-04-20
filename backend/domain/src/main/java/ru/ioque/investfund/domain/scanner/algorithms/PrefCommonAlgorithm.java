@@ -44,7 +44,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                     .isBuy(true)
                     .summary(summary)
                     .watermark(watermark)
-                    .instrumentId(pair.getPref().getInstrumentId())
+                    .ticker(pair.getPref().getTicker())
                     .price(pair.getPref().getTodayLastPrice().orElse(0D))
                     .build()
                 );

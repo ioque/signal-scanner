@@ -44,7 +44,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
-                        .instrumentId(snapshot.getInstrumentId())
+                        .ticker(snapshot.getTicker())
                         .price(snapshot.getTodayLastPrice().orElse(0D))
                         .build()
                 );

@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
-import ru.ioque.investfund.domain.datasource.value.Contract;
-import ru.ioque.investfund.domain.datasource.value.Deal;
-import ru.ioque.investfund.domain.datasource.value.Delta;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
+import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
+import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;

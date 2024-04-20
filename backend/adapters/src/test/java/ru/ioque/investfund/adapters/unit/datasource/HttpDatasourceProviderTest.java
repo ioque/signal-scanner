@@ -16,21 +16,17 @@ import ru.ioque.investfund.adapters.datasource.client.dto.intraday.DeltaDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.adapters.uuid.RandomUUIDGenerator;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.domain.datasource.entity.CurrencyPair;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.Futures;
-import ru.ioque.investfund.domain.datasource.entity.Index;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.Stock;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.Contract;
-import ru.ioque.investfund.domain.datasource.value.Deal;
-import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
-import ru.ioque.investfund.domain.datasource.value.IntradayValue;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
+import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -105,7 +101,7 @@ public class HttpDatasourceProviderTest {
 
         when(datasourceRestClient.fetchInstruments(DATASOURCE_URL)).thenReturn(instruments);
 
-        List<Instrument> batch = datasourceProvider.fetchInstruments(datasource());
+        List<Instrument> batch = datasourceProvider.fetchInstrumentDetails(datasource());
 
         assertEquals(4, batch.size());
         assertEqualsStock(stockDto, getInstrumentFromBatchByTicker(batch, stockDto.getTicker()));

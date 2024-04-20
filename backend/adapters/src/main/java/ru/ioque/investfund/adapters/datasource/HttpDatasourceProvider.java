@@ -12,8 +12,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.HistoryBatch;
-import ru.ioque.investfund.domain.datasource.value.IntradayBatch;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<Instrument> fetchInstruments(Datasource datasource) {
+    public List<Instrument> fetchInstrumentDetails(Datasource datasource) {
         return moexClient
             .fetchInstruments(datasource.getUrl())
             .stream()

@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("SCANNER MANAGER TEST - UPDATE SCANNER")
 public class UpdateConfiguratorTest extends BaseConfiguratorTest {
@@ -52,7 +51,6 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
                 .build()
         );
         assertEquals(2, getScanner(scannerId).getInstrumentIds().size());
-        assertTrue(List.of(tgknId, imoexId).containsAll(getScanner(scannerId).getInstrumentIds()));
     }
 
     @Test

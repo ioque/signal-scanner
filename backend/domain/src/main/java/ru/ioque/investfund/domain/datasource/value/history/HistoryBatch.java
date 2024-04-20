@@ -1,11 +1,13 @@
-package ru.ioque.investfund.domain.datasource.value;
+package ru.ioque.investfund.domain.datasource.value.history;
+
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public class HistoryBatch {
-    private final List<HistoryValue> values;
+    private final List<@Valid HistoryValue> values;
 
     public HistoryBatch(List<HistoryValue> values) {
         this.values = values;

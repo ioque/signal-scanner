@@ -1,8 +1,8 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.HistoryValueRepository;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,25 +13,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeHistoryValueRepository implements HistoryValueRepository {
-    final Map<InstrumentId, Set<HistoryValue>> historyValues = new ConcurrentHashMap<>();
+    final Map<Ticker, Set<HistoryValue>> historyValues = new ConcurrentHashMap<>();
 
 
-    public Stream<HistoryValue> getAllBy(InstrumentId instrumentId) {
+    public Stream<HistoryValue> getAllBy(Ticker ticker) {
         return historyValues
-            .getOrDefault(instrumentId, new HashSet<>())
+            .getOrDefault(ticker, new HashSet<>())
             .stream();
     }
 
     @Override
     public void saveAll(List<HistoryValue> newValues) {
-        Map<InstrumentId, List<HistoryValue>> instrumentIdToValues = newValues
+        Map<Ticker, List<HistoryValue>> tickerToValues = newValues
             .stream()
-            .collect(Collectors.groupingBy(HistoryValue::getInstrumentId));
-        instrumentIdToValues.forEach((instrumentId, values) -> {
-            if (!this.historyValues.containsKey(instrumentId)) {
-                this.historyValues.put(instrumentId, new HashSet<>());
+            .collect(Collectors.groupingBy(HistoryValue::getTicker));
+        tickerToValues.forEach((ticker, values) -> {
+            if (!this.historyValues.containsKey(ticker)) {
+                this.historyValues.put(ticker, new HashSet<>());
             }
-            this.historyValues.get(instrumentId).addAll(values);
+            this.historyValues.get(ticker).addAll(values);
         });
     }
 }

@@ -105,7 +105,7 @@ public class SignalScanner extends Domain<ScannerId> {
     }
 
     private boolean registerNewSignal(Signal newSignal) {
-        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByInstrumentId(newSignal)).findFirst();
+        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
         if (signalSameByTicker.isPresent()) {
             if (signalSameByTicker.get().isBuy() && newSignal.isSell()) {
                 signalSameByTicker.get().close();

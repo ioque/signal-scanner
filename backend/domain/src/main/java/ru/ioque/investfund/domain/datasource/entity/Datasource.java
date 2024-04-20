@@ -11,7 +11,7 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,8 +108,11 @@ public class Datasource extends Domain<DatasourceId> {
     }
 
     private void addInstrument(Instrument instrument) {
-        if (findInstrumentBy(instrument.getTicker()).isEmpty()) {
+        Optional<Instrument> existed = findInstrumentBy(instrument.getTicker());
+        if (existed.isEmpty()) {
             instruments.add(instrument);
+        } else {
+            existed.get().updateDetails(instrument.getDetails());
         }
     }
 }

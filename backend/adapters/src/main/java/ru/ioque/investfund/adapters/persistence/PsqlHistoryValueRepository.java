@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.application.adapters.HistoryValueRepository;
-import ru.ioque.investfund.domain.datasource.value.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 
 import java.util.List;
 
