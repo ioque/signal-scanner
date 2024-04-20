@@ -20,7 +20,6 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.UUID;
@@ -69,7 +68,7 @@ public class DatasourceCommandController {
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
         commandBus.execute(new EnableUpdateInstrumentsCommand(
                 DatasourceId.from(datasourceId),
-                request.getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList()
+                request.getTickers().stream().map(Ticker::from).toList()
             )
         );
     }
@@ -78,7 +77,7 @@ public class DatasourceCommandController {
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
         commandBus.execute(new DisableUpdateInstrumentsCommand(
                 DatasourceId.from(datasourceId),
-                request.getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList()
+                request.getTickers().stream().map(Ticker::from).toList()
             )
         );
     }

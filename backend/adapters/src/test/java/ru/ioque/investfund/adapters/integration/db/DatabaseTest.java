@@ -13,24 +13,14 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
-import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Transactional
 public abstract class DatabaseTest extends InfrastructureTest {
-    protected static final DatasourceId MOEX_DATASOURCE_ID = DatasourceId.from(UUID.randomUUID());
-    protected static final DatasourceId NASDAQ_DATASOURCE_ID = DatasourceId.from(UUID.randomUUID());
-    
+
     @Autowired
     protected DateTimeProvider dateTimeProvider;
     @Autowired
@@ -64,188 +54,47 @@ public abstract class DatabaseTest extends InfrastructureTest {
         datasourceRepository.save(nasdaqDatasource());
         historyValueRepository.saveAll(
             List.of(
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-03")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKB_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKB_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKB_ID, LocalDate.parse("2024-04-03")),
-                createHistoryValue(MOEX_DATASOURCE_ID, IMOEX_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(MOEX_DATASOURCE_ID, IMOEX_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(MOEX_DATASOURCE_ID, IMOEX_ID, LocalDate.parse("2024-04-03")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPL_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPL_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPL_ID, LocalDate.parse("2024-04-03")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPLP_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPLP_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, APPLP_ID, LocalDate.parse("2024-04-03")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, COMP_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, COMP_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(NASDAQ_DATASOURCE_ID, COMP_ID, LocalDate.parse("2024-04-03"))
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-01")),
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-02")),
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-03")),
+                createHistoryValue(TGKB, LocalDate.parse("2024-04-01")),
+                createHistoryValue(TGKB, LocalDate.parse("2024-04-02")),
+                createHistoryValue(TGKB, LocalDate.parse("2024-04-03")),
+                createHistoryValue(IMOEX, LocalDate.parse("2024-04-01")),
+                createHistoryValue(IMOEX, LocalDate.parse("2024-04-02")),
+                createHistoryValue(IMOEX, LocalDate.parse("2024-04-03")),
+                createHistoryValue(APPL, LocalDate.parse("2024-04-01")),
+                createHistoryValue(APPL, LocalDate.parse("2024-04-02")),
+                createHistoryValue(APPL, LocalDate.parse("2024-04-03")),
+                createHistoryValue(APPLP, LocalDate.parse("2024-04-01")),
+                createHistoryValue(APPLP, LocalDate.parse("2024-04-02")),
+                createHistoryValue(APPLP, LocalDate.parse("2024-04-03")),
+                createHistoryValue(COMP, LocalDate.parse("2024-04-01")),
+                createHistoryValue(COMP, LocalDate.parse("2024-04-02")),
+                createHistoryValue(COMP, LocalDate.parse("2024-04-03"))
             )
         );
         intradayValueRepository.saveAll(
             List.of(
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,3L, LocalDateTime.parse("2024-04-04T12:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKB_ID,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKB_ID,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKB_ID,3L, LocalDateTime.parse("2024-04-04T12:00:00")),
-                createDelta(MOEX_DATASOURCE_ID, IMOEX_ID, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDelta(MOEX_DATASOURCE_ID, IMOEX_ID, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDelta(MOEX_DATASOURCE_ID, IMOEX_ID, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPL_ID, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPL_ID, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPL_ID, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPLP_ID, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPLP_ID, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDeal(NASDAQ_DATASOURCE_ID, APPLP_ID, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
-                createDelta(NASDAQ_DATASOURCE_ID, COMP_ID, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDelta(NASDAQ_DATASOURCE_ID, COMP_ID, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDelta(NASDAQ_DATASOURCE_ID, COMP_ID, 3L, LocalDateTime.parse("2024-04-04T12:00:00"))
+                createDeal(TGKN,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDeal(TGKN,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDeal(TGKN,3L, LocalDateTime.parse("2024-04-04T12:00:00")),
+                createDeal(TGKB,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDeal(TGKB,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDeal(TGKB,3L, LocalDateTime.parse("2024-04-04T12:00:00")),
+                createDelta(IMOEX, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDelta(IMOEX, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDelta(IMOEX, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
+                createDeal(APPL, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDeal(APPL, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDeal(APPL, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
+                createDeal(APPLP, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDeal(APPLP, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDeal(APPLP, 3L, LocalDateTime.parse("2024-04-04T12:00:00")),
+                createDelta(COMP, 1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDelta(COMP, 2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDelta(COMP, 3L, LocalDateTime.parse("2024-04-04T12:00:00"))
             )
         );
-    }
-
-    protected Datasource moexDatasource() {
-        return new Datasource(
-            MOEX_DATASOURCE_ID,
-            "Московская биржа",
-            "https://moex.com",
-            "description",
-            List.of(
-                createImoex(), createTgkb(), createTgkn(), createBrf4()
-            )
-        );
-    }
-
-    protected Datasource nasdaqDatasource() {
-        return new Datasource(
-            MOEX_DATASOURCE_ID,
-            "National Association of Securities Dealers Automated Quotation",
-            "https://nasdaq.com",
-            "National Association of Securities Dealers Automated Quotation",
-            List.of(
-                createAppl(), createApplp(), createComp()
-            )
-        );
-    }
-
-    protected Index createComp() {
-        return Index.builder()
-            .id(COMP_ID)
-            .name("NASDAQ Composite Index")
-            .shortName("NASDAQ Composite Index")
-            .updatable(true)
-            .build();
-    }
-
-    protected Stock createApplp() {
-        return Stock.builder()
-            .id(APPLP_ID)
-            .name("Apple Inc. Pref Stock")
-            .shortName("ApplePref")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1)
-            .build();
-    }
-
-
-    protected Stock createAppl() {
-        return Stock.builder()
-            .id(APPL_ID)
-            .name("Apple Inc. Common Stock")
-            .shortName("AppleCommon")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1)
-            .build();
-    }
-
-
-    protected Stock createTgkn() {
-        return Stock
-            .builder()
-            .id(TGKN_ID)
-            .shortName("TGK НННН")
-            .name("fasfasfasfasf")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1)
-            .build();
-    }
-
-    protected Stock createTgkb() {
-        return Stock
-            .builder()
-            .id(TGKB_ID)
-            .shortName("ТГК ББББ")
-            .name("fasfasfasfasf")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1)
-            .build();
-    }
-
-    protected Index createImoex() {
-        return Index
-            .builder()
-            .id(IMOEX_ID)
-            .shortName("ао Система")
-            .name("fasfasfasfasf")
-            .build();
-    }
-
-    protected Futures createBrf4() {
-        return Futures
-            .builder()
-            .id(BRF4_ID)
-            .shortName("Фьючерс Брент")
-            .name("Фьючерс Брент")
-            .build();
-    }
-
-    protected IntradayValue createDeal(DatasourceId datasourceId, InstrumentId instrumentId, Long number, LocalDateTime dateTime) {
-        return Deal.builder()
-            .datasourceId(datasourceId)
-            .instrumentId(instrumentId)
-            .number(number)
-            .dateTime(dateTime)
-            .value(1.0)
-            .price(1.0)
-            .qnt(1)
-            .isBuy(true)
-            .build();
-    }
-
-    protected IntradayValue createDelta(DatasourceId datasourceId, InstrumentId instrumentId, Long number, LocalDateTime dateTime) {
-        return Delta.builder()
-            .datasourceId(datasourceId)
-            .instrumentId(instrumentId)
-            .number(number)
-            .dateTime(dateTime)
-            .value(1.0)
-            .price(1.0)
-            .build();
-    }
-
-    protected HistoryValue createHistoryValue(DatasourceId datasourceId, InstrumentId instrumentId, LocalDate tradeDate) {
-        return HistoryValue.builder()
-            .datasourceId(datasourceId)
-            .instrumentId(instrumentId)
-            .tradeDate(tradeDate)
-            .waPrice(1.0)
-            .closePrice(1.0)
-            .highPrice(1.0)
-            .lowPrice(1.0)
-            .openPrice(1.0)
-            .value(1.0)
-            .build();
     }
 }

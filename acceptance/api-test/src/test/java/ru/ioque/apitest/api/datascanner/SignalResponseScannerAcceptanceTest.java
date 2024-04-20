@@ -284,18 +284,20 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
                 .tickers(getTickers(datasourceId))
                 .properties(
                     AnomalyVolumePropertiesDto.builder()
-                        .historyPeriod(180)
+                        .historyPeriod(20)
                         .scaleCoefficient(1.5)
                         .indexTicker("IMOEX")
                         .build()
                 )
                 .build()
         );
+        final UUID id = getSignalScanners().get(0).getId();
 
         integrateTradingData(datasourceId);
 
-        assertTrue(waitScanningFinishedEvent());
-        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
+        assertTrue(waitTradingDataIntegratedEvent());
+        assertTrue(waitSignalRegisteredEvent());
+        assertEquals(1, getSignalsBy(id).size());
     }
 
     @Test
@@ -394,7 +396,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateTradingData(datasourceId);
 
-        assertTrue(waitScanningFinishedEvent());
+        assertTrue(waitSignalRegisteredEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -531,7 +533,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitScanningFinishedEvent());
+        assertTrue(waitSignalRegisteredEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 
@@ -615,7 +617,7 @@ public class SignalResponseScannerAcceptanceTest extends BaseApiAcceptanceTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitScanningFinishedEvent());
+        assertTrue(waitSignalRegisteredEvent());
         assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
     }
 }

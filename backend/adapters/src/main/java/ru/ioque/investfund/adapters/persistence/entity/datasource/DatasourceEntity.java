@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
+import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Table(name = "datasource")
 @Entity(name = "Datasource")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DatasourceEntity extends AbstractEntity {
+public class DatasourceEntity extends UuidIdentity {
     String name;
     String url;
     String description;
@@ -76,7 +76,7 @@ public class DatasourceEntity extends AbstractEntity {
         final Set<InstrumentEntity> instruments = datasource
             .getInstruments()
             .stream()
-            .map(InstrumentEntity::from)
+            .map(InstrumentEntity::toEntityFrom)
             .peek(row -> row.setDatasource(datasourceEntity))
             .collect(Collectors.toSet());
         datasourceEntity.setInstruments(instruments);

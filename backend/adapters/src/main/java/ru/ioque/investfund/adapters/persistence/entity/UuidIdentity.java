@@ -20,7 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AbstractEntity {
+public class UuidIdentity {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     UUID id;
@@ -38,7 +38,7 @@ public class AbstractEntity {
                 .getHibernateLazyInitializer()
                 .getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        AbstractEntity that = (AbstractEntity) object;
+        UuidIdentity that = (UuidIdentity) object;
         return id != null && Objects.equals(id, that.id);
     }
 

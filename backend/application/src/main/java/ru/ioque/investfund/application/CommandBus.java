@@ -1,5 +1,6 @@
 package ru.ioque.investfund.application;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.domain.core.Command;
 
@@ -7,7 +8,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@Slf4j
 @Component
 public class CommandBus {
     private final Map<Class<? extends Command>, CommandHandler> handlers = new HashMap<>();
@@ -24,6 +27,11 @@ public class CommandBus {
 
     @SuppressWarnings("unchecked")
     public void execute(Command command) {
-        handlers.get(command.getClass()).handleFor(command);
+        Optional
+            .ofNullable(handlers.get(command.getClass()))
+            .ifPresentOrElse(
+                handler -> handler.handleFor(command),
+                () -> log.warn(String.format("Для команды %s не существует обработчика.", command))
+            );
     }
 }

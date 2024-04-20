@@ -9,14 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -32,7 +29,6 @@ public class DealEntity extends IntradayValueEntity {
     @Builder
     public DealEntity(
         Long id,
-        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -41,7 +37,7 @@ public class DealEntity extends IntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(id, datasourceId, number, dateTime, ticker, price, value);
+        super(id, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }
@@ -49,8 +45,7 @@ public class DealEntity extends IntradayValueEntity {
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
-            .datasourceId(DatasourceId.from(datasourceId))
-            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTime)
             .price(price)
@@ -62,8 +57,7 @@ public class DealEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Deal deal) {
         return DealEntity.builder()
-            .datasourceId(deal.getDatasourceId().getUuid())
-            .ticker(deal.getInstrumentId().getTicker().getValue())
+            .ticker(deal.getTicker().getValue())
             .number(deal.getNumber())
             .dateTime(deal.getDateTime())
             .price(deal.getPrice())

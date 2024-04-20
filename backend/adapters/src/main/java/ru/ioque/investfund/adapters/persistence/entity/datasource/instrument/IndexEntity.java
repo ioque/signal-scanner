@@ -14,10 +14,12 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.H
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -32,14 +34,14 @@ public class IndexEntity extends InstrumentEntity {
 
     @Builder
     public IndexEntity(
-        Long id,
+        UUID id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
         String name,
         Boolean updatable,
         List<HistoryValueEntity> dailyTradingResults,
-        List<IntradayValueEntity> intradayValues,
+        List<IntradayValueEntity> intradayValueEntities,
         Double annualHigh,
         Double annualLow,
         LocalDate lastHistoryDate,
@@ -52,28 +54,20 @@ public class IndexEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain() {
-        return Index.builder()
-            .id(InstrumentId.from(Ticker.from(this.getTicker())))
-            .name(this.getName())
-            .shortName(this.getShortName())
+        return Instrument.builder()
+            .id(InstrumentId.from(getId()))
+            .details(
+                IndexDetails.builder()
+                    .ticker(Ticker.from(this.getTicker()))
+                    .name(this.getName())
+                    .shortName(this.getShortName())
+                    .annualHigh(this.getAnnualHigh())
+                    .annualLow(this.getAnnualLow())
+                    .build()
+            )
             .updatable(this.getUpdatable())
-            .annualHigh(this.getAnnualHigh())
-            .annualLow(this.getAnnualLow())
             .lastHistoryDate(this.getLastHistoryDate())
             .lastTradingNumber(this.getLastTradingNumber())
-            .build();
-    }
-
-    public static InstrumentEntity from(Index domain) {
-        return IndexEntity.builder()
-            .ticker(domain.getId().getTicker().getValue())
-            .name(domain.getName())
-            .shortName(domain.getShortName())
-            .updatable(domain.getUpdatable())
-            .annualHigh(domain.getAnnualHigh())
-            .annualLow(domain.getAnnualLow())
-            .lastHistoryDate(domain.getLastHistoryDate().orElse(null))
-            .lastTradingNumber(domain.getLastTradingNumber())
             .build();
     }
 }

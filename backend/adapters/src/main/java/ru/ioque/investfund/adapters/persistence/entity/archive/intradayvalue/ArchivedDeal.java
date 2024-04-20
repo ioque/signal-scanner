@@ -9,14 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -25,14 +22,13 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("DealEntity")
-public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
+public class ArchivedDeal extends ArchivedIntradayValue {
     Boolean isBuy;
     Integer qnt;
 
     @Builder
-    public ArchivedDealEntity(
+    public ArchivedDeal(
         Long id,
-        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -41,7 +37,7 @@ public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
         Integer qnt,
         Double value
     ) {
-        super(id, datasourceId, number, dateTime, ticker, price, value);
+        super(id, number, dateTime, ticker, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }
@@ -49,8 +45,7 @@ public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
     @Override
     public IntradayValue toDomain() {
         return Deal.builder()
-            .datasourceId(DatasourceId.from(datasourceId))
-            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTime)
             .price(price)
@@ -60,10 +55,9 @@ public class ArchivedDealEntity extends ArchivedIntradayValueEntity {
             .build();
     }
 
-    public static ArchivedIntradayValueEntity from(Deal deal) {
-        return ArchivedDealEntity.builder()
-            .datasourceId(deal.getDatasourceId().getUuid())
-            .ticker(deal.getInstrumentId().getTicker().getValue())
+    public static ArchivedIntradayValue from(Deal deal) {
+        return ArchivedDeal.builder()
+            .ticker(deal.getTicker().getValue())
             .number(deal.getNumber())
             .dateTime(deal.getDateTime())
             .price(deal.getPrice())

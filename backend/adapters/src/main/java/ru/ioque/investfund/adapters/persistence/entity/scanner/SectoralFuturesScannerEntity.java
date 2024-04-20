@@ -40,14 +40,14 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
-        List<String> tickers,
+        List<UUID> instrumentIds,
         List<SignalEntity> signals,
         LocalDateTime lastWorkDateTime,
         Double futuresOvernightScale,
         Double stockOvernightScale,
         String futuresTicker
     ) {
-        super(id, workPeriodInMinutes, description, datasourceId, tickers, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
@@ -60,11 +60,11 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
-            .tickers(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getTicker).map(Ticker::getValue).toList())
+            .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .futuresOvernightScale(properties.getFuturesOvernightScale())
             .stockOvernightScale(properties.getStockOvernightScale())
-            .futuresTicker(properties.getFuturesTicker().getTicker().getValue())
+            .futuresTicker(properties.getFuturesTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
             .getSignals()
@@ -85,13 +85,13 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
                     .builder()
                     .futuresOvernightScale(futuresOvernightScale)
                     .stockOvernightScale(stockOvernightScale)
-                    .futuresTicker(new InstrumentId(new Ticker(futuresTicker)))
+                    .futuresTicker(new Ticker(futuresTicker))
                     .build()
             )
             .datasourceId(DatasourceId.from(getDatasourceId()))
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .instrumentIds(getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
+            .instrumentIds(getInstrumentIds().stream().map(InstrumentId::new).toList())
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();

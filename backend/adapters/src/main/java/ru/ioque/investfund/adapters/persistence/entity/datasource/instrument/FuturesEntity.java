@@ -12,9 +12,11 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -32,7 +34,7 @@ public class FuturesEntity extends InstrumentEntity {
 
     @Builder
     public FuturesEntity(
-        Long id,
+        UUID id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
@@ -56,34 +58,23 @@ public class FuturesEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain() {
-        return Futures.builder()
-            .id(InstrumentId.from(Ticker.from(this.getTicker())))
-            .name(this.getName())
-            .shortName(this.getShortName())
+        return Instrument.builder()
+            .id(InstrumentId.from(getId()))
+            .details(
+                FuturesDetails.builder()
+                    .ticker(Ticker.from(this.getTicker()))
+                    .name(this.getName())
+                    .shortName(this.getShortName())
+                    .lotVolume(this.getLotVolume())
+                    .initialMargin(this.getInitialMargin())
+                    .highLimit(this.getHighLimit())
+                    .lowLimit(this.getLowLimit())
+                    .assetCode(this.getAssetCode())
+                    .build()
+            )
             .updatable(this.getUpdatable())
-            .lotVolume(this.getLotVolume())
-            .initialMargin(this.getInitialMargin())
-            .highLimit(this.getHighLimit())
-            .lowLimit(this.getLowLimit())
-            .assetCode(this.getAssetCode())
             .lastHistoryDate(this.getLastHistoryDate())
             .lastTradingNumber(this.getLastTradingNumber())
-            .build();
-    }
-
-    public static InstrumentEntity from(Futures domain) {
-        return FuturesEntity.builder()
-            .ticker(domain.getId().getTicker().getValue())
-            .name(domain.getName())
-            .shortName(domain.getShortName())
-            .updatable(domain.getUpdatable())
-            .lotVolume(domain.getLotVolume())
-            .initialMargin(domain.getInitialMargin())
-            .highLimit(domain.getHighLimit())
-            .lowLimit(domain.getLowLimit())
-            .assetCode(domain.getAssetCode())
-            .lastHistoryDate(domain.getLastHistoryDate().orElse(null))
-            .lastTradingNumber(domain.getLastTradingNumber())
             .build();
     }
 }

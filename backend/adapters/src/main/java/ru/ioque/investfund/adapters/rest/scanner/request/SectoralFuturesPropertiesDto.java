@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
@@ -34,6 +33,6 @@ public class SectoralFuturesPropertiesDto implements AlgorithmPropertiesDto {
 
     @Override
     public AlgorithmProperties toDomain() {
-        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, new InstrumentId(new Ticker(futuresTicker)));
+        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, new Ticker(futuresTicker));
     }
 }

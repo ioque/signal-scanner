@@ -11,25 +11,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "HistoryValue")
-@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "datasource_id", "ticker", "trade_date" }) })
+@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "ticker", "trade_date" }) })
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HistoryValueEntity extends GeneratedIdEntity {
-    @Column(nullable = false)
-    UUID datasourceId;
+public class HistoryValueEntity extends GeneratedIdentity {
     @Column(nullable = false)
     LocalDate tradeDate;
     @Column(nullable = false)
@@ -44,10 +39,32 @@ public class HistoryValueEntity extends GeneratedIdEntity {
     @Column(nullable = false)
     Double value;
 
+    @Builder
+    public HistoryValueEntity(
+        Long id,
+        LocalDate tradeDate,
+        String ticker,
+        Double openPrice,
+        Double closePrice,
+        Double lowPrice,
+        Double highPrice,
+        Double waPrice,
+        Double value
+    ) {
+        super(id);
+        this.tradeDate = tradeDate;
+        this.ticker = ticker;
+        this.openPrice = openPrice;
+        this.closePrice = closePrice;
+        this.lowPrice = lowPrice;
+        this.highPrice = highPrice;
+        this.waPrice = waPrice;
+        this.value = value;
+    }
+
     public HistoryValue toDomain() {
         return HistoryValue.builder()
-            .datasourceId(DatasourceId.from(datasourceId))
-            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .ticker(Ticker.from(ticker))
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -60,8 +77,7 @@ public class HistoryValueEntity extends GeneratedIdEntity {
 
     public static HistoryValueEntity fromDomain(HistoryValue historyValue) {
         return HistoryValueEntity.builder()
-            .datasourceId(historyValue.getDatasourceId().getUuid())
-            .ticker(historyValue.getInstrumentId().getTicker().getValue())
+            .ticker(historyValue.getTicker().getValue())
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())
@@ -70,30 +86,5 @@ public class HistoryValueEntity extends GeneratedIdEntity {
             .value(historyValue.getValue())
             .waPrice(historyValue.getWaPrice())
             .build();
-    }
-
-    @Builder
-    public HistoryValueEntity(
-        Long id,
-        UUID datasourceId,
-        LocalDate tradeDate,
-        String ticker,
-        Double openPrice,
-        Double closePrice,
-        Double lowPrice,
-        Double highPrice,
-        Double waPrice,
-        Double value
-    ) {
-        super(id);
-        this.datasourceId = datasourceId;
-        this.tradeDate = tradeDate;
-        this.ticker = ticker;
-        this.openPrice = openPrice;
-        this.closePrice = closePrice;
-        this.lowPrice = lowPrice;
-        this.highPrice = highPrice;
-        this.waPrice = waPrice;
-        this.value = value;
     }
 }

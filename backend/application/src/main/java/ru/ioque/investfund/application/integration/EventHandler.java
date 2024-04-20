@@ -3,6 +3,7 @@ package ru.ioque.investfund.application.integration;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.domain.core.ErrorLog;
@@ -10,6 +11,7 @@ import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.util.Set;
 
+@AllArgsConstructor
 public abstract class EventHandler<E> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;

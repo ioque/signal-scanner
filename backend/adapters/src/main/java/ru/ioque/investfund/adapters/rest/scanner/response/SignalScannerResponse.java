@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

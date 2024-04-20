@@ -42,14 +42,6 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Override
     @Transactional
     public void save(Datasource datasource) {
-        findBy(datasource.getId()).ifPresentOrElse(
-            existedDatasource -> {
-
-            },
-            () -> {
-
-            }
-        );
         jpaDatasourceRepository.save(DatasourceEntity.from(datasource));
     }
 

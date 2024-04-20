@@ -7,12 +7,12 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class ScannerQueryController {
     @GetMapping("/api/scanner/{id}")
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
         ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
-        List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByTickerIn(scanner.getTickers());
+        List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByIdIn(scanner.getInstrumentIds());
         return SignalScannerResponse.of(scanner, instruments);
     }
 }

@@ -36,8 +36,8 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
 
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     private static final UUID SIGNAL_ID = UUID.randomUUID();
-    private static final Long AFKS_ID = 1L;
-    private static final Long IMOEX_ID = 2L;
+    private static final UUID AFKS_ID = UUID.randomUUID();
+    private static final UUID IMOEX_ID = UUID.randomUUID();
 
     @Test
     @SneakyThrows
@@ -82,7 +82,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
         Mockito
             .when(
                 instrumentEntityRepository
-                    .findAllByTickerIn(scanner.getTickers())
+                    .findAllByIdIn(scanner.getInstrumentIds())
             )
             .thenReturn(instruments);
         mvc
@@ -128,7 +128,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             1,
             "Описание",
             DATASOURCE_ID,
-            List.of("AFKS", "IMOEX"),
+            List.of(AFKS_ID, IMOEX_ID),
             LocalDateTime.now(),
             new ArrayList<>(),
             1.5,

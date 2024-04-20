@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentResponse {
-    Long id;
+    UUID id;
     String ticker;
     String shortName;
     String name;

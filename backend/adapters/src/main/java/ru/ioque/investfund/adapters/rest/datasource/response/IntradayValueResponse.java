@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.archive.intradayvalue.ArchivedIntradayValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.archive.intradayvalue.ArchivedIntradayValue;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 
 import java.io.Serializable;
@@ -24,15 +24,15 @@ public class IntradayValueResponse implements Serializable {
     Double price;
     Long number;
 
-    public static IntradayValueResponse fromDomain(IntradayValueEntity intradayValue) {
+    public static IntradayValueResponse fromDomain(IntradayValueEntity intradayValueEntity) {
         return IntradayValueResponse.builder()
-            .number(intradayValue.getNumber())
-            .dateTime(intradayValue.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-            .price(intradayValue.getPrice())
+            .number(intradayValueEntity.getNumber())
+            .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+            .price(intradayValueEntity.getPrice())
             .build();
     }
 
-    public static IntradayValueResponse fromEntity(ArchivedIntradayValueEntity intradayValueEntity) {
+    public static IntradayValueResponse fromEntity(ArchivedIntradayValue intradayValueEntity) {
         return IntradayValueResponse.builder()
             .number(intradayValueEntity.getNumber())
             .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))

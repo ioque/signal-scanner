@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,9 +23,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentInListResponse implements Serializable {
-    Long id;
-    String shortName;
+    UUID id;
     String ticker;
+    String shortName;
 
     public static InstrumentInListResponse from(InstrumentEntity instrument) {
         return InstrumentInListResponse.builder()

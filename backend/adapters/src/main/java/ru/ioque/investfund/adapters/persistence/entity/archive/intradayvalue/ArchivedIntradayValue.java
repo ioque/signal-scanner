@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
@@ -20,7 +20,6 @@ import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Getter
@@ -28,13 +27,11 @@ import java.util.function.Function;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Table(name = "archived_intraday_value", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"datasource_id", "number", "ticker"})})
+    @UniqueConstraint(columnNames = {"number", "ticker"})})
 @Entity(name = "ArchivedIntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="INTRADAY_VALUE_TYPE", discriminatorType= DiscriminatorType.STRING, columnDefinition = "varchar(255)")
-public abstract class ArchivedIntradayValueEntity extends GeneratedIdEntity {
-    @Column(nullable = false)
-    UUID datasourceId;
+public abstract class ArchivedIntradayValue extends GeneratedIdentity {
     @Column(nullable = false)
     Long number;
     @Column(nullable = false)
@@ -46,9 +43,8 @@ public abstract class ArchivedIntradayValueEntity extends GeneratedIdEntity {
     @Column(nullable = false)
     Double value;
 
-    public ArchivedIntradayValueEntity(
+    public ArchivedIntradayValue(
         Long id,
-        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -56,7 +52,6 @@ public abstract class ArchivedIntradayValueEntity extends GeneratedIdEntity {
         Double value
     ) {
         super(id);
-        this.datasourceId = datasourceId;
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;
@@ -66,14 +61,14 @@ public abstract class ArchivedIntradayValueEntity extends GeneratedIdEntity {
 
     public abstract IntradayValue toDomain();
 
-    public static ArchivedIntradayValueEntity fromDomain(IntradayValue intradayValue) {
+    public static ArchivedIntradayValue fromDomain(IntradayValue intradayValue) {
         return mappers.get(intradayValue.getClass()).apply(intradayValue);
     }
 
-    private static Map<Class<? extends IntradayValue>, Function<IntradayValue, ArchivedIntradayValueEntity>> mappers = Map.of(
-        Deal.class, domain -> ArchivedDealEntity.from((Deal) domain),
-        Contract.class, domain -> ArchivedFuturesDealEntity.from((Contract) domain),
-        Delta.class, domain -> ArchivedIndexDeltaEntity.from((Delta) domain)
+    private static Map<Class<? extends IntradayValue>, Function<IntradayValue, ArchivedIntradayValue>> mappers = Map.of(
+        Deal.class, domain -> ArchivedDeal.from((Deal) domain),
+        Contract.class, domain -> ArchivedFuturesDeal.from((Contract) domain),
+        Delta.class, domain -> ArchivedIndexDelta.from((Delta) domain)
     );
 }
 

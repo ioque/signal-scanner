@@ -20,7 +20,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GeneratedIdEntity {
+public class GeneratedIdentity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -38,7 +38,7 @@ public class GeneratedIdEntity {
                 .getHibernateLazyInitializer()
                 .getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        GeneratedIdEntity that = (GeneratedIdEntity) object;
+        GeneratedIdentity that = (GeneratedIdentity) object;
         return id != null && Objects.equals(id, that.id);
     }
 

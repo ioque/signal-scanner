@@ -12,9 +12,12 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
+import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -31,7 +34,7 @@ public class StockEntity extends InstrumentEntity {
 
     @Builder
     public StockEntity(
-        Long id,
+        UUID id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
@@ -53,32 +56,22 @@ public class StockEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain() {
-        return Stock.builder()
-            .id(InstrumentId.from(Ticker.from(this.getTicker())))
-            .name(this.getName())
-            .shortName(this.getShortName())
+        return Instrument.builder()
+            .id(InstrumentId.from(getId()))
+            .details(
+                StockDetails.builder()
+                    .ticker(Ticker.from(this.getTicker()))
+                    .name(this.getName())
+                    .shortName(this.getShortName())
+                    .lotSize(this.getLotSize())
+                    .isin(Isin.from(this.getIsin()))
+                    .regNumber(this.getRegNumber())
+                    .listLevel(this.getListLevel())
+                    .build()
+            )
             .updatable(this.getUpdatable())
-            .lotSize(this.getLotSize())
-            .isin(this.getIsin())
-            .regNumber(this.getRegNumber())
-            .listLevel(this.getListLevel())
             .lastHistoryDate(this.getLastHistoryDate())
             .lastTradingNumber(this.getLastTradingNumber())
-            .build();
-    }
-
-    public static InstrumentEntity from(Stock domain) {
-        return StockEntity.builder()
-            .ticker(domain.getId().getTicker().getValue())
-            .name(domain.getName())
-            .shortName(domain.getShortName())
-            .lotSize(domain.getLotSize())
-            .isin(domain.getIsin())
-            .updatable(domain.getUpdatable())
-            .regNumber(domain.getRegNumber())
-            .listLevel(domain.getListLevel())
-            .lastHistoryDate(domain.getLastHistoryDate().orElse(null))
-            .lastTradingNumber(domain.getLastTradingNumber())
             .build();
     }
 }

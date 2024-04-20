@@ -9,14 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -30,21 +27,19 @@ public class DeltaEntity extends IntradayValueEntity {
     @Builder
     public DeltaEntity(
         Long id,
-        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
-        super(id, datasourceId, number, dateTime, ticker, price, value);
+        super(id, number, dateTime, ticker, price, value);
     }
 
     @Override
     public IntradayValue toDomain() {
         return Delta.builder()
-            .datasourceId(DatasourceId.from(datasourceId))
-            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTime)
             .price(price)
@@ -54,8 +49,7 @@ public class DeltaEntity extends IntradayValueEntity {
 
     public static IntradayValueEntity from(Delta delta) {
         return DeltaEntity.builder()
-            .datasourceId(delta.getDatasourceId().getUuid())
-            .ticker(delta.getInstrumentId().getTicker().getValue())
+            .ticker(delta.getTicker().getValue())
             .number(delta.getNumber())
             .dateTime(delta.getDateTime())
             .price(delta.getPrice())

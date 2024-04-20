@@ -8,11 +8,11 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEnti
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
 
 import java.time.LocalDate;
@@ -45,20 +45,18 @@ public class PsqlDatasourceQueryService {
             .orElseThrow(notFoundException(instrumentNotFoundMsg()));
     }
 
-    public List<HistoryValueEntity> findHistory(UUID datasourceId, InstrumentEntity instrument, LocalDate date) {
+    public List<HistoryValueEntity> findHistory(InstrumentEntity instrument, LocalDate date) {
         return jpaHistoryValueRepository.findAllBy(
-            datasourceId,
             instrument.getTicker(),
             date
         );
     }
 
     public List<IntradayValueEntity> findIntraday(
-        UUID datasourceId,
         InstrumentEntity instrument,
         LocalDateTime dateTime
     ) {
-        return jpaIntradayValueRepository.findAllBy(datasourceId, instrument.getTicker(), dateTime);
+        return jpaIntradayValueRepository.findAllBy(instrument.getTicker(), dateTime);
     }
 
     public List<InstrumentEntity> findInstruments(InstrumentFilterParams filterParams) {

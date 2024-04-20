@@ -40,12 +40,10 @@ public class DatasourceQueryController {
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
         InstrumentEntity instrument = psqlDatasourceQueryService.findInstrumentBy(ticker);
         List<HistoryValueEntity> history = psqlDatasourceQueryService.findHistory(
-            datasourceId,
             instrument,
             dateTimeProvider.nowDate().minusMonths(6)
         );
         List<IntradayValueEntity> intraday = psqlDatasourceQueryService.findIntraday(
-            datasourceId,
             instrument,
             dateTimeProvider.nowDate().atStartOfDay()
         );

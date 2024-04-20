@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -34,10 +32,9 @@ public class HistoryValueDto {
     Double waPrice;
     Double value;
 
-    public HistoryValue toDomain(DatasourceId datasourceId) {
+    public HistoryValue toHistoryValue() {
         return HistoryValue.builder()
-            .instrumentId(InstrumentId.from(Ticker.from(getTicker())))
-            .datasourceId(datasourceId)
+            .ticker(Ticker.from(getTicker()))
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)

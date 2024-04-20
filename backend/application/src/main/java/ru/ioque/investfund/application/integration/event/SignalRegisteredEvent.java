@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
@@ -24,19 +23,19 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalRegisteredEvent implements IntegrationEvent {
     UUID id;
-    Ticker ticker;
+    String ticker;
     Double price;
     boolean isBuy;
-    ScannerId scannerId;
+    UUID scannerId;
     LocalDateTime watermark;
 
-    public static IntegrationEvent of(UUID id, ScannerId scannerId, Signal newSignal) {
+    public static SignalRegisteredEvent of(UUID id, ScannerId scannerId, Signal newSignal) {
         return SignalRegisteredEvent.builder()
             .id(id)
-            .ticker(newSignal.getTicker())
+            .ticker(newSignal.getTicker().getValue())
             .price(newSignal.getPrice())
             .isBuy(newSignal.isBuy())
-            .scannerId(scannerId)
+            .scannerId(scannerId.getUuid())
             .watermark(newSignal.getWatermark())
             .build();
     }

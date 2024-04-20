@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -30,10 +28,9 @@ public class ContractDto extends IntradayValueDto {
     }
 
     @Override
-    public IntradayValue toDomain(DatasourceId datasourceId) {
+    public IntradayValue toIntradayValue() {
         return Contract.builder()
-            .instrumentId(InstrumentId.from(Ticker.from(getTicker())))
-            .datasourceId(datasourceId)
+            .ticker(Ticker.from(getTicker()))
             .number(getNumber())
             .dateTime(getDateTime())
             .value(getValue())

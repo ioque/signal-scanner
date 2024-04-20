@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 @Table(name = "signal")
 @Entity(name = "Signal")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalEntity extends GeneratedIdEntity {
+public class SignalEntity extends GeneratedIdentity {
     @ManyToOne
     @JoinColumn(name="scanner_id", nullable=false)
     ScannerEntity scanner;
@@ -35,28 +34,6 @@ public class SignalEntity extends GeneratedIdEntity {
     String summary;
     boolean isBuy;
     boolean isOpen;
-
-    public Signal toDomain() {
-        return Signal.builder()
-            .watermark(getDateTime())
-            .ticker(InstrumentId.from(Ticker.from(getTicker())))
-            .price(getPrice())
-            .summary(getSummary())
-            .isBuy(isBuy())
-            .isOpen(isOpen())
-            .build();
-    }
-
-    public static SignalEntity from(Signal signal) {
-        return SignalEntity.builder()
-            .dateTime(signal.getWatermark())
-            .price(signal.getPrice())
-            .ticker(signal.getTicker().getTicker().getValue())
-            .summary(signal.getSummary())
-            .isBuy(signal.isBuy())
-            .isOpen(signal.isOpen())
-            .build();
-    }
 
     @Builder
     public SignalEntity(
@@ -77,5 +54,27 @@ public class SignalEntity extends GeneratedIdEntity {
         this.summary = summary;
         this.isBuy = isBuy;
         this.isOpen = isOpen;
+    }
+
+    public Signal toDomain() {
+        return Signal.builder()
+            .watermark(getDateTime())
+            .ticker(Ticker.from(getTicker()))
+            .price(getPrice())
+            .summary(getSummary())
+            .isBuy(isBuy())
+            .isOpen(isOpen())
+            .build();
+    }
+
+    public static SignalEntity from(Signal signal) {
+        return SignalEntity.builder()
+            .dateTime(signal.getWatermark())
+            .price(signal.getPrice())
+            .ticker(signal.getTicker().getValue())
+            .summary(signal.getSummary())
+            .isBuy(signal.isBuy())
+            .isOpen(signal.isOpen())
+            .build();
     }
 }

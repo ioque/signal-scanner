@@ -7,12 +7,11 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.H
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface JpaHistoryValueRepository extends JpaRepository<HistoryValueEntity, Long> {
-    @Query("select d from HistoryValue d where d.datasourceId = :datasourceId and d.ticker = :ticker and d.tradeDate >= :from")
-    List<HistoryValueEntity> findAllBy(UUID datasourceId, String ticker, LocalDate from);
+    @Query("select d from HistoryValue d where d.ticker = :ticker and d.tradeDate >= :from")
+    List<HistoryValueEntity> findAllBy(String ticker, LocalDate from);
 
-    List<HistoryValueEntity> findAllByDatasourceIdAndTickerIn(UUID datasourceId, List<String> tickers);
+    List<HistoryValueEntity> findAllByTickerIn(List<String> tickers);
 }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
@@ -45,7 +44,7 @@ public class CreateScannerRequest {
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)
             .description(description)
-            .tickers(tickers.stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
+            .tickers(tickers.stream().map(Ticker::from).toList())
             .build();
     }
 }

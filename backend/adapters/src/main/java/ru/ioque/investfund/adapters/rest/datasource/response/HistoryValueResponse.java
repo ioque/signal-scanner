@@ -24,13 +24,13 @@ public class HistoryValueResponse implements Serializable {
     Double value;
     Double openPrice;
     Double closePrice;
-    public static HistoryValueResponse fromDomain(HistoryValueEntity historyValue) {
+    public static HistoryValueResponse fromDomain(HistoryValueEntity historyValueEntity) {
         return HistoryValueResponse.builder()
-            .tradeDate(historyValue.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
-            .ticker(historyValue.getTicker())
-            .value(historyValue.getValue())
-            .openPrice(historyValue.getOpenPrice())
-            .closePrice(historyValue.getClosePrice())
+            .tradeDate(historyValueEntity.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+            .ticker(historyValueEntity.getTicker())
+            .value(historyValueEntity.getValue())
+            .openPrice(historyValueEntity.getOpenPrice())
+            .closePrice(historyValueEntity.getClosePrice())
             .build();
     }
 }

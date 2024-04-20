@@ -27,8 +27,7 @@ public class PsqlTradingSnapshotsRepositoryTest extends DatabaseTest {
     void testCase1() {
         initDatabase();
 
-        final List<TradingSnapshot> tradingSnapshots = tradingSnapshotsRepository
-            .findAllBy(MOEX_DATASOURCE_ID, List.of(TGKN_ID));
+        final List<TradingSnapshot> tradingSnapshots = tradingSnapshotsRepository.findAllBy(List.of(TGKN_ID));
 
         assertEquals(1, tradingSnapshots.size());
         TradingSnapshot tgkn = tradingSnapshots.get(0);
@@ -52,16 +51,16 @@ public class PsqlTradingSnapshotsRepositoryTest extends DatabaseTest {
         datasourceRepository.save(moexDatasource());
         historyValueRepository.saveAll(
             List.of(
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-01")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-02")),
-                createHistoryValue(MOEX_DATASOURCE_ID, TGKN_ID, LocalDate.parse("2024-04-03"))
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-01")),
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-02")),
+                createHistoryValue(TGKN, LocalDate.parse("2024-04-03"))
             )
         );
         intradayValueRepository.saveAll(
             List.of(
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
-                createDeal(MOEX_DATASOURCE_ID, TGKN_ID,3L, LocalDateTime.parse("2024-04-04T12:00:00"))
+                createDeal(TGKN,1L, LocalDateTime.parse("2024-04-04T10:00:00")),
+                createDeal(TGKN,2L, LocalDateTime.parse("2024-04-04T11:00:00")),
+                createDeal(TGKN,3L, LocalDateTime.parse("2024-04-04T12:00:00"))
             )
         );
     }

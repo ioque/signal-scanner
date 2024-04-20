@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
+import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
@@ -40,13 +41,13 @@ public class StockDto extends InstrumentDto {
     }
 
     @Override
-    public Instrument toDomain() {
-        return Stock.builder()
-            .id(new InstrumentId(new Ticker(getTicker())))
+    public InstrumentDetails toDetails() {
+        return StockDetails.builder()
+            .ticker(new Ticker(getTicker()))
             .shortName(getShortName())
             .name(getName())
             .lotSize(lotSize)
-            .isin(isin)
+            .isin(Isin.from(isin))
             .regNumber(regNumber)
             .listLevel(listLevel)
             .build();

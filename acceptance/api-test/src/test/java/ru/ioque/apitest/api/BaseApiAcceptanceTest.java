@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.ClientFacade;
 import ru.ioque.apitest.DatasetManager;
+import ru.ioque.apitest.kafka.IntegrationEvent;
 import ru.ioque.apitest.kafka.KafkaConsumer;
-import ru.ioque.apitest.kafka.ScanningFinishedEvent;
 import ru.ioque.core.client.datasource.DatasourceRestClient;
 import ru.ioque.core.client.service.ServiceClient;
 import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
@@ -49,9 +49,19 @@ public class BaseApiAcceptanceTest {
         kafkaConsumer.clear();
     }
 
-    protected boolean waitScanningFinishedEvent() {
+    protected boolean waitTradingDataIntegratedEvent() {
         long start = System.currentTimeMillis();
-        while (kafkaConsumer.getMessages().stream().anyMatch(row -> row.getClass().equals(ScanningFinishedEvent.class))) {
+        while (kafkaConsumer.getMessages().stream().noneMatch(IntegrationEvent::isTradingDataIntegratedEvent)) {
+            if (System.currentTimeMillis() - start > 1000) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected boolean waitSignalRegisteredEvent() {
+        long start = System.currentTimeMillis();
+        while (kafkaConsumer.getMessages().stream().noneMatch(IntegrationEvent::isSignalRegisteredEvent)) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }
@@ -63,7 +73,7 @@ public class BaseApiAcceptanceTest {
         return clientFacade.getDatasourceRestClient();
     }
 
-    private SignalScannerRestClient signalScannerClient() {
+    protected SignalScannerRestClient signalScannerClient() {
         return clientFacade.getSignalScannerRestClient();
     }
 

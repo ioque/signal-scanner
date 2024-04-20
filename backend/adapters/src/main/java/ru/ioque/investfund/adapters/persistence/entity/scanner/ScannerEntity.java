@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.AbstractEntity;
+import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
@@ -32,12 +32,12 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "SCANNER_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
-public abstract class ScannerEntity extends AbstractEntity {
+public abstract class ScannerEntity extends UuidIdentity {
     Integer workPeriodInMinutes;
     String description;
     UUID datasourceId;
     @ElementCollection(fetch = FetchType.EAGER)
-    List<String> tickers;
+    List<UUID> instrumentIds;
     LocalDateTime lastExecutionDateTime;
     @OneToMany(mappedBy = "scanner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<SignalEntity> signals;
@@ -47,7 +47,7 @@ public abstract class ScannerEntity extends AbstractEntity {
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
-        List<String> tickers,
+        List<UUID> instrumentIds,
         LocalDateTime lastExecutionDateTime,
         List<SignalEntity> signals
     ) {
@@ -55,7 +55,7 @@ public abstract class ScannerEntity extends AbstractEntity {
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;
-        this.tickers = tickers;
+        this.instrumentIds = instrumentIds;
         this.lastExecutionDateTime = lastExecutionDateTime;
         this.signals = signals;
     }

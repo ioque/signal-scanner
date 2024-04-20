@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdEntity;
+import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
@@ -20,7 +20,6 @@ import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Getter
@@ -28,13 +27,11 @@ import java.util.function.Function;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Table(name = "intraday_value", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"datasource_id", "number", "ticker"})})
+    @UniqueConstraint(columnNames = {"number", "ticker"})})
 @Entity(name = "IntradayValue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "INTRADAY_VALUE_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
-public abstract class IntradayValueEntity extends GeneratedIdEntity {
-    @Column(nullable = false)
-    UUID datasourceId;
+public abstract class IntradayValueEntity extends GeneratedIdentity {
     @Column(nullable = false)
     Long number;
     @Column(nullable = false)
@@ -48,7 +45,6 @@ public abstract class IntradayValueEntity extends GeneratedIdEntity {
 
     public IntradayValueEntity(
         Long id,
-        UUID datasourceId,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -56,7 +52,6 @@ public abstract class IntradayValueEntity extends GeneratedIdEntity {
         Double value
     ) {
         super(id);
-        this.datasourceId = datasourceId;
         this.number = number;
         this.dateTime = dateTime;
         this.ticker = ticker;

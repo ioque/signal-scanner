@@ -24,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("PSQL DATASOURCE QUERY SERVICE TEST")
-public class InstrumentQueryRepositoryTest extends InfrastructureTest {
-    private static final UUID DATASOURCE_ID = UUID.randomUUID();
+public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
 
     PsqlDatasourceQueryService psqlDatasourceQueryService;
     UUIDProvider uuidProvider;
@@ -35,7 +34,7 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaInstrumentRepository jpaInstrumentRepository;
 
-    public InstrumentQueryRepositoryTest(
+    public InstrumentEntityQueryRepositoryTest(
         @Autowired PsqlDatasourceQueryService psqlDatasourceQueryService,
         @Autowired UUIDProvider uuidProvider,
         @Autowired DatasourceRepository datasourceRepository,
@@ -78,7 +77,7 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         """)
     void testCase2() {
         saveExchangeWithStocks();
-        assertEquals(AFKS_ID.getTicker().getValue(), psqlDatasourceQueryService.findInstrumentBy(AFKS_ID.getTicker().getValue()).getTicker());
+        assertEquals("AFKS", psqlDatasourceQueryService.findInstrumentBy("AFKS").getTicker());
         assertEquals("SBER", psqlDatasourceQueryService.findInstrumentBy("SBER").getTicker());
     }
 
@@ -89,8 +88,8 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(AFKS_ID).name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(SBER_ID).name("SBER").shortName("SBER").build()
+                createAfks(),
+                createSber()
             )
         );
         datasourceRepository.save(datasource);
@@ -106,10 +105,7 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             "test",
-            List.of(
-                buildStockWith().id(AFKS_ID).name("AFKS").shortName("AFKS").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
-            )
+            List.of(createAfks(), createImoex())
         );
         datasourceRepository.save(datasource);
 
@@ -137,10 +133,10 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(AFKS_ID).name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(SBER_ID).name("SBER").shortName("SBER").build(),
-                buildStockWith().id(SBERP_ID).name("SBERP").shortName("SBERP").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+                createAfks(),
+                createSber(),
+                createSberp(),
+                createImoex()
             )
         );
         datasourceRepository.save(datasource);
@@ -174,8 +170,8 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(SBER_ID).name("ПАО Сбербанк").shortName("Сбербанк").build(),
-                buildIndexWith().id(SBERP_ID).name("ПАО Сбербанк-п").shortName("Сбербанк-п").build()
+                createSber(),
+                createSberp()
             )
         );
         datasourceRepository.save(datasource);
@@ -199,9 +195,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(AFKS_ID).name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(SBER_ID).name("SBER").shortName("SBER").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+                createAfks(),
+                createSber(),
+                createImoex()
             )
         );
         datasourceRepository.save(datasource);
@@ -234,9 +230,9 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(SBER_ID).name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(SBERP_ID).name("SBER").shortName("Сбербанк-п").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+                createAfks(),
+                createSberp(),
+                createImoex()
             )
         );
         datasourceRepository.save(datasource);
@@ -264,20 +260,16 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         T8. Постраничное получение данных
         """)
     void testCase8() {
-        final UUID id1 = UUID.randomUUID();
-        final UUID id2 = UUID.randomUUID();
-        final UUID id3 = UUID.randomUUID();
-        final UUID id4 = UUID.randomUUID();
         final Datasource datasource = new Datasource(
             DatasourceId.from(UUID.randomUUID()),
             "test",
             "test",
             "test",
             List.of(
-                buildStockWith().id(AFKS_ID).name("AFKS").shortName("AFKS").build(),
-                buildStockWith().id(SBER_ID).name("SBER").shortName("SBER").build(),
-                buildStockWith().id(SBERP_ID).name("SBERP").shortName("SBERP").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+                createAfks(),
+                createSber(),
+                createSberp(),
+                createImoex()
             )
         );
         datasourceRepository.save(datasource);
@@ -339,10 +331,10 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             "test",
             "test",
             List.of(
-                buildStockWith().id(AFKS_ID).name("АФК Система").shortName("ао Система").build(),
-                buildStockWith().id(SBER_ID).name("ПАО Сбербанк").shortName("Сбербанк").build(),
-                buildStockWith().id(SBERP_ID).name("ПАО Сбербанк-п").shortName("Сбербанк-п").build(),
-                buildIndexWith().id(IMOEX_ID).name("Индекс мосбиржи").shortName("Индекс мосбиржи").build()
+                createAfks(),
+                createSber(),
+                createSberp(),
+                createImoex()
             )
         );
         datasourceRepository.save(datasource);
@@ -362,7 +354,7 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
             .orderField("shortName")
             .build());
 
-        assertEquals(AFKS_ID.getTicker().getValue(), instruments.get(0).getTicker());
+        assertEquals("AFKS", instruments.get(0).getTicker());
         assertEquals("SBERP", instruments.get(1).getTicker());
         assertEquals("SBER", instruments.get(2).getTicker());
         assertEquals("IMOEX", instruments.get(3).getTicker());
@@ -370,26 +362,6 @@ public class InstrumentQueryRepositoryTest extends InfrastructureTest {
         assertEquals("IMOEX", instruments2.get(0).getTicker());
         assertEquals("SBER", instruments2.get(1).getTicker());
         assertEquals("SBERP", instruments2.get(2).getTicker());
-        assertEquals(AFKS_ID.getTicker().getValue(), instruments2.get(3).getTicker());
-    }
-
-    protected Stock.StockBuilder buildStockWith() {
-        return Stock
-            .builder()
-            .id(AFKS_ID)
-            .shortName("ао Система")
-            .name("fasfasfasfasf")
-            .lotSize(1000)
-            .regNumber("regNumber")
-            .isin("isin")
-            .listLevel(1);
-    }
-
-    protected Index.IndexBuilder buildIndexWith() {
-        return Index
-            .builder()
-            .id(IMOEX_ID)
-            .shortName("Какой-то индекс")
-            .name("Какой-то индекс");
+        assertEquals("AFKS", instruments2.get(3).getTicker());
     }
 }

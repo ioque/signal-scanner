@@ -19,11 +19,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalFoundEvent implements IntegrationEvent {
+public class SignalRegisteredEvent implements IntegrationEvent {
     UUID id;
-    InstrumentId instrumentId;
+    String ticker;
     Double price;
     boolean isBuy;
-    ScannerId scannerId;
+    UUID scannerId;
     LocalDateTime watermark;
+
+    @Override
+    public boolean isSignalRegisteredEvent() {
+        return true;
+    }
 }

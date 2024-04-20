@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -31,7 +29,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Entity(name = "ArchivedHistoryValue")
 @Table(name = "archived_history_value", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"datasourceId", "ticker", "tradeDate"})})
+    @UniqueConstraint(columnNames = {"ticker", "trade_date"})})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ArchivedHistoryValueEntity {
     @Id
@@ -73,8 +71,7 @@ public class ArchivedHistoryValueEntity {
 
     public HistoryValue toDomain() {
         return HistoryValue.builder()
-            .datasourceId(DatasourceId.from(datasourceId))
-            .instrumentId(InstrumentId.from(Ticker.from(ticker)))
+            .ticker(Ticker.from(ticker))
             .tradeDate(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -87,8 +84,7 @@ public class ArchivedHistoryValueEntity {
 
     public static ArchivedHistoryValueEntity fromDomain(HistoryValue historyValue) {
         return ArchivedHistoryValueEntity.builder()
-            .datasourceId(historyValue.getDatasourceId().getUuid())
-            .ticker(historyValue.getInstrumentId().getTicker().getValue())
+            .ticker(historyValue.getTicker().getValue())
             .tradeDate(historyValue.getTradeDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())

@@ -3,12 +3,13 @@ package ru.ioque.investfund.adapters.persistence;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
@@ -23,44 +24,47 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepository {
+    JpaInstrumentRepository jpaInstrumentRepository;
     JpaHistoryValueRepository jpaHistoryValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     DateTimeProvider dateTimeProvider;
 
     @Override
-    public List<TradingSnapshot> findAllBy(DatasourceId datasourceId, List<InstrumentId> instrumentIds) {
-        final List<String> tickers = instrumentIds.stream().map(id -> id.getTicker().getValue()).toList();
+    public List<TradingSnapshot> findAllBy(List<InstrumentId> instrumentIds) {
+        final List<InstrumentEntity> instrumentEntities = jpaInstrumentRepository.findAllByIdIn(instrumentIds.stream().map(InstrumentId::getUuid).toList());
+        final List<String> tickers = instrumentEntities.stream().map(InstrumentEntity::getTicker).toList();
         final Map<String, List<HistoryValueEntity>> histories = jpaHistoryValueRepository
-            .findAllByDatasourceIdAndTickerIn(datasourceId.getUuid(), tickers)
+            .findAllByTickerIn(tickers)
             .stream()
             .collect(Collectors.groupingBy(HistoryValueEntity::getTicker));
         final Map<String, List<IntradayValueEntity>> intradayValues = jpaIntradayValueRepository
-            .findAllBy(datasourceId.getUuid(), tickers, dateTimeProvider.nowDate().atStartOfDay())
+            .findAllBy(tickers, dateTimeProvider.nowDate().atStartOfDay())
             .stream()
             .collect(Collectors.groupingBy(IntradayValueEntity::getTicker));
-        return tickers
+        return instrumentEntities
             .stream()
-            .map(ticker -> TradingSnapshot.builder()
-                .instrumentId(InstrumentId.from(Ticker.from(ticker)))
-                .waPriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+            .map(instrument -> TradingSnapshot.builder()
+                .ticker(Ticker.from(instrument.getTicker()))
+                .instrumentId(InstrumentId.from(instrument.getId()))
+                .waPriceSeries(histories.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getTradeDate()))
                     .toList()
                 )
-                .closePriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                .closePriceSeries(histories.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getTradeDate()))
                     .toList())
-                .openPriceSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                .openPriceSeries(histories.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getTradeDate()))
                     .toList())
-                .valueSeries(histories.getOrDefault(ticker, new ArrayList<>())
+                .valueSeries(histories.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getTradeDate()))
                     .toList())
-                .todayValueSeries(intradayValues.getOrDefault(ticker, new ArrayList<>())
+                .todayValueSeries(intradayValues.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getValue(),
@@ -68,7 +72,7 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
                     ))
                     .toList()
                 )
-                .todayPriceSeries(intradayValues.getOrDefault(ticker, new ArrayList<>())
+                .todayPriceSeries(intradayValues.getOrDefault(instrument.getTicker(), new ArrayList<>())
                     .stream()
                     .map(intradayValue -> new TimeSeriesValue<>(
                         intradayValue.getPrice(),

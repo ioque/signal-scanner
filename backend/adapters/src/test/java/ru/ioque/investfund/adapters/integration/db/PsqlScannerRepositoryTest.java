@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -46,13 +47,13 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     void testCase1() {
         final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
         final List<InstrumentId> instrumentIds = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
-        final AnomalyVolumeProperties properties = createAnomalyVolumeProperties(1.5, 180, IMOEX_ID);
+        final AnomalyVolumeProperties properties = createAnomalyVolumeProperties(1.5, 180, IMOEX);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(instrumentIds.get(0))
+            .ticker(TGKN)
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -86,7 +87,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(instrumentIds.get(0))
+            .ticker(TGKN)
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -114,13 +115,13 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     void testCase3() {
         final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
         final List<InstrumentId> tickers = List.of(TGKB_ID, BRF4_ID);
-        final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, BRF4_ID);
+        final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, BRF4);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .ticker(TGKB)
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -154,7 +155,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(tickers.get(0))
+            .ticker(TGKN)
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -188,7 +189,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             ScannerId.from(UUID.randomUUID()),
             MOEX_DATASOURCE_ID,
             List.of(TGKN_ID, TGKB_ID, IMOEX_ID),
-            createAnomalyVolumeProperties(1.5, 180, IMOEX_ID)
+            createAnomalyVolumeProperties(1.5, 180, IMOEX)
         );
         final SignalScanner prefCommonNasdaqScanner = creatScanner(
             ScannerId.from(UUID.randomUUID()),
@@ -231,16 +232,16 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     private AnomalyVolumeProperties createAnomalyVolumeProperties(
         double scaleCoefficient,
         int historyPeriod,
-        InstrumentId indexId
+        Ticker indexTicker
     ) {
-        return new AnomalyVolumeProperties(scaleCoefficient, historyPeriod, indexId);
+        return new AnomalyVolumeProperties(scaleCoefficient, historyPeriod, indexTicker);
     }
 
     private SectoralFuturesProperties createSectoralFuturesProperties(
         double futuresOvernightScale,
         double stockOvernightScale,
-        InstrumentId futuresId
+        Ticker futuresTicker
     ) {
-        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, futuresId);
+        return new SectoralFuturesProperties(futuresOvernightScale, stockOvernightScale, futuresTicker);
     }
 }

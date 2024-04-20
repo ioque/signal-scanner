@@ -14,16 +14,20 @@ import ru.ioque.investfund.adapters.datasource.client.dto.intraday.ContractDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.DealDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.DeltaDto;
 import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
-import ru.ioque.investfund.adapters.uuid.RandomUUIDGenerator;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
-import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
+import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
+import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
+import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -42,7 +46,7 @@ public class HttpDatasourceProviderTest {
     private static final DatasourceId DATASOURCE_ID = DatasourceId.from(UUID.randomUUID());
     private static final String DATASOURCE_URL = "http://url.com";
     private static final String INSTRUMENT_TICKER = "AFKS";
-    private static final InstrumentId INSTRUMENT_ID = InstrumentId.from(new Ticker(INSTRUMENT_TICKER));
+    private static final InstrumentId INSTRUMENT_ID = InstrumentId.from(UUID.randomUUID());
 
     DatasourceRestClient datasourceRestClient = mock(DatasourceRestClient.class);
     DateTimeProvider dateTimeProvider = mock(DateTimeProvider.class);
@@ -51,7 +55,6 @@ public class HttpDatasourceProviderTest {
     public HttpDatasourceProviderTest() {
         this.datasourceProvider = new HttpDatasourceProvider(
             datasourceRestClient,
-            new RandomUUIDGenerator(),
             dateTimeProvider
         );
     }
@@ -101,7 +104,7 @@ public class HttpDatasourceProviderTest {
 
         when(datasourceRestClient.fetchInstruments(DATASOURCE_URL)).thenReturn(instruments);
 
-        List<Instrument> batch = datasourceProvider.fetchInstrumentDetails(datasource());
+        List<InstrumentDetails> batch = datasourceProvider.fetchInstrumentDetails(datasource());
 
         assertEquals(4, batch.size());
         assertEqualsStock(stockDto, getInstrumentFromBatchByTicker(batch, stockDto.getTicker()));
@@ -214,7 +217,7 @@ public class HttpDatasourceProviderTest {
     }
 
     private void asserIntraday(IntradayValueDto intradayValueDto, IntradayValue intradayValue) {
-        assertEquals(intradayValueDto.getTicker(), intradayValue.getInstrumentId().getTicker().getValue());
+        assertEquals(intradayValueDto.getTicker(), intradayValue.getTicker().getValue());
         assertEquals(intradayValueDto.getValue(), intradayValue.getValue());
         assertEquals(intradayValueDto.getPrice(), intradayValue.getPrice());
         assertEquals(intradayValueDto.getNumber(), intradayValue.getNumber());
@@ -232,11 +235,16 @@ public class HttpDatasourceProviderTest {
     }
 
     private Instrument instrument() {
-        return Stock.builder()
+        return Instrument.builder()
             .id(INSTRUMENT_ID)
-            .name("name")
-            .shortName("name")
-            .lotSize(100)
+            .details(
+                StockDetails.builder()
+                    .ticker(Ticker.from(INSTRUMENT_TICKER))
+                    .name("name")
+                    .shortName("name")
+                    .lotSize(100)
+                    .build()
+            )
             .lastHistoryDate(LocalDate.of(2024, 1, 9))
             .build();
     }
@@ -245,60 +253,60 @@ public class HttpDatasourceProviderTest {
         return batch
             .getUniqueValues()
             .stream()
-            .filter(row -> row.getInstrumentId().getTicker().getValue().equals(ticker))
+            .filter(row -> row.getTicker().getValue().equals(ticker))
             .findFirst()
             .orElseThrow();
     }
 
-    private Instrument getInstrumentFromBatchByTicker(List<Instrument> batch, String ticker) {
+    private InstrumentDetails getInstrumentFromBatchByTicker(List<InstrumentDetails> batch, String ticker) {
         return batch
             .stream()
-            .filter(row -> row.getId().getTicker().getValue().equals(ticker))
+            .filter(row -> row.getTicker().getValue().equals(ticker))
             .findFirst()
             .orElseThrow();
     }
 
-    private void assertEqualsFutures(FuturesDto futuresDto, Instrument instrument) {
-        Futures futures = (Futures) instrument;
-        assertInstrument(futuresDto, futures);
-        assertEquals(futuresDto.getAssetCode(), futures.getAssetCode());
-        assertEquals(futuresDto.getHighLimit(), futures.getHighLimit());
-        assertEquals(futuresDto.getLowLimit(), futures.getLowLimit());
-        assertEquals(futuresDto.getLotVolume(), futures.getLotVolume());
-        assertEquals(futuresDto.getInitialMargin(), futures.getInitialMargin());
+    private void assertEqualsFutures(FuturesDto futuresDto, InstrumentDetails instrument) {
+        assertInstrument(futuresDto, instrument);
+        FuturesDetails futuresDetails = (FuturesDetails) instrument;
+        assertEquals(futuresDto.getAssetCode(), futuresDetails.getAssetCode());
+        assertEquals(futuresDto.getHighLimit(), futuresDetails.getHighLimit());
+        assertEquals(futuresDto.getLowLimit(), futuresDetails.getLowLimit());
+        assertEquals(futuresDto.getLotVolume(), futuresDetails.getLotVolume());
+        assertEquals(futuresDto.getInitialMargin(), futuresDetails.getInitialMargin());
     }
 
-    private void assertEqualsIndex(IndexDto indexDto, Instrument instrument) {
-        Index index = (Index) instrument;
-        assertInstrument(indexDto, index);
-        assertEquals(indexDto.getAnnualHigh(), index.getAnnualHigh());
-        assertEquals(indexDto.getAnnualLow(), index.getAnnualLow());
+    private void assertEqualsIndex(IndexDto indexDto, InstrumentDetails instrument) {
+        assertInstrument(indexDto, instrument);
+        IndexDetails indexDetails = (IndexDetails) instrument;
+        assertEquals(indexDto.getAnnualHigh(), indexDetails.getAnnualHigh());
+        assertEquals(indexDto.getAnnualLow(), indexDetails.getAnnualLow());
     }
 
-    private void assertEqualsCurrencyPair(CurrencyPairDto currencyPairDto, Instrument instrument) {
-        CurrencyPair currencyPair = (CurrencyPair) instrument;
-        assertInstrument(currencyPairDto, currencyPair);
-        assertEquals(currencyPairDto.getFaceUnit(), currencyPair.getFaceUnit());
-        assertEquals(currencyPairDto.getLotSize(), currencyPair.getLotSize());
+    private void assertEqualsCurrencyPair(CurrencyPairDto currencyPairDto, InstrumentDetails instrument) {
+        assertInstrument(currencyPairDto, instrument);
+        CurrencyPairDetails currencyPairDetails = (CurrencyPairDetails) instrument;
+        assertEquals(currencyPairDto.getFaceUnit(), currencyPairDetails.getFaceUnit());
+        assertEquals(currencyPairDto.getLotSize(), currencyPairDetails.getLotSize());
     }
 
-    private void assertEqualsStock(StockDto stockDto, Instrument instrument) {
-        Stock stock = (Stock) instrument;
-        assertInstrument(stockDto, stock);
-        assertEquals(stockDto.getIsin(), stock.getIsin());
-        assertEquals(stockDto.getListLevel(), stock.getListLevel());
-        assertEquals(stockDto.getRegNumber(), stock.getRegNumber());
-        assertEquals(stockDto.getLotSize(), stock.getLotSize());
+    private void assertEqualsStock(StockDto stockDto, InstrumentDetails instrument) {
+        assertInstrument(stockDto, instrument);
+        StockDetails stockDetails = (StockDetails) instrument;
+        assertEquals(stockDto.getIsin(), stockDetails.getIsin().getValue());
+        assertEquals(stockDto.getListLevel(), stockDetails.getListLevel());
+        assertEquals(stockDto.getRegNumber(), stockDetails.getRegNumber());
+        assertEquals(stockDto.getLotSize(), stockDetails.getLotSize());
     }
 
-    private void assertInstrument(InstrumentDto instrumentDto, Instrument instrument) {
-        assertEquals(instrumentDto.getTicker(), instrument.getId().getTicker().getValue());
+    private void assertInstrument(InstrumentDto instrumentDto, InstrumentDetails instrument) {
+        assertEquals(instrumentDto.getTicker(), instrument.getTicker().getValue());
         assertEquals(instrumentDto.getName(), instrument.getName());
         assertEquals(instrumentDto.getShortName(), instrument.getShortName());
     }
 
     private void assertHistory(HistoryValueDto historyDto, HistoryValue historyValue) {
-        assertEquals(historyDto.getTicker(), historyValue.getInstrumentId().getTicker().getValue());
+        assertEquals(historyDto.getTicker(), historyValue.getTicker().getValue());
         assertEquals(historyDto.getTradeDate(), historyValue.getTradeDate());
         assertEquals(historyDto.getClosePrice(), historyValue.getClosePrice());
         assertEquals(historyDto.getOpenPrice(), historyValue.getOpenPrice());

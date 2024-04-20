@@ -21,7 +21,12 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegratedEvent implements IntegrationEvent {
     UUID id;
-    DatasourceId datasourceId;
+    UUID datasourceId;
     Integer updatedCount;
     LocalDateTime dateTime;
+
+    @Override
+    public boolean isTradingDataIntegratedEvent() {
+        return true;
+    }
 }

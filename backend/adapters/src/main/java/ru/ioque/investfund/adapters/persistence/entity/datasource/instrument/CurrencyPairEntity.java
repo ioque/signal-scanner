@@ -12,9 +12,11 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -29,7 +31,7 @@ public class CurrencyPairEntity extends InstrumentEntity {
 
     @Builder
     public CurrencyPairEntity(
-        Long id,
+        UUID id,
         DatasourceEntity datasource,
         String ticker,
         String shortName,
@@ -47,28 +49,20 @@ public class CurrencyPairEntity extends InstrumentEntity {
 
     @Override
     public Instrument toDomain() {
-        return CurrencyPair.builder()
-            .id(InstrumentId.from(Ticker.from(this.getTicker())))
-            .name(this.getName())
-            .shortName(this.getShortName())
+        return Instrument.builder()
+            .id(InstrumentId.from(getId()))
+            .details(
+                CurrencyPairDetails.builder()
+                    .ticker(Ticker.from(this.getTicker()))
+                    .name(this.getName())
+                    .shortName(this.getShortName())
+                    .lotSize(this.getLotSize())
+                    .faceUnit(this.getFaceUnit())
+                    .build()
+            )
             .updatable(this.getUpdatable())
-            .lotSize(this.getLotSize())
-            .faceUnit(this.getFaceUnit())
             .lastHistoryDate(this.getLastHistoryDate())
             .lastTradingNumber(this.getLastTradingNumber())
-            .build();
-    }
-
-    public static InstrumentEntity from(CurrencyPair domain) {
-        return CurrencyPairEntity.builder()
-            .ticker(domain.getId().getTicker().getValue())
-            .name(domain.getName())
-            .shortName(domain.getShortName())
-            .lotSize(domain.getLotSize())
-            .faceUnit(domain.getFaceUnit())
-            .updatable(domain.getUpdatable())
-            .lastHistoryDate(domain.getLastHistoryDate().orElse(null))
-            .lastTradingNumber(domain.getLastTradingNumber())
             .build();
     }
 }

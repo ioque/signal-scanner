@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
 
 @Getter
 @NoArgsConstructor
@@ -27,5 +27,5 @@ public abstract class InstrumentDto {
     String shortName;
     String name;
 
-    public abstract Instrument toDomain();
+    public abstract InstrumentDetails toDetails();
 }

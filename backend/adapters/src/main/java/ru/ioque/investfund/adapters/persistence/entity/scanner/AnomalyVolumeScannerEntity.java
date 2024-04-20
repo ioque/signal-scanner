@@ -40,14 +40,14 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
-        List<String> tickers,
+        List<UUID> instrumentIds,
         LocalDateTime lastWorkDateTime,
         List<SignalEntity> signals,
         Double scaleCoefficient,
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(id, workPeriodInMinutes, description, datasourceId, tickers, lastWorkDateTime, signals);
+        super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;
@@ -60,11 +60,11 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
-            .tickers(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getTicker).map(Ticker::getValue).toList())
+            .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
             .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .scaleCoefficient(properties.getScaleCoefficient())
             .historyPeriod(properties.getHistoryPeriod())
-            .indexTicker(properties.getIndexTicker().getTicker().getValue())
+            .indexTicker(properties.getIndexTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
                 .getSignals()
@@ -85,13 +85,13 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
                     .builder()
                     .scaleCoefficient(scaleCoefficient)
                     .historyPeriod(historyPeriod)
-                    .indexTicker(new InstrumentId(new Ticker(indexTicker)))
+                    .indexTicker(new Ticker(indexTicker))
                     .build()
             )
             .datasourceId(DatasourceId.from(getDatasourceId()))
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
-            .instrumentIds(getTickers().stream().map(ticker -> new InstrumentId(new Ticker(ticker))).toList())
+            .instrumentIds(getInstrumentIds().stream().map(InstrumentId::new).toList())
             .lastExecutionDateTime(getLastExecutionDateTime())
             .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();

@@ -10,8 +10,7 @@ create table if not exists archived_history_value
     id            bigserial
         primary key,
     ticker        varchar(255)     not null,
-    datasource_id uuid             not null,
-    unique(datasource_id, trade_date, ticker)
+    unique(trade_date, ticker)
 );
 
 alter table archived_history_value
@@ -29,8 +28,7 @@ create table if not exists archived_intraday_value
     number              bigint           not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null,
-    datasource_id       uuid             not null,
-    unique(number, datasource_id, ticker)
+    unique(number, ticker)
 );
 
 alter table archived_intraday_value
@@ -59,8 +57,7 @@ create table if not exists history_value
     wa_price      double precision,
     id            bigserial primary key,
     ticker        varchar(255)     not null,
-    datasource_id uuid             not null,
-    unique(datasource_id, trade_date, ticker)
+    unique(trade_date, ticker)
 );
 
 alter table history_value
@@ -82,7 +79,8 @@ create table if not exists instrument
     datasource_id       uuid
         constraint fko12pnddmjd9f5v3u21t3ydro8
             references datasource,
-    id            bigserial primary key,
+    id          uuid not null
+        primary key,
     instrument_type     varchar(255) not null,
     asset_code          varchar(255),
     face_unit           varchar(255),
@@ -108,8 +106,7 @@ create table if not exists intraday_value
     number              bigint    not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null,
-    datasource_id       uuid             not null,
-    unique(number, datasource_id, ticker)
+    unique(number, ticker)
 );
 
 alter table intraday_value
@@ -137,15 +134,15 @@ create table if not exists scanner
 alter table scanner
     owner to postgres;
 
-create table if not exists scanner_entity_tickers
+create table if not exists scanner_entity_instrument_ids
 (
     scanner_entity_id uuid not null
         constraint fk5bt9iv5oxecq3mh7u0pes3xkl
             references scanner,
-    tickers           varchar(255)
+    instrument_ids           uuid         not null
 );
 
-alter table scanner_entity_tickers
+alter table scanner_entity_instrument_ids
     owner to postgres;
 
 create table if not exists signal
@@ -177,9 +174,7 @@ alter table telegram_chat
 CREATE INDEX IF NOT EXISTS idx_instrument_ticker ON instrument (ticker);
 CREATE INDEX IF NOT EXISTS idx_instrument_datasource_id ON instrument (datasource_id);
 CREATE INDEX IF NOT EXISTS idx_intraday_value_ticker ON intraday_value (ticker);
-CREATE INDEX IF NOT EXISTS idx_intraday_value_datasource_id ON intraday_value (datasource_id);
 CREATE INDEX IF NOT EXISTS idx_history_value_ticker ON history_value (ticker);
-CREATE INDEX IF NOT EXISTS idx_history_value_datasource_id ON history_value (datasource_id);
 
 create or replace procedure archiving_intraday_values()
     language plpgsql

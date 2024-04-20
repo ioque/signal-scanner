@@ -64,7 +64,7 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         datasourceRepository.save(datasource);
         eventPublisher.publish(TradingDataIntegratedEvent.builder()
             .id(uuidProvider.generate())
-            .datasourceId(datasource.getId())
+            .datasourceId(datasource.getId().getUuid())
             .dateTime(dateTimeProvider.nowDateTime())
             .updatedCount(datasource.getUpdatableInstruments().size())
             .build());
