@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
+    LocalDateTime dateTime;
     Ticker ticker;
     Double lastPrice;
     Double firstPrice;
@@ -29,6 +31,7 @@ public class TradingSnapshot {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
 
     public TradingSnapshot(
+        LocalDateTime dateTime,
         Ticker ticker,
         Double lastPrice,
         Double openPrice,
@@ -38,6 +41,7 @@ public class TradingSnapshot {
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries
     ) {
+        this.dateTime = dateTime;
         this.ticker = ticker;
         this.lastPrice = lastPrice;
         this.firstPrice = openPrice;

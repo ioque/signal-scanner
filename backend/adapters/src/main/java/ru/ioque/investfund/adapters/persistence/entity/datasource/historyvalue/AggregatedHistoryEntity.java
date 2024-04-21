@@ -2,6 +2,8 @@ package ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -12,8 +14,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 
 import java.time.LocalDate;
 
@@ -21,14 +23,15 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-@Entity(name = "HistoryValue")
-@Table(name = "history_value", uniqueConstraints = { @UniqueConstraint(columnNames = { "ticker", "trade_date" }) })
+@Entity(name = "AggregatedHistory")
+@Table(name = "aggregated_history", uniqueConstraints = { @UniqueConstraint(columnNames = { "instrument_id", "date" }) })
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HistoryValueEntity extends GeneratedIdentity {
+public class AggregatedHistoryEntity extends GeneratedIdentity {
+    @ManyToOne
+    @JoinColumn(name = "instrument_id")
+    InstrumentEntity instrument;
     @Column(nullable = false)
-    LocalDate tradeDate;
-    @Column(nullable = false)
-    String ticker;
+    LocalDate date;
     @Column(nullable = false)
     Double openPrice;
     @Column(nullable = false)
@@ -40,10 +43,10 @@ public class HistoryValueEntity extends GeneratedIdentity {
     Double value;
 
     @Builder
-    public HistoryValueEntity(
+    public AggregatedHistoryEntity(
         Long id,
-        LocalDate tradeDate,
-        String ticker,
+        InstrumentEntity instrument,
+        LocalDate date,
         Double openPrice,
         Double closePrice,
         Double lowPrice,
@@ -52,8 +55,8 @@ public class HistoryValueEntity extends GeneratedIdentity {
         Double value
     ) {
         super(id);
-        this.tradeDate = tradeDate;
-        this.ticker = ticker;
+        this.instrument = instrument;
+        this.date = date;
         this.openPrice = openPrice;
         this.closePrice = closePrice;
         this.lowPrice = lowPrice;
@@ -62,10 +65,9 @@ public class HistoryValueEntity extends GeneratedIdentity {
         this.value = value;
     }
 
-    public HistoryValue toDomain() {
-        return HistoryValue.builder()
-            .ticker(Ticker.from(ticker))
-            .tradeDate(tradeDate)
+    public AggregatedHistory toDomain() {
+        return AggregatedHistory.builder()
+            .date(date)
             .openPrice(openPrice)
             .closePrice(closePrice)
             .lowPrice(lowPrice)
@@ -75,10 +77,9 @@ public class HistoryValueEntity extends GeneratedIdentity {
             .build();
     }
 
-    public static HistoryValueEntity fromDomain(HistoryValue historyValue) {
-        return HistoryValueEntity.builder()
-            .ticker(historyValue.getTicker().getValue())
-            .tradeDate(historyValue.getTradeDate())
+    public static AggregatedHistoryEntity fromDomain(AggregatedHistory historyValue) {
+        return AggregatedHistoryEntity.builder()
+            .date(historyValue.getDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())
             .lowPrice(historyValue.getLowPrice())

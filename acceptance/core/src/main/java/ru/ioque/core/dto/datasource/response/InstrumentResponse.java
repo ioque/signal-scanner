@@ -19,10 +19,11 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentResponse {
     UUID id;
-    String ticker;
-    String shortName;
     String name;
-
-    List<HistoryValueResponse> historyValues;
-    List<IntradayValueResponse> intradayValues;
+    String shortName;
+    String ticker;
+    Double todayLastPrice;
+    Double todayFirstPrice;
+    Double todayValue;
+    List<AggregatedHistoryResponse> historyValues;
 }

@@ -4,6 +4,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -33,9 +34,9 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                 Ticker ticker = instrument.getTicker();
                 return TradingSnapshot.builder()
                     .ticker(ticker)
-                    .lastPrice(instrument.getTradingState() != null ? instrument.getTradingState().getLastPrice() : null)
-                    .firstPrice(instrument.getTradingState() != null ? instrument.getTradingState().getOpenPrice() : null)
-                    .value(instrument.getTradingState() != null ? instrument.getTradingState().getValue() : null)
+                    .lastPrice(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(null))
+                    .firstPrice(instrument.getTradingState().map(TradingState::getTodayFirstPrice).orElse(null))
+                    .value(instrument.getTradingState().map(TradingState::getTodayValue).orElse(null))
                     .waPriceSeries(instrument.getAggregateHistories().stream()
                         .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
                         .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getDate()))

@@ -88,7 +88,7 @@ public class BaseScannerTest extends BaseTest {
 
     protected TradingSnapshot getSnapshotBy(String ticker) {
         Instrument instrument = datasourceRepository()
-            .findAll()
+            .getAll()
             .stream()
             .map(Datasource::getInstruments)
             .flatMap(Collection::stream)

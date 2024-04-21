@@ -10,12 +10,14 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.time.LocalDate;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Entity
@@ -40,15 +42,15 @@ public class FuturesEntity extends InstrumentEntity {
         String shortName,
         String name,
         Boolean updatable,
+        TradingStateEmbeddable tradingState,
+        List<AggregatedHistoryEntity> history,
         Integer lotVolume,
         Double initialMargin,
         Double highLimit,
         Double lowLimit,
-        String assetCode,
-        LocalDate lastHistoryDate,
-        Long lastTradingNumber
+        String assetCode
     ) {
-        super(id, datasource, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasource, ticker, shortName, name, updatable, tradingState, history);
         this.lotVolume = lotVolume;
         this.initialMargin = initialMargin;
         this.highLimit = highLimit;
@@ -73,8 +75,10 @@ public class FuturesEntity extends InstrumentEntity {
                     .build()
             )
             .updatable(this.getUpdatable())
-            .lastHistoryDate(this.getLastHistoryDate())
-            .lastTradingNumber(this.getLastTradingNumber())
+            .tradingState(getTradingState().map(TradingStateEmbeddable::toTradingState).orElse(null))
+            .aggregateHistories(new TreeSet<>(
+                history.stream().map(AggregatedHistoryEntity::toDomain).toList()
+            ))
             .build();
     }
 }

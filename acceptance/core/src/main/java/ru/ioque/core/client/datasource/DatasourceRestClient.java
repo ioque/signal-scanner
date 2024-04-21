@@ -6,7 +6,7 @@ import ru.ioque.core.client.JsonApplicationHttpClient;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 
@@ -34,13 +34,13 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
     }
 
     @SneakyThrows
-    public List<ExchangeResponse> getExchanges() {
+    public List<DatasourceResponse> getExchanges() {
         return objectMapper.readValue(get("/api/datasource"), new TypeReference<>(){});
     }
 
     @SneakyThrows
-    public ExchangeResponse getExchangeBy(UUID datasourceId) {
-        return objectMapper.readValue(get("/api/datasource/" + datasourceId), ExchangeResponse.class);
+    public DatasourceResponse getExchangeBy(UUID datasourceId) {
+        return objectMapper.readValue(get("/api/datasource/" + datasourceId), DatasourceResponse.class);
     }
 
     @SneakyThrows

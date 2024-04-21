@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.integration.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
@@ -25,12 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("PSQL DATASOURCE QUERY SERVICE TEST")
 public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
-
+    private static final UUID DATASOURCE_ID = UUID.randomUUID();
     PsqlDatasourceQueryService psqlDatasourceQueryService;
     UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
     JpaDatasourceRepository jpaDatasourceRepository;
-    JpaHistoryValueRepository jpaHistoryValueRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaInstrumentRepository jpaInstrumentRepository;
 
@@ -40,7 +38,6 @@ public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
         @Autowired DatasourceRepository datasourceRepository,
         @Autowired JpaDatasourceRepository jpaDatasourceRepository,
         @Autowired JpaInstrumentRepository jpaInstrumentRepository,
-        @Autowired JpaHistoryValueRepository jpaHistoryValueRepository,
         @Autowired JpaIntradayValueRepository jpaIntradayValueRepository
     ) {
         this.psqlDatasourceQueryService = psqlDatasourceQueryService;
@@ -48,7 +45,6 @@ public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
         this.datasourceRepository = datasourceRepository;
         this.jpaDatasourceRepository = jpaDatasourceRepository;
         this.jpaInstrumentRepository = jpaInstrumentRepository;
-        this.jpaHistoryValueRepository = jpaHistoryValueRepository;
         this.jpaIntradayValueRepository = jpaIntradayValueRepository;
     }
 
@@ -56,7 +52,6 @@ public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
     void beforeEach() {
         this.jpaDatasourceRepository.deleteAll();
         this.jpaInstrumentRepository.deleteAll();
-        this.jpaHistoryValueRepository.deleteAll();
         this.jpaIntradayValueRepository.deleteAll();
     }
 
@@ -73,17 +68,17 @@ public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
 
     @Test
     @DisplayName("""
-        T2. Получение инструмента по его тикеру
+        T2. Получение инструмента по его тикеру и источнику данных
         """)
     void testCase2() {
         saveExchangeWithStocks();
-        assertEquals("AFKS", psqlDatasourceQueryService.findInstrumentBy("AFKS").getTicker());
-        assertEquals("SBER", psqlDatasourceQueryService.findInstrumentBy("SBER").getTicker());
+        assertEquals("AFKS", psqlDatasourceQueryService.findInstrumentBy(DATASOURCE_ID, "AFKS").getTicker());
+        assertEquals("SBER", psqlDatasourceQueryService.findInstrumentBy(DATASOURCE_ID, "SBER").getTicker());
     }
 
     private void saveExchangeWithStocks() {
         final Datasource datasource = new Datasource(
-            DatasourceId.from(UUID.randomUUID()),
+            DatasourceId.from(DATASOURCE_ID),
             "test",
             "test",
             "test",

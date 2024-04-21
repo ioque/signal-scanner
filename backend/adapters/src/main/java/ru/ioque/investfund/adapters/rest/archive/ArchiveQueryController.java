@@ -6,26 +6,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.rest.datasource.response.IntradayValueResponse;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@Tag(name = "ArchiveQueryController", description = "Контроллер запросов к модулю \"Архив\"")
+@Tag(name = "ArchiveQueryController", description = "Контроллер запросов к модулю \"Архив внутридневных сделок\"")
 public class ArchiveQueryController {
-    JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
+    JpaIntradayValueRepository jpaIntradayValueRepository;
 
     @GetMapping("/api/archive/intraday")
-    public List<IntradayValueResponse> getIntradayValues(
+    public List<IntradayDtoResponse> getIntradayValues(
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize
     ) {
-        return jpaArchivedIntradayValueRepository
+        return jpaIntradayValueRepository
             .findAll(PageRequest.of(pageNumber, pageSize))
             .stream()
-            .map(IntradayValueResponse::fromEntity)
+            .map(IntradayDtoResponse::from)
             .toList();
     }
 }

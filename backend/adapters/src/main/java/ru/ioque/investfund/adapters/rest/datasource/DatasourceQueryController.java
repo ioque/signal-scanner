@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
-import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
+import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -38,16 +36,8 @@ public class DatasourceQueryController {
 
     @GetMapping("/api/datasource/{datasourceId}/instrument/{ticker}")
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
-        InstrumentEntity instrument = psqlDatasourceQueryService.findInstrumentBy(ticker);
-        List<HistoryValueEntity> history = psqlDatasourceQueryService.findHistory(
-            instrument,
-            dateTimeProvider.nowDate().minusMonths(6)
-        );
-        List<IntradayValueEntity> intraday = psqlDatasourceQueryService.findIntraday(
-            instrument,
-            dateTimeProvider.nowDate().atStartOfDay()
-        );
-        return InstrumentResponse.of(instrument, history, intraday);
+        InstrumentEntity instrument = psqlDatasourceQueryService.findInstrumentBy(datasourceId, ticker);
+        return InstrumentResponse.from(instrument);
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument")

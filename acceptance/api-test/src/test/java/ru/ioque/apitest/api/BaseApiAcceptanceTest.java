@@ -17,10 +17,10 @@ import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
-import ru.ioque.core.dto.datasource.response.IntradayValueResponse;
+import ru.ioque.core.dto.datasource.response.IntradayDtoResponse;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
@@ -85,7 +85,7 @@ public class BaseApiAcceptanceTest {
         serviceClient().initDateTime(dateTime);
     }
 
-    protected List<ExchangeResponse> getAllDatasource() {
+    protected List<DatasourceResponse> getAllDatasource() {
         return exchangeClient().getExchanges();
     }
 
@@ -116,7 +116,7 @@ public class BaseApiAcceptanceTest {
         return signalScannerClient().getDataScanners();
     }
 
-    protected ExchangeResponse getExchangeBy(UUID exchangeId) {
+    protected DatasourceResponse getExchangeBy(UUID exchangeId) {
         return exchangeClient().getExchangeBy(exchangeId);
     }
 
@@ -166,7 +166,7 @@ public class BaseApiAcceptanceTest {
         return exchangeClient().getInstrumentBy(exchangeId, ticker);
     }
 
-    protected List<IntradayValueResponse> getIntradayValues(int pageNumber, int pageSize) {
+    protected List<IntradayDtoResponse> getIntradayValues(int pageNumber, int pageSize) {
         return clientFacade.getArchiveRestClient().getIntradayValues(pageNumber, pageSize);
     }
 

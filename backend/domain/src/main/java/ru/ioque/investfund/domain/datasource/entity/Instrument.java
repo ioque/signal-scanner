@@ -44,7 +44,7 @@ public class Instrument extends Domain<InstrumentId> {
         this.details = details;
         this.updatable = updatable;
         this.tradingState = tradingState;
-        this.aggregateHistories = aggregateHistories;
+        this.aggregateHistories = aggregateHistories == null ? new TreeSet<>() : aggregateHistories;
     }
 
     public static Instrument of(InstrumentId id, InstrumentDetails details) {
@@ -70,7 +70,7 @@ public class Instrument extends Domain<InstrumentId> {
             return;
         }
         IntradayData lastIntradayData = intradayData.last();
-        if (lastIntradayData.getNumber() > tradingState.getLastNumber()) {
+        if (lastIntradayData.getNumber() > tradingState.getLastIntradayNumber()) {
             tradingState = TradingState.of(tradingState, intradayData);
             addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
         }
@@ -93,16 +93,16 @@ public class Instrument extends Domain<InstrumentId> {
         );
     }
 
+    public Optional<TradingState> getTradingState() {
+        return Optional.ofNullable(tradingState);
+    }
+
     public Ticker getTicker() {
         return details.getTicker();
     }
 
     public InstrumentType getType() {
         return details.getType();
-    }
-
-    public LocalDate getLastHistoryDate() {
-        return aggregateHistories.last().getDate();
     }
 
     public LocalDate historyRightBound(LocalDate now) {
@@ -117,7 +117,7 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public Long getLastTradingNumber() {
-        return Optional.ofNullable(tradingState).map(TradingState::getLastNumber).orElse(0L);
+        return getTradingState().map(TradingState::getLastIntradayNumber).orElse(0L);
     }
 
     public void enableUpdate() {
@@ -130,5 +130,9 @@ public class Instrument extends Domain<InstrumentId> {
 
     public boolean isUpdatable() {
         return Boolean.TRUE.equals(updatable);
+    }
+
+    private LocalDate getLastHistoryDate() {
+        return aggregateHistories.last().getDate();
     }
 }

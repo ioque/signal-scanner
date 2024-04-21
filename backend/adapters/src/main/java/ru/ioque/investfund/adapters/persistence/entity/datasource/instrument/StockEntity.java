@@ -10,13 +10,15 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.time.LocalDate;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Entity
@@ -40,14 +42,14 @@ public class StockEntity extends InstrumentEntity {
         String shortName,
         String name,
         Boolean updatable,
+        TradingStateEmbeddable tradingState,
+        List<AggregatedHistoryEntity> history,
         Integer lotSize,
         String isin,
         String regNumber,
-        Integer listLevel,
-        LocalDate lastHistoryDate,
-        Long lastTradingNumber
+        Integer listLevel
     ) {
-        super(id, datasource, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasource, ticker, shortName, name, updatable, tradingState, history);
         this.lotSize = lotSize;
         this.isin = isin;
         this.regNumber = regNumber;
@@ -70,8 +72,10 @@ public class StockEntity extends InstrumentEntity {
                     .build()
             )
             .updatable(this.getUpdatable())
-            .lastHistoryDate(this.getLastHistoryDate())
-            .lastTradingNumber(this.getLastTradingNumber())
+            .tradingState(getTradingState().map(TradingStateEmbeddable::toTradingState).orElse(null))
+            .aggregateHistories(new TreeSet<>(
+                history.stream().map(AggregatedHistoryEntity::toDomain).toList()
+            ))
             .build();
     }
 }

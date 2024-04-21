@@ -160,7 +160,7 @@ public class BaseTest {
     }
 
     protected DatasourceId getDatasourceId() {
-        return datasourceRepository().findAll().get(0).getId();
+        return datasourceRepository().getAll().get(0).getId();
     }
 
     protected void clearLogs() {

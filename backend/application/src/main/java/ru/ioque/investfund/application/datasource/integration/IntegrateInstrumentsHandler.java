@@ -39,7 +39,7 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
 
     @Override
     protected void businessProcess(IntegrateInstrumentsCommand command) {
-        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final List<InstrumentDetails> detailsList = datasourceProvider
             .fetchInstruments(datasource)
             .stream()

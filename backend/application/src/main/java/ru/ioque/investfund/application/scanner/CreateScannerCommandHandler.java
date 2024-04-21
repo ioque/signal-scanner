@@ -43,7 +43,7 @@ public class CreateScannerCommandHandler extends CommandHandler<CreateScannerCom
 
     @Override
     protected void businessProcess(CreateScannerCommand command) {
-        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
         final SignalScanner scanner = SignalScanner.builder()
             .id(ScannerId.from(uuidProvider.generate()))

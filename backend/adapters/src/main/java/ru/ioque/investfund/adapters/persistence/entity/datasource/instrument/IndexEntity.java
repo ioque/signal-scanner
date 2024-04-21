@@ -10,15 +10,14 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Entity
@@ -40,14 +39,12 @@ public class IndexEntity extends InstrumentEntity {
         String shortName,
         String name,
         Boolean updatable,
-        List<HistoryValueEntity> dailyTradingResults,
-        List<IntradayValueEntity> intradayValueEntities,
+        TradingStateEmbeddable tradingState,
+        List<AggregatedHistoryEntity> history,
         Double annualHigh,
-        Double annualLow,
-        LocalDate lastHistoryDate,
-        Long lastTradingNumber
+        Double annualLow
     ) {
-        super(id, datasource, ticker, shortName, name, updatable, lastHistoryDate, lastTradingNumber);
+        super(id, datasource, ticker, shortName, name, updatable, tradingState, history);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
     }
@@ -66,8 +63,10 @@ public class IndexEntity extends InstrumentEntity {
                     .build()
             )
             .updatable(this.getUpdatable())
-            .lastHistoryDate(this.getLastHistoryDate())
-            .lastTradingNumber(this.getLastTradingNumber())
+            .tradingState(getTradingState().map(TradingStateEmbeddable::toTradingState).orElse(null))
+            .aggregateHistories(new TreeSet<>(
+                history.stream().map(AggregatedHistoryEntity::toDomain).toList()
+            ))
             .build();
     }
 }

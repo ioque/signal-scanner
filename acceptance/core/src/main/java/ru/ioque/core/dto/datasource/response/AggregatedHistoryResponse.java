@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HistoryValueResponse {
+public class AggregatedHistoryResponse {
     String tradeDate;
     String ticker;
     Double value;

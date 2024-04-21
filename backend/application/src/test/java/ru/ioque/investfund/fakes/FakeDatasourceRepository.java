@@ -22,8 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FakeDatasourceRepository implements DatasourceRepository {
     final Map<DatasourceId, Datasource> exchanges = new ConcurrentHashMap<>();
 
-    @Override
-    public List<Datasource> findAll() {
+    public List<Datasource> getAll() {
         return exchanges.values().stream().toList();
     }
 
@@ -43,7 +42,7 @@ public class FakeDatasourceRepository implements DatasourceRepository {
     }
 
     @Override
-    public Datasource getById(DatasourceId datasourceId) throws EntityNotFoundException {
+    public Datasource getBy(DatasourceId datasourceId) throws EntityNotFoundException {
         return findBy(datasourceId).orElseThrow(
             () -> new EntityNotFoundException(
                 String.format("Источник данных[id=%s] не существует.", datasourceId)

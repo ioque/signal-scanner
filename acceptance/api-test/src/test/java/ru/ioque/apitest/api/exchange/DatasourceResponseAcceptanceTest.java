@@ -16,10 +16,10 @@ import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
-import ru.ioque.core.dto.datasource.response.ExchangeResponse;
+import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
-import ru.ioque.core.dto.datasource.response.IntradayValueResponse;
+import ru.ioque.core.dto.datasource.response.IntradayDtoResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,10 +30,11 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("МОДУЛЬ \"EXCHANGE\"")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
+public class DatasourceResponseAcceptanceTest extends BaseApiAcceptanceTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
@@ -67,14 +68,14 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         integrateInstruments(datasourceId);
 
-        ExchangeResponse exchangeResponse = getExchangeBy(datasourceId);
+        DatasourceResponse datasourceResponse = getExchangeBy(datasourceId);
         List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
-        assertEquals("Московская Биржа", exchangeResponse.getName());
+        assertEquals("Московская Биржа", datasourceResponse.getName());
         assertEquals(
             "Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.",
-            exchangeResponse.getDescription()
+            datasourceResponse.getDescription()
         );
-        assertNotNull(exchangeResponse.getUrl());
+        assertNotNull(datasourceResponse.getUrl());
         assertEquals(4, instruments.size());
     }
 
@@ -98,19 +99,19 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
         UUID datasourceId = getAllDatasource().get(0).getId();
 
         integrateInstruments(datasourceId);
-        ExchangeResponse exchangeResponse = getExchangeBy(datasourceId);
+        DatasourceResponse datasourceResponse = getExchangeBy(datasourceId);
         List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
 
         integrateInstruments(datasourceId);
-        ExchangeResponse updatedExchangeResponse = getExchangeBy(datasourceId);
+        DatasourceResponse updatedDatasourceResponse = getExchangeBy(datasourceId);
         List<InstrumentInListResponse> updatedInstruments = getInstruments(datasourceId);
 
-        assertEquals(exchangeResponse.getName(), updatedExchangeResponse.getName());
+        assertEquals(datasourceResponse.getName(), updatedDatasourceResponse.getName());
         assertEquals(
-            exchangeResponse.getDescription(),
-            updatedExchangeResponse.getDescription()
+            datasourceResponse.getDescription(),
+            updatedDatasourceResponse.getDescription()
         );
-        assertEquals(exchangeResponse.getUrl(), updatedExchangeResponse.getUrl());
+        assertEquals(datasourceResponse.getUrl(), updatedDatasourceResponse.getUrl());
         assertEquals(instruments.size(), updatedInstruments.size());
         assertEquals(
             "Индекс фондового рынка мосбиржи",
@@ -355,7 +356,9 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         InstrumentResponse sber = getInstrumentBy(datasourceId, "SBER");
         assertEquals(130, sber.getHistoryValues().size());
-        assertEquals(10, sber.getIntradayValues().size());
+        assertNotNull(sber.getTodayFirstPrice());
+        assertNotNull(sber.getTodayLastPrice());
+        assertNotNull(sber.getTodayValue());
     }
 
     private static LocalDateTime getDateTimeNow() {
@@ -405,7 +408,9 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
 
         InstrumentResponse sber = getInstrumentBy(datasourceId, "SBER");
         assertEquals(0, sber.getHistoryValues().size());
-        assertEquals(0, sber.getIntradayValues().size());
+        assertNull(sber.getTodayFirstPrice());
+        assertNull(sber.getTodayLastPrice());
+        assertNull(sber.getTodayValue());
     }
 
     @Test
@@ -421,29 +426,9 @@ public class ExchangeResponseAcceptanceTest extends BaseApiAcceptanceTest {
             .stream()
             .map(ticker -> getInstrumentBy(datasourceId, ticker))
             .toList();
-
+        List<IntradayDtoResponse> intradayValues = getIntradayValues(0, 6);
         assertEquals(4, instrumentResponses.stream().filter(row -> !row.getHistoryValues().isEmpty()).toList().size());
-        assertEquals(4, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
-    }
-
-    @Test
-    @DisplayName("""
-        T13. Перенос внутридневных данных в архив.
-        """)
-    void testCase15() {
-        UUID datasourceId = getAllDatasource().get(0).getId();
-        initInstrumentsWithTradingData();
-        fullIntegrate(datasourceId);
-
-        runArchiving();
-
-        List<InstrumentResponse> instrumentResponses = getTickers(datasourceId)
-            .stream()
-            .map(ticker -> getInstrumentBy(datasourceId, ticker))
-            .toList();
-        List<IntradayValueResponse> intradayValues = getIntradayValues(0, 4);
-        assertEquals(0, instrumentResponses.stream().filter(row -> !row.getIntradayValues().isEmpty()).toList().size());
-        assertEquals(4, intradayValues.size());
+        assertEquals(6, intradayValues.size());
     }
 
     private void initInstrumentsWithTradingData() {

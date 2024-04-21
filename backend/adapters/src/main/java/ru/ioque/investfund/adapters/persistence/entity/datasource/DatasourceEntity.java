@@ -2,6 +2,7 @@ package ru.ioque.investfund.adapters.persistence.entity.datasource;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -33,7 +34,7 @@ public class DatasourceEntity extends UuidIdentity {
     String url;
     String description;
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "datasource")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "datasource", fetch = FetchType.LAZY)
     Set<InstrumentEntity> instruments;
 
     @Builder

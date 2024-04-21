@@ -4,9 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
@@ -76,12 +74,6 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public JpaHistoryValueRepository mockHistoryTradeDataRepository() {
-        return mock(JpaHistoryValueRepository.class);
-    }
-
-    @Bean
-    @Primary
     public JpaInstrumentRepository mockInstrumentEntityRepository() {
         return mock(JpaInstrumentRepository.class);
     }
@@ -102,12 +94,6 @@ public class ControllerTestConfiguration {
     @Primary
     public JpaDatasourceRepository mockExchangeEntityRepository() {
         return mock(JpaDatasourceRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public JpaArchivedIntradayValueRepository mockArchivedIntradayValueEntityRepository() {
-        return mock(JpaArchivedIntradayValueRepository.class);
     }
 
     @Bean

@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.HistoryValueEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,17 +22,21 @@ public class InstrumentResponse implements Serializable {
     String name;
     String shortName;
     String ticker;
-    List<HistoryValueResponse> historyValues;
-    List<IntradayValueResponse> intradayValues;
+    Double todayLastPrice;
+    Double todayFirstPrice;
+    Double todayValue;
+    List<AggregatedHistoryResponse> historyValues;
 
-    public static InstrumentResponse of(InstrumentEntity instrument, List<HistoryValueEntity> history, List<IntradayValueEntity> intraday) {
+    public static InstrumentResponse from(InstrumentEntity instrument) {
         return InstrumentResponse.builder()
             .id(instrument.getId())
             .ticker(instrument.getTicker())
             .name(instrument.getName())
             .shortName(instrument.getShortName())
-            .historyValues(history.stream().map(HistoryValueResponse::fromDomain).toList())
-            .intradayValues(intraday.stream().map(IntradayValueResponse::fromDomain).toList())
+            .historyValues(instrument.getHistory().stream().map(AggregatedHistoryResponse::fromDomain).toList())
+            .todayLastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
+            .todayFirstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))
+            .todayValue(instrument.getTradingState().map(TradingStateEmbeddable::getTodayValue).orElse(null))
             .build();
     }
 }

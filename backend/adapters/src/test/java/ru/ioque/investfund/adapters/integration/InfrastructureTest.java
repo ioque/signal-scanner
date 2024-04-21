@@ -5,10 +5,10 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
 import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
@@ -260,10 +260,9 @@ public abstract class InfrastructureTest {
             .build();
     }
 
-    protected HistoryValue createHistoryValue(Ticker ticker, LocalDate tradeDate) {
-        return HistoryValue.builder()
-            .ticker(ticker)
-            .tradeDate(tradeDate)
+    protected AggregatedHistory createHistoryValue(LocalDate tradeDate) {
+        return AggregatedHistory.builder()
+            .date(tradeDate)
             .waPrice(1.0)
             .closePrice(1.0)
             .highPrice(1.0)

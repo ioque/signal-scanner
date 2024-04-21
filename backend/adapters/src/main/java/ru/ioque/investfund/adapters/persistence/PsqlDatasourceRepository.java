@@ -12,7 +12,6 @@ import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -23,20 +22,20 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Datasource> findAll() {
-        return jpaDatasourceRepository
-            .findAll()
-            .stream()
-            .map(DatasourceEntity::toDomain)
-            .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Datasource> findBy(DatasourceId datasourceId) {
         return jpaDatasourceRepository
             .findById(datasourceId.getUuid())
             .map(DatasourceEntity::toDomain);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Datasource getBy(DatasourceId datasourceId) throws EntityNotFoundException {
+        return findBy(datasourceId).orElseThrow(
+            () -> new EntityNotFoundException(
+                String.format("Источник данных[id=%s] не существует.", datasourceId)
+            )
+        );
     }
 
     @Override
@@ -49,15 +48,5 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Transactional
     public void remove(Datasource datasource) {
         jpaDatasourceRepository.deleteById(datasource.getId().getUuid());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Datasource getById(DatasourceId datasourceId) throws EntityNotFoundException {
-        return findBy(datasourceId).orElseThrow(
-            () -> new EntityNotFoundException(
-                String.format("Источник данных[id=%s] не существует.", datasourceId)
-            )
-        );
     }
 }

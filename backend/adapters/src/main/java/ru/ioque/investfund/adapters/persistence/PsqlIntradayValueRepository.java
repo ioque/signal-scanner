@@ -10,7 +10,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import java.util.List;
+import java.util.Collection;
 
 @Component
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class PsqlIntradayValueRepository implements IntradayValueRepository {
 
     @Override
     @Transactional
-    public void saveAll(List<IntradayData> intradayData) {
+    public void saveAll(Collection<IntradayData> intradayData) {
         jpaIntradayValueRepository.saveAll(intradayData.stream().map(IntradayValueEntity::fromDomain).toList());
     }
 }

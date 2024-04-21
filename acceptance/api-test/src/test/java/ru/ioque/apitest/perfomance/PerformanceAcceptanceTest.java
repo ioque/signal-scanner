@@ -20,7 +20,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("PERFORMANCE")
@@ -91,7 +91,9 @@ public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
 
         InstrumentResponse sber = getInstrumentBy(datasourceId, "SBER");
         assertTrue(sber.getHistoryValues().size() >= 128);
-        assertEquals(50000, sber.getIntradayValues().size());
+        assertNotNull(sber.getTodayFirstPrice());
+        assertNotNull(sber.getTodayLastPrice());
+        assertNotNull(sber.getTodayValue());
         assertTrue(seconds < 60);
         System.out.println("seconds = " + seconds);
     }

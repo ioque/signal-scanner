@@ -52,7 +52,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
 
     @Override
     protected void businessProcess(IntegrateTradingDataCommand command) {
-        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final List<DomainEventWrapper> events = datasource
             .getUpdatableInstruments()
             .stream()

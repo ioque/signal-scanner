@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaArchivedIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaHistoryValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
@@ -23,12 +21,10 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 @AllArgsConstructor
 @Tag(name = "Служебный контролер", description = "Работает в окружении test, позволяет очищать стейт приложения.")
 public class ServiceController {
-    JpaDatasourceRepository exchangeEntityRepository;
-    JpaInstrumentRepository instrumentEntityRepository;
-    JpaHistoryValueRepository jpaHistoryValueRepository;
+    JpaDatasourceRepository jpaDatasourceRepository;
+    JpaInstrumentRepository jpaInstrumentRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
-    JpaSignalScannerRepository signalScannerEntityRepository;
-    JpaArchivedIntradayValueRepository jpaArchivedIntradayValueRepository;
+    JpaSignalScannerRepository jpaSignalScannerRepository;
     DateTimeProvider dateTimeProvider;
 
     @PostMapping("/api/service/date-time")
@@ -38,12 +34,10 @@ public class ServiceController {
 
     @DeleteMapping("/api/service/state")
     public void clearState() {
-        instrumentEntityRepository.deleteAll();
-        jpaHistoryValueRepository.deleteAll();
+        jpaInstrumentRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
-        exchangeEntityRepository.deleteAll();
-        signalScannerEntityRepository.deleteAll();
-        jpaArchivedIntradayValueRepository.deleteAll();
+        jpaDatasourceRepository.deleteAll();
+        jpaSignalScannerRepository.deleteAll();
         dateTimeProvider.initToday(null);
     }
 }

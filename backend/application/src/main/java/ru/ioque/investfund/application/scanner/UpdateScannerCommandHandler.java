@@ -38,7 +38,7 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
     @Override
     protected void businessProcess(UpdateScannerCommand command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
-        final Datasource datasource = datasourceRepository.getById(scanner.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getBy(scanner.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
         scanner.update(instrumentIds, command);
         scannerRepository.save(scanner);

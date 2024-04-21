@@ -21,12 +21,12 @@ import java.util.TreeSet;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TradingState implements Comparable<TradingState> {
-    Long lastNumber;
     LocalDate date;
     LocalTime time;
-    Double lastPrice;
-    Double openPrice;
-    Double value;
+    Double todayValue;
+    Double todayLastPrice;
+    Double todayFirstPrice;
+    Long lastIntradayNumber;
 
     public static TradingState from(TreeSet<IntradayData> intradayData) {
         IntradayData last = intradayData.last();
@@ -39,14 +39,13 @@ public class TradingState implements Comparable<TradingState> {
         LocalTime time = last.getDateTime().toLocalTime();
         Double openPrice = intradayData.first().getPrice();
         Double value = intradayData.stream().mapToDouble(IntradayData::getValue).sum();
-
         return TradingState.builder()
             .time(time)
             .date(date)
-            .value(value)
-            .openPrice(openPrice)
-            .lastPrice(lastPrice)
-            .lastNumber(lastNumber)
+            .todayValue(value)
+            .todayFirstPrice(openPrice)
+            .todayLastPrice(lastPrice)
+            .lastIntradayNumber(lastNumber)
             .build();
     }
 
@@ -61,14 +60,14 @@ public class TradingState implements Comparable<TradingState> {
         Long lastNumber = last.getNumber();
         Double lastPrice = last.getPrice();
         LocalTime time = last.getDateTime().toLocalTime();
-        Double value = intradayData.stream().mapToDouble(IntradayData::getValue).sum() + tradingState.getValue();
+        Double value = intradayData.stream().mapToDouble(IntradayData::getValue).sum() + tradingState.getTodayValue();
         return TradingState.builder()
             .time(time)
-            .value(value)
-            .lastPrice(lastPrice)
-            .lastNumber(lastNumber)
+            .todayValue(value)
+            .todayLastPrice(lastPrice)
+            .lastIntradayNumber(lastNumber)
             .date(tradingState.getDate())
-            .openPrice(tradingState.getOpenPrice())
+            .todayFirstPrice(tradingState.getTodayFirstPrice())
             .build();
     }
 

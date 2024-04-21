@@ -89,6 +89,6 @@ public class DatasourceConfiguratorTest extends BaseTest {
                 .build()
         );
 
-        assertEquals(2, datasourceRepository().findAll().size());
+        assertEquals(2, datasourceRepository().getAll().size());
     }
 }

@@ -16,6 +16,7 @@ dependencies {
     //PROJECTS
     implementation project(path: ':domain')
     implementation project(path: ':application')
+    testImplementation project(path: ':application')
 
     //SPRING
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

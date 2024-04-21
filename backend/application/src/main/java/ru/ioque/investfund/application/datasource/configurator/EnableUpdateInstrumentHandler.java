@@ -28,7 +28,7 @@ public class EnableUpdateInstrumentHandler extends CommandHandler<EnableUpdateIn
 
     @Override
     protected void businessProcess(EnableUpdateInstrumentsCommand command) {
-        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
+        final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         datasource.enableUpdate(command.getTickers());
         datasourceRepository.save(datasource);
     }
