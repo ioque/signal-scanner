@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
     void testCase2() {
         commandBus().execute(
             buildCreateAnomalyVolumeScannerWith()
-                .tickers(List.of(TGKN, TGKB, IMOEX))
+                .tickers(List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX)))
                 .build()
         );
         final ScannerId scannerId = getFirstScannerId();
@@ -47,7 +48,7 @@ public class UpdateConfiguratorTest extends BaseConfiguratorTest {
         commandBus().execute(
             buildUpdateAnomalyVolumeScannerWith()
                 .scannerId(scannerId)
-                .tickers(List.of(TGKN, IMOEX))
+                .tickers(List.of(new Ticker(TGKN), new Ticker(IMOEX)))
                 .build()
         );
         assertEquals(2, getScanner(scannerId).getInstrumentIds().size());

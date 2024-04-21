@@ -1,7 +1,5 @@
 package ru.ioque.investfund.domain.datasource.value.intraday;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,15 +10,12 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
 
-@Getter(AccessLevel.PUBLIC)
+@Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Deal extends IntradayValue {
-    @NotNull(message = "Не заполнен признак покупки.")
     Boolean isBuy;
-    @NotNull(message = "Не заполнено количество лотов.")
-    @Min(value = 0, message = "Количество лотов должно быть больше нуля.")
     Integer qnt;
 
     @Builder

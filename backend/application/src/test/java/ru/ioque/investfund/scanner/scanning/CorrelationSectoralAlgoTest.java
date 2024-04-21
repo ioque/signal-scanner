@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 
@@ -98,8 +99,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 1, 0);
-        assertFalse(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnSnapshot().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Snapshot().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -113,7 +114,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals();
-        initTradingResults(
+        initHistoryValues(
             buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
             buildTatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
             buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
@@ -136,7 +137,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults();
-        initDealDatas(
+        initIntradayValues(
             buildTatnBuyDeal(1L, "10:00:00", 251.1D, 136926D, 1),
             buildTatnBuyDeal(2L, "12:00:00", 247.1D, 136926D, 1),
             buildTatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
@@ -161,7 +162,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals();
-        initTradingResults(
+        initHistoryValues(
             buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
             buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D)
         );
@@ -185,7 +186,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDealResults();
-        initDealDatas(
+        initIntradayValues(
             buildBrf4Contract(1L, "10:00:00", 78D, 78000D, 1),
             buildBrf4Contract(2L, "12:00:00", 96D, 96000D, 1)
         );
@@ -209,7 +210,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initTodayDateTime(startDate);
         initInstruments(datasourceId);
         initPositiveDeals();
-        initTradingResults(
+        initHistoryValues(
             buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
             buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
             buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
@@ -234,7 +235,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     SectoralFuturesProperties.builder()
                         .futuresOvernightScale(futuresOvernightScale)
                         .stockOvernightScale(stockOvernightScale)
-                        .futuresTicker(BRF4)
+                        .futuresTicker(new Ticker(BRF4))
                         .build()
                 )
                 .build()
@@ -242,7 +243,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initPositiveDealResults() {
-        datasourceStorage().initTradingResults(
+        datasourceStorage().initHistoryValues(
             List.of(
                 buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
                 buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
@@ -253,7 +254,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initNegativeDealResults() {
-        initTradingResults(
+        initHistoryValues(
             buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
             buildBrf4HistoryValue("2023-12-21", 80D, 74D, 10D),
             buildTatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
@@ -262,7 +263,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initNegativeDeals() {
-        initDealDatas(
+        initIntradayValues(
             buildBrf4Contract(1L,"10:00:00", 73D, 73000D, 1),
             buildBrf4Contract(2L,"12:00:00", 72D, 73000D, 1),
             buildTatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
@@ -272,7 +273,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     }
 
     private void initPositiveDeals() {
-        initDealDatas(
+        initIntradayValues(
             buildBrf4Contract(1L,"10:00:00", 78D, 78000D, 1),
             buildBrf4Contract(2L,"12:00:00", 96D, 96000D, 1),
             buildTatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
@@ -286,7 +287,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
             .initInstrumentDetails(
                 List.of(
                     tatnDetails(),
-                    brf4Details()
+                    brf4()
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));

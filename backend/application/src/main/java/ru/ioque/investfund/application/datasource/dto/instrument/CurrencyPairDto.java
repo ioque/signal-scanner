@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
+package ru.ioque.investfund.application.datasource.dto.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
+import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -16,25 +16,25 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IndexDto extends InstrumentDto {
-    Double annualHigh;
-    Double annualLow;
+public class CurrencyPairDto extends InstrumentDto {
+    Integer lotSize;
+    String faceUnit;
 
     @Builder
-    public IndexDto(String ticker, String shortName, String name, Double annualHigh, Double annualLow) {
+    public CurrencyPairDto(String ticker, String shortName, String name, Integer lotSize, String faceUnit) {
         super(ticker, shortName, name);
-        this.annualHigh = annualHigh;
-        this.annualLow = annualLow;
+        this.lotSize = lotSize;
+        this.faceUnit = faceUnit;
     }
 
     @Override
     public InstrumentDetails toDetails() {
-        return IndexDetails.builder()
-            .ticker(new Ticker(getTicker()))
+        return CurrencyPairDetails.builder()
+            .ticker(Ticker.from(getTicker()))
+            .faceUnit(faceUnit)
+            .lotSize(lotSize)
             .shortName(getShortName())
             .name(getName())
-            .annualHigh(annualHigh)
-            .annualLow(annualLow)
             .build();
     }
 }

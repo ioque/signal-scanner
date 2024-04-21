@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,6 +49,15 @@ public class FakeDatasourceRepository implements DatasourceRepository {
                 String.format("Источник данных[id=%s] не существует.", datasourceId)
             )
         );
+    }
+
+    public Instrument getInstrumentBy(Ticker ticker) {
+        return exchanges.values()
+            .stream()
+            .map(Datasource::getInstruments)
+            .flatMap(Collection::stream).filter(row -> row.getTicker().equals(ticker))
+            .findFirst()
+            .orElseThrow();
     }
 
     public Instrument getInstrumentBy(InstrumentId instrumentId) {

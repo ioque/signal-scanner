@@ -23,7 +23,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     private AnomalyVolumeProperties.AnomalyVolumePropertiesBuilder buildPropertiesWith() {
         return AnomalyVolumeProperties.builder()
             .historyPeriod(180)
-            .indexTicker(IMOEX)
+            .indexTicker(Ticker.from(IMOEX))
             .scaleCoefficient(1.5);
     }
 
@@ -251,7 +251,7 @@ public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     }
 
     private String indexIdIsNotValid() {
-        return "Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.";
+        return "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.";
     }
 
     private String scaleCoefficientIsNegative() {

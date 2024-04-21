@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
+package ru.ioque.investfund.application.datasource.dto.instrument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,7 +45,7 @@ public class FuturesDto extends InstrumentDto {
     @Override
     public InstrumentDetails toDetails() {
         return FuturesDetails.builder()
-            .ticker(new Ticker(getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotVolume(lotVolume)

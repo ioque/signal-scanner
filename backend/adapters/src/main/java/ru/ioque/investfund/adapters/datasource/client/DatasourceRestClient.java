@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import ru.ioque.investfund.adapters.datasource.client.dto.history.HistoryValueDto;
-import ru.ioque.investfund.adapters.datasource.client.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.dto.history.HistoryValueDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.datasource.dto.intraday.IntradayValueDto;
 
 import java.time.LocalDate;
 import java.util.List;

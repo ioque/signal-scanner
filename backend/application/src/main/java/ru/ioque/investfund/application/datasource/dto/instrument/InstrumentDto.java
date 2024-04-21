@@ -1,8 +1,10 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
+package ru.ioque.investfund.application.datasource.dto.instrument;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +25,12 @@ import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
     @JsonSubTypes.Type(value = StockDto.class, name = "StockDto") }
 )
 public abstract class InstrumentDto {
+    @NotBlank(message = "Не заполнен тикер инструмента.")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;
+    @NotBlank(message = "Не заполнено краткое наименование инструмента.")
     String shortName;
+    @NotBlank(message = "Не заполнено полное наименование инструмента.")
     String name;
 
     public abstract InstrumentDetails toDetails();

@@ -26,7 +26,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
 
     private SectoralFuturesProperties.SectoralFuturesPropertiesBuilder buildPropertiesWith() {
         return SectoralFuturesProperties.builder()
-            .futuresTicker(BRF4)
+            .futuresTicker(new Ticker(BRF4))
             .futuresOvernightScale(0.05)
             .stockOvernightScale(0.05);
     }
@@ -270,7 +270,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     }
 
     private String futuresIdIsNotValid() {
-        return "Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.";
+        return "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.";
     }
 
     private String stockOvernightScaleIsNegative() {
@@ -291,7 +291,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresTicker(BRF4)
+                    .futuresTicker(new Ticker(BRF4))
                     .build()
             );
     }
@@ -306,12 +306,12 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
                 SectoralFuturesProperties.builder()
                     .futuresOvernightScale(0.015)
                     .stockOvernightScale(0.015)
-                    .futuresTicker(BRF4)
+                    .futuresTicker(new Ticker(BRF4))
                     .build()
             );
     }
 
     private List<Ticker> getTickers() {
-        return List.of(TGKN, TGKB, IMOEX);
+        return List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX));
     }
 }

@@ -1,9 +1,9 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface HistoryValueRepository {
-    void saveAll(List<HistoryValue> historyValues);
+    void saveAll(Collection<AggregateHistory> historyValues);
 }

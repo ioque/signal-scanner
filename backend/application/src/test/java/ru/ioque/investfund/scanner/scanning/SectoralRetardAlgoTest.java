@@ -151,13 +151,13 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
-    private void initScanner(DatasourceId datasourceId, Ticker... tickers) {
+    private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
                 .workPeriodInMinutes(1)
                 .description("Секторальный отстающий, нефтянка.")
                 .datasourceId(datasourceId)
-                .tickers(Arrays.asList(tickers))
+                .tickers(Arrays.stream(tickers).map(Ticker::from).toList())
                 .properties(
                     SectoralRetardProperties.builder()
                         .historyScale(historyScale)
@@ -175,7 +175,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
                     rosnDetails(),
                     tatnDetails(),
                     lkohDetails(),
-                    sibnDetails()
+                    sibn()
                 )
             );
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
@@ -201,7 +201,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initTradingResultsForTestCase2(DatasourceId datasourceId) {
-        datasourceStorage().initTradingResults(
+        datasourceStorage().initHistoryValues(
             List.of(
                 //BRF4
                 buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
@@ -223,7 +223,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
     }
 
     private void initTradingResultsForTestCase1(DatasourceId datasourceId) {
-        datasourceStorage().initTradingResults(
+        datasourceStorage().initHistoryValues(
             List.of(
                 //BRF4
                 buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),

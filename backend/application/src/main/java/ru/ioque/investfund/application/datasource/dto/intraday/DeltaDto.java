@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.intraday;
+package ru.ioque.investfund.application.datasource.dto.intraday;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,8 +20,14 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeltaDto extends IntradayValueDto {
     @Builder
-    public DeltaDto(Long number, LocalDateTime dateTime, String ticker, Double value, Double price) {
-        super(number, dateTime, ticker, value, price);
+    public DeltaDto(
+        String ticker,
+        Long number,
+        LocalDateTime dateTime,
+        Double price,
+        Double value
+    ) {
+        super(ticker, number, dateTime, price, value);
     }
 
     @Override

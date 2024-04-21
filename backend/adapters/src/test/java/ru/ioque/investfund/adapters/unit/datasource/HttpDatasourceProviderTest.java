@@ -24,17 +24,16 @@ import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
 import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryBatch;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayBatch;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -134,9 +133,9 @@ public class HttpDatasourceProviderTest {
         when(datasourceRestClient.fetchHistory(DATASOURCE_URL, INSTRUMENT_TICKER, from, to)).thenReturn(List.of(historyDto));
         when(dateTimeProvider.nowDate()).thenReturn(to.plusDays(1));
 
-        HistoryBatch batch = datasourceProvider.fetchHistoryBy(datasource(), instrument());
-        assertEquals(1, batch.getUniqueValues().size());
-        assertHistory(historyDto, batch.getUniqueValues().get(0));
+        TreeSet<HistoryValue> batch = datasourceProvider.fetchAggregateHistory(datasource(), instrument());
+        assertEquals(1, batch.size());
+        assertHistory(historyDto, batch.first());
     }
 
     @Test
@@ -155,9 +154,9 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(dealDto));
 
-        IntradayBatch batch = datasourceProvider.fetchIntradayValuesBy(datasource(), instrument());
+        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
-        assertEquals(1, batch.getUniqueValues().size());
+        assertEquals(1, batch.size());
         assertDeal(dealDto, getIntradayFromBatchByTicker(batch, dealDto.getTicker()));
     }
 
@@ -176,9 +175,9 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(contractDto));
 
-        IntradayBatch batch = datasourceProvider.fetchIntradayValuesBy(datasource(), instrument());
+        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
-        assertEquals(1, batch.getUniqueValues().size());
+        assertEquals(1, batch.size());
         assertContract(contractDto, getIntradayFromBatchByTicker(batch, contractDto.getTicker()));
     }
 
@@ -196,9 +195,9 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(indexDto));
 
-        IntradayBatch batch = datasourceProvider.fetchIntradayValuesBy(datasource(), instrument());
+        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
-        assertEquals(1, batch.getUniqueValues().size());
+        assertEquals(1, batch.size());
         asserIntraday(indexDto, getIntradayFromBatchByTicker(batch, indexDto.getTicker()));
     }
 
@@ -249,9 +248,8 @@ public class HttpDatasourceProviderTest {
             .build();
     }
 
-    private IntradayValue getIntradayFromBatchByTicker(IntradayBatch batch, String ticker) {
+    private IntradayValue getIntradayFromBatchByTicker(TreeSet<IntradayValue> batch, String ticker) {
         return batch
-            .getUniqueValues()
             .stream()
             .filter(row -> row.getTicker().getValue().equals(ticker))
             .findFirst()

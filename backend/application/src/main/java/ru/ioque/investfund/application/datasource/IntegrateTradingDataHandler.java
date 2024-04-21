@@ -1,6 +1,5 @@
 package ru.ioque.investfund.application.datasource;
 
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -10,16 +9,18 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
-import ru.ioque.investfund.application.adapters.HistoryValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
+import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.TreeSet;
 
 @Component
@@ -28,7 +29,6 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
     UUIDProvider uuidProvider;
     DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
-    HistoryValueRepository historyValueRepository;
     IntradayValueRepository intradayValueRepository;
     EventPublisher eventPublisher;
 
@@ -39,7 +39,6 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         UUIDProvider uuidProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
-        HistoryValueRepository historyValueRepository,
         IntradayValueRepository intradayValueRepository,
         EventPublisher eventPublisher
     ) {
@@ -47,7 +46,6 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         this.uuidProvider = uuidProvider;
         this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
-        this.historyValueRepository = historyValueRepository;
         this.intradayValueRepository = intradayValueRepository;
         this.eventPublisher = eventPublisher;
     }
@@ -55,17 +53,34 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
     @Override
     protected void businessProcess(IntegrateTradingDataCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasource.getUpdatableInstruments().forEach(instrument -> {
-            final TreeSet<@Valid HistoryValue> history = datasourceProvider.fetchHistoryBy(datasource, instrument);
-            final TreeSet<@Valid IntradayValue> intraday = datasourceProvider.fetchIntradayValuesBy(datasource, instrument);
-            validate(history);
-            validate(intraday);
-            historyValueRepository.saveAll(history.stream().distinct().toList());
-            intradayValueRepository.saveAll(intraday.stream().distinct().toList());
-            instrument.updateTradingState(intraday);
-            instrument.updateAggregateHistory(history);
-        });
+        final List<DomainEventWrapper> events = datasource
+            .getUpdatableInstruments()
+            .stream()
+            .map(instrument -> {
+                final TreeSet<AggregateHistory> aggregateHistories = datasourceProvider.fetchAggregateHistory(
+                    datasource,
+                    instrument
+                ).getAggregateHistory(validator);
+                final TreeSet<IntradayValue> intradayValues = datasourceProvider.fetchIntradayValues(
+                    datasource,
+                    instrument
+                ).getIntradayValues(validator);
+                intradayValueRepository.saveAll(intradayValues);
+                instrument.updateTradingState(intradayValues);
+                instrument.updateAggregateHistory(aggregateHistories);
+                return instrument
+                    .getEvents()
+                    .stream()
+                    .map(event -> DomainEventWrapper.of(
+                        uuidProvider.generate(),
+                        event,
+                        dateTimeProvider.nowDateTime()
+                    )).toList();
+            })
+            .flatMap(Collection::stream)
+            .toList();
         datasourceRepository.save(datasource);
+        events.forEach(eventPublisher::publish);
         eventPublisher.publish(TradingDataIntegratedEvent.builder()
             .id(uuidProvider.generate())
             .datasourceId(datasource.getId().getUuid())

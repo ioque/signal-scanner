@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class Isin {
-    @Pattern(regexp = "\\b([A-Z]{2})((?![A-Z]{10}\\b)[A-Z0-9]{10})\\b", message = "Неккоретное значение ISIN.")
     String value;
 
     public Isin(String value) {

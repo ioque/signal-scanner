@@ -55,7 +55,7 @@ public class CreateConfiguratorTest extends BaseConfiguratorTest {
         """)
     void testCase3() {
         final CreateScannerCommand command = buildCreateAnomalyVolumeScannerWith()
-            .tickers(List.of(TGKN, new Ticker("LVHK"), new Ticker("TGKM"), IMOEX))
+            .tickers(List.of(new Ticker(TGKN), new Ticker("LVHK"), new Ticker("TGKM"), new Ticker(IMOEX)))
             .build();
 
         final IllegalArgumentException exception = assertThrows(

@@ -6,19 +6,16 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
-import ru.ioque.investfund.adapters.datasource.client.dto.history.HistoryValueDto;
-import ru.ioque.investfund.adapters.datasource.client.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.adapters.datasource.client.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.datasource.dto.HistoryBatch;
+import ru.ioque.investfund.application.datasource.dto.IntradayBatch;
+import ru.ioque.investfund.application.datasource.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.util.List;
-import java.util.TreeSet;
 
 @Component
 @RequiredArgsConstructor
@@ -39,8 +36,8 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public TreeSet<HistoryValue> fetchHistoryBy(Datasource datasource, Instrument instrument) {
-        return new TreeSet<>(
+    public HistoryBatch fetchAggregateHistory(Datasource datasource, Instrument instrument) {
+        return new HistoryBatch(
             moexClient
                 .fetchHistory(
                     datasource.getUrl(),
@@ -48,26 +45,19 @@ public class HttpDatasourceProvider implements DatasourceProvider {
                     instrument.historyLeftBound(dateTimeProvider.nowDate()),
                     instrument.historyRightBound(dateTimeProvider.nowDate())
                 )
-                .stream()
-                .map(HistoryValueDto::toHistoryValue)
-                .toList()
         );
     }
 
     @Override
     @SneakyThrows
-    public TreeSet<IntradayValue> fetchIntradayValuesBy(Datasource datasource, Instrument instrument) {
-        return new TreeSet<>(
+    public IntradayBatch fetchIntradayValues(Datasource datasource, Instrument instrument) {
+        return new IntradayBatch(
             moexClient
                 .fetchIntradayValues(
                     datasource.getUrl(),
                     instrument.getTicker().getValue(),
                     instrument.getLastTradingNumber()
                 )
-                .stream()
-                .map(IntradayValueDto::toIntradayValue)
-                .filter(row -> row.getNumber() > instrument.getLastTradingNumber())
-                .toList()
         );
     }
 }

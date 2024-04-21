@@ -44,16 +44,16 @@ public class BaseConfiguratorTest extends BaseTest {
     private void prepareDatasource() {
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoexDetails(),
+                imoex(),
                 tgkbDetails(),
                 tgknDetails(),
-                sberDetails(),
-                sberpDetails(),
+                sber(),
+                sberp(),
                 rosnDetails(),
-                sibnDetails(),
+                sibn(),
                 lkohDetails(),
                 tatnDetails(),
-                brf4Details(),
+                brf4(),
                 usdRubDetails())
         );
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
@@ -98,12 +98,12 @@ public class BaseConfiguratorTest extends BaseTest {
     }
 
     private List<@Valid Ticker> getAnomalyVolumeTickers() {
-        return List.of(TGKN, TGKB, IMOEX);
+        return List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX));
     }
 
     private AnomalyVolumeProperties getDefaultAnomalyVolumeProperties() {
         return AnomalyVolumeProperties.builder()
-            .indexTicker(IMOEX)
+            .indexTicker(new Ticker(IMOEX))
             .historyPeriod(180)
             .scaleCoefficient(1.5)
             .build();

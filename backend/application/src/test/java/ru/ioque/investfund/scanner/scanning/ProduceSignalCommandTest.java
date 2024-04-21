@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
@@ -35,18 +36,18 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        initInstrumentDetails(imoexDetails(), tgkbDetails(), tgknDetails());
+        initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(
             CreateScannerCommand.builder()
                 .datasourceId(getDatasourceId())
                 .workPeriodInMinutes(1)
-                .tickers(List.of(TGKN, TGKB, IMOEX))
+                .tickers(List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX)))
                 .description("description")
                 .properties(
                     AnomalyVolumeProperties.builder()
                         .scaleCoefficient(1.5)
-                        .indexTicker(IMOEX)
+                        .indexTicker(new Ticker(IMOEX))
                         .historyPeriod(3)
                         .build()
                 )
@@ -93,7 +94,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId().getUuid(), signalFoundEvent.get().getScannerId());
-        assertEquals(TGKN.getValue(), signalFoundEvent.get().getTicker());
+        assertEquals(TGKN, signalFoundEvent.get().getTicker());
         assertTrue(signalFoundEvent.get().isBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
     }
@@ -151,7 +152,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     private void prepareTestCase3() {
         final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
-        initTradingResults(
+        initHistoryValues(
             buildTgknHistoryValue("2023-12-22", 99.D, 99.D, 99D, 1000D),
             buildTgknHistoryValue("2023-12-23", 99.D, 99.D, 99D, 2000D),
             buildTgknHistoryValue("2023-12-24", 100.D, 100.D, 100D, 1400D),
@@ -159,7 +160,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        initDealDatas(
+        initIntradayValues(
             buildImoexDelta( 1L, "10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L, "12:00:00", 3100D, 2_000_000D),
             buildTgknBuyDeal(1L,"10:00:00", 100D, 5000D, 1),
@@ -183,7 +184,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                     .price(10D)
                     .isBuy(true)
                     .isOpen(true)
-                    .ticker(TGKB)
+                    .ticker(new Ticker(TGKB))
                     .summary("summary")
                     .watermark(today)
                     .build(),
@@ -191,13 +192,13 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                     .price(10D)
                     .isBuy(true)
                     .isOpen(true)
-                    .ticker(TGKN)
+                    .ticker(new Ticker(TGKN))
                     .summary("summary")
                     .watermark(today)
                     .build()
             )
         );
-        initTradingResults(
+        initHistoryValues(
             buildTgkbHistoryValue("2023-12-22", 99.D, 99.D, 99D, 1000D),
             buildTgkbHistoryValue("2023-12-23", 99.D, 99.D, 99D, 2000D),
             buildTgkbHistoryValue("2023-12-24", 100.D, 100.D, 100D, 1400D),
@@ -208,7 +209,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        initDealDatas(
+        initIntradayValues(
             buildImoexDelta( 1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 2900D, 2_000_000D),
             buildTgknBuyDeal(1L,"10:00:00", 98D, 5000D, 1),
@@ -229,7 +230,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
 
     private void prepareTestCase5() {
         initTodayDateTime("2023-12-25T12:00:00");
-        initTradingResults(
+        initHistoryValues(
             buildTgknHistoryValue("2023-12-22", 99.D, 99.1D, 97D, 2000D),
             buildTgknHistoryValue("2023-12-23", 99.D, 99.1D, 97D, 1000D),
             buildTgknHistoryValue("2023-12-24", 97.2D, 97.1D, 97D, 1500D),
@@ -237,7 +238,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        initDealDatas(
+        initIntradayValues(
             buildImoexDelta( 1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 2900D, 2_000_000D),
             buildTgknBuyDeal(1L,"10:00:00", 98D, 5000D, 1),
@@ -260,12 +261,12 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 .price(10D)
                 .isBuy(false)
                 .isOpen(true)
-                .ticker(TGKN)
+                .ticker(new Ticker(TGKN))
                 .summary("summary")
                 .watermark(today)
                 .build()
         );
-        initTradingResults(
+        initHistoryValues(
             buildTgknHistoryValue("2023-12-22", 99.D, 99.D, 99D, 1000D),
             buildTgknHistoryValue("2023-12-23", 99.D, 99.D, 99D, 2000D),
             buildTgknHistoryValue("2023-12-24", 100.D, 100.D, 100D, 1400D),
@@ -273,7 +274,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        initDealDatas(
+        initIntradayValues(
             buildImoexDelta(1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 3100D, 2_000_000D),
             buildTgknBuyDeal(1L,"10:00:00", 100D, 5000D, 1),

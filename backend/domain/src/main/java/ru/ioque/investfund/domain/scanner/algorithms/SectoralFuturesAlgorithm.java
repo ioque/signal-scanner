@@ -52,7 +52,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                         .summary(summary)
                         .watermark(watermark)
                         .ticker(snapshot.getTicker())
-                        .price(snapshot.getTodayLastPrice().orElse(0D))
+                        .price(snapshot.getLastPrice())
                         .build()
                 );
             }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class Ticker {
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String value;
 
     public Ticker(String value) {

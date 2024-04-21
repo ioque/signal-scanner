@@ -228,6 +228,6 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
     }
 
     private List<@Valid Ticker> getTickers() {
-        return List.of(TGKN, TGKB, IMOEX);
+        return List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX));
     }
 }

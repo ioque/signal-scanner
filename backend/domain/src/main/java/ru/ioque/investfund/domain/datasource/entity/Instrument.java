@@ -12,7 +12,6 @@ import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
 import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -29,7 +28,7 @@ public class Instrument extends Domain<InstrumentId> {
     InstrumentDetails details;
     Boolean updatable;
     TradingState tradingState;
-    final TreeSet<AggregateHistory> aggregateHistory;
+    final TreeSet<AggregateHistory> aggregateHistories;
 
     @Builder
     public Instrument(
@@ -39,13 +38,13 @@ public class Instrument extends Domain<InstrumentId> {
         Long lastTradingNumber,
         LocalDate lastHistoryDate,
         TradingState tradingState,
-        TreeSet<AggregateHistory> aggregateHistory
+        TreeSet<AggregateHistory> aggregateHistories
     ) {
         super(id);
         this.details = details;
         this.updatable = updatable;
         this.tradingState = tradingState;
-        this.aggregateHistory = aggregateHistory;
+        this.aggregateHistories = aggregateHistories;
     }
 
     public static Instrument of(InstrumentId id, InstrumentDetails details) {
@@ -53,7 +52,7 @@ public class Instrument extends Domain<InstrumentId> {
             .id(id)
             .details(details)
             .updatable(false)
-            .aggregateHistory(new TreeSet<>())
+            .aggregateHistories(new TreeSet<>())
             .build();
     }
 
@@ -70,26 +69,26 @@ public class Instrument extends Domain<InstrumentId> {
             addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
             return;
         }
-        tradingState = TradingState.of(tradingState, intradayValues);
-        addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
+        IntradayValue lastIntradayValue = intradayValues.last();
+        if (lastIntradayValue.getNumber() > tradingState.getLastNumber()) {
+            tradingState = TradingState.of(tradingState, intradayValues);
+            addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
+        }
     }
 
-    public void updateAggregateHistory(TreeSet<HistoryValue> historyValues) {
-        if (historyValues.isEmpty()) {
+    public void updateAggregateHistory(TreeSet<AggregateHistory> aggregateHistories) {
+        if (aggregateHistories.isEmpty()) {
             return;
         }
-        if (aggregateHistory.isEmpty()) {
-            aggregateHistory.addAll(
-                historyValues.stream().map(AggregateHistory::from).toList()
-            );
+        if (this.aggregateHistories.isEmpty()) {
+            this.aggregateHistories.addAll(aggregateHistories);
             return;
         }
-        Optional<LocalDate> lastHistoryDate = getLastHistoryDate();
-        aggregateHistory.addAll(
-            historyValues
+        LocalDate lastHistoryDate = getLastHistoryDate();
+        this.aggregateHistories.addAll(
+            aggregateHistories
                 .stream()
-                .filter(historyValue -> historyValue.getTradeDate().isAfter(lastHistoryDate.get()))
-                .map(AggregateHistory::from)
+                .filter(history -> history.getDate().isAfter(lastHistoryDate))
                 .toList()
         );
     }
@@ -102,8 +101,8 @@ public class Instrument extends Domain<InstrumentId> {
         return details.getType();
     }
 
-    public Optional<LocalDate> getLastHistoryDate() {
-        return Optional.ofNullable(aggregateHistory.last()).map(AggregateHistory::getDate);
+    public LocalDate getLastHistoryDate() {
+        return aggregateHistories.last().getDate();
     }
 
     public LocalDate historyRightBound(LocalDate now) {
@@ -111,7 +110,10 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public LocalDate historyLeftBound(LocalDate now) {
-        return getLastHistoryDate().map(lastHistoryDate -> lastHistoryDate.plusDays(1)).orElse(now.minusMonths(6));
+        if (aggregateHistories.isEmpty()) {
+            return now.minusMonths(6);
+        }
+        return getLastHistoryDate().plusDays(1);
     }
 
     public Long getLastTradingNumber() {

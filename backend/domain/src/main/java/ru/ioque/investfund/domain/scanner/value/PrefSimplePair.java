@@ -13,10 +13,10 @@ public class PrefSimplePair {
     TradingSnapshot simple;
 
     public Double getCurrentDelta() {
-        var simplePrice = simple.getTodayLastPrice();
-        var prefPrice = pref.getTodayLastPrice();
-        if (simplePrice.isEmpty() || prefPrice.isEmpty()) return 0D;
-        return simplePrice.get() - prefPrice.get();
+        if (simple.getLastPrice() == null || pref.getLastPrice() == null) {
+            return 0D;
+        }
+        return simple.getLastPrice() - pref.getLastPrice();
     }
 
     public Double getHistoryDelta() {

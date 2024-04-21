@@ -42,8 +42,9 @@ public class IntegrateInstrumentsHandler extends CommandHandler<IntegrateInstrum
     @Override
     protected void businessProcess(IntegrateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        List<InstrumentDetails> detailsList = datasourceProvider.fetchInstrumentDetails(datasource);
-        validate(detailsList);
+        final List<InstrumentDetails> detailsList = datasourceProvider.fetchInstrumentDetails(
+            datasource
+        ).getInstrumentDetails(validator);
         final List<Instrument> instruments = detailsList
             .stream()
             .map(details -> Instrument.of(InstrumentId.from(uuidProvider.generate()), details))

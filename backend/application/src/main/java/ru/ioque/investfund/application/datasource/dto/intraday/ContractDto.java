@@ -1,5 +1,7 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.intraday;
+package ru.ioque.investfund.application.datasource.dto.intraday;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,11 +21,20 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ContractDto extends IntradayValueDto {
+    @NotNull(message = "Не заполнено количество контрактов.")
+    @Min(value = 0, message = "Количество контрактов должно быть больше нуля.")
     Integer qnt;
 
     @Builder
-    public ContractDto(Long number, LocalDateTime dateTime, String ticker, Double value, Double price, Integer qnt) {
-        super(number, dateTime, ticker, value, price);
+    public ContractDto(
+        String ticker,
+        Long number,
+        LocalDateTime dateTime,
+        Double price,
+        Double value,
+        Integer qnt
+    ) {
+        super(ticker, number, dateTime, price, value);
         this.qnt = qnt;
     }
 

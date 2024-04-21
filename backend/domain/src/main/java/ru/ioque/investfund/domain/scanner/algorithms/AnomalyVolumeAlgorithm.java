@@ -48,18 +48,18 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue(historyPeriod);
-            final Optional<Double> currentValue = tradingSnapshot.getTodayValue();
+            final Double currentValue = tradingSnapshot.getValue();
             if (medianValue.isEmpty() ||
-                currentValue.isEmpty() ||
+                currentValue == null ||
                 indexIsRiseToday.isEmpty() ||
                 tradingSnapshot.isRiseToday().isEmpty()) {
                 continue;
             }
-            final double currentValueToMedianValue = currentValue.get() / medianValue.get();
+            final double currentValueToMedianValue = currentValue / medianValue.get();
             final String summary = String.format(
                 "медиана исторических объемов: %s; текущий объем: %s; отношение текущего объема к медиане: %s; тренд индекса %s.",
                 medianValue.get(),
-                currentValue.get(),
+                currentValue,
                 currentValueToMedianValue,
                 indexIsRiseToday.get() ? "растущий" : "нисходящий"
             );
@@ -71,7 +71,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .summary(summary)
                         .watermark(watermark)
                         .ticker(tradingSnapshot.getTicker())
-                        .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
+                        .price(tradingSnapshot.getLastPrice())
                         .build()
                 );
             }
@@ -82,7 +82,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .isBuy(false)
                         .watermark(watermark)
                         .summary(summary)
-                        .price(tradingSnapshot.getTodayLastPrice().orElse(0D))
+                        .price(tradingSnapshot.getLastPrice())
                         .ticker(tradingSnapshot.getTicker())
                         .build()
                 );

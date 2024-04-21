@@ -4,6 +4,7 @@ import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class FakeIntradayValueRepository implements IntradayValueRepository {
             .stream();
     }
     @Override
-    public void saveAll(List<IntradayValue> newValues) {
+    public void saveAll(Collection<IntradayValue> newValues) {
         Map<Ticker, List<IntradayValue>> tickerToValues = newValues
             .stream()
             .collect(Collectors.groupingBy(IntradayValue::getTicker));

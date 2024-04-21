@@ -1,27 +1,34 @@
-package ru.ioque.investfund.domain.datasource.value.history;
+package ru.ioque.investfund.application.datasource.dto.history;
 
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
+@Getter
+@Builder
 @ToString
 @EqualsAndHashCode
-@Getter(AccessLevel.PUBLIC)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class HistoryValue implements Comparable<HistoryValue> {
-    @NotNull(message = "Не заполнен тикер.")
-    @Valid
-    Ticker ticker;
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class HistoryValueDto {
+    @NotBlank(message = "Не заполнен тикер.")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
+    String ticker;
 
     @NotNull(message = "Не заполнена дата агрегированных итогов.")
     LocalDate tradeDate;
@@ -49,29 +56,15 @@ public class HistoryValue implements Comparable<HistoryValue> {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
-    @Builder
-    public HistoryValue(
-        Ticker ticker,
-        LocalDate tradeDate,
-        Double openPrice,
-        Double closePrice,
-        Double lowPrice,
-        Double highPrice,
-        Double waPrice,
-        Double value
-    ) {
-        this.ticker = ticker;
-        this.tradeDate = tradeDate;
-        this.openPrice = openPrice;
-        this.closePrice = closePrice;
-        this.lowPrice = lowPrice;
-        this.highPrice = highPrice;
-        this.waPrice = waPrice;
-        this.value = value;
-    }
-
-    @Override
-    public int compareTo(HistoryValue historyValue) {
-        return Objects.compare(getTradeDate(), historyValue.getTradeDate(), LocalDate::compareTo);
+    public AggregateHistory toAggregateHistory() {
+        return AggregateHistory.builder()
+            .date(tradeDate)
+            .openPrice(openPrice)
+            .closePrice(closePrice)
+            .highPrice(highPrice)
+            .lowPrice(lowPrice)
+            .waPrice(waPrice)
+            .value(value)
+            .build();
     }
 }

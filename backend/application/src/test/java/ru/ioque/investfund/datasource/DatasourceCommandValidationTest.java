@@ -98,7 +98,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(null, List.of(TGKN)))
+            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(null, List.of(new Ticker(TGKN))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -140,10 +140,10 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of(TGKN, new Ticker(""))))
+            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
+        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
 
@@ -155,7 +155,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(null, List.of(TGKN)))
+            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(null, List.of(new Ticker(TGKN))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -197,10 +197,10 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of(TGKN, new Ticker(""))))
+            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Идентификатор должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
+        assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
     }
 
     @Test

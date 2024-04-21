@@ -5,12 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -21,33 +19,33 @@ import java.util.Optional;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
-    InstrumentId instrumentId;
     Ticker ticker;
+    Double lastPrice;
+    Double firstPrice;
+    Double value;
     List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries;
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
-    List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries;
-    List<TimeSeriesValue<Double, LocalTime>> todayValueSeries;
 
     public TradingSnapshot(
-        InstrumentId instrumentId,
         Ticker ticker,
+        Double lastPrice,
+        Double openPrice,
+        Double value,
         List<TimeSeriesValue<Double, ChronoLocalDate>> closePriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> openPriceSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
-        List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries,
-        List<TimeSeriesValue<Double, LocalTime>> todayPriceSeries,
-        List<TimeSeriesValue<Double, LocalTime>> todayValueSeries
+        List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries
     ) {
-        this.instrumentId = instrumentId;
         this.ticker = ticker;
+        this.lastPrice = lastPrice;
+        this.firstPrice = openPrice;
+        this.value = value;
         this.closePriceSeries = closePriceSeries;
         this.openPriceSeries = openPriceSeries;
         this.valueSeries = valueSeries;
         this.waPriceSeries = waPriceSeries;
-        this.todayPriceSeries = todayPriceSeries;
-        this.todayValueSeries = todayValueSeries;
     }
 
     public Optional<Double> getHistoryMedianValue(int period) {
@@ -61,32 +59,20 @@ public class TradingSnapshot {
         return Optional.of((sortedValues[(n - 1) / 2] + sortedValues[(n / 2)]) / 2.0);
     }
 
-    public Optional<Double> getTodayOpenPrice() {
-        return todayPriceSeries.stream().min(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue);
-    }
-
-    public Optional<Double> getTodayLastPrice() {
-        return todayPriceSeries.stream().max(TimeSeriesValue::compareTo).map(TimeSeriesValue::getValue);
-    }
-
-    public Optional<Double> getTodayValue() {
-        if (todayValueSeries.isEmpty()) return Optional.empty();
-        return Optional.of(todayValueSeries.stream().mapToDouble(TimeSeriesValue::getValue).sum());
-    }
-
     public Optional<Boolean> isRiseToday() {
-        var todayLastPrice = getTodayLastPrice();
-        var todayOpenPrice = getTodayOpenPrice();
         var prevClosePrice = getPrevClosePrice();
-        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty() || prevClosePrice.isEmpty()) return Optional.empty();
-        return Optional.of(todayLastPrice.get() > prevClosePrice.get() && todayLastPrice.get() > todayOpenPrice.get());
+        if (lastPrice == null) {
+            return Optional.empty();
+        }
+        return prevClosePrice.map(aDouble -> lastPrice > aDouble && lastPrice > firstPrice);
     }
 
     public boolean isRiseOvernight(double scale) {
-        var todayLastPrice = getTodayLastPrice();
         var prevClosePrice = getPrevClosePrice();
-        if (todayLastPrice.isEmpty() || prevClosePrice.isEmpty()) return false;
-        return ((todayLastPrice.get() / prevClosePrice.get()) - 1) > scale;
+        if (lastPrice == null) {
+            return false;
+        }
+        return prevClosePrice.filter(aDouble -> ((lastPrice / aDouble) - 1) > scale).isPresent();
     }
 
     public boolean isRiseForPrevDay(double scale) {
@@ -97,10 +83,10 @@ public class TradingSnapshot {
     }
 
     public boolean isRiseForToday(double scale) {
-        var todayLastPrice = getTodayLastPrice();
-        var todayOpenPrice = getTodayOpenPrice();
-        if (todayLastPrice.isEmpty() || todayOpenPrice.isEmpty()) return false;
-        return ((todayLastPrice.get() / todayOpenPrice.get()) - 1) > scale;
+        if (lastPrice == null) {
+            return false;
+        }
+        return ((lastPrice / firstPrice) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {

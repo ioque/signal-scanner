@@ -3,23 +3,25 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.datasource.dto.history.HistoryValueDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.CurrencyPairDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.FuturesDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.IndexDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.datasource.dto.instrument.StockDto;
+import ru.ioque.investfund.application.datasource.dto.intraday.ContractDto;
+import ru.ioque.investfund.application.datasource.dto.intraday.DealDto;
+import ru.ioque.investfund.application.datasource.dto.intraday.DeltaDto;
+import ru.ioque.investfund.application.datasource.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.application.telegrambot.TelegramBotService;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
-import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
-import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
-import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
-import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
-import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
-import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
+import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
-import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
@@ -107,12 +109,12 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-    protected List<HistoryValue> generateTradingResultsBy(
-        Ticker ticker,
+    protected List<HistoryValueDto> generateHistoryValues(
+        String ticker,
         LocalDate start,
         LocalDate stop
     ) {
-        final List<HistoryValue> historyValues = new ArrayList<>();
+        final List<HistoryValueDto> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
@@ -123,33 +125,38 @@ public class BaseTest {
         return historyValues;
     }
 
-    protected void integrateInstruments(DatasourceId datasourceId, InstrumentDetails... details) {
-        datasourceStorage().initInstrumentDetails(Arrays.asList(details));
+    protected void integrateInstruments(DatasourceId datasourceId, InstrumentDto... instrumentDtos) {
+        datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
         commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
     }
 
-    protected void initInstrumentDetails(InstrumentDetails... details) {
-        datasourceStorage().initInstrumentDetails(Arrays.asList(details));
+    protected void initInstrumentDetails(InstrumentDto... instrumentDtos) {
+        datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
     }
 
-    protected void initTradingResults(List<HistoryValue> tradingResults) {
-        datasourceStorage().initTradingResults(tradingResults);
+    protected void initHistoryValues(List<HistoryValueDto> tradingResults) {
+        datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initTradingResults(HistoryValue... tradingResults) {
-        initTradingResults(Arrays.asList(tradingResults));
+    protected void initHistoryValues(HistoryValueDto... historyValueDtos) {
+        datasourceStorage().initHistoryValues(Arrays.asList(historyValueDtos));
     }
 
-    protected void initDealDatas(IntradayValue... intradayValues) {
+    protected void initIntradayValues(IntradayValueDto... intradayValues) {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(Ticker ticker) {
-        return fakeDIContainer.getIntradayValueRepository().getAllBy(ticker).toList();
+    protected List<IntradayValue> getIntradayValuesBy(String ticker) {
+        return fakeDIContainer.getIntradayValueRepository().getAllBy(Ticker.from(ticker)).toList();
     }
 
-    protected List<HistoryValue> getHistoryValuesBy(Ticker ticker) {
-        return fakeDIContainer.getHistoryValueRepository().getAllBy(ticker).toList();
+    protected List<AggregateHistory> getHistoryValuesBy(String ticker) {
+        return fakeDIContainer
+            .getDatasourceRepository()
+            .getInstrumentBy(Ticker.from(ticker))
+            .getAggregateHistories()
+            .stream()
+            .toList();
     }
 
     protected DatasourceId getDatasourceId() {
@@ -182,15 +189,24 @@ public class BaseTest {
         return exception.getConstraintViolations().stream().findFirst().map(ConstraintViolation::getMessage).orElseThrow();
     }
 
-    protected Deal buildBuyDealBy(
-        Ticker ticker,
+
+    protected EnableUpdateInstrumentsCommand enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    }
+
+    protected EnableUpdateInstrumentsCommand disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    }
+
+    protected DealDto buildBuyDealBy(
+        String ticker,
         Long number,
         String localTime,
         Double price,
         Double value,
         Integer qnt
     ) {
-        return Deal.builder()
+        return DealDto.builder()
             .ticker(ticker)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -201,15 +217,15 @@ public class BaseTest {
             .build();
     }
 
-    protected Deal buildSellDealBy(
-        Ticker ticker,
+    protected DealDto buildSellDealBy(
+        String ticker,
         Long number,
         String localTime,
         Double price,
         Double value,
         Integer qnt
     ) {
-        return Deal.builder()
+        return DealDto.builder()
             .ticker(ticker)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -220,15 +236,15 @@ public class BaseTest {
             .build();
     }
 
-    protected Contract buildContractBy(
-        Ticker ticker,
+    protected ContractDto buildContractBy(
+        String ticker,
         Long number,
         String localTime,
         Double price,
         Double value,
         Integer qnt
     ) {
-        return Contract.builder()
+        return ContractDto.builder()
             .ticker(ticker)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -238,14 +254,14 @@ public class BaseTest {
             .build();
     }
 
-    protected Delta buildDeltaBy(
-        Ticker ticker,
+    protected DeltaDto buildDeltaBy(
+        String ticker,
         Long number,
         String localTime,
         Double price,
         Double value
     ) {
-        return Delta.builder()
+        return DeltaDto.builder()
             .ticker(ticker)
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
@@ -254,14 +270,14 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValue buildFuturesDealResultBy(
-        Ticker ticker,
+    protected HistoryValueDto buildFuturesDealResultBy(
+        String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double value
     ) {
-        return HistoryValue.builder()
+        return HistoryValueDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -272,14 +288,14 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValue buildDeltaResultBy(
-        Ticker ticker,
+    protected HistoryValueDto buildDeltaResultBy(
+        String ticker,
         String tradeDate,
         double openPrice,
         double closePrice,
         double value
     ) {
-        return HistoryValue.builder()
+        return HistoryValueDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -290,15 +306,15 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValue buildDealResultBy(
-        Ticker ticker,
+    protected HistoryValueDto buildDealResultBy(
+        String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double waPrice,
         Double value
     ) {
-        return HistoryValue.builder()
+        return HistoryValueDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -310,11 +326,11 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValue.HistoryValueBuilder buildTradingResultWith(
-        Ticker ticker,
+    protected HistoryValueDto.HistoryValueDtoBuilder buildTradingResultWith(
+        String ticker,
         LocalDate localDate
     ) {
-        return HistoryValue.builder()
+        return HistoryValueDto.builder()
             .ticker(ticker)
             .tradeDate(localDate)
             .openPrice(1.0)
@@ -325,8 +341,8 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected Deal buildDealWith(Ticker ticker, Long number, LocalDateTime dateTime) {
-        return Deal.builder()
+    protected DealDto buildDealWith(String ticker, Long number, LocalDateTime dateTime) {
+        return DealDto.builder()
             .ticker(ticker)
             .number(number)
             .dateTime(dateTime)
@@ -337,8 +353,8 @@ public class BaseTest {
             .build();
     }
 
-    protected IndexDetails imoexDetails() {
-        return IndexDetails
+    protected IndexDto imoex() {
+        return IndexDto
             .builder()
             .ticker(IMOEX)
             .name("Индекс МосБиржи")
@@ -348,60 +364,60 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDetails afksDetails() {
-        return StockDetails
+    protected StockDto afks() {
+        return StockDto
             .builder()
             .ticker(AFKS)
             .shortName("ао Система")
             .name("АФК Система")
             .lotSize(10000)
             .regNumber("1-05-01669-A")
-            .isin(Isin.from("RU000A0DQZE3"))
+            .isin("RU000A0DQZE3")
             .listLevel(1)
             .build();
     }
 
-    protected StockDetails sberpDetails() {
-        return StockDetails
+    protected StockDto sberp() {
+        return StockDto
             .builder()
             .ticker(SBERP)
             .shortName("Сбер п")
             .name("Сбербанк П")
             .lotSize(100)
             .regNumber("20301481B")
-            .isin(Isin.from("RU0009029557"))
+            .isin("RU0009029557")
             .listLevel(1)
             .build();
     }
 
-    protected StockDetails sberDetails() {
-        return StockDetails
+    protected StockDto sber() {
+        return StockDto
             .builder()
             .ticker(SBER)
             .shortName("Сбер")
             .name("Сбербанк")
             .lotSize(100)
             .regNumber("10301481B")
-            .isin(Isin.from("RU0009029540"))
+            .isin("RU0009029540")
             .listLevel(1)
             .build();
     }
 
-    protected StockDetails sibnDetails() {
-        return StockDetails
+    protected StockDto sibn() {
+        return StockDto
             .builder()
             .ticker(SIBN)
             .shortName("Газпромнефть")
             .name("Газпромнефть")
             .lotSize(100)
             .regNumber("1-01-00146-A")
-            .isin(Isin.from("RU0009062467"))
+            .isin("RU0009062467")
             .listLevel(1)
             .build();
     }
 
-    protected FuturesDetails brf4Details() {
-        return FuturesDetails
+    protected FuturesDto brf4() {
+        return FuturesDto
             .builder()
             .ticker(BRF4)
             .name("Фьючерсный контракт BR-1.24")
@@ -414,47 +430,47 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDetails lkohDetails() {
-        return StockDetails
+    protected StockDto lkohDetails() {
+        return StockDto
             .builder()
             .ticker(LKOH)
             .shortName("Лукойл")
             .name("Лукойл")
             .lotSize(100)
             .regNumber("1-01-00077-A")
-            .isin(Isin.from("RU0009024277"))
+            .isin("RU0009024277")
             .listLevel(1)
             .build();
     }
 
-    protected StockDetails tatnDetails() {
-        return StockDetails
+    protected StockDto tatnDetails() {
+        return StockDto
             .builder()
             .ticker(TATN)
             .shortName("Татнефть")
             .name("Татнефть")
-            .isin(Isin.from("RU0009033591"))
+            .isin("RU0009033591")
             .regNumber("1-03-00161-A")
             .lotSize(100)
             .listLevel(1)
             .build();
     }
 
-    protected StockDetails rosnDetails() {
-        return StockDetails
+    protected StockDto rosnDetails() {
+        return StockDto
             .builder()
             .ticker(ROSN)
             .shortName("Роснефть")
             .name("Роснефть")
-            .isin(Isin.from("RU000A0J2Q06"))
+            .isin("RU000A0J2Q06")
             .regNumber("1-02-00122-A")
             .lotSize(100)
             .listLevel(1)
             .build();
     }
 
-    protected CurrencyPairDetails usdRubDetails() {
-        return CurrencyPairDetails
+    protected CurrencyPairDto usdRubDetails() {
+        return CurrencyPairDto
             .builder()
             .ticker(USD000UTSTOM)
             .shortName("USDRUB_TOM")
@@ -464,42 +480,42 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDetails tgkbDetails() {
-        return StockDetails
+    protected StockDto tgkbDetails() {
+        return StockDto
             .builder()
             .ticker(TGKB)
             .name("TGKB")
             .shortName("TGKB")
-            .isin(Isin.from("RU000A0JNGS7"))
+            .isin("RU000A0JNGS7")
             .regNumber("1-01-10420-A")
             .listLevel(3)
             .lotSize(100)
             .build();
     }
 
-    protected StockDetails tgknDetails() {
-        return StockDetails
+    protected StockDto tgknDetails() {
+        return StockDto
             .builder()
             .ticker(TGKN)
             .name("TGKN")
             .shortName("TGKN")
             .lotSize(100)
-            .isin(Isin.from("RU000A0H1ES3"))
+            .isin("RU000A0H1ES3")
             .regNumber("1-01-22451-F")
             .listLevel(2)
             .build();
     }
 
-    protected final Ticker TGKN = Ticker.from("TGKN");
-    protected final Ticker TGKB = Ticker.from("TGKB");
-    protected final Ticker ROSN = Ticker.from("ROSN");
-    protected final Ticker TATN = Ticker.from("TATN");
-    protected final Ticker LKOH = Ticker.from("LKOH");
-    protected final Ticker SBER = Ticker.from("SBER");
-    protected final Ticker SBERP = Ticker.from("SBERP");
-    protected final Ticker SIBN = Ticker.from("SIBN");
-    protected final Ticker AFKS = Ticker.from("AFKS");
-    protected final Ticker USD000UTSTOM = Ticker.from("USD000UTSTOM");
-    protected final Ticker BRF4 = Ticker.from("BRF4");
-    protected final Ticker IMOEX = Ticker.from("IMOEX");
+    protected final String TGKN = "TGKN";
+    protected final String TGKB = "TGKB";
+    protected final String ROSN = "ROSN";
+    protected final String TATN = "TATN";
+    protected final String LKOH = "LKOH";
+    protected final String SBER = "SBER";
+    protected final String SBERP = "SBERP";
+    protected final String SIBN = "SIBN";
+    protected final String AFKS = "AFKS";
+    protected final String USD000UTSTOM = "USD000UTSTOM";
+    protected final String BRF4 = "BRF4";
+    protected final String IMOEX = "IMOEX";
 }

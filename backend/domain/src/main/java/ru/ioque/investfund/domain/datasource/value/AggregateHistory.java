@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 
 import java.time.LocalDate;
 
@@ -25,18 +24,6 @@ public class AggregateHistory implements Comparable<AggregateHistory> {
     Double closePrice;
     Double waPrice;
     Double value;
-
-    public static AggregateHistory from(HistoryValue value) {
-        return AggregateHistory.builder()
-            .date(value.getTradeDate())
-            .lowPrice(value.getLowPrice())
-            .highPrice(value.getHighPrice())
-            .openPrice(value.getOpenPrice())
-            .closePrice(value.getClosePrice())
-            .waPrice(value.getWaPrice())
-            .value(value.getValue())
-            .build();
-    }
 
     @Override
     public int compareTo(AggregateHistory aggregateHistory) {

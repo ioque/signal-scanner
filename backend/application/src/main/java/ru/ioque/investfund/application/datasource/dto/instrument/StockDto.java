@@ -1,5 +1,6 @@
-package ru.ioque.investfund.adapters.datasource.client.dto.instrument;
+package ru.ioque.investfund.application.datasource.dto.instrument;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StockDto extends InstrumentDto {
     Integer lotSize;
+    @Pattern(regexp = "\\b([A-Z]{2})((?![A-Z]{10}\\b)[A-Z0-9]{10})\\b", message = "Неккоретное значение ISIN.")
     String isin;
     String regNumber;
     Integer listLevel;
@@ -43,7 +45,7 @@ public class StockDto extends InstrumentDto {
     @Override
     public InstrumentDetails toDetails() {
         return StockDetails.builder()
-            .ticker(new Ticker(getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .shortName(getShortName())
             .name(getName())
             .lotSize(lotSize)
