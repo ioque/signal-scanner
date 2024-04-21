@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource.dto.intraday;
+package ru.ioque.investfund.application.datasource.integration.dto.intraday;
 
 import lombok.AccessLevel;
 import lombok.Builder;

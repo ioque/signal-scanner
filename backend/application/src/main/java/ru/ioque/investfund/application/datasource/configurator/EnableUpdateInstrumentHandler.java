@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource;
+package ru.ioque.investfund.application.datasource.configurator;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -8,15 +8,15 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceCommand> {
+public class EnableUpdateInstrumentHandler extends CommandHandler<EnableUpdateInstrumentsCommand> {
     DatasourceRepository datasourceRepository;
 
-    public UpdateDatasourceHandler(
+    public EnableUpdateInstrumentHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -27,9 +27,9 @@ public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceComm
     }
 
     @Override
-    protected void businessProcess(UpdateDatasourceCommand command) {
-        final Datasource datasource = datasourceRepository.getById(command.getId());
-        datasource.update(command);
+    protected void businessProcess(EnableUpdateInstrumentsCommand command) {
+        final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
+        datasource.enableUpdate(command.getTickers());
         datasourceRepository.save(datasource);
     }
 }

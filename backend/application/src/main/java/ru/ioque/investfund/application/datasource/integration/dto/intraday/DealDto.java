@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource.dto.intraday;
+package ru.ioque.investfund.application.datasource.integration.dto.intraday;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

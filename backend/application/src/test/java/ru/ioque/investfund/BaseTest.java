@@ -3,16 +3,16 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.CommandBus;
-import ru.ioque.investfund.application.datasource.dto.history.HistoryValueDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.CurrencyPairDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.FuturesDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.IndexDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.StockDto;
-import ru.ioque.investfund.application.datasource.dto.intraday.ContractDto;
-import ru.ioque.investfund.application.datasource.dto.intraday.DealDto;
-import ru.ioque.investfund.application.datasource.dto.intraday.DeltaDto;
-import ru.ioque.investfund.application.datasource.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.CurrencyPairDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.FuturesDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.IndexDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.StockDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.ContractDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.DealDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.DeltaDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
@@ -109,12 +109,12 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-    protected List<HistoryValueDto> generateHistoryValues(
+    protected List<AggregateHistoryDto> generateHistoryValues(
         String ticker,
         LocalDate start,
         LocalDate stop
     ) {
-        final List<HistoryValueDto> historyValues = new ArrayList<>();
+        final List<AggregateHistoryDto> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
@@ -134,12 +134,12 @@ public class BaseTest {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
     }
 
-    protected void initHistoryValues(List<HistoryValueDto> tradingResults) {
+    protected void initHistoryValues(List<AggregateHistoryDto> tradingResults) {
         datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initHistoryValues(HistoryValueDto... historyValueDtos) {
-        datasourceStorage().initHistoryValues(Arrays.asList(historyValueDtos));
+    protected void initHistoryValues(AggregateHistoryDto... aggregateHistoryDtos) {
+        datasourceStorage().initHistoryValues(Arrays.asList(aggregateHistoryDtos));
     }
 
     protected void initIntradayValues(IntradayValueDto... intradayValues) {
@@ -270,14 +270,14 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValueDto buildFuturesDealResultBy(
+    protected AggregateHistoryDto buildFuturesDealResultBy(
         String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double value
     ) {
-        return HistoryValueDto.builder()
+        return AggregateHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -288,14 +288,14 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValueDto buildDeltaResultBy(
+    protected AggregateHistoryDto buildDeltaResultBy(
         String ticker,
         String tradeDate,
         double openPrice,
         double closePrice,
         double value
     ) {
-        return HistoryValueDto.builder()
+        return AggregateHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -306,7 +306,7 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValueDto buildDealResultBy(
+    protected AggregateHistoryDto buildDealResultBy(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -314,7 +314,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return HistoryValueDto.builder()
+        return AggregateHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -326,11 +326,11 @@ public class BaseTest {
             .build();
     }
 
-    protected HistoryValueDto.HistoryValueDtoBuilder buildTradingResultWith(
+    protected AggregateHistoryDto.AggregateHistoryDtoBuilder buildTradingResultWith(
         String ticker,
         LocalDate localDate
     ) {
-        return HistoryValueDto.builder()
+        return AggregateHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(localDate)
             .openPrice(1.0)

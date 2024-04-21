@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.dto.instrument.StockDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.StockDto;
 import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;

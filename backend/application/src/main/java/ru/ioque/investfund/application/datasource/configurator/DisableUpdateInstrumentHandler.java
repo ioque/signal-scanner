@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource;
+package ru.ioque.investfund.application.datasource.configurator;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -8,15 +8,15 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UnregisterDatasourceHandler extends CommandHandler<UnregisterDatasourceCommand> {
+public class DisableUpdateInstrumentHandler extends CommandHandler<DisableUpdateInstrumentsCommand> {
     DatasourceRepository datasourceRepository;
 
-    public UnregisterDatasourceHandler(
+    public DisableUpdateInstrumentHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -27,8 +27,9 @@ public class UnregisterDatasourceHandler extends CommandHandler<UnregisterDataso
     }
 
     @Override
-    protected void businessProcess(UnregisterDatasourceCommand command) {
+    protected void businessProcess(DisableUpdateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        datasourceRepository.remove(datasource);
+        datasource.disableUpdate(command.getTickers());
+        datasourceRepository.save(datasource);
     }
 }

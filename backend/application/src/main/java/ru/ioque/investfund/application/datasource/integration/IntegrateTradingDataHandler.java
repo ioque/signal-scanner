@@ -1,10 +1,9 @@
-package ru.ioque.investfund.application.datasource;
+package ru.ioque.investfund.application.datasource.integration;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -12,8 +11,8 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.datasource.dto.HistoryBatch;
-import ru.ioque.investfund.application.datasource.dto.IntradayBatch;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
@@ -28,9 +27,8 @@ import java.util.TreeSet;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTradingDataCommand> {
+public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTradingDataCommand> {
     UUIDProvider uuidProvider;
-    DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
     IntradayValueRepository intradayValueRepository;
     EventPublisher eventPublisher;
@@ -45,9 +43,8 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         IntradayValueRepository intradayValueRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, datasourceProvider);
         this.uuidProvider = uuidProvider;
-        this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
         this.intradayValueRepository = intradayValueRepository;
         this.eventPublisher = eventPublisher;
@@ -73,8 +70,14 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
     }
 
     private List<DomainEventWrapper> integrateTradingDataFor(Instrument instrument, Datasource datasource) {
-        final TreeSet<IntradayValue> intradayValues = getIntradayValues(instrument, datasource);
-        final TreeSet<AggregateHistory> aggregateHistories = getAggregateHistories(instrument, datasource);
+        final TreeSet<IntradayValue> intradayValues = new TreeSet<>(datasourceProvider.fetchIntradayValues(
+            datasource,
+            instrument
+        ).stream().map(IntradayValueDto::toIntradayValue).toList());
+        final TreeSet<AggregateHistory> aggregateHistories = new TreeSet<>(datasourceProvider.fetchAggregateHistory(
+            datasource,
+            instrument
+        ).stream().map(AggregateHistoryDto::toAggregateHistory).toList());
         intradayValueRepository.saveAll(intradayValues);
         instrument.updateTradingState(intradayValues);
         instrument.updateAggregateHistory(aggregateHistories);
@@ -86,23 +89,5 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
                 event,
                 dateTimeProvider.nowDateTime()
             )).toList();
-    }
-
-    private TreeSet<IntradayValue> getIntradayValues(Instrument instrument, Datasource datasource) {
-        final IntradayBatch intradayBatch = datasourceProvider.fetchIntradayValues(
-            datasource,
-            instrument
-        );
-        validate(intradayBatch);
-        return intradayBatch.getIntradayValues(validator);
-    }
-
-    private TreeSet<AggregateHistory> getAggregateHistories(Instrument instrument, Datasource datasource) {
-        final HistoryBatch historyBatch = datasourceProvider.fetchAggregateHistory(
-            datasource,
-            instrument
-        );
-        validate(historyBatch);
-        return historyBatch.getAggregateHistory(validator);
     }
 }

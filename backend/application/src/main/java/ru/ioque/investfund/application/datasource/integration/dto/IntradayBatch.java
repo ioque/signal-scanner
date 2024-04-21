@@ -1,11 +1,11 @@
-package ru.ioque.investfund.application.datasource.dto;
+package ru.ioque.investfund.application.datasource.integration.dto;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
-import ru.ioque.investfund.application.datasource.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
 import java.util.List;

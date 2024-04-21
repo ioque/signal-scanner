@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource.dto.intraday;
+package ru.ioque.investfund.application.datasource.integration.dto.intraday;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

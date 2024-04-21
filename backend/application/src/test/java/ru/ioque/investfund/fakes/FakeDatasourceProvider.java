@@ -3,12 +3,14 @@ package ru.ioque.investfund.fakes;
 import lombok.Setter;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.datasource.dto.HistoryBatch;
-import ru.ioque.investfund.application.datasource.dto.InstrumentBatch;
-import ru.ioque.investfund.application.datasource.dto.IntradayBatch;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.fixture.DatasourceStorage;
+
+import java.util.List;
 
 public class FakeDatasourceProvider implements DatasourceProvider {
     @Setter
@@ -20,17 +22,17 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public HistoryBatch fetchAggregateHistory(Datasource datasource, Instrument instrument) {
-        return new HistoryBatch(datasourceStorage.getHistoryDataBy(instrument.getTicker().getValue()));
+    public List<AggregateHistoryDto> fetchAggregateHistory(Datasource datasource, Instrument instrument) {
+        return datasourceStorage.getHistoryDataBy(instrument.getTicker().getValue());
     }
 
     @Override
-    public IntradayBatch fetchIntradayValues(Datasource datasource, Instrument instrument) {
-        return new IntradayBatch(datasourceStorage.getDealsByTicker(instrument.getTicker().getValue()));
+    public List<IntradayValueDto> fetchIntradayValues(Datasource datasource, Instrument instrument) {
+        return datasourceStorage.getDealsByTicker(instrument.getTicker().getValue());
     }
 
     @Override
-    public InstrumentBatch fetchInstrumentDetails(Datasource datasource) {
-        return new InstrumentBatch(datasourceStorage.getInstrumentDtos());
+    public List<InstrumentDto> fetchInstruments(Datasource datasource) {
+        return datasourceStorage.getInstrumentDtos();
     }
 }

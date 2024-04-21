@@ -103,7 +103,7 @@ public class HttpDatasourceProviderTest {
 
         when(datasourceRestClient.fetchInstruments(DATASOURCE_URL)).thenReturn(instruments);
 
-        List<InstrumentDetails> batch = datasourceProvider.fetchInstrumentDetails(datasource());
+        List<InstrumentDetails> batch = datasourceProvider.fetchInstruments(datasource());
 
         assertEquals(4, batch.size());
         assertEqualsStock(stockDto, getInstrumentFromBatchByTicker(batch, stockDto.getTicker()));

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.datasource.dto.history;
+package ru.ioque.investfund.application.datasource.integration.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.DecimalMin;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HistoryValueDto {
+public class AggregateHistoryDto {
     @NotBlank(message = "Не заполнен тикер.")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;

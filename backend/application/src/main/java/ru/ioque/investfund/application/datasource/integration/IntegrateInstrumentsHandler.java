@@ -1,16 +1,15 @@
-package ru.ioque.investfund.application.datasource;
+package ru.ioque.investfund.application.datasource.integration;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.datasource.dto.InstrumentBatch;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
@@ -21,10 +20,9 @@ import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateInstrumentsHandler extends CommandHandler<IntegrateInstrumentsCommand> {
+public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateInstrumentsCommand> {
     UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
-    DatasourceProvider datasourceProvider;
 
     public IntegrateInstrumentsHandler(
         DateTimeProvider dateTimeProvider,
@@ -34,27 +32,25 @@ public class IntegrateInstrumentsHandler extends CommandHandler<IntegrateInstrum
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, datasourceProvider);
         this.uuidProvider = uuidProvider;
-        this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
     }
 
     @Override
     protected void businessProcess(IntegrateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getById(command.getDatasourceId());
-        final List<InstrumentDetails> detailsList = getInstrumentDetails(datasource);
+        final List<InstrumentDetails> detailsList = datasourceProvider
+            .fetchInstruments(datasource)
+            .stream()
+            .map(InstrumentDto::toDetails)
+            .distinct()
+            .toList();
         final List<Instrument> instruments = detailsList
             .stream()
             .map(details -> Instrument.of(InstrumentId.from(uuidProvider.generate()), details))
             .toList();
         datasource.integrateInstruments(instruments);
         datasourceRepository.save(datasource);
-    }
-
-    private List<InstrumentDetails> getInstrumentDetails(Datasource datasource) {
-        final InstrumentBatch batch = datasourceProvider.fetchInstrumentDetails(datasource);
-        validate(batch);
-        return batch.getInstrumentDetails();
     }
 }

@@ -1,9 +1,9 @@
 package ru.ioque.investfund.fixture;
 
 import lombok.Getter;
-import ru.ioque.investfund.application.datasource.dto.history.HistoryValueDto;
-import ru.ioque.investfund.application.datasource.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.datasource.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +12,12 @@ public class DatasourceStorage {
     @Getter
     private final List<IntradayValueDto> intradayValueDtos = new ArrayList<>();
     @Getter
-    private final List<HistoryValueDto> historyValueDtos = new ArrayList<>();
+    private final List<AggregateHistoryDto> aggregateHistoryDtos = new ArrayList<>();
     @Getter
     private final List<InstrumentDto> instrumentDtos = new ArrayList<>();
 
-    public List<HistoryValueDto> getHistoryDataBy(String ticker) {
-        return historyValueDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
+    public List<AggregateHistoryDto> getHistoryDataBy(String ticker) {
+        return aggregateHistoryDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     public List<IntradayValueDto> getDealsByTicker(String ticker) {
@@ -38,8 +38,8 @@ public class DatasourceStorage {
         this.intradayValueDtos.addAll(intradayValues);
     }
 
-    public void initHistoryValues(List<HistoryValueDto> historyValues) {
-        this.historyValueDtos.clear();
-        this.historyValueDtos.addAll(historyValues);
+    public void initHistoryValues(List<AggregateHistoryDto> historyValues) {
+        this.aggregateHistoryDtos.clear();
+        this.aggregateHistoryDtos.addAll(historyValues);
     }
 }

@@ -1,11 +1,11 @@
-package ru.ioque.investfund.application.datasource.dto.instrument;
+package ru.ioque.investfund.application.datasource.integration.dto.instrument;
 
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
@@ -13,11 +13,12 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
 @NoArgsConstructor
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IndexDto extends InstrumentDto {
+    @DecimalMin(value = "0", inclusive = false, message = "Годовой максимум индекса должен быть положительным числом.")
     Double annualHigh;
+    @DecimalMin(value = "0", inclusive = false, message = "Годовой минимум индекса должен быть положительным числом.")
     Double annualLow;
 
     @Builder
@@ -36,5 +37,16 @@ public class IndexDto extends InstrumentDto {
             .annualHigh(annualHigh)
             .annualLow(annualLow)
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return "IndexDto{" +
+            "ticker=" + getTicker() +
+            ", shortName=" + getShortName() +
+            ", name=" + getName() +
+            ", annualHigh=" + annualHigh +
+            ", assetCode='" + annualLow + '\'' +
+            '}';
     }
 }
