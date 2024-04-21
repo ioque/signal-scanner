@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
-import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
+import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -28,7 +28,7 @@ public class Instrument extends Domain<InstrumentId> {
     InstrumentDetails details;
     Boolean updatable;
     TradingState tradingState;
-    final TreeSet<AggregateHistory> aggregateHistories;
+    final TreeSet<AggregatedHistory> aggregateHistories;
 
     @Builder
     public Instrument(
@@ -38,7 +38,7 @@ public class Instrument extends Domain<InstrumentId> {
         Long lastTradingNumber,
         LocalDate lastHistoryDate,
         TradingState tradingState,
-        TreeSet<AggregateHistory> aggregateHistories
+        TreeSet<AggregatedHistory> aggregateHistories
     ) {
         super(id);
         this.details = details;
@@ -60,23 +60,23 @@ public class Instrument extends Domain<InstrumentId> {
         this.details = details;
     }
 
-    public void updateTradingState(TreeSet<IntradayValue> intradayValues) {
-        if (intradayValues.isEmpty()) {
+    public void updateTradingState(TreeSet<IntradayData> intradayData) {
+        if (intradayData.isEmpty()) {
             return;
         }
         if (tradingState == null) {
-            tradingState = TradingState.from(intradayValues);
+            tradingState = TradingState.from(intradayData);
             addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
             return;
         }
-        IntradayValue lastIntradayValue = intradayValues.last();
-        if (lastIntradayValue.getNumber() > tradingState.getLastNumber()) {
-            tradingState = TradingState.of(tradingState, intradayValues);
+        IntradayData lastIntradayData = intradayData.last();
+        if (lastIntradayData.getNumber() > tradingState.getLastNumber()) {
+            tradingState = TradingState.of(tradingState, intradayData);
             addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
         }
     }
 
-    public void updateAggregateHistory(TreeSet<AggregateHistory> aggregateHistories) {
+    public void updateAggregateHistory(TreeSet<AggregatedHistory> aggregateHistories) {
         if (aggregateHistories.isEmpty()) {
             return;
         }

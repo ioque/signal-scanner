@@ -1,9 +1,9 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.util.Collection;
 
 public interface IntradayValueRepository {
-    void saveAll(Collection<IntradayValue> intradayValues);
+    void saveAll(Collection<IntradayData> intradayData);
 }

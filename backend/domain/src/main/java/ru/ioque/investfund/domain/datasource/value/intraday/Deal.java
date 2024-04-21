@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Deal extends IntradayValue {
+public class Deal extends IntradayData {
     Boolean isBuy;
     Integer qnt;
 

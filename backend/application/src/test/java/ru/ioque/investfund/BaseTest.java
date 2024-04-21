@@ -3,7 +3,7 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.CommandBus;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.CurrencyPairDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.FuturesDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.IndexDto;
@@ -12,7 +12,7 @@ import ru.ioque.investfund.application.datasource.integration.dto.instrument.Sto
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.ContractDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.DealDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.DeltaDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
@@ -20,8 +20,8 @@ import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
@@ -109,12 +109,12 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-    protected List<AggregateHistoryDto> generateHistoryValues(
+    protected List<AggregatedHistoryDto> generateHistoryValues(
         String ticker,
         LocalDate start,
         LocalDate stop
     ) {
-        final List<AggregateHistoryDto> historyValues = new ArrayList<>();
+        final List<AggregatedHistoryDto> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
@@ -134,23 +134,23 @@ public class BaseTest {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
     }
 
-    protected void initHistoryValues(List<AggregateHistoryDto> tradingResults) {
+    protected void initHistoryValues(List<AggregatedHistoryDto> tradingResults) {
         datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initHistoryValues(AggregateHistoryDto... aggregateHistoryDtos) {
-        datasourceStorage().initHistoryValues(Arrays.asList(aggregateHistoryDtos));
+    protected void initHistoryValues(AggregatedHistoryDto... aggregatedHistoryDtos) {
+        datasourceStorage().initHistoryValues(Arrays.asList(aggregatedHistoryDtos));
     }
 
-    protected void initIntradayValues(IntradayValueDto... intradayValues) {
+    protected void initIntradayValues(IntradayDataDto... intradayValues) {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
-    protected List<IntradayValue> getIntradayValuesBy(String ticker) {
+    protected List<IntradayData> getIntradayValuesBy(String ticker) {
         return fakeDIContainer.getIntradayValueRepository().getAllBy(Ticker.from(ticker)).toList();
     }
 
-    protected List<AggregateHistory> getHistoryValuesBy(String ticker) {
+    protected List<AggregatedHistory> getHistoryValuesBy(String ticker) {
         return fakeDIContainer
             .getDatasourceRepository()
             .getInstrumentBy(Ticker.from(ticker))
@@ -270,14 +270,14 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregateHistoryDto buildFuturesDealResultBy(
+    protected AggregatedHistoryDto buildFuturesDealResultBy(
         String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double value
     ) {
-        return AggregateHistoryDto.builder()
+        return AggregatedHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -288,14 +288,14 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregateHistoryDto buildDeltaResultBy(
+    protected AggregatedHistoryDto buildDeltaResultBy(
         String ticker,
         String tradeDate,
         double openPrice,
         double closePrice,
         double value
     ) {
-        return AggregateHistoryDto.builder()
+        return AggregatedHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -306,7 +306,7 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregateHistoryDto buildDealResultBy(
+    protected AggregatedHistoryDto buildDealResultBy(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -314,7 +314,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return AggregateHistoryDto.builder()
+        return AggregatedHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -326,11 +326,11 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregateHistoryDto.AggregateHistoryDtoBuilder buildTradingResultWith(
+    protected AggregatedHistoryDto.AggregatedHistoryDtoBuilder buildTradingResultWith(
         String ticker,
         LocalDate localDate
     ) {
-        return AggregateHistoryDto.builder()
+        return AggregatedHistoryDto.builder()
             .ticker(ticker)
             .tradeDate(localDate)
             .openPrice(1.0)

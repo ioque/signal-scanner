@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class AggregateHistory implements Comparable<AggregateHistory> {
+public class AggregatedHistory implements Comparable<AggregatedHistory> {
     LocalDate date;
     Double lowPrice;
     Double highPrice;
@@ -26,7 +26,7 @@ public class AggregateHistory implements Comparable<AggregateHistory> {
     Double value;
 
     @Override
-    public int compareTo(AggregateHistory aggregateHistory) {
-        return date.compareTo(aggregateHistory.date);
+    public int compareTo(AggregatedHistory aggregatedHistory) {
+        return date.compareTo(aggregatedHistory.date);
     }
 }

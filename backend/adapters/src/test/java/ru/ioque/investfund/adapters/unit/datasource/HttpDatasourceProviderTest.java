@@ -27,7 +27,7 @@ import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
@@ -154,7 +154,7 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(dealDto));
 
-        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
+        TreeSet<IntradayData> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
         assertEquals(1, batch.size());
         assertDeal(dealDto, getIntradayFromBatchByTicker(batch, dealDto.getTicker()));
@@ -175,7 +175,7 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(contractDto));
 
-        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
+        TreeSet<IntradayData> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
         assertEquals(1, batch.size());
         assertContract(contractDto, getIntradayFromBatchByTicker(batch, contractDto.getTicker()));
@@ -195,32 +195,32 @@ public class HttpDatasourceProviderTest {
             .build();
         when(datasourceRestClient.fetchIntradayValues(DATASOURCE_URL, INSTRUMENT_TICKER, 0L)).thenReturn(List.of(indexDto));
 
-        TreeSet<IntradayValue> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
+        TreeSet<IntradayData> batch = datasourceProvider.fetchIntradayValues(datasource(), instrument());
 
         assertEquals(1, batch.size());
         asserIntraday(indexDto, getIntradayFromBatchByTicker(batch, indexDto.getTicker()));
     }
 
-    private void assertContract(ContractDto contractDto, IntradayValue intraday) {
+    private void assertContract(ContractDto contractDto, IntradayData intraday) {
         Contract contract = (Contract) intraday;
         asserIntraday(contractDto, intraday);
         assertEquals(contractDto.getQnt(), contract.getQnt());
     }
 
 
-    private void assertDeal(DealDto dealDto, IntradayValue intraday) {
+    private void assertDeal(DealDto dealDto, IntradayData intraday) {
         Deal deal = (Deal) intraday;
         asserIntraday(dealDto, intraday);
         assertEquals(dealDto.getQnt(), deal.getQnt());
         assertEquals(dealDto.getIsBuy(), deal.getIsBuy());
     }
 
-    private void asserIntraday(IntradayValueDto intradayValueDto, IntradayValue intradayValue) {
-        assertEquals(intradayValueDto.getTicker(), intradayValue.getTicker().getValue());
-        assertEquals(intradayValueDto.getValue(), intradayValue.getValue());
-        assertEquals(intradayValueDto.getPrice(), intradayValue.getPrice());
-        assertEquals(intradayValueDto.getNumber(), intradayValue.getNumber());
-        assertEquals(intradayValueDto.getDateTime(), intradayValue.getDateTime());
+    private void asserIntraday(IntradayValueDto intradayValueDto, IntradayData intradayData) {
+        assertEquals(intradayValueDto.getTicker(), intradayData.getTicker().getValue());
+        assertEquals(intradayValueDto.getValue(), intradayData.getValue());
+        assertEquals(intradayValueDto.getPrice(), intradayData.getPrice());
+        assertEquals(intradayValueDto.getNumber(), intradayData.getNumber());
+        assertEquals(intradayValueDto.getDateTime(), intradayData.getDateTime());
     }
 
     private Datasource datasource() {
@@ -248,7 +248,7 @@ public class HttpDatasourceProviderTest {
             .build();
     }
 
-    private IntradayValue getIntradayFromBatchByTicker(TreeSet<IntradayValue> batch, String ticker) {
+    private IntradayData getIntradayFromBatchByTicker(TreeSet<IntradayData> batch, String ticker) {
         return batch
             .stream()
             .filter(row -> row.getTicker().getValue().equals(ticker))

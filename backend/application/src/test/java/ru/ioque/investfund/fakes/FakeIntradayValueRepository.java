@@ -1,7 +1,7 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.Collection;
@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FakeIntradayValueRepository implements IntradayValueRepository {
-    final Map<Ticker, Set<IntradayValue>> intradayValues = new ConcurrentHashMap<>();
+    final Map<Ticker, Set<IntradayData>> intradayValues = new ConcurrentHashMap<>();
 
-    public Stream<IntradayValue> getAllBy(Ticker ticker) {
+    public Stream<IntradayData> getAllBy(Ticker ticker) {
         return intradayValues
             .getOrDefault(ticker, new HashSet<>())
             .stream();
     }
     @Override
-    public void saveAll(Collection<IntradayValue> newValues) {
-        Map<Ticker, List<IntradayValue>> tickerToValues = newValues
+    public void saveAll(Collection<IntradayData> newValues) {
+        Map<Ticker, List<IntradayData>> tickerToValues = newValues
             .stream()
-            .collect(Collectors.groupingBy(IntradayValue::getTicker));
+            .collect(Collectors.groupingBy(IntradayData::getTicker));
         tickerToValues.forEach((ticker, values) -> {
             if (!this.intradayValues.containsKey(ticker)) {
                 this.intradayValues.put(ticker, new HashSet<>());

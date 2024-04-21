@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DealDto extends IntradayValueDto {
+public class DealDto extends IntradayDataDto {
     @NotNull(message = "Не заполнен признак покупки.")
     Boolean isBuy;
     @NotNull(message = "Не заполнено количество лотов.")
@@ -43,7 +43,7 @@ public class DealDto extends IntradayValueDto {
     }
 
     @Override
-    public IntradayValue toIntradayValue() {
+    public IntradayData toIntradayValue() {
         return Delta.builder()
             .ticker(Ticker.from(getTicker()))
             .number(getNumber())

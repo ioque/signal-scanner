@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Contract extends IntradayValue {
+public class Contract extends IntradayData {
     Integer qnt;
 
     @Builder

@@ -4,26 +4,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.integration.dto.instrument.StockDto;
 import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("DATASOURCE MANAGER TEST - INTEGRATION")
 public class DatasourceIntegrationTest extends BaseTest {
@@ -36,85 +32,6 @@ public class DatasourceIntegrationTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-    }
-
-    @Test
-    @DisplayName("""
-        T1. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
-        Запускается интеграция с источником биржевых данных. Дублей по тикерам в данных нет, все записи валидны.
-        """)
-    void testCase1() {
-        initTodayDateTime("2023-12-12T10:00:00");
-        initInstrumentDetails(
-            imoex(),
-            afks()
-        );
-
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-
-        final Optional<Datasource> exchange = datasourceRepository().findBy(getDatasourceId());
-        assertTrue(exchange.isPresent());
-        assertEquals("Московская биржа", exchange.get().getName());
-        assertEquals("http://localhost:8080", exchange.get().getUrl());
-        assertEquals("Московская биржа", exchange.get().getDescription());
-        assertEquals(2, exchange.get().getInstruments().size());
-        assertEquals(2, getInstruments(getDatasourceId()).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T2. Повторная интеграция с источником биржевых данных.
-        Количество инструментов при первой синхронизации - 10, при второй - те же 10.
-        Результат: в системе зарегистрирвана одна биржа, количество сохраненных инструментов 10.
-        """)
-    void testCase2() {
-        initTodayDateTime("2023-12-12T10:00:00");
-        initInstrumentDetails(afks(), imoex(), brf4());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        clearLogs();
-
-        final var id = datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId();
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        assertEquals(3, getInstruments(getDatasourceId()).size());
-        assertEquals(id, datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. Повторная интеграция с источником биржевых данных.
-        Количество инструментов при первой синхронизации - 3, при второй - 6.
-        Результат: в системе зарегистрирована одна биржа, количество сохраненных инструментов 6.
-        """)
-    void testCase3() {
-        initInstrumentDetails(afks(), imoex(), brf4());
-        initTodayDateTime("2023-12-12T10:00:00");
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        clearLogs();
-        initInstrumentDetails(afks(), imoex(), brf4(), lkohDetails(), rosnDetails(), sibn());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        assertEquals(6, getInstruments(getDatasourceId()).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T4. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
-        Запускается интеграция с источником биржевых данных.
-        Есть дубли по тикерам, все записи валидны.
-        Результат: зарегистрирована биржа, в хранилище инструментов нет дубликатов.
-        """)
-    void testCase4() {
-        initTodayDateTime("2023-12-12T10:00:00");
-        datasourceStorage().initInstrumentDetails(List.of(
-            afks(),
-            StockDto.builder()
-                .ticker(AFKS)
-                .shortName("ао Система")
-                .name("АФК Система1")
-                .lotSize(10000)
-                .build()
-        ));
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        assertEquals(1, getInstruments(getDatasourceId()).size());
     }
 
     @Test

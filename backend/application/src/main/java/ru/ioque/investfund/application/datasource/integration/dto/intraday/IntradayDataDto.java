@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -29,7 +29,7 @@ import java.util.Objects;
     @JsonSubTypes.Type(value = ContractDto.class, name = "ContractDto"),
     @JsonSubTypes.Type(value = DealDto.class, name = "DealDto")
 })
-public abstract class IntradayValueDto implements Comparable<IntradayValue> {
+public abstract class IntradayDataDto implements Comparable<IntradayData> {
     @NotBlank(message = "Не заполнен тикер.")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;
@@ -50,9 +50,9 @@ public abstract class IntradayValueDto implements Comparable<IntradayValue> {
     Double value;
 
     @Override
-    public int compareTo(IntradayValue intradayValue) {
-        return Objects.compare(getNumber(), intradayValue.getNumber(), Long::compareTo);
+    public int compareTo(IntradayData intradayData) {
+        return Objects.compare(getNumber(), intradayData.getNumber(), Long::compareTo);
     }
 
-    public abstract IntradayValue toIntradayValue();
+    public abstract IntradayData toIntradayValue();
 }

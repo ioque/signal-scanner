@@ -11,7 +11,7 @@ import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
 import ru.ioque.investfund.domain.datasource.value.history.HistoryValue;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -238,7 +238,7 @@ public abstract class InfrastructureTest {
             .build();
     }
 
-    protected IntradayValue createDeal(Ticker ticker, Long number, LocalDateTime dateTime) {
+    protected IntradayData createDeal(Ticker ticker, Long number, LocalDateTime dateTime) {
         return Deal.builder()
             .ticker(ticker)
             .number(number)
@@ -250,7 +250,7 @@ public abstract class InfrastructureTest {
             .build();
     }
 
-    protected IntradayValue createDelta(Ticker ticker, Long number, LocalDateTime dateTime) {
+    protected IntradayData createDelta(Ticker ticker, Long number, LocalDateTime dateTime) {
         return Delta.builder()
             .ticker(ticker)
             .number(number)

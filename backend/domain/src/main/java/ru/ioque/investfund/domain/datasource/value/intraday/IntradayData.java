@@ -16,7 +16,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public abstract class IntradayValue implements Comparable<IntradayValue> {
+public abstract class IntradayData implements Comparable<IntradayData> {
     Ticker ticker;
     Long number;
     LocalDateTime dateTime;
@@ -24,7 +24,7 @@ public abstract class IntradayValue implements Comparable<IntradayValue> {
     Double value;
 
     @Override
-    public int compareTo(IntradayValue intradayValue) {
-        return Objects.compare(getNumber(), intradayValue.getNumber(), Long::compareTo);
+    public int compareTo(IntradayData intradayData) {
+        return Objects.compare(getNumber(), intradayData.getNumber(), Long::compareTo);
     }
 }

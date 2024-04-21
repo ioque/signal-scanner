@@ -16,7 +16,7 @@ import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -59,13 +59,13 @@ public abstract class IntradayValueEntity extends GeneratedIdentity {
         this.value = value;
     }
 
-    public abstract IntradayValue toDomain();
+    public abstract IntradayData toDomain();
 
-    public static IntradayValueEntity fromDomain(IntradayValue intradayValue) {
-        return mappers.get(intradayValue.getClass()).apply(intradayValue);
+    public static IntradayValueEntity fromDomain(IntradayData intradayData) {
+        return mappers.get(intradayData.getClass()).apply(intradayData);
     }
 
-    private static Map<Class<? extends IntradayValue>, Function<IntradayValue, IntradayValueEntity>> mappers = Map.of(
+    private static Map<Class<? extends IntradayData>, Function<IntradayData, IntradayValueEntity>> mappers = Map.of(
         Deal.class, domain -> DealEntity.from((Deal) domain),
         Contract.class, domain -> ContractEntity.from((Contract) domain),
         Delta.class, domain -> DeltaEntity.from((Delta) domain)

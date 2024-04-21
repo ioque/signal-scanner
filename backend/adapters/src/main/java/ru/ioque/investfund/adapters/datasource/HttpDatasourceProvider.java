@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.datasource.integration.dto.HistoryBatch;
-import ru.ioque.investfund.application.datasource.integration.dto.IntradayBatch;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class PsqlIntradayValueRepository implements IntradayValueRepository {
 
     @Override
     @Transactional
-    public void saveAll(List<IntradayValue> intradayValues) {
-        jpaIntradayValueRepository.saveAll(intradayValues.stream().map(IntradayValueEntity::fromDomain).toList());
+    public void saveAll(List<IntradayData> intradayData) {
+        jpaIntradayValueRepository.saveAll(intradayData.stream().map(IntradayValueEntity::fromDomain).toList());
     }
 }

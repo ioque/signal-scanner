@@ -5,9 +5,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
@@ -28,20 +28,20 @@ public class ValidatedDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public List<AggregateHistoryDto> fetchAggregateHistory(Datasource datasource, Instrument instrument) {
-        List<@Valid AggregateHistoryDto> aggregateHistoryDtos = datasourceProvider.fetchAggregateHistory(
+    public List<AggregatedHistoryDto> fetchAggregateHistory(Datasource datasource, Instrument instrument) {
+        List<@Valid AggregatedHistoryDto> aggregatedHistoryDtos = datasourceProvider.fetchAggregateHistory(
             datasource,
             instrument
         );
-        validate(aggregateHistoryDtos);
-        return aggregateHistoryDtos;
+        validate(aggregatedHistoryDtos);
+        return aggregatedHistoryDtos;
     }
 
     @Override
-    public List<IntradayValueDto> fetchIntradayValues(Datasource datasource, Instrument instrument) {
-        List<IntradayValueDto> intradayValueDtos = datasourceProvider.fetchIntradayValues(datasource, instrument);
-        validate(intradayValueDtos);
-        return intradayValueDtos;
+    public List<IntradayDataDto> fetchIntradayValues(Datasource datasource, Instrument instrument) {
+        List<IntradayDataDto> intradayDataDtos = datasourceProvider.fetchIntradayValues(datasource, instrument);
+        validate(intradayDataDtos);
+        return intradayDataDtos;
     }
 
     protected <V> void validate(List<@Valid V> values) {

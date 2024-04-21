@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class ArchivedFuturesDeal extends ArchivedIntradayValue {
     }
 
     @Override
-    public IntradayValue toDomain() {
+    public IntradayData toDomain() {
         return Contract.builder()
             .ticker(Ticker.from(ticker))
             .number(number)

@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
+import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AggregateHistoryDto {
+public class AggregatedHistoryDto {
     @NotBlank(message = "Не заполнен тикер.")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;
@@ -56,8 +56,8 @@ public class AggregateHistoryDto {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
-    public AggregateHistory toAggregateHistory() {
-        return AggregateHistory.builder()
+    public AggregatedHistory toAggregateHistory() {
+        return AggregatedHistory.builder()
             .date(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)

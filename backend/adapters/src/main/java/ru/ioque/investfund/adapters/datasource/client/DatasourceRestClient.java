@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +38,7 @@ public class DatasourceRestClient {
         }
     }
 
-    public List<IntradayValueDto> fetchIntradayValues(String exchangeUrl, String ticker, long lastNumber) {
+    public List<IntradayDataDto> fetchIntradayValues(String exchangeUrl, String ticker, long lastNumber) {
         try {
             return objectMapper
                 .readValue(
@@ -54,7 +54,7 @@ public class DatasourceRestClient {
         }
     }
 
-    public List<AggregateHistoryDto> fetchHistory(
+    public List<AggregatedHistoryDto> fetchHistory(
         String exchangeUrl,
         String ticker,
         LocalDate from,

@@ -2,8 +2,8 @@ package ru.ioque.investfund.scanner.scanning;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregateHistoryDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayValueDto;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
@@ -97,23 +97,23 @@ public class BaseScannerTest extends BaseTest {
         return tradingDataRepository().findAllBy(List.of(instrument.getId())).get(0);
     }
 
-    protected IntradayValueDto buildImoexDelta(Long number, String localTime, Double price, Double value) {
+    protected IntradayDataDto buildImoexDelta(Long number, String localTime, Double price, Double value) {
         return buildDeltaBy(IMOEX, number, localTime, price, value);
     }
 
-    protected AggregateHistoryDto buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+    protected AggregatedHistoryDto buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
         return buildDeltaResultBy(IMOEX, tradeDate, openPrice, closePrice, value);
     }
 
-    protected IntradayValueDto buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildSellDealBy(TGKN, number, localTime, price, value, qnt);
     }
 
-    protected IntradayValueDto buildTgknBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildTgknBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TGKN, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildTgknHistoryValue(
+    protected AggregatedHistoryDto buildTgknHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -123,15 +123,15 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(TGKN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildSellDealBy(TGKB, number, localTime, price, value, qnt);
     }
 
-    protected IntradayValueDto buildTgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildTgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TGKB, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildTgkbHistoryValue(
+    protected AggregatedHistoryDto buildTgkbHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -141,11 +141,11 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(TGKB, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TATN, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildTatnHistoryValue(
+    protected AggregatedHistoryDto buildTatnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -155,19 +155,19 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(TATN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildContractBy(BRF4, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+    protected AggregatedHistoryDto buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
         return buildFuturesDealResultBy(BRF4, tradeDate, openPrice, closePrice, value);
     }
 
-    protected IntradayValueDto buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(LKOH, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildLkohHistoryValue(
+    protected AggregatedHistoryDto buildLkohHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -177,11 +177,11 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(LKOH, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SIBN, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildSibnHistoryValue(
+    protected AggregatedHistoryDto buildSibnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -191,11 +191,11 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(SIBN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(ROSN, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildRosnHistoryValue(
+    protected AggregatedHistoryDto buildRosnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -205,11 +205,11 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(ROSN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SBER, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildSberHistoryValue(
+    protected AggregatedHistoryDto buildSberHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -219,11 +219,11 @@ public class BaseScannerTest extends BaseTest {
         return buildDealResultBy(SBER, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayValueDto buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayDataDto buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SBERP, number, localTime, price, value, qnt);
     }
 
-    protected AggregateHistoryDto buildSberpHistoryValue(
+    protected AggregatedHistoryDto buildSberpHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,

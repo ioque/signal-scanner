@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ public class DeltaEntity extends IntradayValueEntity {
     }
 
     @Override
-    public IntradayValue toDomain() {
+    public IntradayData toDomain() {
         return Delta.builder()
             .ticker(Ticker.from(ticker))
             .number(number)

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ContractDto extends IntradayValueDto {
+public class ContractDto extends IntradayDataDto {
     @NotNull(message = "Не заполнено количество контрактов.")
     @Min(value = 0, message = "Количество контрактов должно быть больше нуля.")
     Integer qnt;
@@ -39,7 +39,7 @@ public class ContractDto extends IntradayValueDto {
     }
 
     @Override
-    public IntradayValue toIntradayValue() {
+    public IntradayData toIntradayValue() {
         return Contract.builder()
             .ticker(Ticker.from(getTicker()))
             .number(getNumber())
