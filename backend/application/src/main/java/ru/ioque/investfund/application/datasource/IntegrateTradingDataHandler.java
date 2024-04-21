@@ -12,10 +12,13 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.datasource.dto.HistoryBatch;
+import ru.ioque.investfund.application.datasource.dto.IntradayBatch;
 import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.AggregateHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayValue;
 
@@ -56,27 +59,7 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
         final List<DomainEventWrapper> events = datasource
             .getUpdatableInstruments()
             .stream()
-            .map(instrument -> {
-                final TreeSet<AggregateHistory> aggregateHistories = datasourceProvider.fetchAggregateHistory(
-                    datasource,
-                    instrument
-                ).getAggregateHistory(validator);
-                final TreeSet<IntradayValue> intradayValues = datasourceProvider.fetchIntradayValues(
-                    datasource,
-                    instrument
-                ).getIntradayValues(validator);
-                intradayValueRepository.saveAll(intradayValues);
-                instrument.updateTradingState(intradayValues);
-                instrument.updateAggregateHistory(aggregateHistories);
-                return instrument
-                    .getEvents()
-                    .stream()
-                    .map(event -> DomainEventWrapper.of(
-                        uuidProvider.generate(),
-                        event,
-                        dateTimeProvider.nowDateTime()
-                    )).toList();
-            })
+            .map(instrument -> integrateTradingDataFor(instrument, datasource))
             .flatMap(Collection::stream)
             .toList();
         datasourceRepository.save(datasource);
@@ -87,5 +70,39 @@ public class IntegrateTradingDataHandler extends CommandHandler<IntegrateTrading
             .dateTime(dateTimeProvider.nowDateTime())
             .updatedCount(datasource.getUpdatableInstruments().size())
             .build());
+    }
+
+    private List<DomainEventWrapper> integrateTradingDataFor(Instrument instrument, Datasource datasource) {
+        final TreeSet<IntradayValue> intradayValues = getIntradayValues(instrument, datasource);
+        final TreeSet<AggregateHistory> aggregateHistories = getAggregateHistories(instrument, datasource);
+        intradayValueRepository.saveAll(intradayValues);
+        instrument.updateTradingState(intradayValues);
+        instrument.updateAggregateHistory(aggregateHistories);
+        return instrument
+            .getEvents()
+            .stream()
+            .map(event -> DomainEventWrapper.of(
+                uuidProvider.generate(),
+                event,
+                dateTimeProvider.nowDateTime()
+            )).toList();
+    }
+
+    private TreeSet<IntradayValue> getIntradayValues(Instrument instrument, Datasource datasource) {
+        final IntradayBatch intradayBatch = datasourceProvider.fetchIntradayValues(
+            datasource,
+            instrument
+        );
+        validate(intradayBatch);
+        return intradayBatch.getIntradayValues(validator);
+    }
+
+    private TreeSet<AggregateHistory> getAggregateHistories(Instrument instrument, Datasource datasource) {
+        final HistoryBatch historyBatch = datasourceProvider.fetchAggregateHistory(
+            datasource,
+            instrument
+        );
+        validate(historyBatch);
+        return historyBatch.getAggregateHistory(validator);
     }
 }
