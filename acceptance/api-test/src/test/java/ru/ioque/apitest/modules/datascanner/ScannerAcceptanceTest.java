@@ -1,4 +1,4 @@
-package ru.ioque.apitest.api.datascanner;
+package ru.ioque.apitest.modules.datascanner;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

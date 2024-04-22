@@ -1,4 +1,4 @@
-package ru.ioque.apitest.api.exchange;
+package ru.ioque.apitest.modules.datasource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

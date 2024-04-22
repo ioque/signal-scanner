@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class FakeMoexRestController {
+public class DatasourceEmulator {
     DatasetRepository datasetRepository;
 
     @SneakyThrows
