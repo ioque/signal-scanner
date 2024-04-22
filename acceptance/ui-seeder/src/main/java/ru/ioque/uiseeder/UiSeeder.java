@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -28,14 +28,14 @@ public class UiSeeder implements CommandLineRunner {
         clientFacade.getDatasourceProviderClient().initDataset(uiTestsDataset);
         clientFacade.getServiceClient().clearState();
         clientFacade.getServiceClient().initDateTime(UiTestsDataset.getLastWorkDay().atTime(LocalTime.parse("10:00:00")));
-        clientFacade.getDatasourceRestClient().registerDatasource(
-            RegisterDatasourceRequest.builder()
+        clientFacade.getDatasourceRestClient().createDatasource(
+            DatasourceRequest.builder()
                 .name("Конфигурируемый источник данных")
                 .description("Конфигурируемый источник данных, использовать для тестирования алгоритмов.")
                 .url(datasourceUrl)
                 .build()
         );
-        final UUID datasourceID = clientFacade.getDatasourceRestClient().getExchanges().get(0).getId();
+        final UUID datasourceID = clientFacade.getDatasourceRestClient().getDatasourceList().get(0).getId();
         clientFacade.getDatasourceRestClient().integrateInstruments(datasourceID);
         clientFacade.getDatasourceRestClient()
             .enableUpdateInstruments(

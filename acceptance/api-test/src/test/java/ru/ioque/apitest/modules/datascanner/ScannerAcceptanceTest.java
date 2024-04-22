@@ -15,7 +15,7 @@ import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumePropertiesDto;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.request.PrefSimplePropertiesDto;
@@ -39,8 +39,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
-        registerDatasource(
-            RegisterDatasourceRequest.builder()
+        createDatasource(
+            DatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
                 .url(datasourceHost)

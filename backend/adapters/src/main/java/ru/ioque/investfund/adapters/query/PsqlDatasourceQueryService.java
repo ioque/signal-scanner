@@ -61,7 +61,7 @@ public class PsqlDatasourceQueryService {
     }
 
     private String notFoundDatasourceMsg() {
-        return "Источник данных не зарегистрирована.";
+        return "Источник данных не зарегистрирован.";
     }
 
     private Supplier<ResourceNotFoundException> notFoundException(String message) {

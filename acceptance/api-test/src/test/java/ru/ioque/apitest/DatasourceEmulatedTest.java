@@ -9,14 +9,14 @@ import ru.ioque.apitest.client.ClientFacade;
 import ru.ioque.apitest.dataset.DatasetManager;
 import ru.ioque.apitest.kafka.IntegrationEvent;
 import ru.ioque.apitest.kafka.KafkaConsumer;
-import ru.ioque.core.client.datasource.DatasourceRestClient;
-import ru.ioque.core.client.service.ServiceClient;
-import ru.ioque.core.client.signalscanner.SignalScannerRestClient;
+import ru.ioque.core.client.datasource.DatasourceHttpClient;
+import ru.ioque.core.client.service.ServiceHttpClient;
+import ru.ioque.core.client.signalscanner.ScannerHttpClient;
 import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
@@ -69,15 +69,15 @@ public abstract class DatasourceEmulatedTest {
         return true;
     }
 
-    private DatasourceRestClient exchangeClient() {
+    private DatasourceHttpClient datasourceClient() {
         return clientFacade.getDatasourceRestClient();
     }
 
-    protected SignalScannerRestClient signalScannerClient() {
+    protected ScannerHttpClient signalScannerClient() {
         return clientFacade.getSignalScannerRestClient();
     }
 
-    private ServiceClient serviceClient() {
+    private ServiceHttpClient serviceClient() {
         return clientFacade.getServiceClient();
     }
 
@@ -86,11 +86,19 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected List<DatasourceResponse> getAllDatasource() {
-        return exchangeClient().getExchanges();
+        return datasourceClient().getDatasourceList();
     }
 
-    protected void registerDatasource(RegisterDatasourceRequest request) {
-        exchangeClient().registerDatasource(request);
+    protected void createDatasource(DatasourceRequest request) {
+        datasourceClient().createDatasource(request);
+    }
+
+    protected void removeDatasource(UUID datasourceId) {
+        datasourceClient().removeDatasource(datasourceId);
+    }
+
+    protected void updateDatasource(UUID datasourceId, DatasourceRequest request) {
+        datasourceClient().updateDatasource(datasourceId, request);
     }
 
     protected void createScanner(CreateScannerRequest request) {
@@ -116,8 +124,8 @@ public abstract class DatasourceEmulatedTest {
         return signalScannerClient().getDataScanners();
     }
 
-    protected DatasourceResponse getExchangeBy(UUID exchangeId) {
-        return exchangeClient().getExchangeBy(exchangeId);
+    protected DatasourceResponse getDatasourceBy(UUID exchangeId) {
+        return datasourceClient().getDatasourceBy(exchangeId);
     }
 
     protected void fullIntegrate(UUID datasourceId) {
@@ -126,28 +134,28 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected void integrateInstruments(UUID datasourceId) {
-        exchangeClient().integrateInstruments(datasourceId);
+        datasourceClient().integrateInstruments(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
     }
 
     protected void integrateTradingData(UUID datasourceId) {
-        exchangeClient().integrateTradingData(datasourceId);
+        datasourceClient().integrateTradingData(datasourceId);
     }
 
     protected void enableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
-        exchangeClient().enableUpdateInstruments(exchangeId, new EnableUpdateInstrumentRequest(tickers));
+        datasourceClient().enableUpdateInstruments(exchangeId, new EnableUpdateInstrumentRequest(tickers));
     }
 
     protected void disableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
-        exchangeClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
+        datasourceClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId) {
-        return exchangeClient().getInstruments(exchangeId, "");
+        return datasourceClient().getInstruments(exchangeId, "");
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId, Map<String, String> params) {
-        return exchangeClient()
+        return datasourceClient()
             .getInstruments(
                 exchangeId,
                 params
@@ -159,7 +167,7 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected InstrumentResponse getInstrumentBy(UUID exchangeId, String ticker) {
-        return exchangeClient().getInstrumentBy(exchangeId, ticker);
+        return datasourceClient().getInstrumentBy(exchangeId, ticker);
     }
 
     protected List<IntradayDtoResponse> getIntradayValues(int pageNumber, int pageSize) {

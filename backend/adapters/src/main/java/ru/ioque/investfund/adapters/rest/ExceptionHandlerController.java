@@ -29,11 +29,11 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> notFound(ResourceNotFoundException ex, HttpServletRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new Response(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ExchangeRestClientException.class)
     public ResponseEntity<?> exchangeRestClientError(ExchangeRestClientException ex, HttpServletRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new Response(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

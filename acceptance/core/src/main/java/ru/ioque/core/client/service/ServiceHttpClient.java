@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.core.client.JsonApplicationHttpClient;
+import ru.ioque.core.client.JsonHttpClient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class ServiceClient extends JsonApplicationHttpClient {
-    public ServiceClient(String apiUrl) {
+public class ServiceHttpClient extends JsonHttpClient {
+    public ServiceHttpClient(String apiUrl) {
         super(apiUrl);
     }
 

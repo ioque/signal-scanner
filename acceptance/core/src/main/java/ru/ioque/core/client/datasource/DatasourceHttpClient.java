@@ -2,10 +2,10 @@ package ru.ioque.core.client.datasource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
-import ru.ioque.core.client.JsonApplicationHttpClient;
+import ru.ioque.core.client.JsonHttpClient;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
@@ -13,14 +13,23 @@ import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 import java.util.List;
 import java.util.UUID;
 
-public class DatasourceRestClient extends JsonApplicationHttpClient {
-    public DatasourceRestClient(String apiUrl) {
+public class DatasourceHttpClient extends JsonHttpClient {
+    public DatasourceHttpClient(String apiUrl) {
         super(apiUrl);
     }
 
     @SneakyThrows
-    public void registerDatasource(RegisterDatasourceRequest request) {
+    public void createDatasource(DatasourceRequest request) {
         post("/api/datasource", objectMapper.writeValueAsString(request));
+    }
+
+    @SneakyThrows
+    public void updateDatasource(UUID id, DatasourceRequest request) {
+        patch("/api/datasource/" + id, objectMapper.writeValueAsString(request));
+    }
+
+    public void removeDatasource(UUID id) {
+        delete("/api/datasource/" + id);
     }
 
     @SneakyThrows
@@ -34,12 +43,12 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
     }
 
     @SneakyThrows
-    public List<DatasourceResponse> getExchanges() {
+    public List<DatasourceResponse> getDatasourceList() {
         return objectMapper.readValue(get("/api/datasource"), new TypeReference<>(){});
     }
 
     @SneakyThrows
-    public DatasourceResponse getExchangeBy(UUID datasourceId) {
+    public DatasourceResponse getDatasourceBy(UUID datasourceId) {
         return objectMapper.readValue(get("/api/datasource/" + datasourceId), DatasourceResponse.class);
     }
 
@@ -62,10 +71,5 @@ public class DatasourceRestClient extends JsonApplicationHttpClient {
     @SneakyThrows
     public InstrumentResponse getInstrumentBy(UUID datasourceId, String ticker) {
         return objectMapper.readValue(get("/api/datasource/" + datasourceId + "/instrument/" + ticker), InstrumentResponse.class);
-    }
-
-    @SneakyThrows
-    public void runArchiving() {
-        post("/api/archive");
     }
 }

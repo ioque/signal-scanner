@@ -1,11 +1,11 @@
 package ru.ioque.core.client.datasource_provider;
 
 import lombok.SneakyThrows;
-import ru.ioque.core.client.JsonApplicationHttpClient;
+import ru.ioque.core.client.JsonHttpClient;
 import ru.ioque.core.dataset.Dataset;
 
-public class DatasourceProviderClient extends JsonApplicationHttpClient {
-    public DatasourceProviderClient(String datasourceUrl) {
+public class DatasourceProviderHttpClient extends JsonHttpClient {
+    public DatasourceProviderHttpClient(String datasourceUrl) {
         super(datasourceUrl);
     }
 

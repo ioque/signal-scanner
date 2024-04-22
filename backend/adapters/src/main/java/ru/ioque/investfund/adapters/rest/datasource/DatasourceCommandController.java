@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCom
 import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -32,7 +34,7 @@ public class DatasourceCommandController {
     CommandBus commandBus;
 
     @PostMapping("/api/datasource")
-    public void registerDatasource(@RequestBody SaveDatasourceRequest request) {
+    public void createDatasource(@RequestBody SaveDatasourceRequest request) {
         commandBus.execute(
             CreateDatasourceCommand.builder()
                 .name(request.getName())
@@ -43,7 +45,7 @@ public class DatasourceCommandController {
     }
 
     @PatchMapping("/api/datasource/{datasourceId}")
-    public void registerDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
+    public void updateDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
         commandBus.execute(
             UpdateDatasourceCommand.builder()
                 .id(DatasourceId.from(datasourceId))
@@ -80,5 +82,10 @@ public class DatasourceCommandController {
                 request.getTickers().stream().map(Ticker::from).toList()
             )
         );
+    }
+
+    @DeleteMapping("/api/datasource/{datasourceId}")
+    public void removeDatasource(@PathVariable UUID datasourceId) {
+        commandBus.execute(new UnregisterDatasourceCommand(DatasourceId.from(datasourceId)));
     }
 }

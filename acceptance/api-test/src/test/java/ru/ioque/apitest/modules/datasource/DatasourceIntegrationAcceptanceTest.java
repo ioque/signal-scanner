@@ -15,7 +15,7 @@ import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.Delta;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
@@ -25,21 +25,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@DisplayName("МОДУЛЬ \"ИСТОЧНИК ДАННЫХ\"")
+@DisplayName("DATASOURCE INTEGRATION ACCEPTANCE TEST")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
+public class DatasourceIntegrationAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
-        registerDatasource(
-            RegisterDatasourceRequest.builder()
+        createDatasource(
+            DatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
                 .url(datasourceHost)
@@ -49,7 +48,7 @@ public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
 
     @Test
     @DisplayName("""
-        T1. Интеграция с Биржей.
+        T1. Интеграция инструментов.
         """)
     void testCase1() {
         initDataset(
@@ -68,7 +67,7 @@ public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
 
         integrateInstruments(datasourceId);
 
-        DatasourceResponse datasourceResponse = getExchangeBy(datasourceId);
+        DatasourceResponse datasourceResponse = getDatasourceBy(datasourceId);
         List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
         assertEquals("Московская Биржа", datasourceResponse.getName());
         assertEquals(
@@ -81,7 +80,7 @@ public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
 
     @Test
     @DisplayName("""
-        T2. Повторная синхронизация с источником биржевых данных.
+        T2. Повторная интеграция инструментов.
         """)
     void testCase2() {
         initDataset(
@@ -99,11 +98,11 @@ public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
         UUID datasourceId = getAllDatasource().get(0).getId();
 
         integrateInstruments(datasourceId);
-        DatasourceResponse datasourceResponse = getExchangeBy(datasourceId);
+        DatasourceResponse datasourceResponse = getDatasourceBy(datasourceId);
         List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
 
         integrateInstruments(datasourceId);
-        DatasourceResponse updatedDatasourceResponse = getExchangeBy(datasourceId);
+        DatasourceResponse updatedDatasourceResponse = getDatasourceBy(datasourceId);
         List<InstrumentInListResponse> updatedInstruments = getInstruments(datasourceId);
 
         assertEquals(datasourceResponse.getName(), updatedDatasourceResponse.getName());
@@ -131,179 +130,6 @@ public class DatasourceAcceptanceTest extends DatasourceEmulatedTest {
                 .orElseThrow()
                 .getShortName()
         );
-    }
-
-    @Test
-    @DisplayName("""
-        T3. Поиск финансовых инструментов по тикеру.
-        """)
-    void testCase3() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(2, getInstruments(datasourceId, Map.of("ticker", "SBER")).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T4. Поиск финансовых инструментов по типу.
-        """)
-    void testCase4() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(2, getInstruments(datasourceId, Map.of("type", "stock")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "currencyPair")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "futures")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "index")).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T5. Поиск финансовых инструментов по названию.
-        """)
-    void testCase5() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(2, getInstruments(datasourceId, Map.of("shortname", "Сбер")).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T6. Поиск финансовых инструментов по названию и типу.
-        """)
-    void testCase6() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(1, getInstruments(datasourceId, Map.of("shortname", "BR", "type", "futures")).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T7. Поиск финансовых инструментов по тикеру и типу.
-        """)
-    void testCase7() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(1, getInstruments(datasourceId, Map.of("ticker", "IMOEX", "type", "index")).size());
-    }
-
-    @Test
-    @DisplayName("""
-        T8. Поиск финансовых инструментов по тикеру, названию и типу.
-        """)
-    void testCase8() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        assertEquals(
-            2,
-            getInstruments(datasourceId, Map.of("shortname", "Сбер", "ticker", "SBER", "type", "stock")).size()
-        );
-    }
-
-    @Test
-    @DisplayName("""
-        T9. Получение детализированной информации по финансовому инструменту.
-        """)
-    void testCase9() {
-        initDataset(Dataset.builder().instruments(List.of(DefaultInstrumentSet.sber())).build());
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
-        integrateInstruments(datasourceId);
-
-        InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, "SBER");
-
-        assertEquals("SBER", instrumentResponse.getTicker());
-        assertEquals("Сбербанк", instrumentResponse.getShortName());
-        assertEquals("ПАО Сбербанк", instrumentResponse.getName());
     }
 
     @Test

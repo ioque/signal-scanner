@@ -11,7 +11,7 @@ import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
-import ru.ioque.core.dto.datasource.request.RegisterDatasourceRequest;
+import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 
 import java.time.LocalDate;
@@ -28,8 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
-        registerDatasource(
-            RegisterDatasourceRequest.builder()
+        createDatasource(
+            DatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
                 .url(datasourceHost)
