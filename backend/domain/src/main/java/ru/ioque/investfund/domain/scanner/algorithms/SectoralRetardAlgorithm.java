@@ -29,9 +29,9 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
 
     @Override
     public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        List<Signal> signals = new ArrayList<>();
-        List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
-        List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
+        final List<Signal> signals = new ArrayList<>();
+        final List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
+        final List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
             otherInstruments.forEach(snapshot -> {
                 final String summary = String.format(
@@ -53,7 +53,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
         return signals;
     }
 
-    private static List<TradingSnapshot> getSectoralRetards(
+    private List<TradingSnapshot> getSectoralRetards(
         List<TradingSnapshot> tradingSnapshots,
         List<TradingSnapshot> riseInstruments
     ) {
