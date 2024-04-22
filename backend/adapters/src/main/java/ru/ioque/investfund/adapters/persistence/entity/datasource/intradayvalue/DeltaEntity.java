@@ -26,21 +26,20 @@ public class DeltaEntity extends IntradayValueEntity {
 
     @Builder
     public DeltaEntity(
-        Long id,
         Long number,
         LocalDateTime dateTime,
         String ticker,
         Double price,
         Double value
     ) {
-        super(id, number, dateTime, ticker, price, value);
+        super(number, dateTime, ticker, price, value);
     }
 
     @Override
     public IntradayData toDomain() {
         return Delta.builder()
-            .ticker(Ticker.from(ticker))
-            .number(number)
+            .ticker(Ticker.from(getId().getTicker()))
+            .number(getId().getNumber())
             .dateTime(dateTime)
             .price(price)
             .value(value)

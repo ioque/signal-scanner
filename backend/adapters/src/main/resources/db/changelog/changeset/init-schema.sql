@@ -55,12 +55,11 @@ create table if not exists aggregated_history
     open_price    double precision not null,
     value         double precision not null,
     wa_price      double precision,
-    id            bigserial
-        primary key,
     instrument_id uuid
         constraint fk8vp22v6o2tyxjwg98xl69840a
             references instrument,
-    unique (instrument_id, date)
+    ticker        varchar(255)     not null,
+    primary key (date, ticker)
 );
 
 alter table aggregated_history
@@ -73,12 +72,10 @@ create table if not exists intraday_value
     qnt                 integer,
     value               double precision not null,
     date_time           timestamp(6)     not null,
-    id                  bigserial
-        primary key,
     number              bigint           not null,
     intraday_value_type varchar(255)     not null,
     ticker              varchar(255)     not null,
-    unique (number, ticker)
+    primary key (number, ticker)
 );
 
 alter table intraday_value

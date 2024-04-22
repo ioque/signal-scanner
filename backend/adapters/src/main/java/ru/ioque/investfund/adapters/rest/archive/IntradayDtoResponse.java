@@ -25,7 +25,7 @@ public class IntradayDtoResponse implements Serializable {
 
     public static IntradayDtoResponse from(IntradayValueEntity intradayValueEntity) {
         return IntradayDtoResponse.builder()
-            .number(intradayValueEntity.getNumber())
+            .number(intradayValueEntity.getId().getNumber())
             .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(intradayValueEntity.getPrice())
             .build();

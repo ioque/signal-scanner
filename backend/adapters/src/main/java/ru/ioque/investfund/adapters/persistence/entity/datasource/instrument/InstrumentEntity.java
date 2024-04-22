@@ -113,8 +113,7 @@ public abstract class InstrumentEntity extends UuidIdentity {
         List<AggregatedHistoryEntity> history = domain
             .getAggregateHistories()
             .stream()
-            .map(AggregatedHistoryEntity::fromDomain)
-            .peek(row -> row.setInstrument(stockEntity))
+            .map(row -> AggregatedHistoryEntity.fromDomain(stockEntity, row))
             .toList();
         stockEntity.setHistory(history);
         return stockEntity;
@@ -135,8 +134,7 @@ public abstract class InstrumentEntity extends UuidIdentity {
         List<AggregatedHistoryEntity> history = domain
             .getAggregateHistories()
             .stream()
-            .map(AggregatedHistoryEntity::fromDomain)
-            .peek(row -> row.setInstrument(indexEntity))
+            .map(row -> AggregatedHistoryEntity.fromDomain(indexEntity, row))
             .toList();
         indexEntity.setHistory(history);
         return indexEntity;
@@ -160,8 +158,7 @@ public abstract class InstrumentEntity extends UuidIdentity {
         List<AggregatedHistoryEntity> history = domain
             .getAggregateHistories()
             .stream()
-            .map(AggregatedHistoryEntity::fromDomain)
-            .peek(row -> row.setInstrument(futuresEntity))
+            .map(row -> AggregatedHistoryEntity.fromDomain(futuresEntity, row))
             .toList();
         futuresEntity.setHistory(history);
         return futuresEntity;
@@ -182,8 +179,7 @@ public abstract class InstrumentEntity extends UuidIdentity {
         List<AggregatedHistoryEntity> history = domain
             .getAggregateHistories()
             .stream()
-            .map(AggregatedHistoryEntity::fromDomain)
-            .peek(row -> row.setInstrument(currencyPairEntity))
+            .map(row -> AggregatedHistoryEntity.fromDomain(currencyPairEntity, row))
             .toList();
         currencyPairEntity.setHistory(history);
         return currencyPairEntity;

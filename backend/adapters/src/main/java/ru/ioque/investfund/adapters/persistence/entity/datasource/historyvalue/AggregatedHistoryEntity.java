@@ -1,11 +1,11 @@
 package ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.GeneratedIdentity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 
@@ -24,14 +23,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Entity(name = "AggregatedHistory")
-@Table(name = "aggregated_history", uniqueConstraints = { @UniqueConstraint(columnNames = { "instrument_id", "date" }) })
+@Table(name = "aggregated_history")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AggregatedHistoryEntity extends GeneratedIdentity {
+public class AggregatedHistoryEntity {
+    @EmbeddedId
+    AggregatedHistoryPk id;
     @ManyToOne
     @JoinColumn(name = "instrument_id")
     InstrumentEntity instrument;
-    @Column(nullable = false)
-    LocalDate date;
     @Column(nullable = false)
     Double openPrice;
     @Column(nullable = false)
@@ -44,7 +43,6 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
 
     @Builder
     public AggregatedHistoryEntity(
-        Long id,
         InstrumentEntity instrument,
         LocalDate date,
         Double openPrice,
@@ -54,9 +52,8 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
         Double waPrice,
         Double value
     ) {
-        super(id);
+        this.id = new AggregatedHistoryPk(date, instrument.getTicker());
         this.instrument = instrument;
-        this.date = date;
         this.openPrice = openPrice;
         this.closePrice = closePrice;
         this.lowPrice = lowPrice;
@@ -67,8 +64,7 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
 
     public AggregatedHistory toDomain() {
         return AggregatedHistory.builder()
-            .id(getId())
-            .date(date)
+            .date(getId().getDate())
             .openPrice(openPrice)
             .closePrice(closePrice)
             .lowPrice(lowPrice)
@@ -78,9 +74,9 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
             .build();
     }
 
-    public static AggregatedHistoryEntity fromDomain(AggregatedHistory historyValue) {
+    public static AggregatedHistoryEntity fromDomain(InstrumentEntity instrument, AggregatedHistory historyValue) {
         return AggregatedHistoryEntity.builder()
-            .id(historyValue.getId())
+            .instrument(instrument)
             .date(historyValue.getDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())

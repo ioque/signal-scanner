@@ -55,9 +55,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final ExecutorService service = Executors.newCachedThreadPool();
         for (Instrument instrument : datasource.getUpdatableInstruments()) {
-            service.execute(() -> {
-                integrateTradingDataFor(instrument, datasource);
-            });
+            service.execute(() -> integrateTradingDataFor(instrument, datasource));
         }
         service.shutdown();
         try {

@@ -26,7 +26,7 @@ public class AggregatedHistoryResponse implements Serializable {
     Double closePrice;
     public static AggregatedHistoryResponse fromDomain(AggregatedHistoryEntity aggregatedHistoryEntity) {
         return AggregatedHistoryResponse.builder()
-            .tradeDate(aggregatedHistoryEntity.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+            .tradeDate(aggregatedHistoryEntity.getId().getDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .ticker(aggregatedHistoryEntity.getInstrument().getTicker())
             .value(aggregatedHistoryEntity.getValue())
             .openPrice(aggregatedHistoryEntity.getOpenPrice())

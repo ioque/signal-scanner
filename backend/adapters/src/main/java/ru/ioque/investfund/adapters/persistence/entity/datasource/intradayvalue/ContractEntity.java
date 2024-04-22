@@ -27,7 +27,6 @@ public class ContractEntity extends IntradayValueEntity {
 
     @Builder
     public ContractEntity(
-        Long id,
         Long number,
         LocalDateTime dateTime,
         String ticker,
@@ -35,15 +34,15 @@ public class ContractEntity extends IntradayValueEntity {
         Double value,
         Integer qnt
     ) {
-        super(id, number, dateTime, ticker, price, value);
+        super(number, dateTime, ticker, price, value);
         this.qnt = qnt;
     }
 
     @Override
     public IntradayData toDomain() {
         return Contract.builder()
-            .ticker(Ticker.from(ticker))
-            .number(number)
+            .ticker(Ticker.from(getId().getTicker()))
+            .number(getId().getNumber())
             .dateTime(dateTime)
             .price(price)
             .value(value)

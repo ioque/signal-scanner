@@ -115,7 +115,7 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected void fullIntegrate(UUID datasourceId) {
-        integrateAllInstrumentFrom(datasourceId);;
+        integrateAllInstrumentFrom(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
         integrateTradingData(datasourceId);
     }

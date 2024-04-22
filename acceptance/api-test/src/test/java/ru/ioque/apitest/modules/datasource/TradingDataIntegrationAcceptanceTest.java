@@ -122,7 +122,7 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         T5. Интеграция исторических данных, ранее уже были загружены исторические данные за предпредыдущий день.
         """)
     void testCase5() {
-        initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
+        initDateTime(LocalDateTime.parse("2024-03-21T13:00:00"));
         final UUID datasourceId = getFirstDatasourceId();
         final List<Instrument> instrumentList = getInstrumentList();
         initDataset(instrumentList, getHistoryValues(), List.of());
