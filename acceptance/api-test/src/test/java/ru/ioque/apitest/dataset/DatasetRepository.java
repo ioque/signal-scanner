@@ -31,11 +31,11 @@ public class DatasetRepository {
             .toList();
     }
 
-    public List<IntradayValue> getIntradayValuesBy(String ticker, Integer start) {
+    public List<IntradayValue> getIntradayValuesBy(String ticker, Integer lastNumber) {
         return datasetStorage
             .getIntradayValuesBy(ticker)
             .stream()
-            .skip(start)
+            .filter(row -> row.getNumber() > lastNumber)
             .toList();
     }
 
@@ -46,6 +46,7 @@ public class DatasetRepository {
     public void initIntradayValues(List<? extends IntradayValue> intradayValues) {
         datasetStorage.setIntradayValues(intradayValues);
     }
+
     public void initHistoryValues(List<HistoryValue> dailyResultValues) {
         datasetStorage.setDailyResultValues(dailyResultValues);
     }

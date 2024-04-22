@@ -8,7 +8,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
@@ -66,13 +65,11 @@ public class Instrument extends Domain<InstrumentId> {
         }
         if (tradingState == null) {
             tradingState = TradingState.from(intradayData);
-            addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
             return;
         }
         IntradayData lastIntradayData = intradayData.last();
         if (lastIntradayData.getNumber() > tradingState.getLastIntradayNumber()) {
             tradingState = TradingState.of(tradingState, intradayData);
-            addEvent(UpdateTradingStateEvent.of(getId(), tradingState));
         }
     }
 

@@ -107,7 +107,7 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         integrateInstruments(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
-        integrateAggregatedHistory(datasourceId);
+        integrateTradingData(datasourceId);
 
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
@@ -115,6 +115,49 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
             assertNotNull(instrumentResponse.getTodayFirstPrice());
             assertNotNull(instrumentResponse.getTodayLastPrice());
         });
+    }
+
+    @Test
+    @DisplayName("""
+        T5. Интеграция исторических данных, ранее уже были загружены исторические данные за предпредыдущий день.
+        """)
+    void testCase5() {
+        initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
+        final UUID datasourceId = getFirstDatasourceId();
+        final List<Instrument> instrumentList = getInstrumentList();
+        initDataset(instrumentList, getHistoryValues(), List.of());
+        integrateInstruments(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        integrateAggregatedHistory(datasourceId);
+        instrumentList.forEach(dto -> {
+            InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
+            assertEquals(3, instrumentResponse.getHistoryValues().size());
+        });
+
+        initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
+        integrateAggregatedHistory(datasourceId);
+        instrumentList.forEach(dto -> {
+            InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
+            assertEquals(4, instrumentResponse.getHistoryValues().size());
+        });
+    }
+
+    @Test
+    @DisplayName("""
+        T6. Номер последней загруженной сделки 1. Интегрируются сделки с большим номером.
+        """)
+    void testCase6() {
+        final UUID datasourceId = getFirstDatasourceId();
+        final List<Instrument> instrumentList = List.of(DefaultInstrumentSet.sber());
+        final List<IntradayValue> intradayValues = List.of(Deal.builder().number(1L).ticker("SBER").qnt(100).isBuy(true).price(270D).value(270000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build());
+        initDataset(instrumentList, List.of(), intradayValues);
+        integrateInstruments(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        integrateTradingData(datasourceId);
+        assertEquals(1, getIntradayValues(0, 10).size());
+        initDataset(instrumentList, List.of(), getIntradayValues());
+        integrateTradingData(datasourceId);
+        assertEquals(4, getIntradayValues(0, 10).size());
     }
 
     private LocalDateTime getDateTimeNow() {
@@ -165,28 +208,28 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
 
     private List<IntradayValue> getIntradayValues() {
         List<IntradayValue> imoexIntraday = List.of(
-            Delta.builder().number(1L).ticker("IMOEX").price(3000D).value(100_000_000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
-            Delta.builder().number(2L).ticker("IMOEX").price(3050D).value(200_000_000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
-            Delta.builder().number(3L).ticker("IMOEX").price(3100D).value(300_000_000D).dateTime(LocalDateTime.parse("2024-03-21T12:00:00")).build(),
-            Delta.builder().number(4L).ticker("IMOEX").price(3150D).value(400_000_000D).dateTime(LocalDateTime.parse("2024-03-21T12:45:00")).build()
+            Delta.builder().number(1L).ticker("IMOEX").price(3000D).value(100_000_000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+            Delta.builder().number(2L).ticker("IMOEX").price(3050D).value(200_000_000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+            Delta.builder().number(3L).ticker("IMOEX").price(3100D).value(300_000_000D).dateTime(LocalDateTime.parse("2024-03-22T12:00:00")).build(),
+            Delta.builder().number(4L).ticker("IMOEX").price(3150D).value(400_000_000D).dateTime(LocalDateTime.parse("2024-03-22T12:45:00")).build()
         );
         List<IntradayValue> usdRubIntraday = List.of(
-            Deal.builder().number(1L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(70D).value(70000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
-            Deal.builder().number(2L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(72D).value(72000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
-            Deal.builder().number(3L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(71D).value(71000D).dateTime(LocalDateTime.parse("2024-03-21T12:00:00")).build(),
-            Deal.builder().number(4L).ticker("USD000UTSTOM").qnt(1000).isBuy(false).price(75D).value(75000D).dateTime(LocalDateTime.parse("2024-03-21T12:45:00")).build()
+            Deal.builder().number(1L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(70D).value(70000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+            Deal.builder().number(2L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(72D).value(72000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+            Deal.builder().number(3L).ticker("USD000UTSTOM").qnt(1000).isBuy(true).price(71D).value(71000D).dateTime(LocalDateTime.parse("2024-03-22T12:00:00")).build(),
+            Deal.builder().number(4L).ticker("USD000UTSTOM").qnt(1000).isBuy(false).price(75D).value(75000D).dateTime(LocalDateTime.parse("2024-03-22T12:45:00")).build()
         );
         List<IntradayValue> brf4Intraday = List.of(
-            Contract.builder().number(1L).ticker("BRF4").qnt(1).price(120D).value(120000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
-            Contract.builder().number(2L).ticker("BRF4").qnt(1).price(111D).value(111000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
-            Contract.builder().number(3L).ticker("BRF4").qnt(1).price(125D).value(125000D).dateTime(LocalDateTime.parse("2024-03-21T12:00:00")).build(),
-            Contract.builder().number(4L).ticker("BRF4").qnt(1).price(140D).value(140000D).dateTime(LocalDateTime.parse("2024-03-21T12:45:00")).build()
+            Contract.builder().number(1L).ticker("BRF4").qnt(1).price(120D).value(120000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+            Contract.builder().number(2L).ticker("BRF4").qnt(1).price(111D).value(111000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+            Contract.builder().number(3L).ticker("BRF4").qnt(1).price(125D).value(125000D).dateTime(LocalDateTime.parse("2024-03-22T12:00:00")).build(),
+            Contract.builder().number(4L).ticker("BRF4").qnt(1).price(140D).value(140000D).dateTime(LocalDateTime.parse("2024-03-22T12:45:00")).build()
         );
         List<IntradayValue> sberIntraday = List.of(
-            Deal.builder().number(1L).ticker("SBER").qnt(100).isBuy(true).price(270D).value(270000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
-            Deal.builder().number(2L).ticker("SBER").qnt(100).isBuy(true).price(272D).value(272000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
-            Deal.builder().number(3L).ticker("SBER").qnt(100).isBuy(true).price(271D).value(271000D).dateTime(LocalDateTime.parse("2024-03-21T12:00:00")).build(),
-            Deal.builder().number(4L).ticker("SBER").qnt(100).isBuy(false).price(275D).value(275000D).dateTime(LocalDateTime.parse("2024-03-21T12:45:00")).build()
+            Deal.builder().number(1L).ticker("SBER").qnt(100).isBuy(true).price(270D).value(270000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+            Deal.builder().number(2L).ticker("SBER").qnt(100).isBuy(true).price(272D).value(272000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+            Deal.builder().number(3L).ticker("SBER").qnt(100).isBuy(true).price(271D).value(271000D).dateTime(LocalDateTime.parse("2024-03-22T12:00:00")).build(),
+            Deal.builder().number(4L).ticker("SBER").qnt(100).isBuy(false).price(275D).value(275000D).dateTime(LocalDateTime.parse("2024-03-22T12:45:00")).build()
         );
         List<IntradayValue> intradayValues = new ArrayList<>();
         intradayValues.addAll(imoexIntraday);

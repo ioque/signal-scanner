@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AggregatedHistory implements Comparable<AggregatedHistory> {
+    Long id;
     LocalDate date;
     Double lowPrice;
     Double highPrice;

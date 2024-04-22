@@ -18,7 +18,7 @@ import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
-import ru.ioque.core.dto.datasource.response.IntradayDtoResponse;
+import ru.ioque.core.dto.datasource.response.IntradayResponse;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
@@ -160,7 +160,7 @@ public abstract class DatasourceEmulatedTest {
         return datasourceClient().getInstrumentBy(exchangeId, ticker);
     }
 
-    protected List<IntradayDtoResponse> getIntradayValues(int pageNumber, int pageSize) {
+    protected List<IntradayResponse> getIntradayValues(int pageNumber, int pageSize) {
         return clientFacade.getArchiveRestClient().getIntradayValues(pageNumber, pageSize);
     }
 

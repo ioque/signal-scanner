@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntradayDtoResponse {
+public class IntradayResponse {
     String dateTime;
     Double price;
     Long number;

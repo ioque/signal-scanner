@@ -33,9 +33,9 @@ public class DatasourceEmulator {
     @GetMapping("/api/instruments/{ticker}/intraday")
     public List<IntradayValue> getIntraday(
         @PathVariable String ticker,
-        @RequestParam(required = false, defaultValue = "0") int start
+        @RequestParam(required = false, defaultValue = "0") int lastNumber
     ) {
-        return datasetRepository.getIntradayValuesBy(ticker, start);
+        return datasetRepository.getIntradayValuesBy(ticker, lastNumber);
     }
 
     @GetMapping("/api/instruments/{ticker}/history")

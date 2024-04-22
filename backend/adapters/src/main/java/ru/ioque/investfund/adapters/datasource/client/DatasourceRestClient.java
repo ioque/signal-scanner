@@ -61,7 +61,6 @@ public class DatasourceRestClient {
         LocalDate to
     ) {
         try {
-            if (from.isEqual(to)) return List.of();
             return objectMapper
                 .readValue(
                     defaultClient

@@ -67,6 +67,7 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
 
     public AggregatedHistory toDomain() {
         return AggregatedHistory.builder()
+            .id(getId())
             .date(date)
             .openPrice(openPrice)
             .closePrice(closePrice)
@@ -79,6 +80,7 @@ public class AggregatedHistoryEntity extends GeneratedIdentity {
 
     public static AggregatedHistoryEntity fromDomain(AggregatedHistory historyValue) {
         return AggregatedHistoryEntity.builder()
+            .id(historyValue.getId())
             .date(historyValue.getDate())
             .openPrice(historyValue.getOpenPrice())
             .closePrice(historyValue.getClosePrice())
