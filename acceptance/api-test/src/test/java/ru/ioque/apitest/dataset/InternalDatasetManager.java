@@ -1,10 +1,9 @@
-package ru.ioque.apitest;
+package ru.ioque.apitest.dataset;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.apitest.repos.DatasetRepository;
 import ru.ioque.core.dataset.Dataset;
 
 @Component

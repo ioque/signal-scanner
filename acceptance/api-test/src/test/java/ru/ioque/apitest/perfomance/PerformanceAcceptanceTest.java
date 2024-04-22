@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import ru.ioque.apitest.api.BaseApiAcceptanceTest;
+import ru.ioque.apitest.DatasourceEmulatedTest;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("PERFORMANCE")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class PerformanceAcceptanceTest extends BaseApiAcceptanceTest {
+public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
         registerDatasource(

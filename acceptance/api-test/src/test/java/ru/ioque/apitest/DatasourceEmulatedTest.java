@@ -1,12 +1,12 @@
-package ru.ioque.apitest.api;
+package ru.ioque.apitest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import ru.ioque.apitest.ClientFacade;
-import ru.ioque.apitest.DatasetManager;
+import ru.ioque.apitest.client.ClientFacade;
+import ru.ioque.apitest.dataset.DatasetManager;
 import ru.ioque.apitest.kafka.IntegrationEvent;
 import ru.ioque.apitest.kafka.KafkaConsumer;
 import ru.ioque.core.client.datasource.DatasourceRestClient;
@@ -32,7 +32,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class BaseApiAcceptanceTest {
+public abstract class DatasourceEmulatedTest {
     @Value("${variables.datasource_url}")
     protected String datasourceHost;
     @Autowired
@@ -128,10 +128,6 @@ public class BaseApiAcceptanceTest {
     protected void integrateInstruments(UUID datasourceId) {
         exchangeClient().integrateInstruments(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-    }
-
-    protected void runArchiving() {
-        exchangeClient().runArchiving();
     }
 
     protected void integrateTradingData(UUID datasourceId) {

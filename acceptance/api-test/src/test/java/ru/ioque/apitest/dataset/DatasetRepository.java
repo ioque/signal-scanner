@@ -1,4 +1,4 @@
-package ru.ioque.apitest.repos;
+package ru.ioque.apitest.dataset;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;

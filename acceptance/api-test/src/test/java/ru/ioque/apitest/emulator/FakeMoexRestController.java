@@ -1,4 +1,4 @@
-package ru.ioque.apitest.rest;
+package ru.ioque.apitest.emulator;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.apitest.repos.DatasetRepository;
+import ru.ioque.apitest.dataset.DatasetRepository;
 import ru.ioque.core.datagenerator.history.HistoryValue;
 import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;

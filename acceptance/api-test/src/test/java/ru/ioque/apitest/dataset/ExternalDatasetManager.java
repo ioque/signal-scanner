@@ -1,4 +1,4 @@
-package ru.ioque.apitest;
+package ru.ioque.apitest.dataset;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;

@@ -1,4 +1,4 @@
-package ru.ioque.apitest;
+package ru.ioque.apitest.client;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +15,7 @@ public class ClientFacade {
     private final ArchiveRestClient archiveRestClient;
     private final SignalScannerRestClient signalScannerRestClient;
     private final ServiceClient serviceClient;
+
     public ClientFacade(@Value("${variables.api_url}") String apiHost) {
         datasourceRestClient = new DatasourceRestClient(apiHost);
         archiveRestClient = new ArchiveRestClient(apiHost);

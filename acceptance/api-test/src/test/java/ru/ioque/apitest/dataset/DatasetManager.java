@@ -1,4 +1,4 @@
-package ru.ioque.apitest;
+package ru.ioque.apitest.dataset;
 
 import ru.ioque.core.dataset.Dataset;
 
