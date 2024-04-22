@@ -3,8 +3,7 @@ package ru.ioque.apitest.modules.datasource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.apitest.DatasourceEmulatedTest;
-import ru.ioque.core.dataset.Dataset;
+import ru.ioque.core.datagenerator.instrument.Instrument;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
@@ -17,7 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("DATASOURCE QUERY ACCEPTANCE TEST")
-public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
+public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(LocalDateTime.parse("2024-04-22T13:00:00"));
@@ -35,21 +34,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T1. Поиск финансовых инструментов по тикеру.
         """)
     void testCase3() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("ticker", "SBER")).size());
@@ -60,21 +46,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T2. Поиск финансовых инструментов по типу.
         """)
     void testCase4() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("type", "stock")).size());
@@ -88,21 +61,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T3. Поиск финансовых инструментов по названию.
         """)
     void testCase5() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("shortname", "Сбер")).size());
@@ -113,21 +73,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T4. Поиск финансовых инструментов по названию и типу.
         """)
     void testCase6() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(1, getInstruments(datasourceId, Map.of("shortname", "BR", "type", "futures")).size());
@@ -138,21 +85,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T5. Поиск финансовых инструментов по тикеру и типу.
         """)
     void testCase7() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(1, getInstruments(datasourceId, Map.of("ticker", "IMOEX", "type", "index")).size());
@@ -163,21 +97,8 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T6. Поиск финансовых инструментов по тикеру, названию и типу.
         """)
     void testCase8() {
-        initDataset(
-            Dataset.builder()
-                .instruments(
-                    List.of(
-                        DefaultInstrumentSet.imoex(),
-                        DefaultInstrumentSet.usbRub(),
-                        DefaultInstrumentSet.brf4(),
-                        DefaultInstrumentSet.sber(),
-                        DefaultInstrumentSet.sberp()
-                    )
-                )
-                .build()
-        );
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         assertEquals(
@@ -191,15 +112,23 @@ public class DatasourceQueryAcceptanceTest extends DatasourceEmulatedTest {
         T7. Получение детализированной информации по финансовому инструменту.
         """)
     void testCase9() {
-        initDataset(Dataset.builder().instruments(List.of(DefaultInstrumentSet.sber())).build());
-        UUID datasourceId = getAllDatasource().get(0).getId();
-
+        final UUID datasourceId = getFirstDatasourceId();
+        initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
         InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, "SBER");
-
         assertEquals("SBER", instrumentResponse.getTicker());
         assertEquals("Сбербанк", instrumentResponse.getShortName());
         assertEquals("ПАО Сбербанк", instrumentResponse.getName());
+    }
+
+    private static List<Instrument> getInstrumentList() {
+        return List.of(
+            DefaultInstrumentSet.imoex(),
+            DefaultInstrumentSet.usbRub(),
+            DefaultInstrumentSet.brf4(),
+            DefaultInstrumentSet.sber(),
+            DefaultInstrumentSet.sberp()
+        );
     }
 }

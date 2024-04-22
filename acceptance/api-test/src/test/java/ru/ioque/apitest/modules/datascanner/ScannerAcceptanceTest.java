@@ -3,8 +3,6 @@ package ru.ioque.apitest.modules.datascanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.DatasourceEmulatedTest;
 import ru.ioque.core.datagenerator.config.ContractsGeneratorConfig;
 import ru.ioque.core.datagenerator.config.DealsGeneratorConfig;
@@ -34,12 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
         initDateTime(getDateTimeNow());
-        createDatasource(
+        datasourceClient().createDatasource(
             DatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
@@ -63,7 +60,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -95,7 +92,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .instruments(List.of(DefaultInstrumentSet.sber(), DefaultInstrumentSet.sberp()))
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -126,7 +123,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 ))
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -163,7 +160,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 ))
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -275,7 +272,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -291,13 +289,11 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        final UUID id = getSignalScanners().get(0).getId();
-
         integrateTradingData(datasourceId);
 
         assertTrue(waitTradingDataIntegratedEvent());
         assertTrue(waitSignalRegisteredEvent());
-        assertEquals(1, getSignalsBy(id).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
     @Test
@@ -382,7 +378,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
         createScanner(
             CreateScannerRequest.builder()
@@ -393,11 +390,15 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .properties(new PrefSimplePropertiesDto(1.0))
                 .build()
         );
-
         integrateTradingData(datasourceId);
 
+        assertTrue(waitTradingDataIntegratedEvent());
         assertTrue(waitSignalRegisteredEvent());
-        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+    }
+
+    private UUID getFirstScannerId() {
+        return getSignalScanners().get(0).getId();
     }
 
     @Test
@@ -515,7 +516,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .historyValues(historyValues)
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
         createScanner(
             CreateScannerRequest.builder()
@@ -533,8 +535,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
+        assertTrue(waitTradingDataIntegratedEvent());
         assertTrue(waitSignalRegisteredEvent());
-        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
     @Test
@@ -597,7 +600,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .intradayValues(intradayValues)
                 .build()
         );
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
 
         createScanner(
@@ -617,7 +621,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
+        assertTrue(waitTradingDataIntegratedEvent());
         assertTrue(waitSignalRegisteredEvent());
-        assertEquals(1, getSignalsBy(getSignalScanners().get(0).getId()).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 }

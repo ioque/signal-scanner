@@ -4,14 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.integration.event.DomainEventWrapper;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.event.UpdateTradingStateEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -270,11 +269,11 @@ public class DatasourceIntegrationTest extends BaseTest {
         initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        DomainEventWrapper domainEventWrapper = (DomainEventWrapper) eventPublisher().getEvents().get(0);
-        UpdateTradingStateEvent event = (UpdateTradingStateEvent) domainEventWrapper.getDomainEvent();
-        assertEquals(getInstruments(datasourceId).get(0).getId(), event.getInstrumentId());
-        assertNotNull(event.getTradingState());
-        assertEquals(dateTimeProvider().nowDateTime(), domainEventWrapper.getDateTime());
+        TradingDataIntegratedEvent event = (TradingDataIntegratedEvent) eventPublisher().getEvents().get(0);
+        assertEquals(datasourceId.getUuid(), event.getDatasourceId());
+        assertEquals(1, event.getUpdatedCount());
+        assertNotNull(event.getId());
+        assertEquals(dateTimeProvider().nowDateTime(), event.getDateTime());
     }
 
     @Test

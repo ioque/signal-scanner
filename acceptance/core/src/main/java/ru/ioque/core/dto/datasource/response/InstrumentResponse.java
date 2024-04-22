@@ -25,5 +25,6 @@ public class InstrumentResponse {
     Double todayLastPrice;
     Double todayFirstPrice;
     Double todayValue;
+    Boolean updatable;
     List<AggregatedHistoryResponse> historyValues;
 }

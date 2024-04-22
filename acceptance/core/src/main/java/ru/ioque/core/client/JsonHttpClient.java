@@ -75,10 +75,6 @@ public class JsonHttpClient {
     }
 
     private void checkError(HttpResponse<String> response) throws JsonProcessingException {
-        if (response.statusCode() != 200) {
-            String message = objectMapper.readTree(response.body()).get("message").asText();
-            throw new RuntimeException(message);
-        }
         if(response.statusCode() == 400) {
             List<String> errors = new ArrayList<>();
             JsonNode jsonNode = objectMapper.readTree(response.body()).get("errors");
@@ -88,6 +84,10 @@ public class JsonHttpClient {
                 }
             }
             throw new RuntimeException(errors.toString());
+        }
+        if (response.statusCode() != 200) {
+            String message = objectMapper.readTree(response.body()).get("message").asText();
+            throw new RuntimeException(message);
         }
     }
 }

@@ -25,6 +25,7 @@ public class InstrumentResponse implements Serializable {
     Double todayLastPrice;
     Double todayFirstPrice;
     Double todayValue;
+    Boolean updatable;
     List<AggregatedHistoryResponse> historyValues;
 
     public static InstrumentResponse from(InstrumentEntity instrument) {
@@ -33,6 +34,7 @@ public class InstrumentResponse implements Serializable {
             .ticker(instrument.getTicker())
             .name(instrument.getName())
             .shortName(instrument.getShortName())
+            .updatable(instrument.getUpdatable())
             .historyValues(instrument.getHistory().stream().map(AggregatedHistoryResponse::fromDomain).toList())
             .todayLastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
             .todayFirstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))

@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.client.ClientFacade;
 import ru.ioque.apitest.dataset.DatasetManager;
-import ru.ioque.apitest.kafka.IntegrationEvent;
 import ru.ioque.apitest.kafka.KafkaConsumer;
 import ru.ioque.core.client.datasource.DatasourceHttpClient;
 import ru.ioque.core.client.service.ServiceHttpClient;
@@ -16,7 +15,6 @@ import ru.ioque.core.datagenerator.TradingDataGeneratorFacade;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
-import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
@@ -51,7 +49,7 @@ public abstract class DatasourceEmulatedTest {
 
     protected boolean waitTradingDataIntegratedEvent() {
         long start = System.currentTimeMillis();
-        while (kafkaConsumer.getMessages().stream().noneMatch(IntegrationEvent::isTradingDataIntegratedEvent)) {
+        while (!kafkaConsumer.containsTradingDataIntegratedEvent()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }
@@ -61,7 +59,7 @@ public abstract class DatasourceEmulatedTest {
 
     protected boolean waitSignalRegisteredEvent() {
         long start = System.currentTimeMillis();
-        while (kafkaConsumer.getMessages().stream().noneMatch(IntegrationEvent::isSignalRegisteredEvent)) {
+        while (!kafkaConsumer.containsSignalRegisteredEvent()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }
@@ -69,7 +67,7 @@ public abstract class DatasourceEmulatedTest {
         return true;
     }
 
-    private DatasourceHttpClient datasourceClient() {
+    protected DatasourceHttpClient datasourceClient() {
         return clientFacade.getDatasourceRestClient();
     }
 
@@ -87,18 +85,6 @@ public abstract class DatasourceEmulatedTest {
 
     protected List<DatasourceResponse> getAllDatasource() {
         return datasourceClient().getDatasourceList();
-    }
-
-    protected void createDatasource(DatasourceRequest request) {
-        datasourceClient().createDatasource(request);
-    }
-
-    protected void removeDatasource(UUID datasourceId) {
-        datasourceClient().removeDatasource(datasourceId);
-    }
-
-    protected void updateDatasource(UUID datasourceId, DatasourceRequest request) {
-        datasourceClient().updateDatasource(datasourceId, request);
     }
 
     protected void createScanner(CreateScannerRequest request) {
@@ -129,17 +115,13 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected void fullIntegrate(UUID datasourceId) {
-        integrateInstruments(datasourceId);
+        integrateAllInstrumentFrom(datasourceId);;
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
         integrateTradingData(datasourceId);
     }
 
-    protected void integrateInstruments(UUID datasourceId) {
+    protected void integrateAllInstrumentFrom(UUID datasourceId) {
         datasourceClient().integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-    }
-
-    protected void integrateTradingData(UUID datasourceId) {
-        datasourceClient().integrateTradingData(datasourceId);
     }
 
     protected void enableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
@@ -148,6 +130,14 @@ public abstract class DatasourceEmulatedTest {
 
     protected void disableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
         datasourceClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
+    }
+
+    protected void integrateAggregatedHistory(UUID datasourceId) {
+        datasourceClient().integrateTradingData(datasourceId);
+    }
+
+    protected void integrateTradingData(UUID datasourceId) {
+        datasourceClient().integrateTradingData(datasourceId);
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId) {

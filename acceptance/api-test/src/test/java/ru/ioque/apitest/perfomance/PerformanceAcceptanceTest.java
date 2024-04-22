@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
     @BeforeEach
     void initDateTime() {
-        createDatasource(
+        datasourceClient().createDatasource(
             DatasourceRequest.builder()
                 .name("Московская Биржа")
                 .description("Московская биржа, интегрируются только данные основных торгов: TQBR, RFUD, SNDX, CETS.")
@@ -43,7 +43,8 @@ public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
         """)
     void testCase1() {
         UUID datasourceId = getAllDatasource().get(0).getId();
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.parse("2024-03-22T10:00:00");
+        initDateTime(time);
         LocalDate startDate = time.toLocalDate().minusMonths(6);
         initDataset(
             Dataset.builder()

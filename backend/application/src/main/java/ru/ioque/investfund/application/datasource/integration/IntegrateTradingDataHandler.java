@@ -60,7 +60,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
             .flatMap(Collection::stream)
             .toList();
         datasourceRepository.save(datasource);
-        events.forEach(eventPublisher::publish);
+        //events.forEach(eventPublisher::publish);
         eventPublisher.publish(TradingDataIntegratedEvent.builder()
             .id(uuidProvider.generate())
             .datasourceId(datasource.getId().getUuid())

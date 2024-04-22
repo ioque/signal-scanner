@@ -2,7 +2,6 @@ package ru.ioque.apitest.modules.datasource;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.apitest.DatasourceEmulatedTest;
 import ru.ioque.core.dto.datasource.request.DatasourceRequest;
 import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("DATASOURCE CONFIGURATOR ACCEPTANCE TEST")
-public class DatasourceConfiguratorAcceptanceTest extends DatasourceEmulatedTest {
+public class DatasourceConfiguratorAcceptanceTest extends DatasourceAcceptanceTest {
     @Test
     @DisplayName("""
         T1. Регистрация нового источника данных.

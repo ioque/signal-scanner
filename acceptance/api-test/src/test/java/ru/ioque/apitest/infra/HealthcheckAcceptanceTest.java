@@ -4,11 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
+import ru.ioque.apitest.DatasourceEmulatedTest;
 
-@SpringBootTest
-public class HealthcheckAcceptanceTest {
+public class HealthcheckAcceptanceTest extends DatasourceEmulatedTest {
     @Value("${variables.api_url}")
     String url;
     @Autowired
