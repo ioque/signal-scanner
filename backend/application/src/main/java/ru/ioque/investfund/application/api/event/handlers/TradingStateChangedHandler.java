@@ -29,8 +29,6 @@ public class TradingStateChangedHandler extends EventHandler<TradingStateChanged
 
     @Override
     protected void handle(TradingStateChanged event) {
-        commandPublisher.publish(
-            new EvaluateRisk(InstrumentId.from(event.getInstrumentId()))
-        );
+        commandPublisher.publish(new EvaluateRisk(InstrumentId.from(event.getInstrumentId())));
     }
 }

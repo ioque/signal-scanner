@@ -11,7 +11,7 @@ import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.risk.command.ClosePosition;
 import ru.ioque.investfund.application.risk.command.OpenPosition;
 import ru.ioque.investfund.application.scanner.event.SignalRegistered;
-import ru.ioque.investfund.application.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
@@ -19,23 +19,27 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
     CommandPublisher commandPublisher;
-    TelegramBotService telegramBotService;
 
     public SignalRegisteredHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        CommandPublisher commandPublisher,
-        TelegramBotService telegramBotService
+        CommandPublisher commandPublisher
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.telegramBotService = telegramBotService;
         this.commandPublisher = commandPublisher;
     }
 
     @Override
     public void handle(SignalRegistered event) {
-        telegramBotService.sendToAllChats(event.toString());
+        commandPublisher.publish(
+            PublishSignal.builder()
+                .isBuy(event.getIsBuy())
+                .price(event.getPrice())
+                .scannerId(ScannerId.from(event.getScannerId()))
+                .instrumentId(InstrumentId.from(event.getInstrumentId()))
+                .build()
+        );
         if (event.getIsBuy()) {
             commandPublisher.publish(
                 OpenPosition.builder()

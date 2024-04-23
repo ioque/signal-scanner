@@ -6,30 +6,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.ioque.investfund.application.telegrambot.TelegramBotService;
-import ru.ioque.investfund.application.telegrambot.TelegramCommand;
+import ru.ioque.investfund.application.adapters.CommandPublisher;
+import ru.ioque.investfund.application.telegrambot.command.Subscribe;
+import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
 
 @Slf4j
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalTelegramBot extends TelegramBot {
-    TelegramBotService telegramBotService;
+    CommandPublisher commandPublisher;
 
     public SignalTelegramBot(
         @Value("${telegram-bot.token}") String botToken,
-        TelegramBotService telegramBotService
+        CommandPublisher commandPublisher
     ) {
         super(botToken);
-        this.telegramBotService = telegramBotService;
+        this.commandPublisher = commandPublisher;
     }
 
     @Override
     public void consume(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            telegramBotService.execute(new TelegramCommand(
-                update.getMessage().getChatId(),
-                update.getMessage().getText()
-            ));
+            switch (update.getMessage().getText()) {
+                case "/start":
+                case "/subscribe":
+                    commandPublisher.publish(new Subscribe(update.getMessage().getChatId()));
+                    break;
+                case "/unsubscribe":
+                    commandPublisher.publish(new Unsubscribe(update.getMessage().getChatId()));
+                    break;
+            }
         }
     }
 }
