@@ -34,8 +34,4 @@ public class EventBus {
                 () -> log.warn(String.format("Для события %s не существует обработчика.", event))
             );
     }
-
-    public void handleFor(IntegrationEvent event) {
-
-    }
 }

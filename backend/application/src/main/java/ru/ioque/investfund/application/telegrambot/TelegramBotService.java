@@ -9,7 +9,6 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.domain.telegrambot.TelegramChat;
-import ru.ioque.investfund.domain.telegrambot.TelegramCommand;
 import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 @Slf4j

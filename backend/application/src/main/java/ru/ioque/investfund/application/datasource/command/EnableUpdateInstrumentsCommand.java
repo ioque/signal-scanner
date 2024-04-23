@@ -1,5 +1,7 @@
-package ru.ioque.investfund.domain.datasource.command;
+package ru.ioque.investfund.application.datasource.command;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,8 +11,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -19,7 +24,9 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntegrateTradingDataCommand implements Command {
+public class EnableUpdateInstrumentsCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
+    @NotEmpty(message = "Не передан список тикеров инструментов для активации обновления торговых данных.")
+    List<@Valid Ticker> tickers;
 }

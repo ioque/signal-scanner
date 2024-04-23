@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;

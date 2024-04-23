@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.datasource.command;
+package ru.ioque.investfund.application.datasource.command;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 @Getter
@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UnregisterDatasourceCommand implements Command {
+public class IntegrateTradingDataCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
 }

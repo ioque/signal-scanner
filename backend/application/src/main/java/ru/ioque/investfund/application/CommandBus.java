@@ -2,7 +2,6 @@ package ru.ioque.investfund.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.domain.core.Command;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;

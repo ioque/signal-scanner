@@ -14,13 +14,13 @@ import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrum
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
 import ru.ioque.investfund.application.CommandBus;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.command.DisableUpdateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.DisableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 

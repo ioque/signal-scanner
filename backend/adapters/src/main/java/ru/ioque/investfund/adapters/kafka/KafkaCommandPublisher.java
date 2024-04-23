@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 
 @Component
 @AllArgsConstructor

@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;

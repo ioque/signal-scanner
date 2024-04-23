@@ -22,16 +22,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalRegisteredEvent implements IntegrationEvent {
+public class TradingStateChanged implements IntegrationEvent {
     UUID id;
-    String ticker;
-    Double price;
-    boolean isBuy;
-    UUID scannerId;
-    LocalDateTime watermark;
+    UUID instrumentId;
+    UUID integrationSessionMark;
+    LocalDateTime createdAt;
 
-    @Override
-    public boolean isSignalRegisteredEvent() {
+    public boolean isTradingStateChanged() {
         return true;
     }
 }

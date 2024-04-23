@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner.command;
+package ru.ioque.investfund.application.datasource.command;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -9,10 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -21,9 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProduceSignalCommand implements Command {
+public class IntegrateInstrumentsCommand implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
-    @NotNull(message = "Не передан watermark.")
-    LocalDateTime watermark;
 }

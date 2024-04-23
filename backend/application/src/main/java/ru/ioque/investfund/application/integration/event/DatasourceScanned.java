@@ -15,13 +15,13 @@ import java.util.UUID;
 @Getter
 @Builder
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEvent implements IntegrationEvent {
+public class DatasourceScanned implements IntegrationEvent {
     UUID id;
     UUID datasourceId;
-    Integer updatedCount;
-    LocalDateTime dateTime;
+    LocalDateTime watermark;
+    LocalDateTime createdAt;
 }

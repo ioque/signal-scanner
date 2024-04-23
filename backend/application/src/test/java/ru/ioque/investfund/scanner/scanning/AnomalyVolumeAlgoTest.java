@@ -3,12 +3,12 @@ package ru.ioque.investfund.scanner.scanning;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Arrays;

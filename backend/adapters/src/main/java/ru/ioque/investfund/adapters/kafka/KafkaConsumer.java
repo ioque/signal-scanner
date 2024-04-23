@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.ioque.investfund.application.CommandBus;
 import ru.ioque.investfund.application.integration.EventBus;
 import ru.ioque.investfund.application.integration.event.IntegrationEvent;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 
 @Slf4j
 @Service

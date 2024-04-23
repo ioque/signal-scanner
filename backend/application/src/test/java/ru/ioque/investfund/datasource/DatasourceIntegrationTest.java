@@ -4,17 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
+import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -269,11 +270,10 @@ public class DatasourceIntegrationTest extends BaseTest {
         initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        TradingDataIntegratedEvent event = (TradingDataIntegratedEvent) eventPublisher().getEvents().get(0);
+        TradingDataIntegrated event = findTradingDataIntegrated().orElseThrow();
         assertEquals(datasourceId.getUuid(), event.getDatasourceId());
-        assertEquals(1, event.getUpdatedCount());
         assertNotNull(event.getId());
-        assertEquals(dateTimeProvider().nowDateTime(), event.getDateTime());
+        assertEquals(dateTimeProvider().nowDateTime(), event.getCreatedAt());
     }
 
     @Test
@@ -309,5 +309,13 @@ public class DatasourceIntegrationTest extends BaseTest {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         assertEquals(1, getIntradayValuesBy(AFKS).size());
+    }
+
+    private Optional<TradingDataIntegrated> findTradingDataIntegrated() {
+        return eventPublisher()
+            .getEvents()
+            .stream().filter(row -> row.getClass().equals(TradingDataIntegrated.class))
+            .findFirst()
+            .map(TradingDataIntegrated.class::cast);
     }
 }

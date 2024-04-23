@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 import java.util.List;

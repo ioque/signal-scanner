@@ -11,19 +11,23 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = Id.DEDUCTION)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = SignalRegisteredEvent.class, name = "SignalRegisteredEvent"),
-    @JsonSubTypes.Type(value = TradingDataIntegratedEvent.class, name = "TradingDataIntegratedEvent"),
-    @JsonSubTypes.Type(value = ScanningFinishedEvent.class, name = "ScanningFinishedEvent")
+    @JsonSubTypes.Type(value = DatasourceScanned.class, name = "DatasourceScanned"),
+    @JsonSubTypes.Type(value = SignalRegistered.class, name = "SignalRegistered"),
+    @JsonSubTypes.Type(value = TradingDataIntegrated.class, name = "TradingDataIntegrated"),
+    @JsonSubTypes.Type(value = TradingStateChanged.class, name = "TradingStateChanged"),
 }
 )
 public interface IntegrationEvent {
-    default boolean isSignalRegisteredEvent() {
+    default boolean isDatasourceScanned() {
         return false;
     }
-    default boolean isTradingDataIntegratedEvent() {
+    default boolean isSignalRegistered() {
         return false;
     }
-    default boolean isScanningFinishedEvent() {
+    default boolean isTradingDataIntegrated() {
+        return false;
+    }
+    default boolean isTradingStateChanged() {
         return false;
     }
 }

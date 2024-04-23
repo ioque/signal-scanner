@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
@@ -29,7 +29,9 @@ public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceComm
     @Override
     protected void businessProcess(UpdateDatasourceCommand command) {
         final Datasource datasource = datasourceRepository.getBy(command.getId());
-        datasource.update(command);
+        datasource.updateName(command.getName());
+        datasource.updateUrl(command.getUrl());
+        datasource.updateDescription(command.getDescription());
         datasourceRepository.save(datasource);
     }
 }

@@ -3,7 +3,7 @@ package ru.ioque.investfund.telegrambot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.domain.telegrambot.TelegramCommand;
+import ru.ioque.investfund.application.telegrambot.TelegramCommand;
 import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 import java.time.LocalDateTime;

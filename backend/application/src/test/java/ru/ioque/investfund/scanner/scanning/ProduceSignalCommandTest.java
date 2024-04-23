@@ -4,15 +4,15 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.integration.event.SignalRegisteredEvent;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.integration.event.SignalRegistered;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -90,13 +90,13 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
 
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
-        final Optional<SignalRegisteredEvent> signalFoundEvent = findSignalFoundEvent();
+        final Optional<SignalRegistered> signalFoundEvent = findSignalFoundEvent();
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId().getUuid(), signalFoundEvent.get().getScannerId());
         assertEquals(TGKN, signalFoundEvent.get().getTicker());
-        assertTrue(signalFoundEvent.get().isBuy());
-        assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getWatermark());
+        assertTrue(signalFoundEvent.get().getIsBuy());
+        assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getCreatedAt());
     }
 
     @Test
@@ -288,11 +288,11 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         clearLogs();
     }
 
-    private Optional<SignalRegisteredEvent> findSignalFoundEvent() {
+    private Optional<SignalRegistered> findSignalFoundEvent() {
         return eventPublisher()
             .getEvents()
-            .stream().filter(row -> row.getClass().equals(SignalRegisteredEvent.class))
+            .stream().filter(row -> row.getClass().equals(SignalRegistered.class))
             .findFirst()
-            .map(SignalRegisteredEvent.class::cast);
+            .map(SignalRegistered.class::cast);
     }
 }

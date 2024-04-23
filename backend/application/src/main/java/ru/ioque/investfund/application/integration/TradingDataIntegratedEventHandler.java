@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegratedEvent;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEventHandler extends EventHandler<TradingDataIntegratedEvent> {
+public class TradingDataIntegratedEventHandler extends EventHandler<TradingDataIntegrated> {
     CommandPublisher commandPublisher;
 
     public TradingDataIntegratedEventHandler(
@@ -27,11 +27,11 @@ public class TradingDataIntegratedEventHandler extends EventHandler<TradingDataI
     }
 
     @Override
-    public void handle(TradingDataIntegratedEvent event) {
+    public void handle(TradingDataIntegrated event) {
         commandPublisher.publish(
             ProduceSignalCommand.builder()
                 .datasourceId(DatasourceId.from(event.getDatasourceId()))
-                .watermark(event.getDateTime())
+                .watermark(event.getCreatedAt())
                 .build()
         );
     }

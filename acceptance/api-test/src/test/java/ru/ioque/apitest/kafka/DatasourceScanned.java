@@ -22,14 +22,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ScanningFinishedEvent implements IntegrationEvent {
+public class DatasourceScanned implements IntegrationEvent {
     UUID id;
-    UUID datasourceId;
     LocalDateTime watermark;
-    LocalDateTime dateTime;
+    UUID datasourceId;
+    LocalDateTime createdAt;
 
-    @Override
-    public boolean isScanningFinishedEvent() {
+    public boolean isDatasourceScanned() {
         return true;
     }
 }

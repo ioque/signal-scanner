@@ -59,18 +59,20 @@ public class Instrument extends Domain<InstrumentId> {
         this.details = details;
     }
 
-    public void updateTradingState(TreeSet<IntradayData> intradayData) {
+    public boolean updateTradingState(TreeSet<IntradayData> intradayData) {
         if (intradayData.isEmpty()) {
-            return;
+            return false;
         }
         if (tradingState == null) {
             tradingState = TradingState.from(intradayData);
-            return;
+            return true;
         }
         IntradayData lastIntradayData = intradayData.last();
         if (lastIntradayData.getNumber() > tradingState.getLastIntradayNumber()) {
             tradingState = TradingState.of(tradingState, intradayData);
+            return true;
         }
+        return false;
     }
 
     public void updateAggregateHistory(TreeSet<AggregatedHistory> aggregateHistories) {

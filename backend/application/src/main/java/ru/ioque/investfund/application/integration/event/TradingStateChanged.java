@@ -1,4 +1,4 @@
-package ru.ioque.apitest.kafka;
+package ru.ioque.investfund.application.integration.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,18 +15,13 @@ import java.util.UUID;
 @Getter
 @Builder
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEvent implements IntegrationEvent {
+public class TradingStateChanged implements IntegrationEvent {
     UUID id;
-    UUID datasourceId;
-    Integer updatedCount;
-    LocalDateTime dateTime;
-
-    @Override
-    public boolean isTradingDataIntegratedEvent() {
-        return true;
-    }
+    UUID instrumentId;
+    UUID integrationSessionMark;
+    LocalDateTime createdAt;
 }

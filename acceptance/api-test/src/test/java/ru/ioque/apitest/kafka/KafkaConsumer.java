@@ -14,39 +14,49 @@ import java.util.List;
 @Component
 public class KafkaConsumer {
     List<IntegrationEvent> messages = new ArrayList<>();
-    boolean containsTradingDataIntegratedEvent = false;
-    boolean containsSignalRegisteredEvent = false;
-    boolean containsScanningFinishedEvent = false;
+    boolean containsTradingStateChanged = false;
+    boolean containsTradingDataIntegrated = false;
+    boolean containsSignalRegistered = false;
+    boolean containsDatasourceScanned = false;
 
     @KafkaListener(topics = "events", groupId = "acceptance")
     public synchronized void consume(@Payload IntegrationEvent event) {
-        if (event.isTradingDataIntegratedEvent()) {
-            containsTradingDataIntegratedEvent = true;
+        if (event.isTradingStateChanged()) {
+            containsTradingStateChanged = true;
         }
-        if (event.isSignalRegisteredEvent()) {
-            containsSignalRegisteredEvent = true;
+        if (event.isTradingDataIntegrated()) {
+            containsTradingDataIntegrated = true;
         }
-        if (event.isScanningFinishedEvent()) {
-            containsScanningFinishedEvent = true;
+        if (event.isSignalRegistered()) {
+            containsSignalRegistered = true;
+        }
+        if (event.isDatasourceScanned()) {
+            containsDatasourceScanned = true;
         }
         messages.add(event);
     }
 
     public synchronized void clear() {
         messages.clear();
-        containsTradingDataIntegratedEvent = false;
-        containsSignalRegisteredEvent = false;
+        containsTradingStateChanged = false;
+        containsTradingDataIntegrated = false;
+        containsSignalRegistered = false;
+        containsDatasourceScanned = false;
     }
 
-    public synchronized boolean containsScanningFinishedEvent() {
-        return containsScanningFinishedEvent;
+    public synchronized boolean containsDatasourceScanned() {
+        return containsDatasourceScanned;
     }
 
-    public synchronized boolean containsTradingDataIntegratedEvent() {
-        return containsTradingDataIntegratedEvent;
+    public synchronized boolean containsTradingDataIntegrated() {
+        return containsTradingDataIntegrated;
     }
 
-    public synchronized boolean containsSignalRegisteredEvent() {
-        return containsSignalRegisteredEvent;
+    public synchronized boolean containsSignalRegistered() {
+        return containsSignalRegistered;
+    }
+
+    public synchronized boolean containsTradingStateChanged() {
+        return containsTradingStateChanged;
     }
 }

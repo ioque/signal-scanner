@@ -11,7 +11,7 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.CommandHandler;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
@@ -40,7 +40,10 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Datasource datasource = datasourceRepository.getBy(scanner.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
-        scanner.update(instrumentIds, command);
+        scanner.updateWorkPeriod(command.getWorkPeriodInMinutes());
+        scanner.updateDescription(command.getDescription());
+        scanner.updateProperties(command.getProperties());
+        scanner.updateInstrumentIds(instrumentIds);
         scannerRepository.save(scanner);
     }
 }

@@ -13,7 +13,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
@@ -55,17 +54,23 @@ public class SignalScanner extends Domain<ScannerId> {
         this.signals = signals;
     }
 
-    public void update(List<InstrumentId> instrumentIds, UpdateScannerCommand command) {
-        if (!this.getId().equals(command.getScannerId())) {
-            throw new IllegalArgumentException("Передан невалидный идентификатор.");
-        }
-        if (!command.getProperties().getType().equals(getProperties().getType())) {
+    public void updateWorkPeriod(Integer workPeriodInMinutes) {
+        this.workPeriodInMinutes = workPeriodInMinutes;
+    }
+
+    public void updateInstrumentIds(List<InstrumentId> instrumentIds) {
+        this.instrumentIds = instrumentIds;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateProperties(AlgorithmProperties properties) {
+        if (!properties.getType().equals(getProperties().getType())) {
             throw new IllegalArgumentException("Невозможно изменить тип алгоритма.");
         }
-        this.workPeriodInMinutes = command.getWorkPeriodInMinutes();
-        this.description = command.getDescription();
-        this.instrumentIds = instrumentIds;
-        this.properties = command.getProperties();
+        this.properties = properties;
     }
 
     public Optional<LocalDateTime> getLastExecutionDateTime() {
@@ -75,9 +80,6 @@ public class SignalScanner extends Domain<ScannerId> {
     public List<Signal> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
-        }
-        if(!signals.isEmpty()){
-            System.out.println("LOH");
         }
         AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);

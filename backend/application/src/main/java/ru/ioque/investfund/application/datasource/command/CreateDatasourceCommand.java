@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.datasource.command;
+package ru.ioque.investfund.application.datasource.command;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.Command;
+import ru.ioque.investfund.application.Command;
 
 @Getter
 @Builder

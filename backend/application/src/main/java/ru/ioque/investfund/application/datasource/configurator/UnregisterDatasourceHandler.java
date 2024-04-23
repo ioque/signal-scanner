@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.CommandHandler;
-import ru.ioque.investfund.domain.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component

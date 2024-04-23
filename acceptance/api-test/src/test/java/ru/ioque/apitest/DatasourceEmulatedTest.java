@@ -49,7 +49,7 @@ public abstract class DatasourceEmulatedTest {
 
     protected boolean waitTradingDataIntegratedEvent() {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsTradingDataIntegratedEvent()) {
+        while (!kafkaConsumer.containsTradingDataIntegrated()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }
@@ -59,7 +59,7 @@ public abstract class DatasourceEmulatedTest {
 
     protected boolean waitSignalRegisteredEvent() {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsSignalRegisteredEvent()) {
+        while (!kafkaConsumer.containsSignalRegistered()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }
@@ -69,7 +69,7 @@ public abstract class DatasourceEmulatedTest {
 
     protected boolean waitScanningFinishedEvent() {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsScanningFinishedEvent()) {
+        while (!kafkaConsumer.containsDatasourceScanned()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }

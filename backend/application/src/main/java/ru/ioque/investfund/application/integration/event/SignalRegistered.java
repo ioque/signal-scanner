@@ -19,9 +19,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ScanningFinishedEvent implements IntegrationEvent {
+public class SignalRegistered implements IntegrationEvent {
     UUID id;
-    UUID datasourceId;
-    LocalDateTime watermark;
-    LocalDateTime dateTime;
+    String ticker;
+    Boolean isBuy;
+    UUID scannerId;
+    LocalDateTime createdAt;
 }

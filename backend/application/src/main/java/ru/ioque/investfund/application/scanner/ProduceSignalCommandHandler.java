@@ -11,9 +11,9 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.integration.event.ScanningFinishedEvent;
-import ru.ioque.investfund.application.integration.event.SignalRegisteredEvent;
-import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.integration.event.DatasourceScanned;
+import ru.ioque.investfund.application.integration.event.SignalRegistered;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
@@ -52,11 +52,11 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .stream()
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
             .forEach(scanner -> runScanner(scanner, command.getWatermark()));
-        eventPublisher.publish(ScanningFinishedEvent.builder()
+        eventPublisher.publish(DatasourceScanned.builder()
             .id(uuidProvider.generate())
             .datasourceId(command.getDatasourceId().getUuid())
             .watermark(command.getWatermark())
-            .dateTime(dateTimeProvider.nowDateTime())
+            .createdAt(dateTimeProvider.nowDateTime())
             .build());
     }
 
@@ -66,7 +66,14 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
         scannerRepository.save(scanner);
         signals
             .stream()
-            .map(signal -> SignalRegisteredEvent.of(uuidProvider.generate(), scanner.getId(), signal))
+            .map(signal -> SignalRegistered.builder()
+                .id(uuidProvider.generate())
+                .scannerId(scanner.getId().getUuid())
+                .ticker(signal.getTicker().getValue())
+                .isBuy(signal.isBuy())
+                .createdAt(dateTimeProvider.nowDateTime())
+                .build()
+            )
             .forEach(eventPublisher::publish);
     }
 }

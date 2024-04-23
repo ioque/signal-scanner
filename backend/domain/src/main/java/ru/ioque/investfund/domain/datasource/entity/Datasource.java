@@ -7,13 +7,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.domain.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,21 +41,14 @@ public class Datasource extends Domain<DatasourceId> {
         this.instruments = instruments;
     }
 
-    public static Datasource of(DatasourceId id, CreateDatasourceCommand command) {
-        return Datasource
-            .builder()
-            .id(id)
-            .name(command.getName())
-            .url(command.getUrl())
-            .description(command.getDescription())
-            .instruments(new ArrayList<>())
-            .build();
+    public void updateName(String name) {
+        this.name = name;
     }
-
-    public void update(UpdateDatasourceCommand command) {
-        this.name = command.getName();
-        this.url = command.getUrl();
-        this.description = command.getDescription();
+    public void updateUrl(String url) {
+        this.url = url;
+    }
+    public void updateDescription(String description) {
+        this.description = description;
     }
 
     public void integrateInstruments(List<Instrument> instruments) {

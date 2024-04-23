@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.ioque.investfund.application.telegrambot.TelegramBotService;
-import ru.ioque.investfund.domain.telegrambot.TelegramCommand;
+import ru.ioque.investfund.application.telegrambot.TelegramCommand;
 
 @Slf4j
 @Component
