@@ -1,6 +1,5 @@
-package ru.ioque.investfund.application.datasource.command;
+package ru.ioque.investfund.application.risk.command;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.api.command.Command;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 @Getter
 @Builder
@@ -19,7 +19,8 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntegrateTradingDataCommand implements Command {
-    @NotNull(message = "Не передан идентификатор источника данных.")
-    DatasourceId datasourceId;
+public class OpenPosition implements Command {
+    private Double price;
+    private ScannerId scannerId;
+    private InstrumentId instrumentId;
 }

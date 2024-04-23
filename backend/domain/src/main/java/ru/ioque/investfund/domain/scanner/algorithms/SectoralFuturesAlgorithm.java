@@ -47,6 +47,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
             if (futuresIsRiseOvernight && riseOvernight) {
                 signals.add(
                     Signal.builder()
+                        .instrumentId(snapshot.getInstrumentId())
                         .isOpen(true)
                         .isBuy(true)
                         .summary(summary)

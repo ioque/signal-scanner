@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.integration.event;
+package ru.ioque.investfund.application.api.event;
 
 import java.util.UUID;
 

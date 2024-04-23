@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.datasource.command.CreateDatasourceComman
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.integration.event.SignalRegistered;
+import ru.ioque.investfund.application.scanner.event.SignalRegistered;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
@@ -94,7 +94,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId().getUuid(), signalFoundEvent.get().getScannerId());
-        assertEquals(TGKN, signalFoundEvent.get().getTicker());
+        assertEquals(getTgknSnapshot().getInstrumentId().getUuid(), signalFoundEvent.get().getInstrumentId());
         assertTrue(signalFoundEvent.get().getIsBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getCreatedAt());
     }

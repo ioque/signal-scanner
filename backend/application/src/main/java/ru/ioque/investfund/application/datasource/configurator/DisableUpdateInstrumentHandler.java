@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.CommandHandler;
+import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 

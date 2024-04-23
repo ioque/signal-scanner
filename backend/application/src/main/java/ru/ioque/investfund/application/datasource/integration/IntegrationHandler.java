@@ -1,7 +1,7 @@
 package ru.ioque.investfund.application.datasource.integration;
 
 import jakarta.validation.Validator;
-import ru.ioque.investfund.application.CommandHandler;
+import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;

@@ -29,6 +29,7 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
         return instrumentEntities
             .stream()
             .map(instrument -> TradingSnapshot.builder()
+                .instrumentId(InstrumentId.from(instrument.getId()))
                 .ticker(Ticker.from(instrument.getTicker()))
                 .dateTime(instrument.getTradingState().map(TradingStateEmbeddable::getDateTime).orElse(null))
                 .firstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application;
+package ru.ioque.investfund.application.api.command;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -4,15 +4,15 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.CommandHandler;
+import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.integration.event.DatasourceScanned;
-import ru.ioque.investfund.application.integration.event.SignalRegistered;
+import ru.ioque.investfund.application.scanner.event.DatasourceScanned;
+import ru.ioque.investfund.application.scanner.event.SignalRegistered;
 import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -68,8 +68,9 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .stream()
             .map(signal -> SignalRegistered.builder()
                 .id(uuidProvider.generate())
+                .price(signal.getPrice())
                 .scannerId(scanner.getId().getUuid())
-                .ticker(signal.getTicker().getValue())
+                .instrumentId(signal.getInstrumentId().getUuid())
                 .isBuy(signal.isBuy())
                 .createdAt(dateTimeProvider.nowDateTime())
                 .build()

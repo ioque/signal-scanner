@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.DayOfWeek;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
+    InstrumentId instrumentId;
     LocalDateTime dateTime;
     Ticker ticker;
     Double lastPrice;
@@ -31,6 +33,7 @@ public class TradingSnapshot {
     List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries;
 
     public TradingSnapshot(
+        InstrumentId instrumentId,
         LocalDateTime dateTime,
         Ticker ticker,
         Double lastPrice,
@@ -41,6 +44,7 @@ public class TradingSnapshot {
         List<TimeSeriesValue<Double, ChronoLocalDate>> valueSeries,
         List<TimeSeriesValue<Double, ChronoLocalDate>> waPriceSeries
     ) {
+        this.instrumentId = instrumentId;
         this.dateTime = dateTime;
         this.ticker = ticker;
         this.lastPrice = lastPrice;

@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.CommandHandler;
+import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;

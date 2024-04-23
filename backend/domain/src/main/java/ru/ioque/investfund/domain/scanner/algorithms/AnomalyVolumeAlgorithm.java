@@ -66,6 +66,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
+                        .instrumentId(tradingSnapshot.getInstrumentId())
                         .isOpen(true)
                         .isBuy(true)
                         .summary(summary)
@@ -78,6 +79,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
+                        .instrumentId(tradingSnapshot.getInstrumentId())
                         .isOpen(true)
                         .isBuy(false)
                         .watermark(watermark)

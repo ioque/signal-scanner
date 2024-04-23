@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.integration.event;
+package ru.ioque.investfund.application.risk.command;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import ru.ioque.investfund.application.api.command.Command;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 @Getter
 @Builder
@@ -19,10 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SignalRegistered implements IntegrationEvent {
-    UUID id;
-    String ticker;
-    Boolean isBuy;
-    UUID scannerId;
-    LocalDateTime createdAt;
+public class ClosePosition implements Command {
+    private ScannerId scannerId;
+    private InstrumentId instrumentId;
 }

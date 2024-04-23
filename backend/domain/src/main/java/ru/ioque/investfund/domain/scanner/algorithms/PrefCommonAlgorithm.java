@@ -40,6 +40,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             );
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
+                    .instrumentId(pair.getPref().getInstrumentId())
                     .isOpen(true)
                     .isBuy(true)
                     .summary(summary)

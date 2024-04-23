@@ -1,8 +1,7 @@
-package ru.ioque.investfund.application.integration;
+package ru.ioque.investfund.application.api.event;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.integration.event.IntegrationEvent;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;

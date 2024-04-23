@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.Command;
+import ru.ioque.investfund.application.api.command.Command;
 
 @Getter
 @Builder

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
-import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.api.command.CommandBus;
 import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;

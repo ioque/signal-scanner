@@ -2,7 +2,7 @@ package ru.ioque.investfund;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.api.command.CommandBus;
 import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.CurrencyPairDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.FuturesDto;

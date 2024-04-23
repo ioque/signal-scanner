@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.EventPublisher;
-import ru.ioque.investfund.application.integration.event.IntegrationEvent;
+import ru.ioque.investfund.application.api.event.IntegrationEvent;
 
 @Slf4j
 @Getter

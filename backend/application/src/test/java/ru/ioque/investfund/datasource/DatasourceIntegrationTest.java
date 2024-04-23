@@ -8,7 +8,7 @@ import ru.ioque.investfund.application.datasource.command.CreateDatasourceComman
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
+import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 

@@ -5,7 +5,7 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.application.CommandBus;
+import ru.ioque.investfund.application.api.command.CommandBus;
 import ru.ioque.investfund.application.datasource.configurator.DisableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.datasource.configurator.EnableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.datasource.integration.IntegrateInstrumentsHandler;

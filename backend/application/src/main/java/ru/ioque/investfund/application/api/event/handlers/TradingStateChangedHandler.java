@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.integration;
+package ru.ioque.investfund.application.api.event.handlers;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -7,16 +7,17 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
-import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.application.api.event.EventHandler;
+import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
+import ru.ioque.investfund.application.risk.command.EvaluateRisk;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TradingDataIntegratedEventHandler extends EventHandler<TradingDataIntegrated> {
+public class TradingStateChangedHandler extends EventHandler<TradingStateChanged> {
     CommandPublisher commandPublisher;
 
-    public TradingDataIntegratedEventHandler(
+    public TradingStateChangedHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -27,12 +28,9 @@ public class TradingDataIntegratedEventHandler extends EventHandler<TradingDataI
     }
 
     @Override
-    public void handle(TradingDataIntegrated event) {
+    protected void handle(TradingStateChanged event) {
         commandPublisher.publish(
-            ProduceSignalCommand.builder()
-                .datasourceId(DatasourceId.from(event.getDatasourceId()))
-                .watermark(event.getCreatedAt())
-                .build()
+            new EvaluateRisk(InstrumentId.from(event.getInstrumentId()))
         );
     }
 }

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.integration.event;
+package ru.ioque.investfund.application.datasource.event;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.application.api.event.IntegrationEvent;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,9 +20,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DatasourceScanned implements IntegrationEvent {
+public class TradingStateChanged implements IntegrationEvent {
     UUID id;
-    UUID datasourceId;
-    LocalDateTime watermark;
+    UUID instrumentId;
+    UUID integrationSessionMark;
     LocalDateTime createdAt;
 }

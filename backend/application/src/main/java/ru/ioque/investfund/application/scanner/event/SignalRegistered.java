@@ -1,7 +1,5 @@
-package ru.ioque.apitest.kafka;
+package ru.ioque.investfund.application.scanner.event;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.application.api.event.IntegrationEvent;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,7 +19,6 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalRegistered implements IntegrationEvent {
     UUID id;
@@ -29,8 +27,4 @@ public class SignalRegistered implements IntegrationEvent {
     Boolean isBuy;
     UUID scannerId;
     LocalDateTime createdAt;
-
-    public boolean isSignalRegistered() {
-        return true;
-    }
 }

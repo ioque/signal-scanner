@@ -33,6 +33,7 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                 Instrument instrument = fakeDatasourceRepository.getInstrumentBy(instrumentId);
                 Ticker ticker = instrument.getTicker();
                 return TradingSnapshot.builder()
+                    .instrumentId(instrument.getId())
                     .ticker(ticker)
                     .lastPrice(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(null))
                     .firstPrice(instrument.getTradingState().map(TradingState::getTodayFirstPrice).orElse(null))
