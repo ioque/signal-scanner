@@ -76,6 +76,9 @@ public class SignalScanner extends Domain<ScannerId> {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
+        if(!signals.isEmpty()){
+            System.out.println("LOH");
+        }
         AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
         lastExecutionDateTime = watermark;

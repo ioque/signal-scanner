@@ -16,6 +16,7 @@ public class KafkaConsumer {
     List<IntegrationEvent> messages = new ArrayList<>();
     boolean containsTradingDataIntegratedEvent = false;
     boolean containsSignalRegisteredEvent = false;
+    boolean containsScanningFinishedEvent = false;
 
     @KafkaListener(topics = "events", groupId = "acceptance")
     public synchronized void consume(@Payload IntegrationEvent event) {
@@ -25,6 +26,9 @@ public class KafkaConsumer {
         if (event.isSignalRegisteredEvent()) {
             containsSignalRegisteredEvent = true;
         }
+        if (event.isScanningFinishedEvent()) {
+            containsScanningFinishedEvent = true;
+        }
         messages.add(event);
     }
 
@@ -32,6 +36,10 @@ public class KafkaConsumer {
         messages.clear();
         containsTradingDataIntegratedEvent = false;
         containsSignalRegisteredEvent = false;
+    }
+
+    public synchronized boolean containsScanningFinishedEvent() {
+        return containsScanningFinishedEvent;
     }
 
     public synchronized boolean containsTradingDataIntegratedEvent() {

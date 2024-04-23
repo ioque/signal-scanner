@@ -67,11 +67,10 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
             .indexTicker(properties.getIndexTicker().getValue())
             .build();
         List<SignalEntity> signals = scannerDomain
-                .getSignals()
-                .stream()
-                .map(SignalEntity::from)
-                .peek(row -> row.setScanner(scannerEntity))
-                .toList();
+            .getSignals()
+            .stream()
+            .map(signal -> SignalEntity.from(scannerEntity, signal))
+            .toList();
         scannerEntity.setSignals(signals);
         return scannerEntity;
     }

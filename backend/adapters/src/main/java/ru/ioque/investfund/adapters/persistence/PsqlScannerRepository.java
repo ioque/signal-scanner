@@ -10,7 +10,7 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScanner
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralFuturesScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralRetardScannerEntity;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -27,7 +27,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PsqlScannerRepository implements ScannerRepository {
-    JpaSignalScannerRepository signalScannerEntityRepository;
+    JpaScannerRepository signalScannerEntityRepository;
 
     @Transactional(readOnly = true)
     public Optional<SignalScanner> findBy(ScannerId id) {

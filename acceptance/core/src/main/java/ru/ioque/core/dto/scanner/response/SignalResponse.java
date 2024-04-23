@@ -18,4 +18,5 @@ public class SignalResponse {
     String ticker;
     String dateTime;
     Boolean isBuy;
+    Boolean isOpen;
 }

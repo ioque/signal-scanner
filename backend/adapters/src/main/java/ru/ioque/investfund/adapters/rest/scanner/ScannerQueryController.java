@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 
@@ -22,7 +22,7 @@ import java.util.UUID;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name="ScannerQueryController", description="Контроллер запросов к модулю \"SCANNER\"")
 public class ScannerQueryController {
-    JpaSignalScannerRepository signalScannerEntityRepository;
+    JpaScannerRepository signalScannerEntityRepository;
     JpaInstrumentRepository instrumentEntityRepository;
 
     @GetMapping("/api/scanner")

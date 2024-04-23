@@ -25,10 +25,12 @@ public class SignalResponse implements Serializable {
     String ticker;
     String dateTime;
     Boolean isBuy;
+    Boolean isOpen;
     public static SignalResponse from(SignalEntity signalEntity, InstrumentEntity instrument) {
         return SignalResponse.builder()
             .ticker(instrument.getTicker())
-            .isBuy(signalEntity.isBuy())
+            .isBuy(signalEntity.getId().isBuy())
+            .isOpen(signalEntity.isOpen())
             .dateTime(signalEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .build();
     }

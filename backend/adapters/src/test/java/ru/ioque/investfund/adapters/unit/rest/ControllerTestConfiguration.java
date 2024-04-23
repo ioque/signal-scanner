@@ -8,7 +8,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepository;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
@@ -62,8 +62,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public JpaSignalScannerRepository mockSignalScannerRepository() {
-        return mock(JpaSignalScannerRepository.class);
+    public JpaScannerRepository mockSignalScannerRepository() {
+        return mock(JpaScannerRepository.class);
     }
 
     @Bean

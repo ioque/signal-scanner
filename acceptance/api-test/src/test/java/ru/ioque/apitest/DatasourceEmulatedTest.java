@@ -38,7 +38,7 @@ public abstract class DatasourceEmulatedTest {
     @Autowired
     private DatasetManager datasetManager;
     @Autowired
-    private KafkaConsumer kafkaConsumer;
+    protected KafkaConsumer kafkaConsumer;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
 
     @BeforeEach
@@ -60,6 +60,16 @@ public abstract class DatasourceEmulatedTest {
     protected boolean waitSignalRegisteredEvent() {
         long start = System.currentTimeMillis();
         while (!kafkaConsumer.containsSignalRegisteredEvent()) {
+            if (System.currentTimeMillis() - start > 1000) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected boolean waitScanningFinishedEvent() {
+        long start = System.currentTimeMillis();
+        while (!kafkaConsumer.containsScanningFinishedEvent()) {
             if (System.currentTimeMillis() - start > 1000) {
                 return false;
             }

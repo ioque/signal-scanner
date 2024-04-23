@@ -69,8 +69,7 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
         List<SignalEntity> signals = scannerDomain
             .getSignals()
             .stream()
-            .map(SignalEntity::from)
-            .peek(row -> row.setScanner(scannerEntity))
+            .map(signal -> SignalEntity.from(scannerEntity, signal))
             .toList();
         scannerEntity.setSignals(signals);
         return scannerEntity;

@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface JpaSignalScannerRepository extends JpaAbstractRepository<ScannerEntity> {
+public interface JpaScannerRepository extends JpaAbstractRepository<ScannerEntity> {
     List<ScannerEntity> findAllByDatasourceId(UUID datasourceId);
 }

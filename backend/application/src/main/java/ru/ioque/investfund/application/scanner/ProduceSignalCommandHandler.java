@@ -11,6 +11,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.integration.event.ScanningFinishedEvent;
 import ru.ioque.investfund.application.integration.event.SignalRegisteredEvent;
 import ru.ioque.investfund.domain.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -51,6 +52,12 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .stream()
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
             .forEach(scanner -> runScanner(scanner, command.getWatermark()));
+        eventPublisher.publish(ScanningFinishedEvent.builder()
+            .id(uuidProvider.generate())
+            .datasourceId(command.getDatasourceId().getUuid())
+            .watermark(command.getWatermark())
+            .dateTime(dateTimeProvider.nowDateTime())
+            .build());
     }
 
     private void runScanner(SignalScanner scanner, LocalDateTime watermark) {

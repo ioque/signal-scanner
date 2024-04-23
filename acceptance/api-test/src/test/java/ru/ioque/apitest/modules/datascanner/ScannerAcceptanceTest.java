@@ -10,6 +10,7 @@ import ru.ioque.core.datagenerator.config.DeltasGeneratorConfig;
 import ru.ioque.core.datagenerator.core.HistoryGeneratorConfig;
 import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.datagenerator.history.HistoryValue;
+import ru.ioque.core.datagenerator.intraday.Deal;
 import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
@@ -19,6 +20,7 @@ import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.request.PrefSimplePropertiesDto;
 import ru.ioque.core.dto.scanner.request.SectoralFuturesPropertiesDto;
 import ru.ioque.core.dto.scanner.request.SectoralRetardPropertiesDto;
+import ru.ioque.core.dto.scanner.response.SignalResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -624,5 +626,163 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertTrue(waitTradingDataIntegratedEvent());
         assertTrue(waitSignalRegisteredEvent());
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+    }
+
+    @Test
+    @DisplayName("""
+        T9. Зафиксирован сигнал к покупке, после чего зафиксирован сигнал к продаже.
+        """)
+    void testCase9() {
+        final UUID datasourceId = getAllDatasource().get(0).getId();
+        initDateTime(LocalDateTime.parse("2024-03-21T13:00:00"));
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.tgkn(), DefaultInstrumentSet.imoex()))
+                .historyValues(
+                    List.of(
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3050D).lowPrice(2700D).openPrice(2800D).closePrice(3000D).tradeDate(LocalDate.parse("2024-03-18")).build(),
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3150D).lowPrice(2800D).openPrice(2900D).closePrice(3100D).tradeDate(LocalDate.parse("2024-03-19")).build(),
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3250D).lowPrice(2900D).openPrice(3000D).closePrice(3200D).tradeDate(LocalDate.parse("2024-03-20")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(700_000D).highPrice(98D).lowPrice(98D).openPrice(98D).closePrice(98D).tradeDate(LocalDate.parse("2024-03-18")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(600_000D).highPrice(99D).lowPrice(99D).openPrice(99D).closePrice(99D).tradeDate(LocalDate.parse("2024-03-19")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(1_100_000D).highPrice(100D).lowPrice(100D).openPrice(100D).closePrice(100D).tradeDate(LocalDate.parse("2024-03-20")).build()
+                    )
+                )
+                .intradayValues(
+                    List.of(
+                        Deal.builder().number(1L).ticker("IMOEX").qnt(1).isBuy(true).price(3300D).value(1_000_000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
+                        Deal.builder().number(2L).ticker("IMOEX").qnt(1).isBuy(true).price(3400D).value(2_000_000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
+                        Deal.builder().number(1L).ticker("TGKN").qnt(100).isBuy(true).price(100D).value(700_000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
+                        Deal.builder().number(2L).ticker("TGKN").qnt(100).isBuy(true).price(102D).value(600_000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build()
+                    )
+                )
+                .build()
+        );
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        createScanner(
+            CreateScannerRequest.builder()
+                .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
+                .description("desc")
+                .tickers(getTickers(datasourceId))
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(3)
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
+                .build()
+        );
+        integrateTradingData(datasourceId);
+        assertTrue(waitTradingDataIntegratedEvent());
+        assertTrue(waitSignalRegisteredEvent());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        kafkaConsumer.clear();
+        initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.tgkn(), DefaultInstrumentSet.imoex()))
+                .historyValues(
+                    List.of(
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3450D).lowPrice(2900D).openPrice(2900D).closePrice(3300D).tradeDate(LocalDate.parse("2024-03-21")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(1_200_000D).highPrice(102D).lowPrice(102D).openPrice(102D).closePrice(102D).tradeDate(LocalDate.parse("2024-03-21")).build()
+                    )
+                )
+                .intradayValues(
+                    List.of(
+                        Deal.builder().number(3L).ticker("IMOEX").qnt(1).isBuy(true).price(3000D).value(1_000_000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+                        Deal.builder().number(4L).ticker("IMOEX").qnt(1).isBuy(true).price(2900D).value(2_000_000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+                        Deal.builder().number(3L).ticker("TGKN").qnt(100).isBuy(false).price(101D).value(700_000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+                        Deal.builder().number(4L).ticker("TGKN").qnt(100).isBuy(false).price(99D).value(900_000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build()
+                    )
+                )
+                .build()
+        );
+        integrateTradingData(datasourceId);
+        assertTrue(waitTradingDataIntegratedEvent());
+        assertTrue(waitSignalRegisteredEvent());
+        assertEquals(2, getSignalsBy(getFirstScannerId()).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
+    }
+
+    @Test
+    @DisplayName("""
+        T10. Зафиксирован сигнал к покупке, после чего найден повторный сигнал к продаже.
+        """)
+    void testCase10() {
+        final UUID datasourceId = getAllDatasource().get(0).getId();
+        initDateTime(LocalDateTime.parse("2024-03-21T13:00:00"));
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.tgkn(), DefaultInstrumentSet.imoex()))
+                .historyValues(
+                    List.of(
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3050D).lowPrice(2700D).openPrice(2800D).closePrice(3000D).tradeDate(LocalDate.parse("2024-03-18")).build(),
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3150D).lowPrice(2800D).openPrice(2900D).closePrice(3100D).tradeDate(LocalDate.parse("2024-03-19")).build(),
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3250D).lowPrice(2900D).openPrice(3000D).closePrice(3200D).tradeDate(LocalDate.parse("2024-03-20")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(700_000D).highPrice(98D).lowPrice(98D).openPrice(98D).closePrice(98D).tradeDate(LocalDate.parse("2024-03-18")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(600_000D).highPrice(99D).lowPrice(99D).openPrice(99D).closePrice(99D).tradeDate(LocalDate.parse("2024-03-19")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(1_100_000D).highPrice(100D).lowPrice(100D).openPrice(100D).closePrice(100D).tradeDate(LocalDate.parse("2024-03-20")).build()
+                    )
+                )
+                .intradayValues(
+                    List.of(
+                        Deal.builder().number(1L).ticker("IMOEX").qnt(1).isBuy(true).price(3300D).value(1_000_000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
+                        Deal.builder().number(2L).ticker("IMOEX").qnt(1).isBuy(true).price(3400D).value(2_000_000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build(),
+                        Deal.builder().number(1L).ticker("TGKN").qnt(100).isBuy(true).price(100D).value(700_000D).dateTime(LocalDateTime.parse("2024-03-21T10:00:00")).build(),
+                        Deal.builder().number(2L).ticker("TGKN").qnt(100).isBuy(true).price(102D).value(600_000D).dateTime(LocalDateTime.parse("2024-03-21T11:00:00")).build()
+                    )
+                )
+                .build()
+        );
+        integrateAllInstrumentFrom(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        createScanner(
+            CreateScannerRequest.builder()
+                .workPeriodInMinutes(1)
+                .datasourceId(datasourceId)
+                .description("desc")
+                .tickers(getTickers(datasourceId))
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(3)
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
+                .build()
+        );
+        integrateTradingData(datasourceId);
+        assertTrue(waitTradingDataIntegratedEvent());
+        assertTrue(waitSignalRegisteredEvent());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        kafkaConsumer.clear();
+        initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.tgkn(), DefaultInstrumentSet.imoex()))
+                .historyValues(
+                    List.of(
+                        HistoryValue.builder().ticker("IMOEX").value(300_000_000D).highPrice(3450D).lowPrice(2900D).openPrice(2900D).closePrice(3300D).tradeDate(LocalDate.parse("2024-03-21")).build(),
+                        HistoryValue.builder().ticker("TGKN").value(1_200_000D).highPrice(102D).lowPrice(102D).openPrice(102D).closePrice(102D).tradeDate(LocalDate.parse("2024-03-21")).build()
+                    )
+                )
+                .intradayValues(
+                    List.of(
+                        Deal.builder().number(3L).ticker("IMOEX").qnt(1).isBuy(true).price(3400D).value(1_000_000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+                        Deal.builder().number(4L).ticker("IMOEX").qnt(1).isBuy(true).price(3500D).value(2_000_000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build(),
+                        Deal.builder().number(3L).ticker("TGKN").qnt(100).isBuy(false).price(103D).value(700_000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build(),
+                        Deal.builder().number(4L).ticker("TGKN").qnt(100).isBuy(false).price(104D).value(900_000D).dateTime(LocalDateTime.parse("2024-03-22T11:00:00")).build()
+                    )
+                )
+                .build()
+        );
+        integrateTradingData(datasourceId);
+        assertTrue(waitTradingDataIntegratedEvent());
+        assertTrue(waitScanningFinishedEvent());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
     }
 }

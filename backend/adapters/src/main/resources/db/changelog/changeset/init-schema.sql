@@ -117,17 +117,16 @@ alter table scanner_entity_instrument_ids
 
 create table if not exists signal
 (
-    is_buy     boolean not null,
-    is_open    boolean not null,
+    is_buy     boolean      not null,
+    is_open    boolean      not null,
     price      double precision,
     date_time  timestamp(6),
-    id         bigserial
-        primary key,
-    scanner_id uuid    not null
+    scanner_id uuid         not null
         constraint fkequgd386jasnr67d0w1b1y1sb
             references scanner,
     summary    varchar(255),
-    ticker     varchar(255)
+    ticker     varchar(255) not null,
+    primary key (is_buy, scanner_id, ticker)
 );
 
 alter table signal

@@ -53,7 +53,7 @@ public class SignalScannerResponse implements Serializable {
                         signal,
                         instruments
                             .stream()
-                            .filter(instrument -> instrument.getTicker().equals(signal.getTicker()))
+                            .filter(instrument -> instrument.getTicker().equals(signal.getId().getTicker()))
                             .findFirst()
                             .orElseThrow()
                     )

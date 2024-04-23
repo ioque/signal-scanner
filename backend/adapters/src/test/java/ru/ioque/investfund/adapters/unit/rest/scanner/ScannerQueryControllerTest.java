@@ -13,7 +13,7 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScan
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalScannerRepository;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("SCANNER QUERY REST CONTROLLER")
 public class ScannerQueryControllerTest extends BaseControllerTest {
     @Autowired
-    JpaSignalScannerRepository signalScannerEntityRepository;
+    JpaScannerRepository signalScannerEntityRepository;
     @Autowired
     JpaInstrumentRepository instrumentEntityRepository;
 
@@ -136,7 +136,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             "IMOEX"
         );
         scanner.getSignals().add(SignalEntity.builder()
-                .id(1L)
+                .scanner(scanner)
                 .price(10D)
                 .isOpen(true)
                 .isBuy(true)
