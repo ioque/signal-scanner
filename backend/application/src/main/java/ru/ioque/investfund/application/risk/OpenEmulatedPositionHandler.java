@@ -38,9 +38,12 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
 
     @Override
     protected void businessProcess(OpenEmulatedPosition command) {
-        SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
+        final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         if (!scanner.getInstrumentIds().contains(command.getInstrumentId())) {
             throw new EntityNotFoundException(String.format("Инструмент[id=%s] не существует.", command.getInstrumentId()));
+        }
+        if (emulatedPositionRepository.findBy(command.getInstrumentId(), command.getScannerId()).isPresent()) {
+            return;
         }
         EmulatedPosition emulatedPosition = EmulatedPosition.builder()
             .id(EmulatedPositionId.from(uuidProvider.generate()))

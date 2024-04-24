@@ -23,6 +23,5 @@ import java.util.UUID;
 public class TradingDataIntegrated implements IntegrationEvent {
     UUID id;
     UUID datasourceId;
-    UUID integrationSessionMark;
     LocalDateTime createdAt;
 }

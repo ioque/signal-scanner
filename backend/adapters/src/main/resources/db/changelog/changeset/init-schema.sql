@@ -10,6 +10,23 @@ create table if not exists datasource
 alter table datasource
     owner to postgres;
 
+create table if not exists emulated_position
+(
+    close_price   double precision,
+    is_open       boolean,
+    last_price    double precision,
+    open_price    double precision,
+    profit        double precision,
+    id            uuid not null
+        primary key,
+    instrument_id uuid,
+    scanner_id    uuid,
+    unique (instrument_id, scanner_id)
+);
+
+alter table emulated_position
+    owner to postgres;
+
 create table if not exists instrument
 (
     annual_high          double precision,

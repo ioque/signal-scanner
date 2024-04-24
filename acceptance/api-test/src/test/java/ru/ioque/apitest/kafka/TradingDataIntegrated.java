@@ -1,7 +1,5 @@
 package ru.ioque.apitest.kafka;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,12 +18,10 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegrated implements IntegrationEvent {
     UUID id;
     UUID datasourceId;
-    UUID integrationSessionMark;
     LocalDateTime createdAt;
 
     public boolean isTradingDataIntegrated() {

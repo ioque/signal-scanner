@@ -1,15 +1,12 @@
 package ru.ioque.apitest.kafka;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-@JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = Id.DEDUCTION)
+@JsonTypeInfo(use = Id.DEDUCTION, defaultImpl = TradingDataIntegrated.class)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = DatasourceScanned.class, name = "DatasourceScanned"),
     @JsonSubTypes.Type(value = SignalRegistered.class, name = "SignalRegistered"),

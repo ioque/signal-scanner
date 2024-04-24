@@ -80,4 +80,37 @@ public class OpenEmulatedPositionTest extends RiskManagerTest {
         );
         assertEquals(String.format("Сканер[id=%s] не существует.", scannerId), error.getMessage());
     }
+
+    @Test
+    @DisplayName("""
+        T4. Повторное открытие позиции по инструменту TGKN.
+        """)
+    void testCase4() {
+        commandBus().execute(
+            OpenEmulatedPosition.builder()
+                .scannerId(getScannerId())
+                .instrumentId(getInstrumentIdBy(TGKN))
+                .price(102D)
+                .build()
+        );
+
+        commandBus().execute(
+            OpenEmulatedPosition.builder()
+                .scannerId(getScannerId())
+                .instrumentId(getInstrumentIdBy(TGKN))
+                .price(102D)
+                .build()
+        );
+
+        final List<EmulatedPosition> positions = emulatedPositionRepository().findAllBy(getInstrumentIdBy(TGKN));
+        assertEquals(1, positions.size());
+        assertNotNull(positions.get(0).getId());
+        assertTrue(positions.get(0).getIsOpen());
+        assertNull(positions.get(0).getClosePrice());
+        assertEquals(102D, positions.get(0).getOpenPrice());
+        assertEquals(102D, positions.get(0).getLastPrice());
+        assertEquals(0, positions.get(0).getProfit());
+        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrumentId());
+        assertEquals(getScannerId(), positions.get(0).getScannerId());
+    }
 }

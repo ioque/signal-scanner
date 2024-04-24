@@ -12,10 +12,10 @@ import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
+import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
+import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
@@ -23,7 +23,6 @@ import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.util.TreeSet;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,11 +54,10 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
 
     @Override
     protected void businessProcess(IntegrateTradingDataCommand command) {
-        final UUID integrationSessionMark = uuidProvider.generate();
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final ExecutorService service = Executors.newCachedThreadPool();
         for (Instrument instrument : datasource.getUpdatableInstruments()) {
-            service.execute(() -> integrateTradingDataFor(instrument, datasource, integrationSessionMark));
+            service.execute(() -> integrateTradingDataFor(instrument, datasource));
         }
         service.shutdown();
         try {
@@ -71,12 +69,11 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
         eventPublisher.publish(TradingDataIntegrated.builder()
             .id(uuidProvider.generate())
             .datasourceId(datasource.getId().getUuid())
-            .integrationSessionMark(integrationSessionMark)
             .createdAt(dateTimeProvider.nowDateTime())
             .build());
     }
 
-    private void integrateTradingDataFor(Instrument instrument, Datasource datasource, UUID integrationSessionMark) {
+    private void integrateTradingDataFor(Instrument instrument, Datasource datasource) {
         final TreeSet<IntradayData> intradayData = new TreeSet<>(datasourceProvider.fetchIntradayValues(
             datasource,
             instrument
