@@ -15,7 +15,6 @@ import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 import java.text.DecimalFormat;
 
@@ -57,25 +56,23 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
             .findAll()
             .forEach(chat -> {
                 telegramMessageSender.sendMessage(
-                    new TelegramMessage(
-                        chat.getChatId(),
-                        String.format(
-                            """
-                                #%s
-                                Зафиксирован сигнал, алгоритм "%s"
-                                
-                                %s
-                                Изменение цены относительно цены закрытия предыдущего дня %s
-                                """,
-                            tradingSnapshot.getTicker(),
-                            scanner.getProperties().getType().getName(),
-                            signal.getSummary(),
-                            tradingSnapshot
-                                .getPrevClosePrice()
-                                .map(closePrice ->
-                                    decimalFormat.format((signal.getPrice() / closePrice - 1) * 100) + "%")
-                                .orElse("0%")
-                        )
+                    chat.getChatId(),
+                    String.format(
+                        """
+                            #%s
+                            Зафиксирован сигнал, алгоритм "%s"
+                                                            
+                            %s
+                            Изменение цены относительно цены закрытия предыдущего дня %s
+                            """,
+                        tradingSnapshot.getTicker(),
+                        scanner.getProperties().getType().getName(),
+                        signal.getSummary(),
+                        tradingSnapshot
+                            .getPrevClosePrice()
+                            .map(closePrice ->
+                                decimalFormat.format((signal.getPrice() / closePrice - 1) * 100) + "%")
+                            .orElse("0%")
                     )
                 );
             });

@@ -17,11 +17,17 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -60,5 +66,18 @@ public abstract class ScannerEntity extends UuidIdentity {
         this.signals = signals;
     }
 
-    public abstract SignalScanner toDomain();
+    public SignalScanner toDomain() {
+        return SignalScanner.builder()
+            .id(ScannerId.from(getId()))
+            .properties(getAlgorithmProperties())
+            .datasourceId(DatasourceId.from(getDatasourceId()))
+            .workPeriodInMinutes(getWorkPeriodInMinutes())
+            .description(getDescription())
+            .instrumentIds(getInstrumentIds().stream().map(InstrumentId::new).toList())
+            .lastExecutionDateTime(getLastExecutionDateTime())
+            .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
+            .build();
+    }
+
+    public abstract AlgorithmProperties getAlgorithmProperties();
 }

@@ -1,7 +1,8 @@
 package ru.ioque.investfund.application.adapters;
 
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
+import java.io.File;
 
 public interface TelegramMessageSender {
-    void sendMessage(TelegramMessage message);
+    void sendMessage(Long chatId, String message);
+    void sendMessage(Long chatId, String message, File file);
 }

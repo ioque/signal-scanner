@@ -10,7 +10,6 @@ import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -36,6 +35,6 @@ public class UnsubscribeHandler extends CommandHandler<Unsubscribe> {
             throw new IllegalArgumentException(String.format("Чат[id=%s] не существует.", command.getChatId()));
         }
         telegramChatRepository.removeBy(command.getChatId());
-        telegramMessageSender.sendMessage(new TelegramMessage(command.getChatId(), "Вы успешно отписались от получения торговых сигналов."));
+        telegramMessageSender.sendMessage(command.getChatId(), "Вы успешно отписались от получения торговых сигналов.");
     }
 }

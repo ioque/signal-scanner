@@ -17,7 +17,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,10 +42,10 @@ public class TelegramBotTest extends BaseTest {
         assertTrue(telegramChatRepository().findBy(command.getChatId()).isPresent());
         assertEquals(command.getChatId(), telegramChatRepository().findBy(command.getChatId()).get().getChatId());
         assertEquals(today, telegramChatRepository().findBy(command.getChatId()).get().getCreatedAt());
-        assertEquals(1, telegramMessageSender().getMessages().size());
-        TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
-        assertEquals(command.getChatId(), telegramMessage.getChatId());
-        assertEquals("Вы успешно подписались на получение торговых сигналов.", telegramMessage.getText());
+        assertEquals(
+            "Вы успешно подписались на получение торговых сигналов.",
+            telegramMessageSender().messages.get(command.getChatId()).get(0)
+        );
     }
 
     @Test
@@ -61,10 +60,10 @@ public class TelegramBotTest extends BaseTest {
         commandBus().execute(command);
 
         assertTrue(telegramChatRepository().findBy(command.getChatId()).isEmpty());
-        assertEquals(1, telegramMessageSender().getMessages().size());
-        TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
-        assertEquals(command.getChatId(), telegramMessage.getChatId());
-        assertEquals("Вы успешно отписались от получения торговых сигналов.", telegramMessage.getText());
+        assertEquals(
+            "Вы успешно отписались от получения торговых сигналов.",
+            telegramMessageSender().messages.get(command.getChatId()).get(0)
+        );
     }
 
     @Test
@@ -104,9 +103,6 @@ public class TelegramBotTest extends BaseTest {
             getInstrumentIdBy(TGKN)
         ));
 
-        assertEquals(1, telegramMessageSender().getMessages().size());
-        TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
-        assertEquals(1L, telegramMessage.getChatId());
         assertEquals("""
             #TGKN
             Зафиксирован сигнал, алгоритм "Аномальные объемы"
@@ -116,7 +112,8 @@ public class TelegramBotTest extends BaseTest {
             Отношение текущего объема к медиане: 9.29;
             Тренд индекса растущий.    
             Изменение цены относительно цены закрытия предыдущего дня 14.5%
-            """, telegramMessage.getText());
+            """,
+            telegramMessageSender().messages.get(1L).get(0));
     }
 
     private void prepareState() {
@@ -137,13 +134,13 @@ public class TelegramBotTest extends BaseTest {
         );
         datasourceStorage().initDealDatas(
             List.of(
-                buildImoexDelta( 1L, "10:00:00", 2800D, 100D),
-                buildImoexDelta( 2L, "12:00:00", 3200D, 200D),
-                buildTgknBuyDeal( 1L, "10:00:00", 111D, 5000D, 1),
-                buildTgknBuyDeal( 2L, "10:03:00", 112D, 1000D, 1),
+                buildImoexDelta(1L, "10:00:00", 2800D, 100D),
+                buildImoexDelta(2L, "12:00:00", 3200D, 200D),
+                buildTgknBuyDeal(1L, "10:00:00", 111D, 5000D, 1),
+                buildTgknBuyDeal(2L, "10:03:00", 112D, 1000D, 1),
                 buildTgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
-                buildTgknBuyDeal( 4L, "11:01:00", 110D, 1000D, 1),
-                buildTgknBuyDeal( 5L, "11:45:00", 114.5D, 5000D, 1)
+                buildTgknBuyDeal(4L, "11:01:00", 110D, 1000D, 1),
+                buildTgknBuyDeal(5L, "11:45:00", 114.5D, 5000D, 1)
             )
         );
         datasourceStorage().initHistoryValues(

@@ -2,6 +2,7 @@ package ru.ioque.investfund.adapters.persistence.entity.scanner;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,18 +10,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -76,23 +74,13 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
     }
 
     @Override
-    public SignalScanner toDomain() {
-        return SignalScanner.builder()
-            .id(ScannerId.from(getId()))
-            .properties(
-                AnomalyVolumeProperties
-                    .builder()
-                    .scaleCoefficient(scaleCoefficient)
-                    .historyPeriod(historyPeriod)
-                    .indexTicker(new Ticker(indexTicker))
-                    .build()
-            )
-            .datasourceId(DatasourceId.from(getDatasourceId()))
-            .workPeriodInMinutes(getWorkPeriodInMinutes())
-            .description(getDescription())
-            .instrumentIds(getInstrumentIds().stream().map(InstrumentId::new).toList())
-            .lastExecutionDateTime(getLastExecutionDateTime())
-            .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
+    @Transient
+    public AlgorithmProperties getAlgorithmProperties() {
+        return AnomalyVolumeProperties
+            .builder()
+            .scaleCoefficient(scaleCoefficient)
+            .historyPeriod(historyPeriod)
+            .indexTicker(new Ticker(indexTicker))
             .build();
     }
 }

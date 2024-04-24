@@ -11,7 +11,6 @@ import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.telegrambot.command.Subscribe;
 import ru.ioque.investfund.domain.telegrambot.TelegramChat;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -37,6 +36,6 @@ public class SubscribeHandler extends CommandHandler<Subscribe> {
             return;
         }
         telegramChatRepository.save(new TelegramChat(command.getChatId(), dateTimeProvider.nowDateTime()));
-        telegramMessageSender.sendMessage(new TelegramMessage(command.getChatId(), "Вы успешно подписались на получение торговых сигналов."));
+        telegramMessageSender.sendMessage(command.getChatId(), "Вы успешно подписались на получение торговых сигналов.");
     }
 }

@@ -6,11 +6,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
+
+import java.io.File;
 
 @Slf4j
 @Component
@@ -21,9 +24,25 @@ public class SignalTelegramBotSender implements TelegramMessageSender {
     TelegramClient telegramClient;
 
     @Override
-    public void sendMessage(TelegramMessage message) {
+    public void sendMessage(Long chatId, String message) {
         try {
-            telegramClient.execute(new SendMessage(String.valueOf(message.getChatId()), message.getText()));
+            telegramClient.execute(new SendMessage(String.valueOf(chatId), message));
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendMessage(Long chatId, String message, File file) {
+        try {
+            telegramClient.execute(
+                SendDocument.builder()
+                    .chatId(String.valueOf(chatId))
+                    .document(new InputFile(file))
+                    .caption(message)
+                    .build()
+            );
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

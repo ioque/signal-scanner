@@ -1,22 +1,23 @@
 package ru.ioque.investfund.fakes;
 
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
-import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
-import java.util.Collections;
+import java.io.File;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FakeTelegramMessageSender implements TelegramMessageSender {
-    private final List<TelegramMessage> messages = new CopyOnWriteArrayList<>();
+    public Map<Long, List<String>> messages = new ConcurrentHashMap<>();
 
     @Override
-    public void sendMessage(TelegramMessage message) {
-        messages.add(message);
+    public void sendMessage(Long chatId, String message) {
+        messages.put(chatId, List.of(message));
     }
 
-    public List<TelegramMessage> getMessages() {
-        return Collections.unmodifiableList(messages);
+    @Override
+    public void sendMessage(Long chatId, String message, File fileSystemResource) {
+        messages.put(chatId, List.of(message));
     }
 
     public void clear() {
