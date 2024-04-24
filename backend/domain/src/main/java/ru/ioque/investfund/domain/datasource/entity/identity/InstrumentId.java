@@ -1,5 +1,6 @@
 package ru.ioque.investfund.domain.datasource.entity.identity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentId {
+    @NotNull(message = "Не указан uuid")
     UUID uuid;
 
     public static InstrumentId from(UUID uuid) {

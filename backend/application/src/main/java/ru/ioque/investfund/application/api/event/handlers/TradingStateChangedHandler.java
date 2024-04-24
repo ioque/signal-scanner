@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
-import ru.ioque.investfund.application.risk.command.EvaluateRisk;
+import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 @Component
@@ -29,6 +29,9 @@ public class TradingStateChangedHandler extends EventHandler<TradingStateChanged
 
     @Override
     protected void handle(TradingStateChanged event) {
-        commandPublisher.publish(new EvaluateRisk(InstrumentId.from(event.getInstrumentId())));
+        commandPublisher.publish(new EvaluateEmulatedPosition(
+            InstrumentId.from(event.getInstrumentId()),
+            event.getPrice()
+        ));
     }
 }

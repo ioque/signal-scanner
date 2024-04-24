@@ -13,6 +13,9 @@ import ru.ioque.investfund.application.datasource.integration.IntegrateTradingDa
 import ru.ioque.investfund.application.datasource.configurator.RegisterDatasourceHandler;
 import ru.ioque.investfund.application.datasource.configurator.UnregisterDatasourceHandler;
 import ru.ioque.investfund.application.datasource.configurator.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.risk.CloseEmulatedPositionHandler;
+import ru.ioque.investfund.application.risk.EvaluateEmulatedPositionHandler;
+import ru.ioque.investfund.application.risk.OpenEmulatedPositionHandler;
 import ru.ioque.investfund.application.scanner.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.scanner.ProduceSignalCommandHandler;
 import ru.ioque.investfund.application.scanner.UpdateScannerCommandHandler;
@@ -36,6 +39,7 @@ public class FakeDIContainer {
     FakeIntradayValueRepository intradayValueRepository;
     TelegramBotService telegramBotService;
     FakeTelegramChatRepository telegramChatRepository;
+    FakeEmulatedPositionRepository emulatedPositionRepository;
     FakeTelegramMessageSender telegramMessageSender;
     DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
@@ -47,6 +51,9 @@ public class FakeDIContainer {
     CreateScannerCommandHandler createScannerProcessor;
     ProduceSignalCommandHandler produceSignalProcessor;
     UpdateScannerCommandHandler updateScannerProcessor;
+    CloseEmulatedPositionHandler closeEmulatedPositionHandler;
+    EvaluateEmulatedPositionHandler evaluateEmulatedPositionHandler;
+    OpenEmulatedPositionHandler openEmulatedPositionHandler;
     CommandBus commandBus;
     Validator validator;
 
@@ -65,6 +72,7 @@ public class FakeDIContainer {
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingSnapshotsRepository(datasourceRepository, dateTimeProvider);
         telegramChatRepository = new FakeTelegramChatRepository();
+        emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
         telegramBotService = new TelegramBotService(dateTimeProvider, telegramChatRepository, telegramMessageSender);
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
@@ -140,7 +148,22 @@ public class FakeDIContainer {
             tradingDataRepository,
             eventPublisher
         );
-
+        closeEmulatedPositionHandler = new CloseEmulatedPositionHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider
+        );
+        evaluateEmulatedPositionHandler = new EvaluateEmulatedPositionHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            emulatedPositionRepository
+        );
+        openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider
+        );
         commandBus = new CommandBus(
             List.of(
                 disableUpdateInstrumentProcessor,
@@ -152,7 +175,10 @@ public class FakeDIContainer {
                 unregisterDatasourceProcessor,
                 createScannerProcessor,
                 produceSignalProcessor,
-                updateScannerProcessor
+                updateScannerProcessor,
+                closeEmulatedPositionHandler,
+                evaluateEmulatedPositionHandler,
+                openEmulatedPositionHandler
             )
         );
     }

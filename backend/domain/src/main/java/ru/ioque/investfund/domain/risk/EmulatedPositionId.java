@@ -1,12 +1,12 @@
-package ru.ioque.investfund.domain.scanner.entity;
+package ru.ioque.investfund.domain.risk;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.util.UUID;
 
@@ -15,12 +15,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ScannerId {
-    @NotNull(message = "Не указан uuid")
+public class EmulatedPositionId {
     UUID uuid;
 
-    public static ScannerId from(UUID id) {
-        return new ScannerId(id);
+    public static EmulatedPositionId from(UUID uuid) {
+        return new EmulatedPositionId(uuid);
     }
 
     @Override

@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
-import ru.ioque.investfund.application.risk.command.ClosePosition;
+import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
 
 @Component
-public class ClosePositionHandler extends CommandHandler<ClosePosition> {
-    public ClosePositionHandler(
+public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPosition> {
+    public CloseEmulatedPositionHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider
@@ -18,7 +18,7 @@ public class ClosePositionHandler extends CommandHandler<ClosePosition> {
     }
 
     @Override
-    protected void businessProcess(ClosePosition command) {
+    protected void businessProcess(CloseEmulatedPosition command) {
         System.out.println(command);
     }
 }

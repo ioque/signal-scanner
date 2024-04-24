@@ -8,8 +8,8 @@ import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.event.EventHandler;
-import ru.ioque.investfund.application.risk.command.ClosePosition;
-import ru.ioque.investfund.application.risk.command.OpenPosition;
+import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
+import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.scanner.event.SignalRegistered;
 import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
@@ -42,7 +42,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
         );
         if (event.getIsBuy()) {
             commandPublisher.publish(
-                OpenPosition.builder()
+                OpenEmulatedPosition.builder()
                     .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))
                     .instrumentId(InstrumentId.from(event.getInstrumentId()))
@@ -50,7 +50,8 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
             );
         } else {
             commandPublisher.publish(
-                ClosePosition.builder()
+                CloseEmulatedPosition.builder()
+                    .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))
                     .instrumentId(InstrumentId.from(event.getInstrumentId()))
                     .build()

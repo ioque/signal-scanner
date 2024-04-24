@@ -19,6 +19,7 @@ import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.util.TreeSet;
@@ -94,7 +95,8 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
                 TradingStateChanged.builder()
                     .id(uuidProvider.generate())
                     .instrumentId(instrument.getId().getUuid())
-                    .integrationSessionMark(integrationSessionMark)
+                    .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(null))
+                    .value(instrument.getTradingState().map(TradingState::getTodayValue).orElse(null))
                     .createdAt(dateTimeProvider.nowDateTime())
                     .build()
             );

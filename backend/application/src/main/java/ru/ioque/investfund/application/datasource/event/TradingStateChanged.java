@@ -22,7 +22,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingStateChanged implements IntegrationEvent {
     UUID id;
+    Double price;
+    Double value;
     UUID instrumentId;
-    UUID integrationSessionMark;
     LocalDateTime createdAt;
 }
