@@ -3,6 +3,9 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.api.command.CommandBus;
+import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.CurrencyPairDto;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.FuturesDto;
@@ -13,10 +16,7 @@ import ru.ioque.investfund.application.datasource.integration.dto.intraday.Contr
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.DealDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.DeltaDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
-import ru.ioque.investfund.application.telegrambot.TelegramBotService;
-import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -24,7 +24,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
@@ -90,10 +89,6 @@ public class BaseTest {
 
     protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
         return fakeDIContainer.getEmulatedPositionRepository();
-    }
-
-    protected final TelegramBotService telegramBotService() {
-        return fakeDIContainer.getTelegramBotService();
     }
 
     protected LocalDate nowMinus1Days() {

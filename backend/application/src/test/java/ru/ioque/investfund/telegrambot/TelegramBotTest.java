@@ -9,7 +9,6 @@ import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCo
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
-import ru.ioque.investfund.application.telegrambot.TelegramCommand;
 import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.application.telegrambot.command.Subscribe;
 import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
@@ -73,14 +72,12 @@ public class TelegramBotTest extends BaseTest {
         T3. Отписка от обновлений по несуществующему чату.
         """)
     void testCase3() {
-        final TelegramCommand command = new TelegramCommand(1L, "/unsubscribe");
-
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> telegramBotService().execute(command)
+            () -> commandBus().execute(new Unsubscribe(1L))
         );
 
-        assertEquals(String.format("Чат[id=%s] не существует.", command.getChatId()), exception.getMessage());
+        assertEquals(String.format("Чат[id=%s] не существует.", 1L), exception.getMessage());
     }
 
     @Test

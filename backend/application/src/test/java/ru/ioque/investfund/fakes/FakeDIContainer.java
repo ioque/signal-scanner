@@ -21,7 +21,6 @@ import ru.ioque.investfund.application.scanner.ProduceSignalCommandHandler;
 import ru.ioque.investfund.application.scanner.UpdateScannerCommandHandler;
 import ru.ioque.investfund.application.telegrambot.PublishSignalHandler;
 import ru.ioque.investfund.application.telegrambot.SubscribeHandler;
-import ru.ioque.investfund.application.telegrambot.TelegramBotService;
 import ru.ioque.investfund.application.telegrambot.UnsubscribeHandler;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
@@ -40,7 +39,6 @@ public class FakeDIContainer {
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeIntradayValueRepository intradayValueRepository;
-    TelegramBotService telegramBotService;
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
     FakeTelegramMessageSender telegramMessageSender;
@@ -80,7 +78,6 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
-        telegramBotService = new TelegramBotService(dateTimeProvider, telegramChatRepository, telegramMessageSender);
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
