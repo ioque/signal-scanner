@@ -20,7 +20,6 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PublishSignal implements Command {
-    Double price;
     Boolean isBuy;
     ScannerId scannerId;
     InstrumentId instrumentId;

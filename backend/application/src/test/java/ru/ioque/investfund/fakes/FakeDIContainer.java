@@ -8,18 +8,21 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.api.command.CommandBus;
 import ru.ioque.investfund.application.datasource.configurator.DisableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.datasource.configurator.EnableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.datasource.integration.IntegrateInstrumentsHandler;
-import ru.ioque.investfund.application.datasource.integration.IntegrateTradingDataHandler;
 import ru.ioque.investfund.application.datasource.configurator.RegisterDatasourceHandler;
 import ru.ioque.investfund.application.datasource.configurator.UnregisterDatasourceHandler;
 import ru.ioque.investfund.application.datasource.configurator.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.datasource.integration.IntegrateInstrumentsHandler;
+import ru.ioque.investfund.application.datasource.integration.IntegrateTradingDataHandler;
 import ru.ioque.investfund.application.risk.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.risk.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.risk.OpenEmulatedPositionHandler;
 import ru.ioque.investfund.application.scanner.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.scanner.ProduceSignalCommandHandler;
 import ru.ioque.investfund.application.scanner.UpdateScannerCommandHandler;
+import ru.ioque.investfund.application.telegrambot.PublishSignalHandler;
+import ru.ioque.investfund.application.telegrambot.SubscribeHandler;
 import ru.ioque.investfund.application.telegrambot.TelegramBotService;
+import ru.ioque.investfund.application.telegrambot.UnsubscribeHandler;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
@@ -54,6 +57,9 @@ public class FakeDIContainer {
     CloseEmulatedPositionHandler closeEmulatedPositionHandler;
     EvaluateEmulatedPositionHandler evaluateEmulatedPositionHandler;
     OpenEmulatedPositionHandler openEmulatedPositionHandler;
+    PublishSignalHandler publishSignalHandler;
+    SubscribeHandler subscribeHandler;
+    UnsubscribeHandler unsubscribeHandler;
     CommandBus commandBus;
     Validator validator;
 
@@ -168,6 +174,29 @@ public class FakeDIContainer {
             emulatedPositionRepository,
             scannerRepository
         );
+        publishSignalHandler = new PublishSignalHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            scannerRepository,
+            tradingDataRepository,
+            telegramChatRepository,
+            telegramMessageSender
+        );
+        subscribeHandler = new SubscribeHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            telegramChatRepository,
+            telegramMessageSender
+        );
+        unsubscribeHandler = new UnsubscribeHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            telegramChatRepository,
+            telegramMessageSender
+        );
         commandBus = new CommandBus(
             List.of(
                 disableUpdateInstrumentProcessor,
@@ -182,7 +211,10 @@ public class FakeDIContainer {
                 updateScannerProcessor,
                 closeEmulatedPositionHandler,
                 evaluateEmulatedPositionHandler,
-                openEmulatedPositionHandler
+                openEmulatedPositionHandler,
+                publishSignalHandler,
+                subscribeHandler,
+                unsubscribeHandler
             )
         );
     }

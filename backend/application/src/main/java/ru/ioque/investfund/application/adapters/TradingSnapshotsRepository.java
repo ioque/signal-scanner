@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TradingSnapshotsRepository {
     List<TradingSnapshot> findAllBy(List<InstrumentId> instrumentIds);
+    TradingSnapshot getBy(InstrumentId instrumentId);
 }

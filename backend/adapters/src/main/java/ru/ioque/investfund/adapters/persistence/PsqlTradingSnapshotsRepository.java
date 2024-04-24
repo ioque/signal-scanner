@@ -8,6 +8,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Tra
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.value.TimeSeriesValue;
@@ -28,32 +29,45 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
         final List<InstrumentEntity> instrumentEntities = jpaInstrumentRepository.findAllByIdIn(instrumentIds.stream().map(InstrumentId::getUuid).toList());
         return instrumentEntities
             .stream()
-            .map(instrument -> TradingSnapshot.builder()
-                .instrumentId(InstrumentId.from(instrument.getId()))
-                .ticker(Ticker.from(instrument.getTicker()))
-                .dateTime(instrument.getTradingState().map(TradingStateEmbeddable::getDateTime).orElse(null))
-                .firstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))
-                .lastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
-                .value(instrument.getTradingState().map(TradingStateEmbeddable::getTodayValue).orElse(null))
-                .waPriceSeries(instrument.getHistory()
-                    .stream()
-                    .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
-                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getId().getDate()))
-                    .toList()
-                )
-                .closePriceSeries(instrument.getHistory()
-                    .stream()
-                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getId().getDate()))
-                    .toList())
-                .openPriceSeries(instrument.getHistory()
-                    .stream()
-                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getId().getDate()))
-                    .toList())
-                .valueSeries(instrument.getHistory()
-                    .stream()
-                    .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getId().getDate()))
-                    .toList())
-                .build())
+            .map(instrument -> buildSnapshot(instrument))
             .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TradingSnapshot getBy(InstrumentId instrumentId) {
+        final InstrumentEntity instrument = jpaInstrumentRepository
+            .findById(instrumentId.getUuid())
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Инструмент[id=%s] не существует", instrumentId)));
+        return buildSnapshot(instrument);
+    }
+
+    private static TradingSnapshot buildSnapshot(InstrumentEntity instrument) {
+        return TradingSnapshot.builder()
+            .instrumentId(InstrumentId.from(instrument.getId()))
+            .ticker(Ticker.from(instrument.getTicker()))
+            .dateTime(instrument.getTradingState().map(TradingStateEmbeddable::getDateTime).orElse(null))
+            .firstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))
+            .lastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
+            .value(instrument.getTradingState().map(TradingStateEmbeddable::getTodayValue).orElse(null))
+            .waPriceSeries(instrument.getHistory()
+                .stream()
+                .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getId().getDate()))
+                .toList()
+            )
+            .closePriceSeries(instrument.getHistory()
+                .stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getId().getDate()))
+                .toList())
+            .openPriceSeries(instrument.getHistory()
+                .stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getId().getDate()))
+                .toList())
+            .valueSeries(instrument.getHistory()
+                .stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getId().getDate()))
+                .toList())
+            .build();
     }
 }

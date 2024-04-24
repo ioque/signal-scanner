@@ -53,7 +53,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(TGKN)
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -87,7 +87,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(TGKN)
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -114,14 +114,14 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         """)
     void testCase3() {
         final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
-        final List<InstrumentId> tickers = List.of(TGKB_ID, BRF4_ID);
+        final List<InstrumentId> instrumentIds = List.of(TGKB_ID, BRF4_ID);
         final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, BRF4);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(TGKB)
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -129,7 +129,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .instrumentIds(tickers)
+            .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))
@@ -148,14 +148,14 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         """)
     void testCase4() {
         final ScannerId scannerId = ScannerId.from(UUID.randomUUID());
-        final List<InstrumentId> tickers = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
+        final List<InstrumentId> instrumentIds = List.of(TGKN_ID, TGKB_ID, IMOEX_ID);
         final SectoralRetardProperties properties = createSectoralRetardProperties(0.015, 0.015);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
             .price(10D)
-            .ticker(TGKN)
+            .instrumentId(instrumentIds.get(0))
             .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -163,7 +163,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .datasourceId(MOEX_DATASOURCE_ID)
-            .instrumentIds(tickers)
+            .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
             .signals(new ArrayList<>(List.of(signal)))

@@ -5,7 +5,6 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
@@ -47,10 +46,6 @@ public abstract class RiskManagerTest extends BaseTest {
                 .build()
         );
         loggerProvider().clearLogs();
-    }
-
-    protected InstrumentId getInstrumentIdBy(String ticker) {
-        return datasourceRepository().getInstrumentBy(Ticker.from(ticker)).getId();
     }
 
     protected ScannerId getScannerId() {

@@ -40,7 +40,9 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
         for (final TradingSnapshot snapshot : analyzeInstruments(tradingSnapshots)) {
             final boolean riseOvernight = snapshot.isRiseOvernight(stockOvernightScale);
             final String summary = String.format(
-                "тренд инструмента %s; тренд фьючерса %s;",
+                """
+                Тренд инструмента %s;
+                Тренд фьючерса %s;""",
                 (riseOvernight ? "растущий" : "нисходящий"),
                 (futuresIsRiseOvernight ? "растущий" : "нисходящий")
             );
@@ -52,7 +54,6 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
-                        .ticker(snapshot.getTicker())
                         .price(snapshot.getLastPrice())
                         .build()
                 );

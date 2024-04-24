@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumePro
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +57,21 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 continue;
             }
             final double currentValueToMedianValue = currentValue / medianValue.get();
+            DecimalFormat formatter = new DecimalFormat("#,###.##");
             final String summary = String.format(
-                "медиана исторических объемов: %s; текущий объем: %s; отношение текущего объема к медиане: %s; тренд индекса %s.",
-                medianValue.get(),
-                currentValue,
-                currentValueToMedianValue,
+                """
+                Медиана исторических объемов: %s;
+                Текущий объем: %s;
+                Отношение текущего объема к медиане: %s;
+                Тренд индекса %s.""",
+                formatter.format(medianValue.get()),
+                formatter.format(currentValue),
+                formatter.format(currentValueToMedianValue),
                 indexIsRiseToday.get() ? "растущий" : "нисходящий"
             );
-            if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot.isRiseToday().get()) {
+            if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot
+                .isRiseToday()
+                .get()) {
                 signals.add(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
@@ -71,7 +79,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
-                        .ticker(tradingSnapshot.getTicker())
                         .price(tradingSnapshot.getLastPrice())
                         .build()
                 );
@@ -85,7 +92,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                         .watermark(watermark)
                         .summary(summary)
                         .price(tradingSnapshot.getLastPrice())
-                        .ticker(tradingSnapshot.getTicker())
                         .build()
                 );
             }

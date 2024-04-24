@@ -143,7 +143,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                 .summary("summary")
                 .scanner(scanner)
                 .dateTime(LocalDateTime.now())
-                .ticker("AFKS")
+                .instrumentId(AFKS_ID)
             .build());
         return List.of(scanner);
     }

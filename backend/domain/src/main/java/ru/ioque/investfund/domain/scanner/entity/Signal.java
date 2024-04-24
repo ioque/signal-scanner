@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
 
@@ -21,14 +20,13 @@ import java.time.LocalDateTime;
 public class Signal {
     InstrumentId instrumentId;
     Double price;
-    Ticker ticker;
     boolean isBuy;
     boolean isOpen;
     String summary;
     LocalDateTime watermark;
 
     public boolean sameByBusinessKey(Signal signal) {
-        return signal.getTicker().equals(this.getTicker()) && signal.isBuy() == this.isBuy();
+        return signal.getInstrumentId().equals(this.getInstrumentId()) && signal.isBuy() == this.isBuy();
     }
 
     public void close() {
@@ -36,7 +34,7 @@ public class Signal {
     }
 
     public boolean sameByTicker(Signal signal) {
-        return signal.getTicker().equals(this.getTicker());
+        return signal.getInstrumentId().equals(this.getInstrumentId());
     }
 
     public boolean isSell() {

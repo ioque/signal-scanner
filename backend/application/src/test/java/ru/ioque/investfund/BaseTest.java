@@ -20,6 +20,7 @@ import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCo
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -188,6 +189,11 @@ public class BaseTest {
 
     protected List<Ticker> getTickers(DatasourceId datasourceId) {
         return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
+    }
+
+
+    protected InstrumentId getInstrumentIdBy(String ticker) {
+        return datasourceRepository().getInstrumentBy(Ticker.from(ticker)).getId();
     }
 
     protected String getMessage(ConstraintViolationException exception) {

@@ -18,4 +18,8 @@ public class FakeTelegramMessageSender implements TelegramMessageSender {
     public List<TelegramMessage> getMessages() {
         return Collections.unmodifiableList(messages);
     }
+
+    public void clear() {
+        messages.clear();
+    }
 }

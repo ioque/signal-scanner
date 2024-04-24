@@ -55,4 +55,31 @@ public class FakeTradingSnapshotsRepository implements TradingSnapshotsRepositor
                     .build();
             }).toList();
     }
+
+    @Override
+    public TradingSnapshot getBy(InstrumentId instrumentId) {
+        Instrument instrument = fakeDatasourceRepository.getInstrumentBy(instrumentId);
+        Ticker ticker = instrument.getTicker();
+        return TradingSnapshot.builder()
+            .instrumentId(instrument.getId())
+            .ticker(ticker)
+            .lastPrice(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(null))
+            .firstPrice(instrument.getTradingState().map(TradingState::getTodayFirstPrice).orElse(null))
+            .value(instrument.getTradingState().map(TradingState::getTodayValue).orElse(null))
+            .waPriceSeries(instrument.getAggregateHistories().stream()
+                .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getWaPrice(), dailyValue.getDate()))
+                .toList()
+            )
+            .closePriceSeries(instrument.getAggregateHistories().stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getClosePrice(), dailyValue.getDate()))
+                .toList())
+            .openPriceSeries(instrument.getAggregateHistories().stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getOpenPrice(), dailyValue.getDate()))
+                .toList())
+            .valueSeries(instrument.getAggregateHistories().stream()
+                .map(dailyValue -> new TimeSeriesValue<>(dailyValue.getValue(), dailyValue.getDate()))
+                .toList())
+            .build();
+    }
 }

@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -41,13 +42,13 @@ public class SignalEntity {
     public SignalEntity(
         ScannerEntity scanner,
         LocalDateTime dateTime,
-        String ticker,
+        UUID instrumentId,
         Double price,
         String summary,
         boolean isBuy,
         boolean isOpen
     ) {
-        this.id = new SignalPk(scanner.getId(), ticker, isBuy);
+        this.id = new SignalPk(scanner.getId(), instrumentId, isBuy);
         this.scanner = scanner;
         this.dateTime = dateTime;
         this.price = price;
@@ -58,7 +59,7 @@ public class SignalEntity {
     public Signal toDomain() {
         return Signal.builder()
             .watermark(getDateTime())
-            .ticker(Ticker.from(getId().getTicker()))
+            .instrumentId(InstrumentId.from(getId().getInstrumentId()))
             .price(getPrice())
             .summary(getSummary())
             .isBuy(getId().isBuy)
@@ -71,7 +72,7 @@ public class SignalEntity {
             .scanner(scanner)
             .dateTime(signal.getWatermark())
             .price(signal.getPrice())
-            .ticker(signal.getTicker().getValue())
+            .instrumentId(signal.getInstrumentId().getUuid())
             .summary(signal.getSummary())
             .isBuy(signal.isBuy())
             .isOpen(signal.isOpen())

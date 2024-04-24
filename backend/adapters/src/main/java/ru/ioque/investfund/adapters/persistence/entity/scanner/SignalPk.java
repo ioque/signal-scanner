@@ -19,6 +19,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SignalPk {
     UUID scannerId;
-    String ticker;
+    UUID instrumentId;
     boolean isBuy;
 }

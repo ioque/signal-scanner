@@ -16,7 +16,6 @@ import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SubscribeHandler extends CommandHandler<Subscribe> {
-    DateTimeProvider dateTimeProvider;
     TelegramChatRepository telegramChatRepository;
     TelegramMessageSender telegramMessageSender;
 
@@ -24,12 +23,10 @@ public class SubscribeHandler extends CommandHandler<Subscribe> {
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        DateTimeProvider dateTimeProvider1,
         TelegramChatRepository telegramChatRepository,
         TelegramMessageSender telegramMessageSender
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.dateTimeProvider = dateTimeProvider1;
         this.telegramChatRepository = telegramChatRepository;
         this.telegramMessageSender = telegramMessageSender;
     }

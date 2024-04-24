@@ -11,6 +11,7 @@ import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,13 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
+            DecimalFormat formatter = new DecimalFormat("#,###.##");
             final String summary = String.format(
-                "Текущая дельта: %s; историческая дельта: %s; отношение текущей дельты к исторической: %s.",
-                currentDelta, historyDelta, multiplier
+                """
+                Текущая дельта: %s;
+                Историческая дельта: %s;
+                Отношение текущей дельты к исторической: %s.""",
+                formatter.format(currentDelta), formatter.format(historyDelta), formatter.format(multiplier)
             );
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
@@ -45,7 +50,6 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                     .isBuy(true)
                     .summary(summary)
                     .watermark(watermark)
-                    .ticker(pair.getPref().getTicker())
                     .price(pair.getPref().getLastPrice())
                     .build()
                 );

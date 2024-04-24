@@ -3,10 +3,26 @@ package ru.ioque.investfund.telegrambot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
+import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.application.telegrambot.TelegramCommand;
+import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
+import ru.ioque.investfund.application.telegrambot.command.Subscribe;
+import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.telegrambot.TelegramMessage;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,58 +32,47 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TelegramBotTest extends BaseTest {
     @Test
     @DisplayName("""
-        T1. Регистрация нового пользователя.
+        T1. Подписка на обновление.
         """)
     void testCase1() {
-        final TelegramCommand command = new TelegramCommand(1L, "/start");
+        final Subscribe command = new Subscribe(1L);
         final LocalDateTime today = LocalDateTime.parse("2024-01-10T10:00:00");
         initTodayDateTime("2024-01-10T10:00:00");
 
-        telegramBotService().execute(command);
+        commandBus().execute(command);
 
         assertTrue(telegramChatRepository().findBy(command.getChatId()).isPresent());
         assertEquals(command.getChatId(), telegramChatRepository().findBy(command.getChatId()).get().getChatId());
         assertEquals(today, telegramChatRepository().findBy(command.getChatId()).get().getCreatedAt());
+        assertEquals(1, telegramMessageSender().getMessages().size());
+        TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
+        assertEquals(command.getChatId(), telegramMessage.getChatId());
+        assertEquals("Вы успешно подписались на получение торговых сигналов.", telegramMessage.getText());
     }
 
     @Test
     @DisplayName("""
-        T2. Подписка на обновление.
+        T2. Отписка от обновлений
         """)
     void testCase2() {
-        final TelegramCommand command = new TelegramCommand(1L, "/subscribe");
-        final LocalDateTime today = LocalDateTime.parse("2024-01-10T10:00:00");
-        initTodayDateTime("2024-01-10T10:00:00");
+        commandBus().execute(new Subscribe(1L));
+        telegramMessageSender().clear();
+        final Unsubscribe command = new Unsubscribe(1L);
 
-        telegramBotService().execute(command);
-
-        assertTrue(telegramChatRepository().findBy(command.getChatId()).isPresent());
-        assertEquals(command.getChatId(), telegramChatRepository().findBy(command.getChatId()).get().getChatId());
-        assertEquals(today, telegramChatRepository().findBy(command.getChatId()).get().getCreatedAt());
-    }
-
-    @Test
-    @DisplayName("""
-        T3. Отписка от обновлений
-        """)
-    void testCase3() {
-        telegramBotService().execute(new TelegramCommand(1L, "/start"));
-        final TelegramCommand command = new TelegramCommand(1L, "/unsubscribe");
-
-        telegramBotService().execute(command);
+        commandBus().execute(command);
 
         assertTrue(telegramChatRepository().findBy(command.getChatId()).isEmpty());
         assertEquals(1, telegramMessageSender().getMessages().size());
         TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
         assertEquals(command.getChatId(), telegramMessage.getChatId());
-        assertEquals("Вы успешно отписались от рассылки данных.", telegramMessage.getText());
+        assertEquals("Вы успешно отписались от получения торговых сигналов.", telegramMessage.getText());
     }
 
     @Test
     @DisplayName("""
-        T4. Отписка от обновлений по несуществующему чату.
+        T3. Отписка от обновлений по несуществующему чату.
         """)
-    void testCase4() {
+    void testCase3() {
         final TelegramCommand command = new TelegramCommand(1L, "/unsubscribe");
 
         final IllegalArgumentException exception = assertThrows(
@@ -80,14 +85,113 @@ public class TelegramBotTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T5. Повторная подписка на обновление.
+        T4. Повторная подписка на обновление.
         """)
-    void testCase5() {
-        telegramBotService().execute(new TelegramCommand(1L, "/start"));
-        telegramBotService().execute(new TelegramCommand(1L, "/start"));
-        telegramBotService().execute(new TelegramCommand(1L, "/subscribe"));
-        telegramBotService().execute(new TelegramCommand(1L, "/subscribe"));
+    void testCase4() {
+        commandBus().execute(new Subscribe(1L));
+        commandBus().execute(new Subscribe(1L));
 
         assertEquals(1, telegramChatRepository().findAll().size());
+    }
+
+    @Test
+    @DisplayName("""
+        T5. Публикация торгового сигнала.
+        """)
+    void testCase5() {
+        prepareState();
+
+        commandBus().execute(new PublishSignal(
+            true,
+            getScannerId(),
+            getInstrumentIdBy(TGKN)
+        ));
+
+        assertEquals(1, telegramMessageSender().getMessages().size());
+        TelegramMessage telegramMessage = telegramMessageSender().getMessages().get(0);
+        assertEquals(1L, telegramMessage.getChatId());
+        assertEquals("""
+            #TGKN
+            Зафиксирован сигнал, алгоритм "Аномальные объемы"
+                        
+            Медиана исторических объемов: 1,400;
+            Текущий объем: 13,000;
+            Отношение текущего объема к медиане: 9.29;
+            Тренд индекса растущий.    
+            Изменение цены относительно цены закрытия предыдущего дня 14.5%
+            """, telegramMessage.getText());
+    }
+
+    private void prepareState() {
+        initTodayDateTime("2024-04-24T13:00:00");
+        commandBus().execute(
+            CreateDatasourceCommand.builder()
+                .name("Московская биржа")
+                .description("Московская биржа")
+                .url("http://localhost:8080")
+                .build()
+        );
+        datasourceStorage().initInstrumentDetails(
+            List.of(
+                imoex(),
+                tgkbDetails(),
+                tgknDetails()
+            )
+        );
+        datasourceStorage().initDealDatas(
+            List.of(
+                buildImoexDelta( 1L, "10:00:00", 2800D, 100D),
+                buildImoexDelta( 2L, "12:00:00", 3200D, 200D),
+                buildTgknBuyDeal( 1L, "10:00:00", 111D, 5000D, 1),
+                buildTgknBuyDeal( 2L, "10:03:00", 112D, 1000D, 1),
+                buildTgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
+                buildTgknBuyDeal( 4L, "11:01:00", 110D, 1000D, 1),
+                buildTgknBuyDeal( 5L, "11:45:00", 114.5D, 5000D, 1)
+            )
+        );
+        datasourceStorage().initHistoryValues(
+            List.of(
+                buildTgknHistoryValue("2024-04-21", 99.D, 99.D, 99D, 1000D),
+                buildTgknHistoryValue("2024-04-22", 99.D, 99.D, 99D, 2000D),
+                buildTgknHistoryValue("2024-04-23", 100.D, 100.D, 100D, 1400D),
+                buildImoexHistoryValue("2024-04-21", 2900D, 2900D, 1_000_000D),
+                buildImoexHistoryValue("2024-04-22", 2900D, 2900D, 1_500_000D),
+                buildImoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
+            )
+        );
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(
+            CreateScannerCommand.builder()
+                .workPeriodInMinutes(1)
+                .description("Аномальные объемы, третий эшелон.")
+                .datasourceId(getDatasourceId())
+                .tickers(Stream.of(TGKN, TGKB, IMOEX).map(Ticker::from).toList())
+                .properties(
+                    AnomalyVolumeProperties.builder()
+                        .indexTicker(new Ticker(IMOEX))
+                        .historyPeriod(3)
+                        .scaleCoefficient(1.5)
+                        .build()
+                )
+                .build()
+        );
+        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), getToday()));
+        commandBus().execute(new Subscribe(1L));
+        clearLogs();
+        telegramMessageSender().clear();
+    }
+
+    protected InstrumentId getInstrumentIdBy(String ticker) {
+        return getInstrumentBy(ticker).getId();
+    }
+
+    protected ScannerId getScannerId() {
+        return scannerRepository().getScannerMap().values().stream().findFirst().orElseThrow().getId();
+    }
+
+    protected Instrument getInstrumentBy(String ticker) {
+        return datasourceRepository().getInstrumentBy(Ticker.from(ticker));
     }
 }

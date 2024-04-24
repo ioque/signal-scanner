@@ -35,7 +35,6 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
         commandPublisher.publish(
             PublishSignal.builder()
                 .isBuy(event.getIsBuy())
-                .price(event.getPrice())
                 .scannerId(ScannerId.from(event.getScannerId()))
                 .instrumentId(InstrumentId.from(event.getInstrumentId()))
                 .build()
