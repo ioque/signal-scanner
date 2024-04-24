@@ -27,6 +27,7 @@ import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
+import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
 import ru.ioque.investfund.fakes.FakeEventPublisher;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
@@ -84,6 +85,10 @@ public class BaseTest {
 
     protected final FakeTelegramMessageSender telegramMessageSender() {
         return fakeDIContainer.getTelegramMessageSender();
+    }
+
+    protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
+        return fakeDIContainer.getEmulatedPositionRepository();
     }
 
     protected final TelegramBotService telegramBotService() {

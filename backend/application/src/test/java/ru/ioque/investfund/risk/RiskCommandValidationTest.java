@@ -1,72 +1,17 @@
 package ru.ioque.investfund.risk;
 
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("RISK COMMAND VALIDATION TEST")
-public class RiskCommandValidationTest extends BaseTest {
-    @BeforeEach
-    void beforeEach() {
-        commandBus().execute(
-            CreateDatasourceCommand.builder()
-                .name("Московская биржа")
-                .description("Московская биржа")
-                .url("http://localhost:8080")
-                .build()
-        );
-        datasourceStorage().initInstrumentDetails(
-            List.of(
-                imoex(),
-                tgkbDetails(),
-                tgknDetails()
-            )
-        );
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
-        commandBus().execute(
-            CreateScannerCommand.builder()
-                .workPeriodInMinutes(1)
-                .description("Аномальные объемы, третий эшелон.")
-                .datasourceId(getDatasourceId())
-                .tickers(Stream.of(TGKN, TGKB, IMOEX).map(Ticker::from).toList())
-                .properties(
-                    AnomalyVolumeProperties.builder()
-                        .indexTicker(new Ticker(IMOEX))
-                        .historyPeriod(2)
-                        .scaleCoefficient(1.5)
-                        .build()
-                )
-                .build()
-        );
-        loggerProvider().clearLogs();
-    }
-
-    private InstrumentId getInstrumentIdBy(String ticker) {
-        return datasourceRepository().getInstrumentBy(Ticker.from(ticker)).getId();
-    }
-
-    private ScannerId getScannerId() {
-        return scannerRepository().getScannerMap().values().stream().findFirst().orElseThrow().getId();
-    }
-
+public class RiskCommandValidationTest extends RiskManagerTest {
     @Test
     @DisplayName("""
         T1. В команде на открытие позиции не указан идентификатор инструмента.

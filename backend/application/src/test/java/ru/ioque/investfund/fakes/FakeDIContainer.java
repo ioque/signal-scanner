@@ -151,7 +151,8 @@ public class FakeDIContainer {
         closeEmulatedPositionHandler = new CloseEmulatedPositionHandler(
             dateTimeProvider,
             validator,
-            loggerProvider
+            loggerProvider,
+            emulatedPositionRepository
         );
         evaluateEmulatedPositionHandler = new EvaluateEmulatedPositionHandler(
             dateTimeProvider,
@@ -162,7 +163,10 @@ public class FakeDIContainer {
         openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
             dateTimeProvider,
             validator,
-            loggerProvider
+            loggerProvider,
+            uuidProvider,
+            emulatedPositionRepository,
+            scannerRepository
         );
         commandBus = new CommandBus(
             List.of(
