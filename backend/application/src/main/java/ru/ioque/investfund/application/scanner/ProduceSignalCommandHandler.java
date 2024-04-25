@@ -4,29 +4,29 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
+import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.application.scanner.event.DatasourceScanned;
 import ru.ioque.investfund.application.scanner.event.SignalRegistered;
-import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCommand> {
-    UUIDProvider uuidProvider;
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository snapshotsRepository;
     EventPublisher eventPublisher;
@@ -40,8 +40,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
         TradingSnapshotsRepository snapshotsRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.scannerRepository = scannerRepository;
         this.snapshotsRepository = snapshotsRepository;
         this.eventPublisher = eventPublisher;
@@ -53,10 +52,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .findAllBy(command.getDatasourceId())
             .stream()
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
-            .map(scanner -> runScanner(scanner, command.getWatermark()))
-            .flatMap(Collection::stream)
-            .map(row -> new InfoLog(dateTimeProvider.nowDateTime(), row, command.getTrack()))
-            .forEach(loggerProvider::log);
+            .forEach(scanner -> runScanner(scanner, command.getWatermark(), command.getTrack()));
         eventPublisher.publish(DatasourceScanned.builder()
             .id(uuidProvider.generate())
             .datasourceId(command.getDatasourceId().getUuid())
@@ -65,9 +61,10 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .build());
     }
 
-    private List<String> runScanner(SignalScanner scanner, LocalDateTime watermark) {
+    private void runScanner(SignalScanner scanner, LocalDateTime watermark, UUID track) {
         final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getInstrumentIds());
-        List<Signal> signals = scanner.scanning(snapshots, watermark);
+        final List<Signal> signals = scanner.scanning(snapshots, watermark);
+        final Set<String> logs = scanner.getLogs();
         scannerRepository.save(scanner);
         signals
             .stream()
@@ -81,6 +78,14 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
                 .build()
             )
             .forEach(eventPublisher::publish);
-        return scanner.getLogs().stream().toList();
+        logs.forEach(log ->
+            loggerProvider.log(
+                new InfoLog(
+                    dateTimeProvider.nowDateTime(),
+                    log,
+                    track
+                )
+            )
+        );
     }
 }

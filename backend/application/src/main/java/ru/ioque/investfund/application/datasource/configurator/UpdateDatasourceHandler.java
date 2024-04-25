@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 @Component
@@ -20,9 +22,10 @@ public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceComm
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -33,5 +36,10 @@ public class UpdateDatasourceHandler extends CommandHandler<UpdateDatasourceComm
         datasource.updateUrl(command.getUrl());
         datasource.updateDescription(command.getDescription());
         datasourceRepository.save(datasource);
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("Обновлен источник данных[id=%s]", datasource.getId()),
+            command.getTrack()
+        ));
     }
 }

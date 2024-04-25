@@ -9,8 +9,10 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ReportService;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
+import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +28,12 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         TelegramMessageSender telegramMessageSender,
         TelegramChatRepository telegramChatRepository,
         ReportService reportService
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.reportService = reportService;
         this.telegramMessageSender = telegramMessageSender;
         this.telegramChatRepository = telegramChatRepository;
@@ -40,6 +43,11 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
     protected void businessProcess(PublishHourlyReport command) {
         try {
             File report = reportService.buildHourlyReport();
+            loggerProvider.log(new InfoLog(
+                dateTimeProvider.nowDateTime(),
+                "Сгенерирован ежечасный отчет",
+                command.getTrack()
+            ));
             if (command.getChatId() != null) {
                 telegramMessageSender.sendMessage(
                     command.getChatId(),
@@ -48,13 +56,11 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
                 );
                 return;
             }
-            telegramChatRepository.findAll().forEach(telegramChat -> {
-                telegramMessageSender.sendMessage(
-                    telegramChat.getChatId(),
-                    "Ежечасный отчет",
-                    report
-                );
-            });
+            telegramChatRepository.findAll().forEach(telegramChat -> telegramMessageSender.sendMessage(
+                telegramChat.getChatId(),
+                "Ежечасный отчет",
+                report
+            ));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

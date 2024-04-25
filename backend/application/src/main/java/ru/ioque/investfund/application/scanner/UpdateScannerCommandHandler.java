@@ -8,7 +8,9 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
@@ -26,10 +28,11 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.dateTimeProvider = dateTimeProvider;
         this.scannerRepository = scannerRepository;
         this.datasourceRepository = datasourceRepository;
@@ -45,5 +48,10 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
         scanner.updateProperties(command.getProperties());
         scanner.updateInstrumentIds(instrumentIds);
         scannerRepository.save(scanner);
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("Обновлен сканер сигналов[id=%s]", scanner.getId()),
+            command.getTrack()
+        ));
     }
 }

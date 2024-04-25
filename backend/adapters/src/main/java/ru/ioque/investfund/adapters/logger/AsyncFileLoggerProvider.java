@@ -16,13 +16,13 @@ public class AsyncFileLoggerProvider implements LoggerProvider {
     @Override
     public void log(ApplicationLog logPart) {
         if (logPart instanceof InfoLog infoLog) {
-            log.info(infoLog.getMsg());
+            log.info(String.format("track = %s | " + infoLog.getMsg(), infoLog.getTrack()));
         }
         if (logPart instanceof WarningLog warningLog) {
-            log.warn(warningLog.getMsg());
+            log.warn(String.format("track = %s | " + warningLog.getMsg(), warningLog.getTrack()));
         }
         if (logPart instanceof ErrorLog errorLog) {
-            log.error(errorLog.getMsg(), errorLog.getError());
+            log.error(String.format("track = %s | " + errorLog.getMsg(), errorLog.getTrack()), errorLog.getError());
         }
     }
 }

@@ -1,7 +1,9 @@
 package ru.ioque.investfund.application.api.command;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.UUID;
@@ -9,17 +11,9 @@ import java.util.UUID;
 @Getter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Command {
+    @ToString.Exclude
     private UUID track;
-
-    public Command() {
-        throw new IllegalArgumentException();
-    }
-
-    public Command(UUID track) {
-        this.track = track;
-        if (track == null) {
-            throw new IllegalArgumentException();
-        }
-    }
 }

@@ -35,8 +35,12 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
             otherInstruments.forEach(snapshot -> {
                 final String summary = String.format(
-                    "Растущие инструменты сектора: %s",
-                    riseInstruments.stream().map(TradingSnapshot::getTicker).toList()
+                    """
+                    Растущие инструменты сектора: %s
+                    Падающие инструменты сектора: %s
+                    """,
+                    riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
+                    otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
                 );
                 scanningResult.addLog(summary);
                 scanningResult.addSignal(

@@ -18,10 +18,10 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @ToString(callSuper = true)
@@ -35,7 +35,7 @@ public class SignalScanner extends Domain<ScannerId> {
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
     final List<Signal> signals;
-    final Set<String> logs = new HashSet<>();
+    final Set<String> logs = new TreeSet<>();
 
     @Builder
     public SignalScanner(

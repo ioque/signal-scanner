@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
@@ -16,11 +17,13 @@ public abstract class CommandHandler<C> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;
     protected LoggerProvider loggerProvider;
+    protected UUIDProvider uuidProvider;
 
     public void handleFor(C command) {
         loggerProvider.log(new InfoLog(
             dateTimeProvider.nowDateTime(),
-            String.format("Получена команда %s", command)
+            String.format("Получена команда %s", command),
+            ((Command) command).getTrack()
         ));
         validate(command);
         execute(command);
@@ -41,7 +44,8 @@ public abstract class CommandHandler<C> {
             loggerProvider.log(
                 new InfoLog(
                     dateTimeProvider.nowDateTime(),
-                    String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, time)
+                    String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, time),
+                    ((Command) command).getTrack()
                 )
             );
         } catch (Exception e) {
@@ -49,7 +53,9 @@ public abstract class CommandHandler<C> {
                 new ErrorLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("При обработке команды %s произошла ошибка: %s", command, e.getMessage()),
-                    e)
+                    e,
+                    ((Command) command).getTrack()
+                )
             );
             throw e;
         }

@@ -30,8 +30,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase1(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase1();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
 
         runWorkPipeline(datasourceId);
@@ -52,8 +52,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
 
         runWorkPipeline(datasourceId);
@@ -73,8 +73,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T13:30:00");
@@ -96,8 +96,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
         runWorkPipelineAndClearLogs(datasourceId);
         initTodayDateTime("2023-12-22T14:00:00");
@@ -120,8 +120,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, TATN);
 
         runWorkPipeline(datasourceId);
@@ -140,8 +140,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-22T13:00:00");
         initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2(datasourceId);
-        initDealsTatnFallOtherRise(datasourceId);
+        initTradingResultsForTestCase2();
+        initDealsTatnFallOtherRise();
         initScanner(datasourceId, ROSN, TATN, SIBN);
 
         runWorkPipeline(datasourceId);
@@ -184,7 +184,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, getTickers(datasourceId)));
     }
 
-    private void initDealsTatnFallOtherRise(DatasourceId datasourceId) {
+    private void initDealsTatnFallOtherRise() {
         datasourceStorage().initDealDatas(
             List.of(
                 buildBrf4Contract(1L,"10:00:00", 78D, 78000D, 1),
@@ -202,7 +202,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initTradingResultsForTestCase2(DatasourceId datasourceId) {
+    private void initTradingResultsForTestCase2() {
         datasourceStorage().initHistoryValues(
             List.of(
                 //BRF4
@@ -224,7 +224,7 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         );
     }
 
-    private void initTradingResultsForTestCase1(DatasourceId datasourceId) {
+    private void initTradingResultsForTestCase1() {
         datasourceStorage().initHistoryValues(
             List.of(
                 //BRF4

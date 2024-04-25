@@ -153,7 +153,6 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     }
 
     private void prepareTestCase3() {
-        final SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         initTodayDateTime("2023-12-25T12:00:00");
         initHistoryValues(
             buildTgknHistoryValue("2023-12-22", 99.D, 99.D, 99D, 1000D),

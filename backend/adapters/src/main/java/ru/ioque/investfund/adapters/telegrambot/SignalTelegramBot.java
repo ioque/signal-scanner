@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.telegrambot.command.PublishDailyReport;
 import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
 import ru.ioque.investfund.application.telegrambot.command.Subscribe;
@@ -19,14 +20,17 @@ import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
 @Profile("!tests")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalTelegramBot extends TelegramBot {
+    UUIDProvider uuidProvider;
     CommandPublisher commandPublisher;
 
     public SignalTelegramBot(
         @Value("${telegram-bot.token}") String botToken,
-        CommandPublisher commandPublisher
+        CommandPublisher commandPublisher,
+        UUIDProvider uuidProvider
     ) {
         super(botToken);
         this.commandPublisher = commandPublisher;
+        this.uuidProvider = uuidProvider;
     }
 
     @Override
@@ -35,16 +39,16 @@ public class SignalTelegramBot extends TelegramBot {
             switch (update.getMessage().getText()) {
                 case "/start":
                 case "/subscribe":
-                    commandPublisher.publish(new Subscribe(update.getMessage().getChatId()));
+                    commandPublisher.publish(new Subscribe(uuidProvider.generate(), update.getMessage().getChatId()));
                     break;
                 case "/unsubscribe":
-                    commandPublisher.publish(new Unsubscribe(update.getMessage().getChatId()));
+                    commandPublisher.publish(new Unsubscribe(uuidProvider.generate(), update.getMessage().getChatId()));
                     break;
                 case "/hourly_report":
-                    commandPublisher.publish(new PublishHourlyReport(update.getMessage().getChatId()));
+                    commandPublisher.publish(new PublishHourlyReport(uuidProvider.generate(), update.getMessage().getChatId()));
                     break;
                 case "/daily_report":
-                    commandPublisher.publish(new PublishDailyReport(update.getMessage().getChatId()));
+                    commandPublisher.publish(new PublishDailyReport(uuidProvider.generate(), update.getMessage().getChatId()));
                     break;
             }
         }

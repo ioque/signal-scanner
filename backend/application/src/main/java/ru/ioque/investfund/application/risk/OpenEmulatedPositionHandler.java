@@ -12,6 +12,7 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 import ru.ioque.investfund.domain.risk.EmulatedPositionId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -21,7 +22,7 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosition> {
     EmulatedPositionRepository emulatedPositionRepository;
     ScannerRepository scannerRepository;
-    UUIDProvider uuidProvider;
+
     public OpenEmulatedPositionHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
@@ -30,8 +31,7 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
         EmulatedPositionRepository emulatedPositionRepository,
         ScannerRepository scannerRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.emulatedPositionRepository = emulatedPositionRepository;
         this.scannerRepository = scannerRepository;
     }
@@ -54,5 +54,10 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
             .build();
         emulatedPosition.updateLastPrice(command.getPrice());
         emulatedPositionRepository.save(emulatedPosition);
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("Открыта эмуляция позиции[id=%s]", emulatedPosition.getId()),
+            command.getTrack()
+        ));
     }
 }

@@ -69,7 +69,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 formatter.format(currentValueToMedianValue),
                 indexIsRiseToday.get() ? "растущий" : "нисходящий"
             );
-            scanningResult.addLog(summary);
+            scanningResult.addLog(String.format("Инструмент[ticker=%s] | %s", tradingSnapshot.getTicker(), summary));
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot
                 .isRiseToday()
                 .get()) {

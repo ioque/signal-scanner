@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 
 @Component
@@ -18,9 +20,10 @@ public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPo
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         EmulatedPositionRepository emulatedPositionRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.emulatedPositionRepository = emulatedPositionRepository;
     }
 
@@ -39,5 +42,10 @@ public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPo
             );
         emulatedPosition.closePosition(command.getPrice());
         emulatedPositionRepository.save(emulatedPosition);
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("Закрыта эмуляция позиции[id=%s]", emulatedPosition.getId()),
+            command.getTrack()
+        ));
     }
 }

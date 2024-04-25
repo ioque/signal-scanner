@@ -16,6 +16,7 @@ import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
 import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
@@ -30,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTradingDataCommand> {
-    UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
     IntradayValueRepository intradayValueRepository;
     EventPublisher eventPublisher;
@@ -45,8 +45,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
         IntradayValueRepository intradayValueRepository,
         EventPublisher eventPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider, datasourceProvider);
-        this.uuidProvider = uuidProvider;
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider, datasourceProvider);
         this.datasourceRepository = datasourceRepository;
         this.intradayValueRepository = intradayValueRepository;
         this.eventPublisher = eventPublisher;
@@ -71,6 +70,11 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
             .datasourceId(datasource.getId().getUuid())
             .createdAt(dateTimeProvider.nowDateTime())
             .build());
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("В источнике данных[id=%s] выполнена интеграция торговых данных.", datasource.getId()),
+            command.getTrack()
+        ));
     }
 
     private void integrateTradingDataFor(Instrument instrument, Datasource datasource) {

@@ -46,7 +46,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 (riseOvernight ? "растущий" : "нисходящий"),
                 (futuresIsRiseOvernight ? "растущий" : "нисходящий")
             );
-            scanningResult.addLog(summary);
+            scanningResult.addLog(String.format("Инструмент[ticker=%s], фьючерс[ticker=%s] | %s", snapshot.getTicker(), futuresTicker, summary));
             if (futuresIsRiseOvernight && riseOvernight) {
                 scanningResult.addSignal(
                     Signal.builder()

@@ -82,12 +82,14 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             datasourceRepository
         );
         enableUpdateInstrumentProcessor = new EnableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             datasourceRepository
         );
         integrateInstrumentsProcessor = new IntegrateInstrumentsHandler(
@@ -119,12 +121,14 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             datasourceRepository
         );
         updateDatasourceProcessor = new UpdateDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             datasourceRepository
         );
         createScannerProcessor = new CreateScannerCommandHandler(
@@ -139,6 +143,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             scannerRepository,
             datasourceRepository
         );
@@ -155,12 +160,14 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             emulatedPositionRepository
         );
         evaluateEmulatedPositionHandler = new EvaluateEmulatedPositionHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             emulatedPositionRepository
         );
         openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
@@ -175,6 +182,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             scannerRepository,
             tradingDataRepository,
             telegramChatRepository,
@@ -184,6 +192,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             telegramChatRepository,
             telegramMessageSender
         );
@@ -191,6 +200,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            uuidProvider,
             telegramChatRepository,
             telegramMessageSender
         );

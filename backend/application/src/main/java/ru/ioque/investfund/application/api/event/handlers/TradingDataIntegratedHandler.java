@@ -33,6 +33,7 @@ public class TradingDataIntegratedHandler extends EventHandler<TradingDataIntegr
     public void handle(TradingDataIntegrated event) {
         commandPublisher.publish(
             ProduceSignalCommand.builder()
+                .track(uuidProvider.generate())
                 .datasourceId(DatasourceId.from(event.getDatasourceId()))
                 .watermark(event.getCreatedAt())
                 .build()

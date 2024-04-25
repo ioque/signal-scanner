@@ -43,7 +43,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                 Отношение текущей дельты к исторической: %s.""",
                 formatter.format(currentDelta), formatter.format(historyDelta), formatter.format(multiplier)
             );
-            scanningResult.addLog(summary);
+            scanningResult.addLog(String.format("Пара преф[ticker=%s] обычка[ticker=%s] | %s", pair.getPref().getTicker(), pair.getSimple().getTicker(), summary));
             if (multiplier > spreadValue) {
                 scanningResult.addSignal(Signal.builder()
                     .instrumentId(pair.getPref().getInstrumentId())

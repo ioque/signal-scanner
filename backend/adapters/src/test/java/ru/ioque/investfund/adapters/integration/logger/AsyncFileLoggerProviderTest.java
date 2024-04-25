@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,13 +60,15 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         T1. Логирование InfoLog
         """)
     void testCase1() {
+        UUID track = UUID.randomUUID();
         provider.log(
             new InfoLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Log 1"
+                "Test Log 1",
+                track
             )
         );
         provider.log(
@@ -74,17 +77,18 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Log 2"
+                "Test Log 2",
+                track
             )
         );
 
         assertTrue(waitLogCount(2));
         final List<JsonNode> logContent = getLogContent();
         assertNotNull(logContent.get(0).get("time"));
-        assertEquals("Test Log 1", logContent.get(0).get("message").asText());
+        assertEquals(String.format("track = %s | Test Log 1", track), logContent.get(0).get("message").asText());
         assertEquals("INFO", logContent.get(0).get("level").asText());
         assertNotNull(logContent.get(1).get("time"));
-        assertEquals("Test Log 2", logContent.get(1).get("message").asText());
+        assertEquals(String.format("track = %s | Test Log 2", track), logContent.get(1).get("message").asText());
         assertEquals("INFO", logContent.get(1).get("level").asText());
     }
 
@@ -93,6 +97,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         T2. Логирование ErrorLog
         """)
     void testCase2() {
+        UUID track = UUID.randomUUID();
         provider.log(
             new ErrorLog(
                 LocalDateTime.of(
@@ -100,7 +105,8 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
                     LocalTime.of(10, 0, 0)
                 ),
                 "Test Error Log 1",
-                new RuntimeException("Test Exception")
+                new RuntimeException("Test Exception"),
+                track
             )
         );
 
@@ -108,7 +114,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         final List<JsonNode> logContent = getLogContent();
         assertNotNull(logContent.get(0).get("time"));
         assertEquals("ERROR", logContent.get(0).get("level").asText());
-        assertEquals("Test Error Log 1", logContent.get(0).get("message").asText());
+        assertEquals(String.format("track = %s | Test Error Log 1", track), logContent.get(0).get("message").asText());
         assertEquals("java.lang.RuntimeException", logContent.get(0).get("error_type").asText());
         assertEquals("Test Exception", logContent.get(0).get("error_message").asText());
     }
@@ -118,13 +124,15 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         T2. Логирование WarningLog
         """)
     void testCase3() {
+        UUID track = UUID.randomUUID();
         provider.log(
             new WarningLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Warning Log 1"
+                "Test Warning Log 1",
+                track
             )
         );
 
@@ -132,7 +140,7 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
         var logContent = getLogContent();
         assertNotNull(logContent.get(0).get("time"));
         assertEquals("WARN", logContent.get(0).get("level").asText());
-        assertEquals("Test Warning Log 1", logContent.get(0).get("message").asText());
+        assertEquals(String.format("track = %s | Test Warning Log 1", track), logContent.get(0).get("message").asText());
     }
 
     private boolean waitLogCount(int logCount) {

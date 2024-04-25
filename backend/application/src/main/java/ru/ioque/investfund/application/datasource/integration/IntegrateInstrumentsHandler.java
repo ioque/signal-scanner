@@ -11,6 +11,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
@@ -21,7 +22,6 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateInstrumentsCommand> {
-    UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
 
     public IntegrateInstrumentsHandler(
@@ -32,8 +32,7 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider, datasourceProvider);
-        this.uuidProvider = uuidProvider;
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider, datasourceProvider);
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -52,5 +51,10 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
             .toList();
         datasource.integrateInstruments(instruments);
         datasourceRepository.save(datasource);
+        loggerProvider.log(new InfoLog(
+            dateTimeProvider.nowDateTime(),
+            String.format("В источнике данных[id=%s] выполнена интеграция инструментов.", datasource.getId()),
+            command.getTrack()
+        ));
     }
 }
