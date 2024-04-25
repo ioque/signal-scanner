@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,15 +18,14 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateScannerCommand implements Command {
+public class CreateScannerCommand extends Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
     @NotNull(message = "Не передан период работы сканера.")
@@ -39,4 +37,21 @@ public class CreateScannerCommand implements Command {
     List<@Valid Ticker> tickers;
     @NotNull(message = "Не переданы параметры алгоритма.")
     @Valid AlgorithmProperties properties;
+
+    @Builder
+    public CreateScannerCommand(
+        UUID track,
+        DatasourceId datasourceId,
+        Integer workPeriodInMinutes,
+        String description,
+        List<@Valid Ticker> tickers,
+        AlgorithmProperties properties
+    ) {
+        super(track);
+        this.datasourceId = datasourceId;
+        this.workPeriodInMinutes = workPeriodInMinutes;
+        this.description = description;
+        this.tickers = tickers;
+        this.properties = properties;
+    }
 }

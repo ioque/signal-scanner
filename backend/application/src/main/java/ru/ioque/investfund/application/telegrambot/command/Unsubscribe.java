@@ -1,7 +1,6 @@
 package ru.ioque.investfund.application.telegrambot.command;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,13 +9,19 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.api.command.Command;
 
+import java.util.UUID;
+
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Unsubscribe implements Command {
+public class Unsubscribe extends Command {
     private Long chatId;
+
+    @Builder
+    public Unsubscribe(UUID track, Long chatId) {
+        super(track);
+        this.chatId = chatId;
+    }
 }

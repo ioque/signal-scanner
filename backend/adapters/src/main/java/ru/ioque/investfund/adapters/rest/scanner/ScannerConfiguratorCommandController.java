@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.rest.scanner.request.CreateScannerRequest;
 import ru.ioque.investfund.adapters.rest.scanner.request.UpdateScannerRequest;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandBus;
 
 import java.util.UUID;
@@ -22,14 +23,15 @@ import java.util.UUID;
 @Tag(name="ScannerCommandController", description="Контроллер команд к модулю \"SCANNER\"")
 public class ScannerConfiguratorCommandController {
     CommandBus commandBus;
+    UUIDProvider uuidProvider;
 
     @PostMapping("/api/scanner")
     public void addNewScanner(@Valid @RequestBody CreateScannerRequest request) {
-        commandBus.execute(request.toCommand());
+        commandBus.execute(request.toCommand(uuidProvider.generate()));
     }
 
     @PatchMapping("/api/scanner/{scannerId}")
     public void updateScanner(@PathVariable UUID scannerId, @Valid @RequestBody UpdateScannerRequest request) {
-        commandBus.execute(request.toCommand(scannerId));
+        commandBus.execute(request.toCommand(scannerId, uuidProvider.generate()));
     }
 }

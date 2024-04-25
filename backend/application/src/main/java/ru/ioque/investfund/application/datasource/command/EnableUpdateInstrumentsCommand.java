@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,17 +15,23 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EnableUpdateInstrumentsCommand implements Command {
+public class EnableUpdateInstrumentsCommand extends Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
     @NotEmpty(message = "Не передан список тикеров инструментов для активации обновления торговых данных.")
     List<@Valid Ticker> tickers;
+
+    @Builder
+    public EnableUpdateInstrumentsCommand(UUID track, DatasourceId datasourceId, List<Ticker> tickers) {
+        super(track);
+        this.tickers = tickers;
+        this.datasourceId = datasourceId;
+    }
 }

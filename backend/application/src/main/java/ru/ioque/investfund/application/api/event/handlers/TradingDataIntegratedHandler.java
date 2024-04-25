@@ -4,6 +4,7 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
@@ -21,9 +22,10 @@ public class TradingDataIntegratedHandler extends EventHandler<TradingDataIntegr
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         CommandPublisher commandPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.commandPublisher = commandPublisher;
     }
 

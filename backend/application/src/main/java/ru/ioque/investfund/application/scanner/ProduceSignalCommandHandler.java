@@ -14,11 +14,13 @@ import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.scanner.event.DatasourceScanned;
 import ru.ioque.investfund.application.scanner.event.SignalRegistered;
 import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -51,7 +53,10 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .findAllBy(command.getDatasourceId())
             .stream()
             .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
-            .forEach(scanner -> runScanner(scanner, command.getWatermark()));
+            .map(scanner -> runScanner(scanner, command.getWatermark()))
+            .flatMap(Collection::stream)
+            .map(row -> new InfoLog(dateTimeProvider.nowDateTime(), row, command.getTrack()))
+            .forEach(loggerProvider::log);
         eventPublisher.publish(DatasourceScanned.builder()
             .id(uuidProvider.generate())
             .datasourceId(command.getDatasourceId().getUuid())
@@ -60,7 +65,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .build());
     }
 
-    private void runScanner(SignalScanner scanner, LocalDateTime watermark) {
+    private List<String> runScanner(SignalScanner scanner, LocalDateTime watermark) {
         final List<TradingSnapshot> snapshots = snapshotsRepository.findAllBy(scanner.getInstrumentIds());
         List<Signal> signals = scanner.scanning(snapshots, watermark);
         scannerRepository.save(scanner);
@@ -76,5 +81,6 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
                 .build()
             )
             .forEach(eventPublisher::publish);
+        return scanner.getLogs().stream().toList();
     }
 }

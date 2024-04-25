@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,6 +21,7 @@ public class BaseScannerTest extends BaseTest {
     void beforeEach() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")

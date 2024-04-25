@@ -9,11 +9,11 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,8 +29,8 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final List<Signal> signals = new ArrayList<>();
+    public ScanningResult run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        ScanningResult scanningResult = new ScanningResult();
         findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
@@ -43,8 +43,9 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                 Отношение текущей дельты к исторической: %s.""",
                 formatter.format(currentDelta), formatter.format(historyDelta), formatter.format(multiplier)
             );
+            scanningResult.addLog(summary);
             if (multiplier > spreadValue) {
-                signals.add(Signal.builder()
+                scanningResult.addSignal(Signal.builder()
                     .instrumentId(pair.getPref().getInstrumentId())
                     .isOpen(true)
                     .isBuy(true)
@@ -55,7 +56,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                 );
             }
         });
-        return signals;
+        return scanningResult;
     }
 
     private List<PrefSimplePair> findAllPrefAndSimplePairs(List<TradingSnapshot> tradingSnapshots) {

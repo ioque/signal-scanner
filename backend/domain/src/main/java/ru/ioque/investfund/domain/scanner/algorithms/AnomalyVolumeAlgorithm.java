@@ -9,11 +9,11 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +44,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
-        final List<Signal> signals = new ArrayList<>();
+    public ScanningResult run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
+        ScanningResult scanningResult = new ScanningResult();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue(historyPeriod);
@@ -69,10 +69,11 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 formatter.format(currentValueToMedianValue),
                 indexIsRiseToday.get() ? "растущий" : "нисходящий"
             );
+            scanningResult.addLog(summary);
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot
                 .isRiseToday()
                 .get()) {
-                signals.add(
+                scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
                         .isOpen(true)
@@ -84,7 +85,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 );
             }
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
-                signals.add(
+                scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
                         .isOpen(true)
@@ -96,7 +97,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 );
             }
         }
-        return signals;
+        return scanningResult;
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {

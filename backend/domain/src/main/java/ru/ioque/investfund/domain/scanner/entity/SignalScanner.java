@@ -13,12 +13,15 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @ToString(callSuper = true)
@@ -32,6 +35,7 @@ public class SignalScanner extends Domain<ScannerId> {
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
     final List<Signal> signals;
+    final Set<String> logs = new HashSet<>();
 
     @Builder
     public SignalScanner(
@@ -81,11 +85,26 @@ public class SignalScanner extends Domain<ScannerId> {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
-        AlgorithmFactory algorithmFactory = new AlgorithmFactory();
-        ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
+        final AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+        final ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
         lastExecutionDateTime = watermark;
-        List<Signal> newSignals = deduplicationNewSignals(algorithm.run(tradingSnapshots, watermark));
-        return registerNewSignals(newSignals);
+        logs.add(String.format(
+            "Начал работу сканер[id=%s], алгоритм %s.",
+            getId(),
+            getProperties().getType().getName()
+        ));
+        final ScanningResult result = algorithm.run(tradingSnapshots, watermark);
+        logs.addAll(result.getLogs());
+        final List<Signal> newSignals = deduplicationNewSignals(result.getSignals());
+        final List<Signal> registeredSignals = registerNewSignals(newSignals);
+        logs.add(String.format(
+            "Завершил работу сканер[id=%s], алгоритм %s. Найдено %s сигналов, зарегистрировано %s",
+            getId(),
+            getProperties().getType().getName(),
+            newSignals.size(),
+            registeredSignals.size()
+        ));
+        return registeredSignals;
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
@@ -110,7 +129,8 @@ public class SignalScanner extends Domain<ScannerId> {
     }
 
     private boolean registerNewSignal(Signal newSignal) {
-        Optional<Signal> signalSameByTicker = signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
+        Optional<Signal> signalSameByTicker =
+            signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
         if (signalSameByTicker.isPresent()) {
             if (signalSameByTicker.get().isBuy() && newSignal.isSell()) {
                 signalSameByTicker.get().close();

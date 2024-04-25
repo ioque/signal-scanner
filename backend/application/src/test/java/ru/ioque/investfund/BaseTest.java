@@ -43,6 +43,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -128,7 +129,7 @@ public class BaseTest {
 
     protected void integrateInstruments(DatasourceId datasourceId, InstrumentDto... instrumentDtos) {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
-        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), datasourceId));
     }
 
     protected void initInstrumentDetails(InstrumentDto... instrumentDtos) {
@@ -173,8 +174,8 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        commandBus().execute(new ProduceSignalCommand(datasourceId, getToday()));
+        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), datasourceId));
+        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), datasourceId, getToday()));
     }
 
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {
@@ -197,11 +198,11 @@ public class BaseTest {
 
 
     protected EnableUpdateInstrumentsCommand enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+        return new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
     }
 
     protected EnableUpdateInstrumentsCommand disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+        return new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
     }
 
     protected DealDto buildBuyDealBy(

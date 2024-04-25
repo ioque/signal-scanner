@@ -7,6 +7,8 @@ import ru.ioque.investfund.application.datasource.command.CreateDatasourceComman
 import ru.ioque.investfund.application.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,6 +24,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
 
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name(datasourceName)
                 .description(datasourceName)
                 .url(datasourceUrl)
@@ -43,6 +46,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
     void testCase2() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -54,6 +58,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
 
         commandBus().execute(
             UpdateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .id(getDatasourceId())
                 .name(datasourceName)
                 .description(datasourceDesc)
@@ -76,6 +81,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
     void testCase3() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа 1")
                 .description("Московская биржа 1")
                 .url("http://localhost:8081")
@@ -83,6 +89,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         );
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа 2")
                 .description("Московская биржа 2")
                 .url("http://localhost:8082")

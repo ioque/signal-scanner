@@ -27,7 +27,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AggregatedHistoryDto {
     @NotBlank(message = "Не заполнен тикер.")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
+    @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;
 
     @NotNull(message = "Не заполнена дата агрегированных итогов.")

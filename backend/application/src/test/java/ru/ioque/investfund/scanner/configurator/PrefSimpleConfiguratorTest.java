@@ -9,6 +9,7 @@ import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
 import java.util.List;
+import java.util.UUID;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE SIMPLE PREF SCANNER")
 public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
@@ -105,6 +106,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
 
     private CreateScannerCommand.CreateScannerCommandBuilder buildCreatePrefSimpleScannerWith() {
         return CreateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -116,6 +118,7 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
 
     private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdatePrefSimpleScannerWith() {
         return UpdateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

@@ -26,7 +26,7 @@ import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
 )
 public abstract class InstrumentDto {
     @NotBlank(message = "Не заполнен тикер инструмента.")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
+    @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.")
     String ticker;
     @NotBlank(message = "Не заполнено краткое наименование инструмента.")
     String shortName;

@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 public class CurrencyPairDto extends InstrumentDto {
     @Min(value = 1, message = "Размер лота должен быть положительным целым числом.")
     Integer lotSize;
-    @Pattern(regexp = "^[A-Za-z]+$", message = "Валюта номинала должна быть строкой, состоящей из латинских букв.")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Валюта номинала должна быть строкой, состоящей из латинских букв или цифр.")
     String faceUnit;
 
     @Builder

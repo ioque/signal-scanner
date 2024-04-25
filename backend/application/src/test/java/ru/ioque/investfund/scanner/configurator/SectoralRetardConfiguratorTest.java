@@ -9,6 +9,7 @@ import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
 import java.util.List;
+import java.util.UUID;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL RETARD SCANNER")
 public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
@@ -204,6 +205,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
 
     private CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralRetardScannerWith() {
         return CreateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -213,6 +215,7 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
 
     private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralRetardScannerWith() {
         return UpdateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

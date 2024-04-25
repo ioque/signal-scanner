@@ -20,6 +20,7 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,15 +32,17 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void beforeEach() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
                 .build()
         );
         initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
         commandBus().execute(
             CreateScannerCommand.builder()
+                .track(UUID.randomUUID())
                 .datasourceId(getDatasourceId())
                 .workPeriodInMinutes(1)
                 .tickers(List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX)))
@@ -63,7 +66,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase1() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new ProduceSignalCommand(null, getToday()))
+            () -> commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), null, getToday()))
         );
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
     }
@@ -75,7 +78,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase2() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new ProduceSignalCommand(getDatasourceId(), null))
+            () -> commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), null))
         );
         assertEquals("Не передан watermark.", getMessage(exception));
     }
@@ -88,7 +91,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase3() {
         prepareTestCase3();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         final Optional<SignalRegistered> signalFoundEvent = findSignalFoundEvent();
         assertTrue(signalFoundEvent.isPresent());
@@ -108,7 +111,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase4() {
         prepareTestCase4();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(3, scanner.getSignals().size());
@@ -122,7 +125,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase5() {
         prepareTestCase5();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(0, scanner.getSignals().size());
@@ -136,7 +139,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase6() {
         prepareTestCase6();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(2, scanner.getSignals().size());
@@ -169,8 +172,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildTgknBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
     }
 
@@ -223,8 +226,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildTgkbBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgkbBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
     }
 
@@ -247,8 +250,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildTgknSellDeal(4L,"11:01:00", 97D, 1000D, 1),
             buildTgknSellDeal(5L, "11:45:00", 96D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
     }
 
@@ -283,8 +286,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             buildTgknBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L,"11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
     }
 

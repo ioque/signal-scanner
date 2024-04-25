@@ -20,13 +20,13 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 public class FuturesDto extends InstrumentDto {
     @Min(value = 0, message = "Размер лота должен быть положительным целым числом.")
     Integer lotVolume;
-    @DecimalMin(value = "0", inclusive = false, message = "Стартовая маржа фьючерса должна быть положительным числом.")
+    @DecimalMin(value = "0", message = "Стартовая маржа фьючерса должна быть положительным числом.")
     Double initialMargin;
-    @DecimalMin(value = "0", inclusive = false, message = "Верхний лимит фьючерса должен быть положительным числом.")
+    @DecimalMin(value = "0", message = "Верхний лимит фьючерса должен быть положительным числом.")
     Double highLimit;
-    @DecimalMin(value = "0", inclusive = false, message = "Нижний лимит фьючерса должен быть положительным числом.")
+    @DecimalMin(value = "0", message = "Нижний лимит фьючерса должен быть положительным числом.")
     Double lowLimit;
-    @Pattern(regexp = "^[A-Za-z]+$", message = "Код товара должен быть строкой, состоящей из латинских букв.")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Код товара должен быть строкой, состоящей из латинских букв или цифр.")
     String assetCode;
 
     @Builder

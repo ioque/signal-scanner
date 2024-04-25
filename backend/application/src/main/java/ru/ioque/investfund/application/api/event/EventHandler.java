@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
@@ -16,6 +17,7 @@ public abstract class EventHandler<E> {
     protected DateTimeProvider dateTimeProvider;
     protected Validator validator;
     protected LoggerProvider loggerProvider;
+    protected UUIDProvider uuidProvider;
 
     public void handleFor(E event) {
         loggerProvider.log(new InfoLog(

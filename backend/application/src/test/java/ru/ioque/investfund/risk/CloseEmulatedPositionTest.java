@@ -25,6 +25,7 @@ public class CloseEmulatedPositionTest extends RiskManagerTest {
     void testCase1() {
         commandBus().execute(
             OpenEmulatedPosition.builder()
+                .track(UUID.randomUUID())
                 .scannerId(getScannerId())
                 .instrumentId(getInstrumentIdBy(TGKN))
                 .price(102D)
@@ -33,6 +34,7 @@ public class CloseEmulatedPositionTest extends RiskManagerTest {
 
         commandBus().execute(
             CloseEmulatedPosition.builder()
+                .track(UUID.randomUUID())
                 .scannerId(getScannerId())
                 .instrumentId(getInstrumentIdBy(TGKN))
                 .price(122D)
@@ -60,6 +62,7 @@ public class CloseEmulatedPositionTest extends RiskManagerTest {
             EntityNotFoundException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
+                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(instrumentId)
                     .price(102D)
@@ -86,6 +89,7 @@ public class CloseEmulatedPositionTest extends RiskManagerTest {
             EntityNotFoundException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
+                    .track(UUID.randomUUID())
                     .scannerId(scannerId)
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(102D)

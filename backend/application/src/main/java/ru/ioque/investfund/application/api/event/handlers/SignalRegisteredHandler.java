@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
@@ -24,9 +25,10 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         CommandPublisher commandPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.commandPublisher = commandPublisher;
     }
 
@@ -34,6 +36,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
     public void handle(SignalRegistered event) {
         commandPublisher.publish(
             PublishSignal.builder()
+                .track(uuidProvider.generate())
                 .isBuy(event.getIsBuy())
                 .scannerId(ScannerId.from(event.getScannerId()))
                 .instrumentId(InstrumentId.from(event.getInstrumentId()))
@@ -42,6 +45,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
         if (event.getIsBuy()) {
             commandPublisher.publish(
                 OpenEmulatedPosition.builder()
+                    .track(uuidProvider.generate())
                     .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))
                     .instrumentId(InstrumentId.from(event.getInstrumentId()))
@@ -50,6 +54,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
         } else {
             commandPublisher.publish(
                 CloseEmulatedPosition.builder()
+                    .track(uuidProvider.generate())
                     .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))
                     .instrumentId(InstrumentId.from(event.getInstrumentId()))

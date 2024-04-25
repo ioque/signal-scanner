@@ -12,6 +12,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,6 +24,7 @@ public class InstrumentIntegrationTest extends BaseTest {
     void beforeEach() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
+                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -41,7 +43,7 @@ public class InstrumentIntegrationTest extends BaseTest {
             afks()
         );
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
 
         final Optional<Datasource> datasource = datasourceRepository().findBy(getDatasourceId());
         assertTrue(datasource.isPresent());
@@ -59,10 +61,10 @@ public class InstrumentIntegrationTest extends BaseTest {
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
         initInstrumentDetails(afks(), imoex(), brf4());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
         assertEquals(3, getInstruments(getDatasourceId()).size());
         assertEquals(getDatasourceId(), datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId());
     }
@@ -74,11 +76,11 @@ public class InstrumentIntegrationTest extends BaseTest {
     void testCase3() {
         initInstrumentDetails(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
         clearLogs();
         initInstrumentDetails(afks(), imoex(), brf4(), lkohDetails(), rosnDetails(), sibn());
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
 
         assertEquals(6, getInstruments(getDatasourceId()).size());
     }
@@ -101,7 +103,7 @@ public class InstrumentIntegrationTest extends BaseTest {
                 .regNumber("1-05-01669-A")
                 .build()
         ));
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
         assertEquals(1, getInstruments(getDatasourceId()).size());
     }
 
@@ -134,7 +136,7 @@ public class InstrumentIntegrationTest extends BaseTest {
         ));
         final IntegrationValidationException error = assertThrows(
             IntegrationValidationException.class,
-            () -> commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()))
+            () -> commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()))
         );
         assertEquals(3, error.getValidationErrors().size());
         assertEquals(2, error.getValidationErrors().get(0).getErrors().size());

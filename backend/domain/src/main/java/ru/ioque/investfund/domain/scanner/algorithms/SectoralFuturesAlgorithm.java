@@ -9,10 +9,10 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,8 +34,8 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final List<Signal> signals = new ArrayList<>();
+    public ScanningResult run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final ScanningResult scanningResult = new ScanningResult();
         final boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
         for (final TradingSnapshot snapshot : analyzeInstruments(tradingSnapshots)) {
             final boolean riseOvernight = snapshot.isRiseOvernight(stockOvernightScale);
@@ -46,8 +46,9 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 (riseOvernight ? "растущий" : "нисходящий"),
                 (futuresIsRiseOvernight ? "растущий" : "нисходящий")
             );
+            scanningResult.addLog(summary);
             if (futuresIsRiseOvernight && riseOvernight) {
-                signals.add(
+                scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(snapshot.getInstrumentId())
                         .isOpen(true)
@@ -59,7 +60,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 );
             }
         }
-        return signals;
+        return scanningResult;
     }
 
     private TradingSnapshot getFuturesStatistic(List<TradingSnapshot> tradingSnapshots) {

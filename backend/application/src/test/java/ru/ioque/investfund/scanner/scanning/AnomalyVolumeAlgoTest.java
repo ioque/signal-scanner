@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -470,13 +471,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgknDetails()
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, getTickers(datasourceId)));
     }
 
     private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
+                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(datasourceId)

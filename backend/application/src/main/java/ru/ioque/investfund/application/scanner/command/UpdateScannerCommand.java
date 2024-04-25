@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,15 +18,14 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmPropert
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
-@Builder
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateScannerCommand implements Command {
+public class UpdateScannerCommand extends Command {
     @NotNull(message = "Не передан идентификатор сканера.")
     ScannerId scannerId;
     @NotNull(message = "Не передан период работы сканера.")
@@ -39,4 +37,21 @@ public class UpdateScannerCommand implements Command {
     List<@Valid Ticker> tickers;
     @NotNull(message = "Не переданы параметры алгоритма.")
     @Valid AlgorithmProperties properties;
+
+    @Builder
+    public UpdateScannerCommand(
+        UUID track,
+        ScannerId scannerId,
+        Integer workPeriodInMinutes,
+        String description,
+        List<@Valid Ticker> tickers,
+        AlgorithmProperties properties
+    ) {
+        super(track);
+        this.scannerId = scannerId;
+        this.workPeriodInMinutes = workPeriodInMinutes;
+        this.description = description;
+        this.tickers = tickers;
+        this.properties = properties;
+    }
 }

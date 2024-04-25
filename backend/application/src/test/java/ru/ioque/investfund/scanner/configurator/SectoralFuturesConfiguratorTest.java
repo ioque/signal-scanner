@@ -8,6 +8,7 @@ import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 
 import java.util.List;
+import java.util.UUID;
 
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL CORRELATION SCANNER")
 public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
@@ -283,6 +284,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
 
     private CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralFuturesScannerWith() {
         return CreateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -298,6 +300,7 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
 
     private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralFuturesScannerWith() {
         return UpdateScannerCommand.builder()
+            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

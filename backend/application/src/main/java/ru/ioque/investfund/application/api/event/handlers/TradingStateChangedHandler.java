@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
 import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
@@ -21,15 +22,17 @@ public class TradingStateChangedHandler extends EventHandler<TradingStateChanged
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
+        UUIDProvider uuidProvider,
         CommandPublisher commandPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider);
+        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
         this.commandPublisher = commandPublisher;
     }
 
     @Override
     protected void handle(TradingStateChanged event) {
         commandPublisher.publish(new EvaluateEmulatedPosition(
+            uuidProvider.generate(),
             InstrumentId.from(event.getInstrumentId()),
             event.getPrice()
         ));

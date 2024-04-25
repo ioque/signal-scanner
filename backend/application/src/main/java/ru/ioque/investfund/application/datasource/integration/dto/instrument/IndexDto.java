@@ -16,9 +16,9 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IndexDto extends InstrumentDto {
-    @DecimalMin(value = "0", inclusive = false, message = "Годовой максимум индекса должен быть положительным числом.")
+    @DecimalMin(value = "0", message = "Годовой максимум индекса должен быть положительным числом.")
     Double annualHigh;
-    @DecimalMin(value = "0", inclusive = false, message = "Годовой минимум индекса должен быть положительным числом.")
+    @DecimalMin(value = "0", message = "Годовой минимум индекса должен быть положительным числом.")
     Double annualLow;
 
     @Builder
