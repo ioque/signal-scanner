@@ -25,6 +25,7 @@ import ru.ioque.investfund.application.adapters.ReportService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 @Component
 @AllArgsConstructor
@@ -33,6 +34,7 @@ public class ExcelReportService implements ReportService {
     JpaEmulatedPositionRepository emulatedPositionRepository;
     JpaInstrumentRepository instrumentRepository;
     JpaScannerRepository jpaScannerRepository;
+    DecimalFormat formatter = new DecimalFormat("#,###.##");
 
     @Override
     public File buildDailyReport() throws IOException {
@@ -65,9 +67,9 @@ public class ExcelReportService implements ReportService {
                 double profit = (closePrice/emulatedPositionEntity.getOpenPrice() - 1) * 100;
                 buildCell(row, 0, instrument.getTicker(), style);
                 buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
-                buildCell(row, 2, emulatedPositionEntity.getOpenPrice().toString(), style);
-                buildCell(row, 3, Double.toString(closePrice), style);
-                buildCell(row, 4, Double.toString(profit), style);
+                buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
+                buildCell(row, 3, formatter.format(closePrice), style);
+                buildCell(row, 4, formatter.format(profit), style);
                 buildCell(row, 5, signal.getSummary(), style);
                 rowIndex++;
             }
@@ -110,9 +112,9 @@ public class ExcelReportService implements ReportService {
                     jpaScannerRepository.findById(emulatedPositionEntity.getScannerId()).orElseThrow();
                 buildCell(row, 0, instrument.getTicker(), style);
                 buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
-                buildCell(row, 2, emulatedPositionEntity.getOpenPrice().toString(), style);
-                buildCell(row, 3, emulatedPositionEntity.getLastPrice().toString(), style);
-                buildCell(row, 4, emulatedPositionEntity.getProfit().toString(), style);
+                buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
+                buildCell(row, 3, formatter.format(emulatedPositionEntity.getLastPrice()), style);
+                buildCell(row, 4, formatter.format(emulatedPositionEntity.getProfit()), style);
                 rowIndex++;
             }
         }
