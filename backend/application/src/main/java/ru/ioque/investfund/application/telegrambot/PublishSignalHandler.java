@@ -62,12 +62,13 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
                 String.format(
                     """
                         #%s
-                        Зафиксирован сигнал, алгоритм "%s"
+                        Зафиксирован сигнал к %s, алгоритм "%s"
                                                         
                         %s
                         Изменение цены относительно цены закрытия предыдущего дня %s
                         """,
                     tradingSnapshot.getTicker(),
+                    signal.isBuy() ? "покупке" : "продаже",
                     scanner.getProperties().getType().getName(),
                     signal.getSummary(),
                     tradingSnapshot
