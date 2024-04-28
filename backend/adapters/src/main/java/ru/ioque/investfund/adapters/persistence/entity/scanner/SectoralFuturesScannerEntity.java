@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,28 +47,6 @@ public class SectoralFuturesScannerEntity extends ScannerEntity {
         this.futuresOvernightScale = futuresOvernightScale;
         this.stockOvernightScale = stockOvernightScale;
         this.futuresTicker = futuresTicker;
-    }
-
-    public static ScannerEntity from(SignalScanner scannerDomain) {
-        SectoralFuturesProperties properties = (SectoralFuturesProperties) scannerDomain.getProperties();
-        SectoralFuturesScannerEntity scannerEntity = SectoralFuturesScannerEntity.builder()
-            .id(scannerDomain.getId().getUuid())
-            .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
-            .description(scannerDomain.getDescription())
-            .datasourceId(scannerDomain.getDatasourceId().getUuid())
-            .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
-            .futuresOvernightScale(properties.getFuturesOvernightScale())
-            .stockOvernightScale(properties.getStockOvernightScale())
-            .futuresTicker(properties.getFuturesTicker().getValue())
-            .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
-        return scannerEntity;
     }
 
     @Override

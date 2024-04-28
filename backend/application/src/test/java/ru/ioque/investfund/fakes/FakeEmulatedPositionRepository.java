@@ -21,7 +21,7 @@ public class FakeEmulatedPositionRepository implements EmulatedPositionRepositor
 
     @Override
     public Optional<EmulatedPosition> findBy(InstrumentId instrumentId, ScannerId scannerId) {
-        return findAllBy(instrumentId).stream().filter(row -> row.getScannerId().equals(scannerId)).findFirst();
+        return findAllBy(instrumentId).stream().filter(row -> row.getScanner().getId().equals(scannerId)).findFirst();
     }
 
     @Override

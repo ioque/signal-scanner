@@ -2,6 +2,7 @@ package ru.ioque.investfund.adapters.persistence;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
@@ -18,6 +19,7 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
     JpaEmulatedPositionRepository emulatedPositionRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmulatedPosition> findAllBy(InstrumentId instrumentId) {
         return emulatedPositionRepository
             .findAllByInstrumentId(instrumentId.getUuid())
@@ -27,6 +29,7 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<EmulatedPosition> findBy(InstrumentId instrumentId, ScannerId scannerId) {
         return emulatedPositionRepository
             .findByInstrumentIdAndScannerId(instrumentId.getUuid(), scannerId.getUuid())
@@ -34,6 +37,7 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
     }
 
     @Override
+    @Transactional
     public void saveAll(List<EmulatedPosition> emulatedPositions) {
         emulatedPositionRepository.saveAll(
             emulatedPositions.stream().map(EmulatedPositionEntity::from).toList()
@@ -41,6 +45,7 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
     }
 
     @Override
+    @Transactional
     public void save(EmulatedPosition emulatedPosition) {
         emulatedPositionRepository.save(EmulatedPositionEntity.from(emulatedPosition));
     }

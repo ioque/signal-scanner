@@ -38,6 +38,7 @@ public class FakeDIContainer {
     FakeTradingSnapshotsRepository tradingDataRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
+    FakeInstrumentRepository instrumentRepository;
     FakeIntradayValueRepository intradayValueRepository;
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
@@ -72,6 +73,7 @@ public class FakeDIContainer {
         loggerProvider = new FakeLoggerProvider();
         uuidProvider = new FakeUUIDProvider();
         datasourceRepository = new FakeDatasourceRepository();
+        instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
         intradayValueRepository = new FakeIntradayValueRepository();
         scannerRepository = new FakeScannerRepository();
         tradingDataRepository = new FakeTradingSnapshotsRepository(datasourceRepository, dateTimeProvider);
@@ -167,6 +169,7 @@ public class FakeDIContainer {
             loggerProvider,
             uuidProvider,
             emulatedPositionRepository,
+            instrumentRepository,
             scannerRepository
         );
         publishSignalHandler = new PublishSignalHandler(

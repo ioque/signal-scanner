@@ -10,7 +10,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Sto
 import java.util.Map;
 import java.util.UUID;
 
-public class Specifications {
+public class InstrumentSpecifications {
     public static Specification<InstrumentEntity> typeEqual(String type) {
         Map<String, Class<? extends InstrumentEntity>> typeToClass = Map.of(
             "stock", StockEntity.class,

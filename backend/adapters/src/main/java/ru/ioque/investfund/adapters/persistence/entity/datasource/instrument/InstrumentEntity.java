@@ -85,7 +85,7 @@ public abstract class InstrumentEntity extends UuidIdentity {
         return Optional.ofNullable(tradingState);
     }
 
-    public static InstrumentEntity toEntityFrom(Instrument instrument) {
+    public static InstrumentEntity fromDomain(Instrument instrument) {
         return instrumentMappers.get(instrument.getType()).apply(instrument);
     }
 

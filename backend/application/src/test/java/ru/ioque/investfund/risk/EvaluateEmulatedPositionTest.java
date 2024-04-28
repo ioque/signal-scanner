@@ -42,7 +42,7 @@ public class EvaluateEmulatedPositionTest extends RiskManagerTest {
         assertEquals(102D, positions.get(0).getOpenPrice());
         assertEquals(122D, positions.get(0).getLastPrice());
         assertEquals(20, Math.round(positions.get(0).getProfit()));
-        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrumentId());
-        assertEquals(getScannerId(), positions.get(0).getScannerId());
+        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrument().getId());
+        assertEquals(getScannerId(), positions.get(0).getScanner().getId());
     }
 }

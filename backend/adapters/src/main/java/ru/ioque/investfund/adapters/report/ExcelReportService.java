@@ -54,14 +54,12 @@ public class ExcelReportService implements ReportService {
         for (EmulatedPositionEntity emulatedPositionEntity : emulatedPositionRepository.findAll()) {
             if (emulatedPositionEntity.getIsOpen()) {
                 Row row = sheet.createRow(rowIndex);
-                InstrumentEntity instrument =
-                    instrumentRepository.findById(emulatedPositionEntity.getInstrumentId()).orElseThrow();
-                ScannerEntity scanner =
-                    jpaScannerRepository.findById(emulatedPositionEntity.getScannerId()).orElseThrow();
+                InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
+                ScannerEntity scanner = emulatedPositionEntity.getScanner();
                 SignalEntity signal = scanner
                     .getSignals()
                     .stream()
-                    .filter(value -> value.getId().getInstrumentId().equals(emulatedPositionEntity.getInstrumentId()))
+                    .filter(value -> value.getId().getInstrumentId().equals(instrument.getId()))
                     .findFirst().orElseThrow();
                 double closePrice = instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(emulatedPositionEntity.getLastPrice());
                 double profit = (closePrice/emulatedPositionEntity.getOpenPrice() - 1) * 100;
@@ -106,10 +104,8 @@ public class ExcelReportService implements ReportService {
         for (EmulatedPositionEntity emulatedPositionEntity : emulatedPositionRepository.findAll()) {
             if (emulatedPositionEntity.getIsOpen()) {
                 Row row = sheet.createRow(rowIndex);
-                InstrumentEntity instrument =
-                    instrumentRepository.findById(emulatedPositionEntity.getInstrumentId()).orElseThrow();
-                ScannerEntity scanner =
-                    jpaScannerRepository.findById(emulatedPositionEntity.getScannerId()).orElseThrow();
+                InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
+                ScannerEntity scanner = emulatedPositionEntity.getScanner();
                 buildCell(row, 0, instrument.getTicker(), style);
                 buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
                 buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);

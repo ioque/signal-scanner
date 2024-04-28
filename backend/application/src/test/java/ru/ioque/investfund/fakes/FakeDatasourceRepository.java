@@ -67,4 +67,12 @@ public class FakeDatasourceRepository implements DatasourceRepository {
             .findFirst()
             .orElseThrow();
     }
+
+    public Optional<Instrument> findInstrumentBy(InstrumentId instrumentId) {
+        return exchanges.values()
+            .stream()
+            .map(Datasource::getInstruments)
+            .flatMap(Collection::stream).filter(row -> row.getId().equals(instrumentId))
+            .findFirst();
+    }
 }

@@ -77,7 +77,7 @@ public class DatasourceEntity extends UuidIdentity {
         final Set<InstrumentEntity> instruments = datasource
             .getInstruments()
             .stream()
-            .map(InstrumentEntity::toEntityFrom)
+            .map(InstrumentEntity::fromDomain)
             .peek(row -> row.setDatasource(datasourceEntity))
             .collect(Collectors.toSet());
         datasourceEntity.setInstruments(instruments);

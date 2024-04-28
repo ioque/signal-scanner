@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 @Getter
 @Builder
@@ -18,8 +18,8 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmulatedPosition {
     EmulatedPositionId id;
-    ScannerId scannerId;
-    InstrumentId instrumentId;
+    SignalScanner scanner;
+    Instrument instrument;
     Double openPrice;
     Double lastPrice;
     Double closePrice;

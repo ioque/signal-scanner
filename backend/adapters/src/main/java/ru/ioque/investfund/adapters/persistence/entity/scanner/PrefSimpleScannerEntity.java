@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,26 +40,6 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     ) {
         super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.spreadParam = spreadParam;
-    }
-
-    public static ScannerEntity from(SignalScanner scannerDomain) {
-        PrefCommonProperties properties = (PrefCommonProperties) scannerDomain.getProperties();
-        PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
-            .id(scannerDomain.getId().getUuid())
-            .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
-            .description(scannerDomain.getDescription())
-            .datasourceId(scannerDomain.getDatasourceId().getUuid())
-            .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
-            .spreadParam(properties.getSpreadValue())
-            .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
-        return scannerEntity;
     }
 
     @Override

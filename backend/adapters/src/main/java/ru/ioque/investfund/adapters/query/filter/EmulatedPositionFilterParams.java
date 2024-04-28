@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.query.specification.InstrumentSpecifications;
+import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
+import ru.ioque.investfund.adapters.query.specification.EmulatedPositionSpecifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +22,16 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class InstrumentFilterParams {
-    UUID datasourceId;
+public class EmulatedPositionFilterParams {
+    UUID scannerId;
     String ticker;
-    String type;
-    String shortName;
+    Boolean isOpen;
     Integer pageNumber;
     Integer pageSize;
     String orderDirection;
     String orderField;
 
-    public Specification<InstrumentEntity> specification() {
+    public Specification<EmulatedPositionEntity> specification() {
         return Specification.allOf(specifications());
     }
 
@@ -44,12 +43,10 @@ public class InstrumentFilterParams {
         return pageNumber == null || pageSize == null;
     }
 
-    private List<Specification<InstrumentEntity>> specifications() {
-        List<Specification<InstrumentEntity>> specifications = new ArrayList<>();
-        Optional.ofNullable(datasourceId).ifPresent(value -> specifications.add(InstrumentSpecifications.datasourceIdEqual(value)));
-        Optional.ofNullable(ticker).ifPresent(value -> specifications.add(InstrumentSpecifications.tickerLike(value)));
-        Optional.ofNullable(type).ifPresent(value -> specifications.add(InstrumentSpecifications.typeEqual(value)));
-        Optional.ofNullable(shortName).ifPresent(value -> specifications.add(InstrumentSpecifications.shortNameLike(value)));
+    private List<Specification<EmulatedPositionEntity>> specifications() {
+        List<Specification<EmulatedPositionEntity>> specifications = new ArrayList<>();
+        Optional.ofNullable(scannerId).ifPresent(value -> specifications.add(EmulatedPositionSpecifications.scannerIdEqual(value)));
+        Optional.ofNullable(ticker).ifPresent(value -> specifications.add(EmulatedPositionSpecifications.tickerLike(value)));
         return specifications;
     }
 

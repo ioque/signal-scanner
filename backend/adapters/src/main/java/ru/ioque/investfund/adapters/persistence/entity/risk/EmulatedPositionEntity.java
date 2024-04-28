@@ -1,6 +1,8 @@
 package ru.ioque.investfund.adapters.persistence.entity.risk;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -11,10 +13,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 import ru.ioque.investfund.domain.risk.EmulatedPositionId;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.UUID;
 
@@ -26,8 +28,12 @@ import java.util.UUID;
 @Entity(name = "EmulatedPosition")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmulatedPositionEntity extends UuidIdentity {
-    UUID scannerId;
-    UUID instrumentId;
+    @ManyToOne
+    @JoinColumn(name = "scanner_id")
+    ScannerEntity scanner;
+    @ManyToOne
+    @JoinColumn(name = "instrument_id")
+    InstrumentEntity instrument;
     Double openPrice;
     Double lastPrice;
     Double closePrice;
@@ -37,8 +43,8 @@ public class EmulatedPositionEntity extends UuidIdentity {
     @Builder
     public EmulatedPositionEntity(
         UUID id,
-        UUID scannerId,
-        UUID instrumentId,
+        ScannerEntity scanner,
+        InstrumentEntity instrument,
         Double openPrice,
         Double lastPrice,
         Double closePrice,
@@ -46,8 +52,8 @@ public class EmulatedPositionEntity extends UuidIdentity {
         Double profit
     ) {
         super(id);
-        this.scannerId = scannerId;
-        this.instrumentId = instrumentId;
+        this.scanner = scanner;
+        this.instrument = instrument;
         this.openPrice = openPrice;
         this.lastPrice = lastPrice;
         this.closePrice = closePrice;
@@ -58,8 +64,8 @@ public class EmulatedPositionEntity extends UuidIdentity {
     public static EmulatedPositionEntity from(EmulatedPosition emulatedPosition) {
         return EmulatedPositionEntity.builder()
             .id(emulatedPosition.getId().getUuid())
-            .scannerId(emulatedPosition.getScannerId().getUuid())
-            .instrumentId(emulatedPosition.getInstrumentId().getUuid())
+            .scanner(ScannerEntity.fromDomain(emulatedPosition.getScanner()))
+            .instrument(InstrumentEntity.fromDomain(emulatedPosition.getInstrument()))
             .openPrice(emulatedPosition.getOpenPrice())
             .lastPrice(emulatedPosition.getLastPrice())
             .closePrice(emulatedPosition.getClosePrice())
@@ -71,8 +77,8 @@ public class EmulatedPositionEntity extends UuidIdentity {
     public EmulatedPosition toDomain() {
         return EmulatedPosition.builder()
             .id(EmulatedPositionId.from(this.getId()))
-            .scannerId(ScannerId.from(this.getScannerId()))
-            .instrumentId(InstrumentId.from(this.getInstrumentId()))
+            .scanner(this.getScanner().toDomain())
+            .instrument(this.getInstrument().toDomain())
             .openPrice(this.getOpenPrice())
             .lastPrice(this.getLastPrice())
             .closePrice(this.getClosePrice())
