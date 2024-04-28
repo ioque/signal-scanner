@@ -20,7 +20,6 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +33,7 @@ public class TelegramBotTest extends BaseTest {
         T1. Подписка на обновление.
         """)
     void testCase1() {
-        final Subscribe command = new Subscribe(UUID.randomUUID(), 1L);
+        final Subscribe command = new Subscribe(1L);
         final LocalDateTime today = LocalDateTime.parse("2024-01-10T10:00:00");
         initTodayDateTime("2024-01-10T10:00:00");
 
@@ -54,9 +53,9 @@ public class TelegramBotTest extends BaseTest {
         T2. Отписка от обновлений
         """)
     void testCase2() {
-        commandBus().execute(new Subscribe(UUID.randomUUID(), 1L));
+        commandBus().execute(new Subscribe(1L));
         telegramMessageSender().clear();
-        final Unsubscribe command = new Unsubscribe(UUID.randomUUID(), 1L);
+        final Unsubscribe command = new Unsubscribe(1L);
 
         commandBus().execute(command);
 
@@ -74,7 +73,7 @@ public class TelegramBotTest extends BaseTest {
     void testCase3() {
         final IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> commandBus().execute(new Unsubscribe(UUID.randomUUID(), 1L))
+            () -> commandBus().execute(new Unsubscribe(1L))
         );
 
         assertEquals(String.format("Чат[id=%s] не существует.", 1L), exception.getMessage());
@@ -85,8 +84,8 @@ public class TelegramBotTest extends BaseTest {
         T4. Повторная подписка на обновление.
         """)
     void testCase4() {
-        commandBus().execute(new Subscribe(UUID.randomUUID(), 1L));
-        commandBus().execute(new Subscribe(UUID.randomUUID(), 1L));
+        commandBus().execute(new Subscribe(1L));
+        commandBus().execute(new Subscribe(1L));
 
         assertEquals(1, telegramChatRepository().findAll().size());
     }
@@ -99,7 +98,6 @@ public class TelegramBotTest extends BaseTest {
         prepareState();
 
         commandBus().execute(new PublishSignal(
-            UUID.randomUUID(),
             true,
             getScannerId(),
             getInstrumentIdBy(TGKN)
@@ -122,7 +120,6 @@ public class TelegramBotTest extends BaseTest {
         initTodayDateTime("2024-04-24T13:00:00");
         commandBus().execute(
             CreateDatasourceCommand.builder()
-                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -156,11 +153,10 @@ public class TelegramBotTest extends BaseTest {
                 buildImoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(
             CreateScannerCommand.builder()
-                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(getDatasourceId())
@@ -174,9 +170,9 @@ public class TelegramBotTest extends BaseTest {
                 )
                 .build()
         );
-        commandBus().execute(new IntegrateTradingDataCommand(UUID.randomUUID(), getDatasourceId()));
-        commandBus().execute(new ProduceSignalCommand(UUID.randomUUID(), getDatasourceId(), getToday()));
-        commandBus().execute(new Subscribe(UUID.randomUUID(), 1L));
+        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), getToday()));
+        commandBus().execute(new Subscribe(1L));
         clearLogs();
         telegramMessageSender().clear();
     }

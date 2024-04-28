@@ -7,7 +7,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -16,5 +15,4 @@ import java.util.UUID;
 public abstract class ApplicationLog {
     LocalDateTime timestamp;
     String msg;
-    UUID track;
 }

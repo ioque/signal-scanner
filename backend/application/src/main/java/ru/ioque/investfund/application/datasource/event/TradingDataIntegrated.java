@@ -21,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingDataIntegrated implements IntegrationEvent {
-    UUID id;
     UUID datasourceId;
     LocalDateTime createdAt;
 }

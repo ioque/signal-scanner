@@ -4,13 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -228,7 +227,6 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initScanner(DatasourceId datasourceId) {
         commandBus().execute(
             CreateScannerCommand.builder()
-                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Корреляция сектора с фьючерсом.")
                 .datasourceId(datasourceId)
@@ -292,7 +290,7 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
                     brf4()
                 )
             );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 }

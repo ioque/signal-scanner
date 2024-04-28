@@ -5,15 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -471,14 +470,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
                 tgknDetails()
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
-                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(datasourceId)

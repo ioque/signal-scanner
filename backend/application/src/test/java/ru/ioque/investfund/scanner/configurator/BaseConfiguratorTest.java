@@ -7,15 +7,14 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,7 +24,6 @@ public class BaseConfiguratorTest extends BaseTest {
     void beforeEach() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
-                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -58,8 +56,8 @@ public class BaseConfiguratorTest extends BaseTest {
                 brf4(),
                 usdRubDetails())
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScannerCommand command, String msg) {
@@ -80,7 +78,6 @@ public class BaseConfiguratorTest extends BaseTest {
 
     protected CreateScannerCommand.CreateScannerCommandBuilder buildCreateAnomalyVolumeScannerWith() {
         return CreateScannerCommand.builder()
-            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -92,7 +89,6 @@ public class BaseConfiguratorTest extends BaseTest {
 
     protected UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateAnomalyVolumeScannerWith() {
         return UpdateScannerCommand.builder()
-            .track(UUID.randomUUID())
             .workPeriodInMinutes(1)
             .description("description")
             .tickers(getAnomalyVolumeTickers())

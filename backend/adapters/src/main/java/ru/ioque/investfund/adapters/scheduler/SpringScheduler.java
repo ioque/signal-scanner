@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.telegrambot.command.PublishDailyReport;
 import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
@@ -21,13 +20,11 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 public class SpringScheduler {
     JpaDatasourceRepository jpaDatasourceRepository;
     CommandPublisher commandPublisher;
-    UUIDProvider uuidProvider;
 
     @Scheduled(cron = "0 */15 10-20 * * MON-FRI")
     public void integrateTradingData() {
         jpaDatasourceRepository.findAll().forEach(datasource -> commandPublisher.publish(
             new IntegrateTradingDataCommand(
-                uuidProvider.generate(),
                 DatasourceId.from(datasource.getId())
             )
         ));

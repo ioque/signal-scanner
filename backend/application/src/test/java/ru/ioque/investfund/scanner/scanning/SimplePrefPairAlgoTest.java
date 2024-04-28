@@ -4,14 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -391,7 +390,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
             CreateScannerCommand.builder()
-                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Анализ пар преф-обычка.")
                 .datasourceId(datasourceId)
@@ -410,8 +408,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
             sber(),
             sberp()
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), datasourceId));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(UUID.randomUUID(), datasourceId, getTickers(datasourceId)));
+        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new EnableUpdateInstrumentsCommand(datasourceId, getTickers(datasourceId)));
     }
 
     private void initSberAndSberpHistory() {

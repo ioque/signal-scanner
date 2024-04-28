@@ -20,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DatasourceScanned implements IntegrationEvent {
-    UUID id;
     UUID datasourceId;
     LocalDateTime watermark;
     LocalDateTime createdAt;

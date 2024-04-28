@@ -7,8 +7,6 @@ import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -23,7 +21,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 OpenEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .price(102D)
                     .build()
@@ -42,7 +39,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 OpenEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(102D)
                     .build()
@@ -61,7 +57,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 OpenEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .build()
@@ -80,7 +75,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 OpenEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(-100D)
@@ -100,7 +94,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 OpenEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(0D)
@@ -120,7 +113,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .price(102D)
                     .build()
@@ -139,7 +131,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(102D)
                     .build()
@@ -158,7 +149,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .build()
@@ -177,7 +167,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(-100D)
@@ -197,7 +186,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 CloseEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .scannerId(getScannerId())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(0D)
@@ -217,7 +205,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 EvaluateEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .price(100D)
                     .build()
             )
@@ -235,7 +222,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 EvaluateEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .build()
             )
@@ -253,7 +239,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 EvaluateEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(-100D)
                     .build()
@@ -272,7 +257,6 @@ public class RiskCommandValidationTest extends RiskManagerTest {
             ConstraintViolationException.class,
             () -> commandBus().execute(
                 EvaluateEmulatedPosition.builder()
-                    .track(UUID.randomUUID())
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .price(0D)
                     .build()

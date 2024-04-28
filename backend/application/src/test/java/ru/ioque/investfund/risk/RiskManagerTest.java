@@ -10,7 +10,6 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumePro
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 public abstract class RiskManagerTest extends BaseTest {
@@ -18,7 +17,6 @@ public abstract class RiskManagerTest extends BaseTest {
     void beforeEach() {
         commandBus().execute(
             CreateDatasourceCommand.builder()
-                .track(UUID.randomUUID())
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -31,10 +29,9 @@ public abstract class RiskManagerTest extends BaseTest {
                 tgknDetails()
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(UUID.randomUUID(), getDatasourceId()));
+        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(
             CreateScannerCommand.builder()
-                .track(UUID.randomUUID())
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(getDatasourceId())

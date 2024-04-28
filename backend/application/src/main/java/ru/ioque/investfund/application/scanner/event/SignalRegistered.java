@@ -21,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalRegistered implements IntegrationEvent {
-    UUID id;
     UUID instrumentId;
     Double price;
     Boolean isBuy;

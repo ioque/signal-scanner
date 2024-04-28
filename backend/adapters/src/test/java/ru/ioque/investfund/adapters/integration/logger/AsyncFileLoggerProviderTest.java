@@ -62,23 +62,23 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
     void testCase1() {
         UUID track = UUID.randomUUID();
         provider.log(
+            track,
             new InfoLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Log 1",
-                track
+                "Test Log 1"
             )
         );
         provider.log(
+            track,
             new InfoLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Log 2",
-                track
+                "Test Log 2"
             )
         );
 
@@ -99,14 +99,14 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
     void testCase2() {
         UUID track = UUID.randomUUID();
         provider.log(
+            track,
             new ErrorLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
                 "Test Error Log 1",
-                new RuntimeException("Test Exception"),
-                track
+                new RuntimeException("Test Exception")
             )
         );
 
@@ -126,13 +126,13 @@ public class AsyncFileLoggerProviderTest extends InfrastructureTest {
     void testCase3() {
         UUID track = UUID.randomUUID();
         provider.log(
+            track,
             new WarningLog(
                 LocalDateTime.of(
                     LocalDate.of(2024, 4, 16),
                     LocalTime.of(10, 0, 0)
                 ),
-                "Test Warning Log 1",
-                track
+                "Test Warning Log 1"
             )
         );
 

@@ -82,29 +82,26 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             datasourceRepository
         );
         enableUpdateInstrumentProcessor = new EnableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             datasourceRepository
         );
         integrateInstrumentsProcessor = new IntegrateInstrumentsHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             exchangeProvider,
+            uuidProvider,
             datasourceRepository
         );
         integrateTradingDataProcessor = new IntegrateTradingDataHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             exchangeProvider,
             datasourceRepository,
             intradayValueRepository,
@@ -121,14 +118,12 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             datasourceRepository
         );
         updateDatasourceProcessor = new UpdateDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             datasourceRepository
         );
         createScannerProcessor = new CreateScannerCommandHandler(
@@ -143,7 +138,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             scannerRepository,
             datasourceRepository
         );
@@ -151,7 +145,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             scannerRepository,
             tradingDataRepository,
             eventPublisher
@@ -160,14 +153,12 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             emulatedPositionRepository
         );
         evaluateEmulatedPositionHandler = new EvaluateEmulatedPositionHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             emulatedPositionRepository
         );
         openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
@@ -182,7 +173,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             scannerRepository,
             tradingDataRepository,
             telegramChatRepository,
@@ -192,7 +182,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             telegramChatRepository,
             telegramMessageSender
         );
@@ -200,7 +189,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             telegramChatRepository,
             telegramMessageSender
         );
@@ -222,7 +210,8 @@ public class FakeDIContainer {
                 publishSignalHandler,
                 subscribeHandler,
                 unsubscribeHandler
-            )
+            ),
+            uuidProvider
         );
     }
 

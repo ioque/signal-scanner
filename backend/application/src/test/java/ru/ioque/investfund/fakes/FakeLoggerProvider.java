@@ -5,6 +5,7 @@ import ru.ioque.investfund.domain.core.ApplicationLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FakeLoggerProvider implements LoggerProvider {
     public final List<ApplicationLog> log = new ArrayList<>();
@@ -13,12 +14,13 @@ public class FakeLoggerProvider implements LoggerProvider {
         log.clear();
     }
 
-    public boolean logContainsMessageParts(String... msgParts) {
-        return log.stream().map(ApplicationLog::getMsg).toList().containsAll(List.of(msgParts));
+    @Override
+    public void log(ApplicationLog logPart) {
+        log.add(logPart);
     }
 
     @Override
-    public void log(ApplicationLog logPart) {
+    public void log(UUID trackId, ApplicationLog logPart) {
         log.add(logPart);
     }
 }

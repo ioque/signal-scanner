@@ -38,9 +38,8 @@ public class CreateScannerRequest {
     @NotNull(message = "Не переданы параметры алгоритма.")
     @Valid AlgorithmPropertiesDto properties;
 
-    public CreateScannerCommand toCommand(UUID track) {
+    public CreateScannerCommand toCommand() {
         return CreateScannerCommand.builder()
-            .track(track)
             .datasourceId(DatasourceId.from(datasourceId))
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)

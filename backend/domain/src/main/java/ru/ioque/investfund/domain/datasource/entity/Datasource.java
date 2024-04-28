@@ -51,10 +51,6 @@ public class Datasource extends Domain<DatasourceId> {
         this.description = description;
     }
 
-    public void integrateInstruments(List<Instrument> instruments) {
-        instruments.forEach(this::addInstrument);
-    }
-
     public List<InstrumentId> findInstrumentIds(List<Ticker> tickers) {
         Map<Ticker, InstrumentId> tickerToIdsMap = getTickerToIdsMap();
         List<Ticker> notExistedInstrument = tickers
@@ -97,7 +93,7 @@ public class Datasource extends Domain<DatasourceId> {
         return instruments.stream().filter(row -> row.getTicker().equals(ticker)).findFirst();
     }
 
-    private void addInstrument(Instrument instrument) {
+    public void addInstrument(Instrument instrument) {
         Optional<Instrument> existed = findInstrumentBy(instrument.getTicker());
         if (existed.isEmpty()) {
             instruments.add(instrument);

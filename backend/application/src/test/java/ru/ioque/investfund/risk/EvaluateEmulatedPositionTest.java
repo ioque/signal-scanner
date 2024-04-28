@@ -7,7 +7,6 @@ import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +21,6 @@ public class EvaluateEmulatedPositionTest extends RiskManagerTest {
     void testCase1() {
         commandBus().execute(
             OpenEmulatedPosition.builder()
-                .track(UUID.randomUUID())
                 .scannerId(getScannerId())
                 .instrumentId(getInstrumentIdBy(TGKN))
                 .price(102D)
@@ -31,7 +29,6 @@ public class EvaluateEmulatedPositionTest extends RiskManagerTest {
 
         commandBus().execute(
             EvaluateEmulatedPosition.builder()
-                .track(UUID.randomUUID())
                 .instrumentId(getInstrumentIdBy(TGKN))
                 .price(122D)
                 .build()

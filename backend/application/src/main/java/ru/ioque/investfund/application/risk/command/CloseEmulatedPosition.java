@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,14 +15,14 @@ import ru.ioque.investfund.application.api.command.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
-import java.util.UUID;
-
 @Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CloseEmulatedPosition extends Command {
+public class CloseEmulatedPosition implements Command {
     @NotNull(message = "Не указан идентификатор сканера данных.")
     @Valid
     ScannerId scannerId;
@@ -31,12 +32,4 @@ public class CloseEmulatedPosition extends Command {
     @NotNull(message = "Не указана цена закрытия позиции.")
     @DecimalMin(value = "0", inclusive = false, message = "Цена закрытия должна быть больше нуля.")
     Double price;
-
-    @Builder
-    public CloseEmulatedPosition(UUID track, ScannerId scannerId, InstrumentId instrumentId, Double price) {
-        super(track);
-        this.scannerId = scannerId;
-        this.instrumentId = instrumentId;
-        this.price = price;
-    }
 }

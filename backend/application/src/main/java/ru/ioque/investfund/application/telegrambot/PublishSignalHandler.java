@@ -10,15 +10,16 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
+import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -32,13 +33,12 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         TradingSnapshotsRepository tradingSnapshotsRepository,
         TelegramChatRepository telegramChatRepository,
         TelegramMessageSender telegramMessageSender
     ) {
-        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
+        super(dateTimeProvider, validator, loggerProvider);
         this.scannerRepository = scannerRepository;
         this.tradingSnapshotsRepository = tradingSnapshotsRepository;
         this.telegramChatRepository = telegramChatRepository;
@@ -46,7 +46,7 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
     }
 
     @Override
-    protected void businessProcess(PublishSignal command) {
+    protected List<ApplicationLog> businessProcess(PublishSignal command) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         TradingSnapshot tradingSnapshot = tradingSnapshotsRepository.getBy(command.getInstrumentId());
@@ -78,10 +78,13 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
                         .orElse("0%")
                 )
             ));
-        loggerProvider.log(new InfoLog(
+        return List.of(new InfoLog(
             dateTimeProvider.nowDateTime(),
-            String.format("Выполнена публикация сигнала[scannerId=%s, instrumentId=%s]", command.getScannerId(), command.getInstrumentId()),
-            command.getTrack()
+            String.format(
+                "Выполнена публикация сигнала[scannerId=%s, instrumentId=%s]",
+                command.getScannerId(),
+                command.getInstrumentId()
+            )
         ));
     }
 }

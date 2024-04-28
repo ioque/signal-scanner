@@ -37,9 +37,8 @@ public class UpdateScannerRequest {
     @Valid
     AlgorithmPropertiesDto properties;
 
-    public UpdateScannerCommand toCommand(UUID scannerId, UUID track) {
+    public UpdateScannerCommand toCommand(UUID scannerId) {
         return UpdateScannerCommand.builder()
-            .track(track)
             .scannerId(ScannerId.from(scannerId))
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)

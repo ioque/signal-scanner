@@ -8,12 +8,12 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
@@ -28,18 +28,16 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         ScannerRepository scannerRepository,
         DatasourceRepository datasourceRepository
     ) {
-        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
-        this.dateTimeProvider = dateTimeProvider;
+        super(dateTimeProvider, validator, loggerProvider);
         this.scannerRepository = scannerRepository;
         this.datasourceRepository = datasourceRepository;
     }
 
     @Override
-    protected void businessProcess(UpdateScannerCommand command) {
+    protected List<ApplicationLog> businessProcess(UpdateScannerCommand command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Datasource datasource = datasourceRepository.getBy(scanner.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
@@ -48,10 +46,9 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
         scanner.updateProperties(command.getProperties());
         scanner.updateInstrumentIds(instrumentIds);
         scannerRepository.save(scanner);
-        loggerProvider.log(new InfoLog(
+        return List.of(new InfoLog(
             dateTimeProvider.nowDateTime(),
-            String.format("Обновлен сканер сигналов[id=%s]", scanner.getId()),
-            command.getTrack()
+            String.format("Обновлен сканер сигналов[id=%s]", scanner.getId())
         ));
     }
 }

@@ -20,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingStateChanged implements IntegrationEvent {
-    UUID id;
     Double price;
     Double value;
     UUID instrumentId;

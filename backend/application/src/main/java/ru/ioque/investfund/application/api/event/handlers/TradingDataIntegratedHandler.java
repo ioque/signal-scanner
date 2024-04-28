@@ -4,11 +4,10 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
-import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.api.event.EventHandler;
 import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -22,10 +21,9 @@ public class TradingDataIntegratedHandler extends EventHandler<TradingDataIntegr
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         CommandPublisher commandPublisher
     ) {
-        super(dateTimeProvider, validator, loggerProvider, uuidProvider);
+        super(dateTimeProvider, validator, loggerProvider);
         this.commandPublisher = commandPublisher;
     }
 
@@ -33,7 +31,6 @@ public class TradingDataIntegratedHandler extends EventHandler<TradingDataIntegr
     public void handle(TradingDataIntegrated event) {
         commandPublisher.publish(
             ProduceSignalCommand.builder()
-                .track(uuidProvider.generate())
                 .datasourceId(DatasourceId.from(event.getDatasourceId()))
                 .watermark(event.getCreatedAt())
                 .build()
