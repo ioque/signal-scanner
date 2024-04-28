@@ -9,6 +9,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +21,14 @@ import java.util.UUID;
 public class InstrumentResponse implements Serializable {
     UUID id;
     String name;
-    String shortName;
     String ticker;
-    Double todayLastPrice;
-    Double todayFirstPrice;
+    String shortName;
     Double todayValue;
     Boolean updatable;
+    Double todayLastPrice;
+    Double todayFirstPrice;
+    Long lastIntradayNumber;
+    LocalDateTime lastUpdate;
     List<AggregatedHistoryResponse> historyValues;
 
     public static InstrumentResponse from(InstrumentEntity instrument) {
@@ -35,10 +38,37 @@ public class InstrumentResponse implements Serializable {
             .name(instrument.getName())
             .shortName(instrument.getShortName())
             .updatable(instrument.getUpdatable())
-            .historyValues(instrument.getHistory().stream().map(AggregatedHistoryResponse::fromDomain).toList())
-            .todayLastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
-            .todayFirstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))
-            .todayValue(instrument.getTradingState().map(TradingStateEmbeddable::getTodayValue).orElse(null))
+            .historyValues(instrument
+                .getHistory()
+                .stream()
+                .map(AggregatedHistoryResponse::fromDomain)
+                .toList()
+            )
+            .lastUpdate(
+                instrument
+                    .getTradingState()
+                    .map(TradingStateEmbeddable::getDateTime)
+                    .orElse(null)
+            )
+            .todayValue(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getTodayValue)
+                .orElse(null)
+            )
+            .todayLastPrice(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getTodayLastPrice)
+                .orElse(null)
+            )
+            .todayFirstPrice(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getTodayFirstPrice)
+                .orElse(null)
+            )
+            .lastIntradayNumber(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getLastIntradayNumber)
+                .orElse(null))
             .build();
     }
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -26,12 +27,24 @@ public class InstrumentInListResponse implements Serializable {
     UUID id;
     String ticker;
     String shortName;
+    Double todayValue;
+    Double todayLastPrice;
 
     public static InstrumentInListResponse from(InstrumentEntity instrument) {
         return InstrumentInListResponse.builder()
             .id(instrument.getId())
-            .shortName(instrument.getShortName())
             .ticker(instrument.getTicker())
+            .shortName(instrument.getShortName())
+            .todayValue(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getTodayValue)
+                .orElse(null)
+            )
+            .todayLastPrice(instrument
+                .getTradingState()
+                .map(TradingStateEmbeddable::getTodayLastPrice)
+                .orElse(null)
+            )
             .build();
     }
 }

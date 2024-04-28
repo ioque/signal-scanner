@@ -30,10 +30,10 @@ public class SignalScannerResponse implements Serializable {
     UUID id;
     String description;
     Integer workPeriodInMinutes;
-    LocalDateTime lastExecutionDateTime;
     SignalConfigResponse config;
-    List<InstrumentInListResponse> instruments;
     List<SignalResponse> signals;
+    LocalDateTime lastExecutionDateTime;
+    List<InstrumentInListResponse> instruments;
 
     public static SignalScannerResponse of(
         ScannerEntity scanner,
@@ -41,12 +41,17 @@ public class SignalScannerResponse implements Serializable {
     ) {
         return SignalScannerResponse.builder()
             .id(scanner.getId())
-            .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
             .description(scanner.getDescription())
-            .lastExecutionDateTime(scanner.getLastExecutionDateTime())
             .config(SignalConfigResponse.from(scanner))
-            .instruments(instruments.stream().map(InstrumentInListResponse::from).toList())
-            .signals(scanner.getSignals()
+            .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
+            .lastExecutionDateTime(scanner.getLastExecutionDateTime())
+            .instruments(instruments
+                .stream()
+                .map(InstrumentInListResponse::from)
+                .toList()
+            )
+            .signals(scanner
+                .getSignals()
                 .stream()
                 .map(signal -> SignalResponse
                     .from(
@@ -58,7 +63,8 @@ public class SignalScannerResponse implements Serializable {
                             .orElseThrow()
                     )
                 )
-                .toList())
+                .toList()
+            )
             .build();
     }
 }

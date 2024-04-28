@@ -92,7 +92,7 @@ public class UiTestsDataset {
             .properties(
                 AnomalyVolumePropertiesDto.builder()
                     .scaleCoefficient(1.5)
-                    .historyPeriod(180)
+                    .historyPeriod(100)
                     .indexTicker("IMOEX")
                     .build()
             )
