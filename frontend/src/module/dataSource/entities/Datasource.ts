@@ -8,27 +8,28 @@ export type Datasource = {
 export type Instrument = {
     id: string;
     ticker: string;
+    lastUpdate: Date;
     shortName: string;
+    updatable: boolean;
+    todayValue: number;
+    todayLastPrice: number;
+    todayFirstPrice: number;
+    lastIntradayNumber: number;
     historyValues: Array<HistoryValue>;
-    intradayValues: Array<IntradayValue>;
 }
 
 export type InstrumentInList = {
     id: string;
     shortName: string;
     ticker: string;
+    todayValue: number;
+    todayLastPrice: number;
 }
 
 export type HistoryValue = {
-    tradeDate: string;
+    tradeDate: Date;
     ticker: string;
     value: number;
     openPrice: number;
     closePrice: number;
-}
-
-export type IntradayValue = {
-    number: number;
-    dateTime: string;
-    price: number;
 }

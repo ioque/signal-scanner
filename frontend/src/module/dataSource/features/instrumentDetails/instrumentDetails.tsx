@@ -33,18 +33,10 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
 
     const dailyValues = instrument.historyValues.map((dailyValue, index) =>
         <tr key={index}>
-            <td>{dailyValue.tradeDate}</td>
+            <td>{new Date(dailyValue.tradeDate).toDateString()}</td>
             <td>{dailyValue.value}</td>
             <td>{dailyValue.openPrice}</td>
             <td>{dailyValue.closePrice}</td>
-        </tr>
-    );
-
-    const intradayValues = instrument.intradayValues.map((intradayValue, index) =>
-        <tr key={index}>
-            <td>{intradayValue.number}</td>
-            <td>{intradayValue.price}</td>
-            <td>{intradayValue.dateTime}</td>
         </tr>
     );
 
@@ -63,19 +55,6 @@ export default function InstrumentDetails(params: InstrumentDetailsParams) {
                 </thead>
                 <tbody>
                 {dailyValues}
-                </tbody>
-            </Table>
-            <h4>Ход текущих торгов</h4>
-            <Table striped bordered hover id="intradayValueTable">
-                <thead>
-                <tr>
-                    <th>Номер сделки</th>
-                    <th>Дата и время</th>
-                    <th>Цена</th>
-                </tr>
-                </thead>
-                <tbody>
-                {intradayValues}
                 </tbody>
             </Table>
         </>

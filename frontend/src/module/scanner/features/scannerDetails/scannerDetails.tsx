@@ -75,17 +75,10 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
     const signals = scanner.signals.map((signal, index) =>
         <tr key={index}>
             <td>{signal.ticker}</td>
-            <td>{signal.dateTime}</td>
+            <td>{new Date(signal.dateTime).toDateString()} {new Date(signal.dateTime).toTimeString()}</td>
             <td>{signal.isBuy ? "Сигнал к покупке" : "Сигнал к продаже"}</td>
         </tr>
     );
-
-    const logs = scanner.logs.map((log, index) =>
-        <tr key={index}>
-            <td>{log.dateTime}</td>
-            <td>{log.message}</td>
-        </tr>
-    )
 
     return <>
         {scannerItem}
@@ -100,18 +93,6 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
             </thead>
             <tbody>
             {signals}
-            </tbody>
-        </Table>
-        <h4>Лог работы</h4>
-        <Table striped bordered hover id="logTable">
-            <thead>
-            <tr>
-                <th>Дата и время</th>
-                <th>Сообщение</th>
-            </tr>
-            </thead>
-            <tbody>
-            {logs}
             </tbody>
         </Table>
     </>

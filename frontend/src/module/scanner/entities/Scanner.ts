@@ -7,7 +7,6 @@ export type Scanner = {
     lastExecutionDateTime: Date;
     config: AnomalyVolumeAlgorithmConfig | CorrelationSectoralAlgorithmConfig | PrefSimpleAlgorithmConfig | SectoralRetardAlgorithmConfig;
     instruments: Array<InstrumentInList>;
-    logs: Array<ScannerLog>
     signals: Array<Signal>
 }
 
@@ -16,17 +15,18 @@ export type ScannerInList = {
     description: string;
     workPeriodInMinutes: number;
     signalCounts: number;
-    lastExecutionDateTime: string;
+    lastExecutionDateTime: Date;
 }
 
 export type Signal = {
     ticker: string;
-    dateTime: string;
+    dateTime: Date;
     isBuy: boolean;
+    isOpen: boolean;
 }
 
 export type ScannerLog = {
-    dateTime: string;
+    dateTime: Date;
     message: string;
 }
 

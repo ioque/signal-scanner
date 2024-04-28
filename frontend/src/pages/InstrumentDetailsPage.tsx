@@ -1,7 +1,7 @@
 import React from "react";
 import InstrumentDetails, {
     InstrumentDetailsParams
-} from "../module/dataSource/futures/instrumentDetails/instrumentDetails";
+} from "../module/dataSource/features/instrumentDetails/instrumentDetails";
 import {useParams} from "react-router-dom";
 import ErrorPage from "./ErrorPage";
 

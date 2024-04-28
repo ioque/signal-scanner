@@ -21,7 +21,7 @@ export default function ScannerList() {
             <td>{scanner.workPeriodInMinutes}</td>
             <td>{scanner.description}</td>
             <td>{scanner.signalCounts}</td>
-            <td>{scanner.lastExecutionDateTime}</td>
+            <td>{scanner.lastExecutionDateTime == null ? "" : new Date(scanner.lastExecutionDateTime).toDateString()}</td>
         </tr>
     );
 

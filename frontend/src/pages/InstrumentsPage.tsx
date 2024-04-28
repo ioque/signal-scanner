@@ -1,5 +1,5 @@
 import React from 'react';
-import InstrumentList, {InstrumentListParams} from "../module/dataSource/futures/instrumentList/instrumentList";
+import InstrumentList, {InstrumentListParams} from "../module/dataSource/features/instrumentList/instrumentList";
 import {useParams} from "react-router-dom";
 import ErrorPage from "./ErrorPage";
 
