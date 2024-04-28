@@ -33,7 +33,6 @@ public class FakeDIContainer {
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
-    FakeUUIDProvider uuidProvider;
     FakeEventPublisher eventPublisher;
     FakeTradingSnapshotsRepository tradingDataRepository;
     FakeScannerRepository scannerRepository;
@@ -71,7 +70,6 @@ public class FakeDIContainer {
         datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
-        uuidProvider = new FakeUUIDProvider();
         datasourceRepository = new FakeDatasourceRepository();
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
         intradayValueRepository = new FakeIntradayValueRepository();
@@ -97,7 +95,7 @@ public class FakeDIContainer {
             validator,
             loggerProvider,
             exchangeProvider,
-            uuidProvider,
+            instrumentRepository,
             datasourceRepository
         );
         integrateTradingDataProcessor = new IntegrateTradingDataHandler(
@@ -113,7 +111,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             datasourceRepository
         );
         unregisterDatasourceProcessor = new UnregisterDatasourceHandler(
@@ -132,7 +129,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             scannerRepository,
             datasourceRepository
         );
@@ -167,7 +163,6 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            uuidProvider,
             emulatedPositionRepository,
             instrumentRepository,
             scannerRepository
@@ -213,8 +208,7 @@ public class FakeDIContainer {
                 publishSignalHandler,
                 subscribeHandler,
                 unsubscribeHandler
-            ),
-            uuidProvider
+            )
         );
     }
 

@@ -13,4 +13,5 @@ public interface ScannerRepository {
     List<SignalScanner> findAllBy(DatasourceId datasourceId);
     Optional<SignalScanner> findBy(ScannerId scannerId);
     SignalScanner getBy(ScannerId scannerId) throws EntityNotFoundException;
+    ScannerId nextId();
 }

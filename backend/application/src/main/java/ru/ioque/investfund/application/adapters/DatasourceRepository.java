@@ -11,4 +11,5 @@ public interface DatasourceRepository {
     void save(Datasource datasource);
     void remove(Datasource datasource);
     Datasource getBy(DatasourceId datasourceId) throws EntityNotFoundException;
+    DatasourceId nextId();
 }

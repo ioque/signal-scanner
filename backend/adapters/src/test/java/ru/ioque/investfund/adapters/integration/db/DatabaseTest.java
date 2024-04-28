@@ -10,7 +10,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import java.time.LocalDate;
@@ -23,8 +22,6 @@ public abstract class DatabaseTest extends InfrastructureTest {
 
     @Autowired
     protected DateTimeProvider dateTimeProvider;
-    @Autowired
-    protected UUIDProvider uuidProvider;
     @Autowired
     protected DatasourceRepository datasourceRepository;
     @Autowired

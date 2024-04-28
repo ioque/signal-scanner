@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FakeEmulatedPositionRepository implements EmulatedPositionRepository {
@@ -35,5 +36,10 @@ public class FakeEmulatedPositionRepository implements EmulatedPositionRepositor
             emulatedPosition.getId(),
             emulatedPosition
         );
+    }
+
+    @Override
+    public EmulatedPositionId nextId() {
+        return EmulatedPositionId.from(UUID.randomUUID());
     }
 }

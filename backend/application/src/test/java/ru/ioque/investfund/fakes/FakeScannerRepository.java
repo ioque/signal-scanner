@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 public class FakeScannerRepository implements ScannerRepository {
@@ -43,5 +44,10 @@ public class FakeScannerRepository implements ScannerRepository {
                     String.format("Сканер[id=%s] не существует.", scannerId)
                 )
             );
+    }
+
+    @Override
+    public ScannerId nextId() {
+        return ScannerId.from(UUID.randomUUID());
     }
 }

@@ -7,13 +7,11 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +19,15 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RegisterDatasourceHandler extends CommandHandler<CreateDatasourceCommand> {
-    UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
 
     public RegisterDatasourceHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
-        LoggerProvider loggerProvider, UUIDProvider uuidProvider,
+        LoggerProvider loggerProvider,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -39,7 +35,7 @@ public class RegisterDatasourceHandler extends CommandHandler<CreateDatasourceCo
     protected List<ApplicationLog> businessProcess(CreateDatasourceCommand command) {
         final Datasource datasource = Datasource
             .builder()
-            .id(DatasourceId.from(uuidProvider.generate()))
+            .id(datasourceRepository.nextId())
             .name(command.getName())
             .url(command.getUrl())
             .description(command.getDescription())

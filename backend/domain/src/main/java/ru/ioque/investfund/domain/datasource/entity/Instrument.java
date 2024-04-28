@@ -18,7 +18,6 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.TreeSet;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -47,9 +46,9 @@ public class Instrument extends Domain<InstrumentId> {
         this.aggregateHistories = aggregateHistories == null ? new TreeSet<>() : aggregateHistories;
     }
 
-    public static Instrument of(UUID uid, InstrumentDetails details) {
+    public static Instrument of(InstrumentId id, InstrumentDetails details) {
         return Instrument.builder()
-            .id(InstrumentId.from(uid))
+            .id(id)
             .details(details)
             .updatable(false)
             .aggregateHistories(new TreeSet<>())

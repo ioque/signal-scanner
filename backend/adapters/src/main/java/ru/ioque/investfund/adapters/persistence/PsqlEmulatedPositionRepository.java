@@ -8,10 +8,12 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPosition
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
+import ru.ioque.investfund.domain.risk.EmulatedPositionId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -48,5 +50,10 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
     @Transactional
     public void save(EmulatedPosition emulatedPosition) {
         emulatedPositionRepository.save(EmulatedPositionEntity.from(emulatedPosition));
+    }
+
+    @Override
+    public EmulatedPositionId nextId() {
+        return EmulatedPositionId.from(UUID.randomUUID());
     }
 }

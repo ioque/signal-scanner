@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.telegrambot.command.PublishDailyReport;
 import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
 import ru.ioque.investfund.application.telegrambot.command.Subscribe;
@@ -20,17 +19,14 @@ import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
 @Profile("!tests")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalTelegramBot extends TelegramBot {
-    UUIDProvider uuidProvider;
     CommandPublisher commandPublisher;
 
     public SignalTelegramBot(
         @Value("${telegram-bot.token}") String botToken,
-        CommandPublisher commandPublisher,
-        UUIDProvider uuidProvider
+        CommandPublisher commandPublisher
     ) {
         super(botToken);
         this.commandPublisher = commandPublisher;
-        this.uuidProvider = uuidProvider;
     }
 
     @Override

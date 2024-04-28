@@ -15,6 +15,7 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -54,5 +55,10 @@ public class PsqlScannerRepository implements ScannerRepository {
                     String.format("Сканер[id=%s] не существует.", scannerId)
                 )
             );
+    }
+
+    @Override
+    public ScannerId nextId() {
+        return ScannerId.from(UUID.randomUUID());
     }
 }

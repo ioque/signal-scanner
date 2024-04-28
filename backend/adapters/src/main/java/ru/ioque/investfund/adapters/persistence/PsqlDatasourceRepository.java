@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -48,5 +49,11 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Transactional
     public void remove(Datasource datasource) {
         jpaDatasourceRepository.deleteById(datasource.getId().getUuid());
+    }
+
+
+    @Override
+    public DatasourceId nextId() {
+        return DatasourceId.from(UUID.randomUUID());
     }
 }

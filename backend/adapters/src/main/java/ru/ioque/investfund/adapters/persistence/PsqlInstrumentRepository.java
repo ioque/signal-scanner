@@ -4,12 +4,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -18,6 +21,7 @@ public class PsqlInstrumentRepository implements InstrumentRepository {
     JpaInstrumentRepository instrumentRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Instrument getBy(InstrumentId instrumentId) throws EntityNotFoundException {
         return instrumentRepository
             .findById(instrumentId.getUuid())
@@ -27,5 +31,10 @@ public class PsqlInstrumentRepository implements InstrumentRepository {
                     String.format("Инструмент[id=%s] не существует.", instrumentId)
                 )
             );
+    }
+
+    @Override
+    public InstrumentId nextId() {
+        return InstrumentId.from(UUID.randomUUID());
     }
 }

@@ -9,14 +9,12 @@ import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
-import ru.ioque.investfund.domain.risk.EmulatedPositionId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosition> {
-    UUIDProvider uuidProvider;
     EmulatedPositionRepository emulatedPositionRepository;
     InstrumentRepository instrumentRepository;
     ScannerRepository scannerRepository;
@@ -33,13 +30,11 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        UUIDProvider uuidProvider,
         EmulatedPositionRepository emulatedPositionRepository,
         InstrumentRepository instrumentRepository,
         ScannerRepository scannerRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.uuidProvider = uuidProvider;
         this.emulatedPositionRepository = emulatedPositionRepository;
         this.instrumentRepository = instrumentRepository;
         this.scannerRepository = scannerRepository;
@@ -62,7 +57,7 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
             );
         }
         final EmulatedPosition emulatedPosition = EmulatedPosition.builder()
-            .id(EmulatedPositionId.from(uuidProvider.generate()))
+            .id(emulatedPositionRepository.nextId())
             .isOpen(true)
             .scanner(scanner)
             .instrument(instrument)

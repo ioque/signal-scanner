@@ -6,4 +6,5 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
 public interface InstrumentRepository {
    Instrument getBy(InstrumentId instrumentId) throws EntityNotFoundException;
+   InstrumentId nextId();
 }

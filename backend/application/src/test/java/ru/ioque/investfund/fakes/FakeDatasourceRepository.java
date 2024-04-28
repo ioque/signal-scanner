@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
@@ -48,6 +49,11 @@ public class FakeDatasourceRepository implements DatasourceRepository {
                 String.format("Источник данных[id=%s] не существует.", datasourceId)
             )
         );
+    }
+
+    @Override
+    public DatasourceId nextId() {
+        return DatasourceId.from(UUID.randomUUID());
     }
 
     public Instrument getInstrumentBy(Ticker ticker) {

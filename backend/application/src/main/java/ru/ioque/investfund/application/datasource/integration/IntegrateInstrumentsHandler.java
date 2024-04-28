@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.domain.core.ApplicationLog;
@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateInstrumentsCommand> {
-    UUIDProvider uuidProvider;
+    InstrumentRepository instrumentRepository;
     DatasourceRepository datasourceRepository;
 
     public IntegrateInstrumentsHandler(
@@ -29,11 +29,11 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
         Validator validator,
         LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
-        UUIDProvider uuidProvider,
+        InstrumentRepository instrumentRepository,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider, datasourceProvider);
-        this.uuidProvider = uuidProvider;
+        this.instrumentRepository = instrumentRepository;
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -45,7 +45,7 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
             .stream()
             .map(InstrumentDto::toDetails)
             .distinct()
-            .map(details -> Instrument.of(uuidProvider.generate(), details))
+            .map(details -> Instrument.of(instrumentRepository.nextId(), details))
             .forEach(datasource::addInstrument);
         datasourceRepository.save(datasource);
         return List.of(new InfoLog(

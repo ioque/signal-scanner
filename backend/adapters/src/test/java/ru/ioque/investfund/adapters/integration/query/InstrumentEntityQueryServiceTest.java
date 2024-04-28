@@ -12,7 +12,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRep
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
-import ru.ioque.investfund.application.adapters.UUIDProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
@@ -23,25 +22,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("PSQL DATASOURCE QUERY SERVICE TEST")
-public class InstrumentEntityQueryRepositoryTest extends InfrastructureTest {
+public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
     PsqlDatasourceQueryService psqlDatasourceQueryService;
-    UUIDProvider uuidProvider;
     DatasourceRepository datasourceRepository;
     JpaDatasourceRepository jpaDatasourceRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaInstrumentRepository jpaInstrumentRepository;
 
-    public InstrumentEntityQueryRepositoryTest(
+    public InstrumentEntityQueryServiceTest(
         @Autowired PsqlDatasourceQueryService psqlDatasourceQueryService,
-        @Autowired UUIDProvider uuidProvider,
         @Autowired DatasourceRepository datasourceRepository,
         @Autowired JpaDatasourceRepository jpaDatasourceRepository,
         @Autowired JpaInstrumentRepository jpaInstrumentRepository,
         @Autowired JpaIntradayValueRepository jpaIntradayValueRepository
     ) {
         this.psqlDatasourceQueryService = psqlDatasourceQueryService;
-        this.uuidProvider = uuidProvider;
         this.datasourceRepository = datasourceRepository;
         this.jpaDatasourceRepository = jpaDatasourceRepository;
         this.jpaInstrumentRepository = jpaInstrumentRepository;
