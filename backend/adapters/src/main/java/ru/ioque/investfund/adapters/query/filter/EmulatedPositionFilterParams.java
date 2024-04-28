@@ -46,7 +46,7 @@ public class EmulatedPositionFilterParams {
     private List<Specification<EmulatedPositionEntity>> specifications() {
         List<Specification<EmulatedPositionEntity>> specifications = new ArrayList<>();
         Optional.ofNullable(scannerId).ifPresent(value -> specifications.add(EmulatedPositionSpecifications.scannerIdEqual(value)));
-        Optional.ofNullable(ticker).ifPresent(value -> specifications.add(EmulatedPositionSpecifications.tickerLike(value)));
+        Optional.ofNullable(ticker).ifPresent(value -> specifications.add(EmulatedPositionSpecifications.tickerEquals(value)));
         return specifications;
     }
 

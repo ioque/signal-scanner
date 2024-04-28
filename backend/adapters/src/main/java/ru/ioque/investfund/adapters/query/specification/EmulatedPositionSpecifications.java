@@ -6,9 +6,9 @@ import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEnti
 import java.util.UUID;
 
 public class EmulatedPositionSpecifications {
-    public static Specification<EmulatedPositionEntity> tickerLike(String ticker) {
+    public static Specification<EmulatedPositionEntity> tickerEquals(String ticker) {
         if (ticker == null || ticker.isEmpty()) throw new RuntimeException();
-        return (emulatedPosition, cq, cb) -> cb.like(emulatedPosition.get("instrument").get("ticker"), "%" + ticker + "%");
+        return (emulatedPosition, cq, cb) -> cb.equal(emulatedPosition.get("instrument").get("ticker"), ticker);
     }
 
     public static Specification<EmulatedPositionEntity> scannerIdEqual(UUID scannerId) {

@@ -193,18 +193,24 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sber = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker(
-                "SBER")
-            .type("stock")
-            .build());
-        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker(
-                "IMOEX")
-            .type("index")
-            .build());
+        List<InstrumentEntity> sber = psqlDatasourceQueryService
+            .findInstruments(
+                InstrumentFilterParams
+                    .builder()
+                    .ticker(
+                        "SBER")
+                    .type("stock")
+                    .build()
+            );
+        List<InstrumentEntity> imoex = psqlDatasourceQueryService
+            .findInstruments(
+                InstrumentFilterParams
+                    .builder()
+                    .ticker(
+                        "IMOEX")
+                    .type("index")
+                    .build()
+            );
 
         assertEquals(1, sber.size());
         assertEquals(1, imoex.size());
