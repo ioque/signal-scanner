@@ -25,5 +25,6 @@ public class TelegramChatEntity {
     @Id
     @Column(unique = true, nullable = false)
     Long chatId;
+    String name;
     LocalDateTime createdAt;
 }

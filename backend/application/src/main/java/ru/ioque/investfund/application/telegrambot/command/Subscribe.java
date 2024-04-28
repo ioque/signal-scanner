@@ -19,4 +19,5 @@ import ru.ioque.investfund.application.api.command.Command;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Subscribe implements Command {
     Long chatId;
+    String name;
 }

@@ -35,7 +35,12 @@ public class SignalTelegramBot extends TelegramBot {
             switch (update.getMessage().getText()) {
                 case "/start":
                 case "/subscribe":
-                    commandPublisher.publish(new Subscribe(update.getMessage().getChatId()));
+                    commandPublisher.publish(
+                        new Subscribe(
+                            update.getMessage().getChatId(),
+                            update.getMessage().getChat().getFirstName()
+                        )
+                    );
                     break;
                 case "/unsubscribe":
                     commandPublisher.publish(new Unsubscribe(update.getMessage().getChatId()));

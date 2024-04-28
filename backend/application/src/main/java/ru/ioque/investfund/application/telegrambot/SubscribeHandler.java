@@ -37,7 +37,11 @@ public class SubscribeHandler extends CommandHandler<Subscribe> {
     @Override
     protected List<ApplicationLog> businessProcess(Subscribe command) {
         if(telegramChatRepository.findBy(command.getChatId()).isEmpty()) {
-            telegramChatRepository.save(new TelegramChat(command.getChatId(), dateTimeProvider.nowDateTime()));
+            telegramChatRepository.save(new TelegramChat(
+                command.getChatId(),
+                command.getName(),
+                dateTimeProvider.nowDateTime()
+            ));
             telegramMessageSender.sendMessage(command.getChatId(), "Вы успешно подписались на получение торговых сигналов.");
         }
         return List.of(new InfoLog(

@@ -13,5 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TelegramChat {
     private final Long chatId;
+    private final String name;
     private final LocalDateTime createdAt;
 }

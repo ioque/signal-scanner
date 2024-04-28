@@ -33,7 +33,7 @@ public class TelegramBotTest extends BaseTest {
         T1. Подписка на обновление.
         """)
     void testCase1() {
-        final Subscribe command = new Subscribe(1L);
+        final Subscribe command = new Subscribe(1L, "kukusuku");
         final LocalDateTime today = LocalDateTime.parse("2024-01-10T10:00:00");
         initTodayDateTime("2024-01-10T10:00:00");
 
@@ -53,7 +53,7 @@ public class TelegramBotTest extends BaseTest {
         T2. Отписка от обновлений
         """)
     void testCase2() {
-        commandBus().execute(new Subscribe(1L));
+        commandBus().execute(new Subscribe(1L, "kukusuku"));
         telegramMessageSender().clear();
         final Unsubscribe command = new Unsubscribe(1L);
 
@@ -84,8 +84,8 @@ public class TelegramBotTest extends BaseTest {
         T4. Повторная подписка на обновление.
         """)
     void testCase4() {
-        commandBus().execute(new Subscribe(1L));
-        commandBus().execute(new Subscribe(1L));
+        commandBus().execute(new Subscribe(1L, "kukusuku"));
+        commandBus().execute(new Subscribe(1L, "kukusuku"));
 
         assertEquals(1, telegramChatRepository().findAll().size());
     }
@@ -172,7 +172,7 @@ public class TelegramBotTest extends BaseTest {
         );
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), getToday()));
-        commandBus().execute(new Subscribe(1L));
+        commandBus().execute(new Subscribe(1L, "kukusuku"));
         clearLogs();
         telegramMessageSender().clear();
     }

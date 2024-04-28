@@ -20,13 +20,18 @@ public class PsqlTelegramChatRepository implements TelegramChatRepository {
 
     @Override
     public void save(TelegramChat telegramChat) {
-        jpaTelegramChatRepository.save(new TelegramChatEntity(telegramChat.getChatId(), telegramChat.getCreatedAt()));
+        jpaTelegramChatRepository.save(new TelegramChatEntity(
+            telegramChat.getChatId(),
+            telegramChat.getName(),
+            telegramChat.getCreatedAt()
+        ));
     }
 
     @Override
     public Optional<TelegramChat> findBy(Long chatId) {
         return jpaTelegramChatRepository.findById(chatId).map(entity -> new TelegramChat(
             entity.getChatId(),
+            entity.getName(),
             entity.getCreatedAt()
         ));
     }
@@ -36,7 +41,11 @@ public class PsqlTelegramChatRepository implements TelegramChatRepository {
         return jpaTelegramChatRepository
             .findAll()
             .stream()
-            .map(entity -> new TelegramChat(entity.getChatId(), entity.getCreatedAt()))
+            .map(entity -> new TelegramChat(
+                entity.getChatId(),
+                entity.getName(),
+                entity.getCreatedAt()
+            ))
             .toList();
     }
 
