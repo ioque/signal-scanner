@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,11 +21,13 @@ import java.util.UUID;
 public class InstrumentResponse {
     UUID id;
     String name;
-    String shortName;
     String ticker;
-    Double todayLastPrice;
-    Double todayFirstPrice;
+    String shortName;
     Double todayValue;
     Boolean updatable;
+    Double todayLastPrice;
+    Double todayFirstPrice;
+    Long lastIntradayNumber;
+    LocalDateTime lastUpdate;
     List<AggregatedHistoryResponse> historyValues;
 }

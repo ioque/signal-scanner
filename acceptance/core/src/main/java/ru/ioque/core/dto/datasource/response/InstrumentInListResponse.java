@@ -20,4 +20,6 @@ public class InstrumentInListResponse {
     UUID id;
     String ticker;
     String shortName;
+    Double todayValue;
+    Double todayLastPrice;
 }

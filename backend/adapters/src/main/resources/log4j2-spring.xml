@@ -49,18 +49,28 @@
                 <AppenderRef ref="ConsoleAppender" />
             </Failovers>
         </Failover>
+
+        <Socket name="SocketAppender" host="localhost" port="5000" immediateFlush="true">
+            <ThresholdFilter level="INFO"/>
+            <JsonTemplateLayout eventTemplateUri="classpath:LogstashJsonEventLayoutV1.json">
+                <EventTemplateAdditionalField key="application" value="stock-data-processor"/>
+            </JsonTemplateLayout>
+        </Socket>
     </Appenders>
 
     <Loggers>
         <Root level="${ROOT_LOG_LVL}">
             <AppenderRef ref="ConsoleAppender" />
             <AppenderRef ref="TechnicalRollingFileAppender" />
+            <AppenderRef ref="SocketAppender"/>
         </Root>
         <Logger name="org.apache.kafka" level="WARN" additivity="false">
             <AppenderRef ref="TechnicalRollingFileAppenderFailover" />
+            <AppenderRef ref="SocketAppender"/>
         </Logger>
         <AsyncLogger name="ASYNC_FILE_LOGGER" level="INFO" additivity="false">
             <AppenderRef ref="BusinessRollingFileAppenderFailover" />
+            <AppenderRef ref="SocketAppender"/>
         </AsyncLogger>
     </Loggers>
 
