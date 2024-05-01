@@ -81,7 +81,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .forEach(eventPublisher::publish);
         return logs
             .stream()
-            .map(log -> (ApplicationLog) new InfoLog(dateTimeProvider.nowDateTime(), log))
+            .map(log -> (ApplicationLog) new InfoLog(dateTimeProvider.nowDateTime(), log.replaceAll("\\n", " ")))
             .toList();
     }
 }

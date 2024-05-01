@@ -91,7 +91,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 0,
                 100,
                 "ASC",
-                "shortName"
+                "ticker"
             )))
             .thenReturn(instrumentInLists);
 

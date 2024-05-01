@@ -14,6 +14,10 @@
     "$resolver": "message",
     "stringified": true
   },
+  "trackId": {
+    "$resolver": "pattern",
+    "pattern": "%X{trackId}"
+  },
   "source": {
     "class": {
       "$resolver": "source",

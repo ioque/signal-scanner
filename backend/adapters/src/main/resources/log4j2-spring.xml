@@ -12,7 +12,7 @@
         </Console>
 
         <Kafka name="KafkaTechAppender" topic="signal-scanner-technical-log" ignoreExceptions="false">
-            <PatternLayout pattern="%m" charset="UTF-8" />
+            <JsonTemplateLayout eventTemplateUri="classpath:JsonTemplateLayout.json" />
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>
             <Property name="max.request.size">30000000</Property>
@@ -24,7 +24,7 @@
         </Failover>
 
         <Kafka name="KafkaBusinessAppender" topic="signal-scanner-business-log" ignoreExceptions="false">
-            <PatternLayout pattern="%m" charset="UTF-8" />
+            <JsonTemplateLayout eventTemplateUri="classpath:JsonTemplateLayout.json" />
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>
             <Property name="max.request.size">30000000</Property>

@@ -31,13 +31,17 @@ public abstract class CommandHandler<C> {
             final long start = System.currentTimeMillis();
             final Result result = execute(command);
             final long duration = System.currentTimeMillis() - start;
-            result.getLogs().forEach(loggerProvider::log);
+            result.getLogs().forEach(applicationLog -> loggerProvider.log(trackId, applicationLog));
             if (result.isSuccess()) {
                 loggerProvider.log(
                     trackId,
                     new InfoLog(
                         timestamp(),
-                        String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, duration)
+                        String.format(
+                            "Комада %s успешно обработана, время выполнения составило %s мс",
+                            command,
+                            duration
+                        )
                     )
                 );
             } else {
@@ -45,7 +49,11 @@ public abstract class CommandHandler<C> {
                     trackId,
                     new InfoLog(
                         timestamp(),
-                        String.format("Обработка команды %s завершилась с ошибкой, время выполнения составило %s мс", command, duration)
+                        String.format(
+                            "Обработка команды %s завершилась с ошибкой, время выполнения составило %s мс",
+                            command,
+                            duration
+                        )
                     )
                 );
             }

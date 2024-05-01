@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 public abstract class EventHandler<E> {
@@ -19,13 +20,16 @@ public abstract class EventHandler<E> {
 
     public void handleFor(E event) {
         try {
-            loggerProvider.log(new InfoLog(
+            loggerProvider.log(
+                UUID.randomUUID(),
+                new InfoLog(
                 dateTimeProvider.nowDateTime(),
                 String.format("Получено событие %s", event)
             ));
             validateEvent(event);
             handle(event);
             loggerProvider.log(
+                UUID.randomUUID(),
                 new InfoLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("Событие %s успешно обработано.", event)
@@ -33,6 +37,7 @@ public abstract class EventHandler<E> {
             );
         } catch (Exception e) {
             loggerProvider.log(
+                UUID.randomUUID(),
                 new ErrorLog(
                     dateTimeProvider.nowDateTime(),
                     String.format("При обработке события %s произошла ошибка: %s", event, e.getMessage()), e)
