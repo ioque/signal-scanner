@@ -9,12 +9,6 @@
             <PatternLayout
                 pattern="%date %highlight{%-5level }%t %style{%c{1.}}{bright,yellow}: %m%n%throwable"/>
         </Console>
-        <Socket name="SocketAppender" host="localhost" port="5044" immediateFlush="true">
-            <ThresholdFilter level="INFO"/>
-            <JsonTemplateLayout eventTemplateUri="classpath:LogstashJsonEventLayoutV1.json">
-                <EventTemplateAdditionalField key="application" value="stock-data-processor"/>
-            </JsonTemplateLayout>
-        </Socket>
     </Appenders>
 
     <Loggers>
@@ -23,10 +17,10 @@
             <AppenderRef ref="SocketAppender"/>
         </Root>
         <Logger name="org.apache.kafka" level="WARN" additivity="false">
-            <AppenderRef ref="SocketAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
         </Logger>
         <AsyncLogger name="BUSINESS_LOGGER" level="INFO" additivity="false">
-            <AppenderRef ref="SocketAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
         </AsyncLogger>
     </Loggers>
 

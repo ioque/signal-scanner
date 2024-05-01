@@ -1,5 +1,3 @@
-
-
 spring:
   application:
     name: trading-data-processor
@@ -43,9 +41,6 @@ spring:
 
 logging-config:
   level: ${ROOT_LOG_LEVEL:INFO}
-  file:
-    level: ${FILE_LOG_LEVEL:INFO}
-    path: ${FILE_LOG_PATH:logs}
 
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}

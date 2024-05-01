@@ -14,11 +14,7 @@ spring:
     enabled: false
 
 logging-config:
-  console:
     level: DEBUG
-  file:
-    level: INFO
-    path: build/logs
 
 telegram-bot:
   token: token

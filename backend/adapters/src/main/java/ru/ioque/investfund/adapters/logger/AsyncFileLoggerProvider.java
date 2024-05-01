@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Component
 public class AsyncFileLoggerProvider implements LoggerProvider {
-    private final Logger log = LoggerFactory.getLogger("ASYNC_FILE_LOGGER");
+    private final Logger log = LoggerFactory.getLogger("BUSINESS_LOGGER");
 
     @Override
     public void log(ApplicationLog logPart) {

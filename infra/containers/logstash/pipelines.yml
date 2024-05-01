@@ -1,0 +1,5 @@
+- pipeline.id: log
+  pipeline.workers: 1
+  pipeline.batch.size: 300
+  pipeline.batch.delay: 30
+  path.config: "./pipeline/pipeline.conf"
