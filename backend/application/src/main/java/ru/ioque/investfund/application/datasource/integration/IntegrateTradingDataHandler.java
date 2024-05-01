@@ -10,20 +10,18 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.datasource.event.TradingStateChanged;
 import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,7 +50,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(IntegrateTradingDataCommand command) {
+    protected Result businessProcess(IntegrateTradingDataCommand command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final ExecutorService service = Executors.newCachedThreadPool();
         for (Instrument instrument : datasource.getUpdatableInstruments()) {
@@ -69,10 +67,7 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
             .datasourceId(datasource.getId().getUuid())
             .createdAt(dateTimeProvider.nowDateTime())
             .build());
-        return List.of(new InfoLog(
-            dateTimeProvider.nowDateTime(),
-            String.format("В источнике данных[id=%s] выполнена интеграция торговых данных.", datasource.getId())
-        ));
+        return Result.success();
     }
 
     private void integrateTradingDataFor(Instrument instrument, Datasource datasource) {

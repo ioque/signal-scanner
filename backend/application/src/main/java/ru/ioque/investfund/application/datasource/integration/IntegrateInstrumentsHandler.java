@@ -9,14 +9,12 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.util.List;
 import java.util.TreeSet;
 
 @Component
@@ -39,7 +37,7 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(IntegrateInstrumentsCommand command) {
+    protected Result businessProcess(IntegrateInstrumentsCommand command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         datasourceProvider
             .fetchInstruments(datasource)
@@ -56,9 +54,6 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
             )
             .forEach(datasource::addInstrument);
         datasourceRepository.save(datasource);
-        return List.of(new InfoLog(
-            dateTimeProvider.nowDateTime(),
-            String.format("В источнике данных[id=%s] выполнена интеграция инструментов.", datasource.getId())
-        ));
+        return Result.success();
     }
 }

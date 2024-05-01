@@ -6,13 +6,10 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
-import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
-
-import java.util.List;
 
 @Component
 public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPosition> {
@@ -29,7 +26,7 @@ public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPo
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(CloseEmulatedPosition command) {
+    protected Result businessProcess(CloseEmulatedPosition command) {
         final EmulatedPosition emulatedPosition = emulatedPositionRepository
             .findBy(command.getInstrumentId(), command.getScannerId())
             .orElseThrow(
@@ -43,11 +40,6 @@ public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPo
             );
         emulatedPosition.closePosition(command.getPrice());
         emulatedPositionRepository.save(emulatedPosition);
-        return List.of(
-            new InfoLog(
-                dateTimeProvider.nowDateTime(),
-                String.format("Закрыта эмуляция позиции[id=%s]", emulatedPosition.getId())
-            )
-        );
+        return Result.success();
     }
 }

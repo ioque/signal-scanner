@@ -9,9 +9,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -38,7 +37,7 @@ public class CreateScannerCommandHandler extends CommandHandler<CreateScannerCom
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(CreateScannerCommand command) {
+    protected Result businessProcess(CreateScannerCommand command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
         final SignalScanner scanner = SignalScanner.builder()
@@ -52,9 +51,6 @@ public class CreateScannerCommandHandler extends CommandHandler<CreateScannerCom
             .lastExecutionDateTime(null)
             .build();
         scannerRepository.save(scanner);
-        return List.of(new InfoLog(
-            dateTimeProvider.nowDateTime(),
-            String.format("Создан сканер сигналов[id=%s]", scanner.getId())
-        ));
+        return Result.success();
     }
 }

@@ -8,12 +8,9 @@ import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
-
-import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -31,12 +28,9 @@ public class UnregisterDatasourceHandler extends CommandHandler<UnregisterDataso
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(UnregisterDatasourceCommand command) {
+    protected Result businessProcess(UnregisterDatasourceCommand command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         datasourceRepository.remove(datasource);
-        return List.of(new InfoLog(
-            dateTimeProvider.nowDateTime(),
-            String.format("Источник данных[id=%s] удален.", datasource.getId())
-        ));
+        return Result.success();
     }
 }

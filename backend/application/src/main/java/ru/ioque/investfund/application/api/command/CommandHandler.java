@@ -8,12 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,15 +29,26 @@ public abstract class CommandHandler<C> {
                 new InfoLog(timestamp(), String.format("Получена команда %s", command))
             );
             final long start = System.currentTimeMillis();
-            execute(command).forEach(log -> loggerProvider.log(trackId, log));
+            final Result result = execute(command);
             final long duration = System.currentTimeMillis() - start;
-            loggerProvider.log(
-                trackId,
-                new InfoLog(
-                    timestamp(),
-                    String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, duration)
-                )
-            );
+            result.getLogs().forEach(loggerProvider::log);
+            if (result.isSuccess()) {
+                loggerProvider.log(
+                    trackId,
+                    new InfoLog(
+                        timestamp(),
+                        String.format("Комада %s успешно обработана, время выполнения составило %s мс", command, duration)
+                    )
+                );
+            } else {
+                loggerProvider.log(
+                    trackId,
+                    new InfoLog(
+                        timestamp(),
+                        String.format("Обработка команды %s завершилась с ошибкой, время выполнения составило %s мс", command, duration)
+                    )
+                );
+            }
         } catch (Exception exception) {
             loggerProvider.log(
                 trackId,
@@ -53,7 +62,7 @@ public abstract class CommandHandler<C> {
         }
     }
 
-    protected abstract List<ApplicationLog> businessProcess(C command);
+    protected abstract Result businessProcess(C command);
 
     private <V> void validate(V value) {
         final Set<ConstraintViolation<V>> violations = validator.validate(value);
@@ -66,7 +75,7 @@ public abstract class CommandHandler<C> {
         return dateTimeProvider.nowDateTime();
     }
 
-    private List<ApplicationLog> execute(C command) {
+    private Result execute(C command) {
         validate(command);
         return businessProcess(command);
     }

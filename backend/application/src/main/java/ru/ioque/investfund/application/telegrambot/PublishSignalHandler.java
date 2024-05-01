@@ -11,15 +11,13 @@ import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.telegrambot.command.PublishSignal;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -46,11 +44,11 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(PublishSignal command) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
-        TradingSnapshot tradingSnapshot = tradingSnapshotsRepository.getBy(command.getInstrumentId());
-        Signal signal = scanner.getSignals()
+    protected Result businessProcess(PublishSignal command) {
+        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
+        final TradingSnapshot tradingSnapshot = tradingSnapshotsRepository.getBy(command.getInstrumentId());
+        final Signal signal = scanner.getSignals()
             .stream()
             .filter(row -> row.getInstrumentId().equals(command.getInstrumentId()))
             .findFirst()
@@ -78,13 +76,6 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
                         .orElse("0%")
                 )
             ));
-        return List.of(new InfoLog(
-            dateTimeProvider.nowDateTime(),
-            String.format(
-                "Выполнена публикация сигнала[scannerId=%s, instrumentId=%s]",
-                command.getScannerId(),
-                command.getInstrumentId()
-            )
-        ));
+        return Result.success();
     }
 }

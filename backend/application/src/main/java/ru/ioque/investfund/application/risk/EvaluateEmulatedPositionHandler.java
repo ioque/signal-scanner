@@ -6,9 +6,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 
 import java.util.List;
@@ -28,15 +27,10 @@ public class EvaluateEmulatedPositionHandler extends CommandHandler<EvaluateEmul
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(EvaluateEmulatedPosition command) {
+    protected Result businessProcess(EvaluateEmulatedPosition command) {
         List<EmulatedPosition> emulatedPositions = emulatedPositionRepository.findAllBy(command.getInstrumentId());
         emulatedPositions.forEach(emulatedPosition -> emulatedPosition.updateLastPrice(command.getPrice()));
         emulatedPositionRepository.saveAll(emulatedPositions);
-        return List.of(
-            new InfoLog(
-                dateTimeProvider.nowDateTime(),
-                String.format("Выполнена переоценка прибыльности позиций по инструменту[id=%s]", command.getInstrumentId())
-            )
-        );
+        return Result.success();
     }
 }

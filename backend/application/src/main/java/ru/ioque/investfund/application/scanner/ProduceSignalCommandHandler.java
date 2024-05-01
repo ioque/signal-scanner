@@ -10,6 +10,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.scanner.command.ProduceSignalCommand;
 import ru.ioque.investfund.application.scanner.event.DatasourceScanned;
 import ru.ioque.investfund.application.scanner.event.SignalRegistered;
@@ -46,7 +47,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(ProduceSignalCommand command) {
+    protected Result businessProcess(ProduceSignalCommand command) {
         final List<ApplicationLog> logs = scannerRepository
             .findAllBy(command.getDatasourceId())
             .stream()
@@ -59,7 +60,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
             .watermark(command.getWatermark())
             .createdAt(dateTimeProvider.nowDateTime())
             .build());
-        return logs;
+        return Result.success(logs);
     }
 
     private List<ApplicationLog> runScanner(SignalScanner scanner, LocalDateTime watermark) {

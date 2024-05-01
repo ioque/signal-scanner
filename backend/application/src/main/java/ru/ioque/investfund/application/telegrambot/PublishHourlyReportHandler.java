@@ -10,13 +10,11 @@ import ru.ioque.investfund.application.adapters.ReportService;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -40,9 +38,9 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(PublishHourlyReport command) {
+    protected Result businessProcess(PublishHourlyReport command) {
         try {
-            File report = reportService.buildHourlyReport();
+            final File report = reportService.buildHourlyReport();
             if (command.getChatId() != null) {
                 telegramMessageSender.sendMessage(
                     command.getChatId(),
@@ -59,11 +57,6 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return List.of(
-            new InfoLog(
-                dateTimeProvider.nowDateTime(),
-                "Сгенерирован ежечасный отчет"
-            )
-        );
+        return Result.success();
     }
 }

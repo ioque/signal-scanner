@@ -5,9 +5,7 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.api.command.CommandHandler;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-
-import java.util.List;
+import ru.ioque.investfund.application.api.command.Result;
 
 public abstract class IntegrationHandler<C> extends CommandHandler<C> {
     protected DatasourceProvider datasourceProvider;
@@ -22,5 +20,5 @@ public abstract class IntegrationHandler<C> extends CommandHandler<C> {
         this.datasourceProvider = new ValidatedDatasourceProvider(datasourceProvider, validator);
     }
 
-    protected abstract List<ApplicationLog> businessProcess(C command);
+    protected abstract Result businessProcess(C command);
 }

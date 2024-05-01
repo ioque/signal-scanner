@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentId {
-    @NotNull(message = "Не указан uuid")
+    @NotNull(message = "Передан пустой идентификатор.")
     UUID uuid;
 
     public static InstrumentId from(UUID uuid) {

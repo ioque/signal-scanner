@@ -10,9 +10,9 @@ import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.api.command.CommandHandler;
+import ru.ioque.investfund.application.api.command.Result;
 import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
-import ru.ioque.investfund.domain.core.ApplicationLog;
-import ru.ioque.investfund.domain.core.InfoLog;
+import ru.ioque.investfund.domain.core.WarningLog;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -41,17 +41,19 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
     }
 
     @Override
-    protected List<ApplicationLog> businessProcess(OpenEmulatedPosition command) {
+    protected Result businessProcess(OpenEmulatedPosition command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Instrument instrument = instrumentRepository.getBy(command.getInstrumentId());
         if (emulatedPositionRepository.findBy(command.getInstrumentId(), command.getScannerId()).isPresent()) {
-            return List.of(
-                new InfoLog(
-                    dateTimeProvider.nowDateTime(),
-                    String.format(
-                        "Эмуляция позиции[scannerId=%s, ticker=%s] уже открыта.",
-                        scanner.getId(),
-                        instrument.getTicker()
+            return Result.error(
+                List.of(
+                    new WarningLog(
+                        dateTimeProvider.nowDateTime(),
+                        String.format(
+                            "Эмуляция позиции[scannerId=%s, ticker=%s] уже открыта.",
+                            scanner.getId(),
+                            instrument.getTicker()
+                        )
                     )
                 )
             );
@@ -65,11 +67,6 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
             .build();
         emulatedPosition.updateLastPrice(command.getPrice());
         emulatedPositionRepository.save(emulatedPosition);
-        return List.of(
-            new InfoLog(
-                dateTimeProvider.nowDateTime(),
-                String.format("Открыта эмуляция позиции[id=%s]", emulatedPosition.getId())
-            )
-        );
+        return Result.success();
     }
 }
