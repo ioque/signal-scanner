@@ -25,7 +25,7 @@ public class RiskManagerQueryController {
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize,
         @RequestParam(defaultValue = "ASC") String orderValue,
-        @RequestParam(defaultValue = "ticker") String orderField
+        @RequestParam(defaultValue = "instrument.ticker") String orderField
     ) {
         return emulatedPositionQueryService
             .findEmulatedPositions(

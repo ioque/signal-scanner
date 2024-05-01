@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -22,5 +23,5 @@ public class SignalScannerInListResponse implements Serializable {
     String description;
     Integer workPeriodInMinutes;
     Integer signalCounts;
-    String lastExecutionDateTime;
+    LocalDateTime lastExecutionDateTime;
 }

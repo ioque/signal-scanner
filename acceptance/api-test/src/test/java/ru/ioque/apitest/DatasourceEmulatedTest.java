@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import ru.ioque.apitest.client.ClientFacade;
 import ru.ioque.apitest.dataset.DatasetManager;
-import ru.ioque.apitest.kafka.KafkaConsumer;
 import ru.ioque.core.client.datasource.DatasourceHttpClient;
 import ru.ioque.core.client.service.ServiceHttpClient;
 import ru.ioque.core.client.signalscanner.ScannerHttpClient;
@@ -19,6 +18,7 @@ import ru.ioque.core.dto.datasource.response.DatasourceResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentInListResponse;
 import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 import ru.ioque.core.dto.datasource.response.IntradayResponse;
+import ru.ioque.core.dto.risk.response.EmulatedPositionResponse;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
@@ -37,40 +37,32 @@ public abstract class DatasourceEmulatedTest {
     private ClientFacade clientFacade;
     @Autowired
     private DatasetManager datasetManager;
-    @Autowired
-    protected KafkaConsumer kafkaConsumer;
     TradingDataGeneratorFacade generator = new TradingDataGeneratorFacade();
 
     @BeforeEach
     void beforeEach() {
         serviceClient().clearState();
-        kafkaConsumer.clear();
     }
 
-    protected boolean waitTradingDataIntegratedEvent() {
+    protected boolean waitOpenEmulatedPositions(int size) {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsTradingDataIntegrated()) {
-            if (System.currentTimeMillis() - start > 5000) {
+        while (getOpenEmulatedPositions().size() != size) {
+            if (System.currentTimeMillis() - start > 2000) {
                 return false;
             }
         }
         return true;
     }
 
-    protected boolean waitSignalRegisteredEvent() {
+    protected boolean waitScanningFinishedEvent(LocalDateTime lastExecutionTime) {
         long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsSignalRegistered()) {
-            if (System.currentTimeMillis() - start > 5000) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected boolean waitScanningFinishedEvent() {
-        long start = System.currentTimeMillis();
-        while (!kafkaConsumer.containsDatasourceScanned()) {
-            if (System.currentTimeMillis() - start > 5000) {
+        while (getSignalScanners()
+            .stream()
+            .filter(row -> row.getLastExecutionDateTime().equals(lastExecutionTime))
+            .findFirst()
+            .isEmpty()
+        ) {
+            if (System.currentTimeMillis() - start > 2000) {
                 return false;
             }
         }
@@ -118,6 +110,15 @@ public abstract class DatasourceEmulatedTest {
 
     protected DatasourceResponse getDatasourceBy(UUID exchangeId) {
         return datasourceClient().getDatasourceBy(exchangeId);
+    }
+
+    protected List<EmulatedPositionResponse> getOpenEmulatedPositions() {
+        return clientFacade
+            .getRiskManagerClient()
+            .getEmulatedPositions()
+            .stream()
+            .filter(EmulatedPositionResponse::getIsOpen)
+            .toList();
     }
 
     protected void fullIntegrate(UUID datasourceId) {

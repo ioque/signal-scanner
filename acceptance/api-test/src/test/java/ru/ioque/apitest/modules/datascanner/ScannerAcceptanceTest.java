@@ -293,8 +293,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
@@ -394,8 +393,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
@@ -537,8 +535,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
@@ -623,8 +620,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
 
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
     }
 
@@ -676,10 +672,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
         integrateTradingData(datasourceId);
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
-        kafkaConsumer.clear();
+
         initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
         initDataset(
             Dataset.builder()
@@ -701,8 +696,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
         integrateTradingData(datasourceId);
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(0));
         assertEquals(2, getSignalsBy(getFirstScannerId()).size());
         assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
     }
@@ -755,10 +749,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
         integrateTradingData(datasourceId);
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitSignalRegisteredEvent());
+        assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
-        kafkaConsumer.clear();
+
         initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
         initDataset(
             Dataset.builder()
@@ -780,8 +773,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
         integrateTradingData(datasourceId);
-        assertTrue(waitTradingDataIntegratedEvent());
-        assertTrue(waitScanningFinishedEvent());
+        assertTrue(waitScanningFinishedEvent(LocalDateTime.parse("2024-03-22T13:00:00")));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
     }

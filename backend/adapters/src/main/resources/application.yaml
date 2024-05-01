@@ -19,7 +19,7 @@ spring:
     username: postgres
     password:
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -41,7 +41,7 @@ spring:
 
 logging-config:
   level: ${ROOT_LOG_LEVEL:INFO}
-  kafka_url: localhost:9094
+  kafka_url: localhost:9092
 
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}

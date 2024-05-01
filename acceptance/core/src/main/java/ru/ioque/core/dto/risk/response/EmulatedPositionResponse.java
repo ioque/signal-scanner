@@ -1,4 +1,4 @@
-package ru.ioque.apitest.kafka;
+package ru.ioque.core.dto.risk.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TradingDataIntegrated implements IntegrationEvent {
-    UUID datasourceId;
-    LocalDateTime createdAt;
-
-    public boolean isTradingDataIntegrated() {
-        return true;
-    }
+public class EmulatedPositionResponse {
+    UUID scannerId;
+    String ticker;
+    Double openPrice;
+    Double lastPrice;
+    Double closePrice;
+    Boolean isOpen;
+    Double profit;
 }
