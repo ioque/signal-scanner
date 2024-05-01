@@ -15,6 +15,7 @@ import ru.ioque.core.datagenerator.intraday.IntradayValue;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.datasource.request.DatasourceRequest;
+import ru.ioque.core.dto.risk.response.EmulatedPositionResponse;
 import ru.ioque.core.dto.scanner.request.AnomalyVolumePropertiesDto;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.request.PrefSimplePropertiesDto;
@@ -31,6 +32,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
@@ -295,6 +298,16 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
+        assertEquals("TGKN", signal.getTicker());
+        assertTrue(signal.getIsOpen());
+        assertTrue(signal.getIsBuy());
+        final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
+        assertEquals("TGKN", emulatedPosition.getTicker());
+        assertNotNull(emulatedPosition.getOpenPrice());
+        assertNotNull(emulatedPosition.getLastPrice());
+        assertNotNull(emulatedPosition.getProfit());
+        assertNull(emulatedPosition.getClosePrice());
     }
 
     @Test
@@ -395,6 +408,16 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
+        assertEquals("SBERP", signal.getTicker());
+        assertTrue(signal.getIsOpen());
+        assertTrue(signal.getIsBuy());
+        final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
+        assertEquals("SBERP", emulatedPosition.getTicker());
+        assertNotNull(emulatedPosition.getOpenPrice());
+        assertNotNull(emulatedPosition.getLastPrice());
+        assertNotNull(emulatedPosition.getProfit());
+        assertNull(emulatedPosition.getClosePrice());
     }
 
     private UUID getFirstScannerId() {
@@ -537,6 +560,16 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
+        assertEquals("ROSN", signal.getTicker());
+        assertTrue(signal.getIsOpen());
+        assertTrue(signal.getIsBuy());
+        final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
+        assertEquals("ROSN", emulatedPosition.getTicker());
+        assertNotNull(emulatedPosition.getOpenPrice());
+        assertNotNull(emulatedPosition.getLastPrice());
+        assertNotNull(emulatedPosition.getProfit());
+        assertNull(emulatedPosition.getClosePrice());
     }
 
     @Test
@@ -622,6 +655,16 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
+        assertEquals("SIBN", signal.getTicker());
+        assertTrue(signal.getIsOpen());
+        assertTrue(signal.getIsBuy());
+        final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
+        assertEquals("SIBN", emulatedPosition.getTicker());
+        assertNotNull(emulatedPosition.getOpenPrice());
+        assertNotNull(emulatedPosition.getLastPrice());
+        assertNotNull(emulatedPosition.getProfit());
+        assertNull(emulatedPosition.getClosePrice());
     }
 
     @Test
