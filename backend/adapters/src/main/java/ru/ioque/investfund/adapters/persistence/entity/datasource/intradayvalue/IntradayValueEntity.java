@@ -33,10 +33,13 @@ import java.util.function.Function;
 public abstract class IntradayValueEntity {
     @EmbeddedId
     IntradayPk id;
+
     @Column(nullable = false)
     LocalDateTime dateTime;
+
     @Column(nullable = false)
     Double price;
+
     @Column(nullable = false)
     Double value;
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.query.specification.InstrumentSpecifications;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class InstrumentFilterParams {
     UUID datasourceId;
     String ticker;
-    String type;
+    InstrumentType type;
     String shortName;
     Integer pageNumber;
     Integer pageSize;

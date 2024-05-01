@@ -50,10 +50,10 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
         initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
-        assertEquals(2, getInstruments(datasourceId, Map.of("type", "stock")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "currencyPair")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "futures")).size());
-        assertEquals(1, getInstruments(datasourceId, Map.of("type", "index")).size());
+        assertEquals(2, getInstruments(datasourceId, Map.of("type", "STOCK")).size());
+        assertEquals(1, getInstruments(datasourceId, Map.of("type", "CURRENCY_PAIR")).size());
+        assertEquals(1, getInstruments(datasourceId, Map.of("type", "FUTURES")).size());
+        assertEquals(1, getInstruments(datasourceId, Map.of("type", "INDEX")).size());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
         initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
-        assertEquals(1, getInstruments(datasourceId, Map.of("shortname", "BR", "type", "futures")).size());
+        assertEquals(1, getInstruments(datasourceId, Map.of("details.shortName", "BR", "type", "FUTURES")).size());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
         initInstruments(getInstrumentList());
         integrateInstruments(datasourceId);
 
-        assertEquals(1, getInstruments(datasourceId, Map.of("ticker", "IMOEX", "type", "index")).size());
+        assertEquals(1, getInstruments(datasourceId, Map.of("ticker", "IMOEX", "type", "INDEX")).size());
     }
 
     @Test
@@ -103,7 +103,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
 
         assertEquals(
             2,
-            getInstruments(datasourceId, Map.of("shortname", "Сбер", "ticker", "SBER", "type", "stock")).size()
+            getInstruments(datasourceId, Map.of("details.shortName", "Сбер", "ticker", "SBER", "type", "STOCK")).size()
         );
     }
 

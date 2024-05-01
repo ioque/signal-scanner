@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,12 +45,12 @@ public class DatasourceQueryController {
     public List<InstrumentInListResponse> findInstruments(
         @PathVariable UUID datasourceId,
         @RequestParam(required = false) String ticker,
-        @RequestParam(required = false) String type,
+        @RequestParam(required = false) InstrumentType type,
         @RequestParam(required = false) String shortname,
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize,
         @RequestParam(defaultValue = "ASC") String orderValue,
-        @RequestParam(defaultValue = "shortName") String orderField
+        @RequestParam(defaultValue = "ticker") String orderField
     ) {
         return psqlDatasourceQueryService
             .findInstruments(

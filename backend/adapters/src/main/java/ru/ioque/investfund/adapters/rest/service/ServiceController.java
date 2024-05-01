@@ -38,12 +38,12 @@ public class ServiceController {
 
     @DeleteMapping("/api/service/state")
     public void clearState() {
+        jpaEmulatedPositionRepository.deleteAll();
         jpaSignalRepository.deleteAll();
         jpaScannerRepository.deleteAll();
         jpaInstrumentRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
         jpaDatasourceRepository.deleteAll();
-        jpaEmulatedPositionRepository.deleteAll();
         dateTimeProvider.initToday(null);
     }
 }

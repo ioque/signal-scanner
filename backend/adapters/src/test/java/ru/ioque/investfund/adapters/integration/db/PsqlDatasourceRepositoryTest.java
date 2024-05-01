@@ -48,9 +48,7 @@ public class PsqlDatasourceRepositoryTest extends DatabaseTest {
             "test",
             "test",
             "test",
-            List.of(
-                instrument
-            )
+            List.of(instrument)
         );
 
         datasourceRepository.save(datasource);

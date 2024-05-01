@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FuturesDto extends InstrumentDto {
+    final InstrumentType type = InstrumentType.FUTURES;
     @Min(value = 0, message = "Размер лота должен быть положительным целым числом.")
     Integer lotVolume;
     @DecimalMin(value = "0", message = "Стартовая маржа фьючерса должна быть положительным числом.")
@@ -51,7 +52,6 @@ public class FuturesDto extends InstrumentDto {
     @Override
     public InstrumentDetails toDetails() {
         return FuturesDetails.builder()
-            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotVolume(lotVolume)

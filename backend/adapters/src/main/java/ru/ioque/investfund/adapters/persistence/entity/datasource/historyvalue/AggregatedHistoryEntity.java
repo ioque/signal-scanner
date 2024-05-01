@@ -5,6 +5,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,6 +30,7 @@ public class AggregatedHistoryEntity {
     @EmbeddedId
     AggregatedHistoryPk id;
     @ManyToOne
+    @MapsId("instrumentId")
     @JoinColumn(name = "instrument_id")
     InstrumentEntity instrument;
     @Column(nullable = false)
@@ -52,7 +54,7 @@ public class AggregatedHistoryEntity {
         Double waPrice,
         Double value
     ) {
-        this.id = new AggregatedHistoryPk(date, instrument.getTicker());
+        this.id = AggregatedHistoryPk.from(instrument.getId(), date);
         this.instrument = instrument;
         this.openPrice = openPrice;
         this.closePrice = closePrice;

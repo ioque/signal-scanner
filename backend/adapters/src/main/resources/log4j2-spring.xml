@@ -2,6 +2,7 @@
 <Configuration>
     <Properties>
         <Property name="ROOT_LOG_LVL">${spring:logging-config.level}</Property>
+        <Property name="KAFKA_URL">${spring:logging-config.kafka_url}</Property>
     </Properties>
 
     <Appenders>
@@ -9,24 +10,43 @@
             <PatternLayout
                 pattern="%date %highlight{%-5level }%t %style{%c{1.}}{bright,yellow}: %m%n%throwable"/>
         </Console>
-        <Socket name="SocketAppender" host="localhost" port="5044" immediateFlush="true">
-            <ThresholdFilter level="INFO"/>
-            <JsonTemplateLayout eventTemplateUri="classpath:LogstashJsonEventLayoutV1.json">
-                <EventTemplateAdditionalField key="application" value="stock-data-processor"/>
-            </JsonTemplateLayout>
-        </Socket>
+
+        <Kafka name="KafkaTechAppender" topic="signal-scanner-technical-log" ignoreExceptions="false">
+            <PatternLayout pattern="%m" charset="UTF-8" />
+            <Property name="bootstrap.servers">${KAFKA_URL}</Property>
+            <Property name="max.block.ms">1500</Property>
+            <Property name="max.request.size">30000000</Property>
+        </Kafka>
+        <Failover name="KafkaAuditFailover" primary="KafkaTechAppender">
+            <Failovers>
+                <AppenderRef ref="ConsoleAppender" />
+            </Failovers>
+        </Failover>
+
+        <Kafka name="KafkaBusinessAppender" topic="signal-scanner-business-log" ignoreExceptions="false">
+            <PatternLayout pattern="%m" charset="UTF-8" />
+            <Property name="bootstrap.servers">${KAFKA_URL}</Property>
+            <Property name="max.block.ms">1500</Property>
+            <Property name="max.request.size">30000000</Property>
+        </Kafka>
+        <Failover name="KafkaAuditFailover" primary="KafkaBusinessAppender">
+            <Failovers>
+                <AppenderRef ref="ConsoleAppender" />
+            </Failovers>
+        </Failover>
     </Appenders>
 
     <Loggers>
         <Root level="${ROOT_LOG_LVL}">
             <AppenderRef ref="ConsoleAppender" />
-            <AppenderRef ref="SocketAppender"/>
+            <AppenderRef ref="KafkaTechAppender"/>
         </Root>
         <Logger name="org.apache.kafka" level="WARN" additivity="false">
-            <AppenderRef ref="SocketAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
         </Logger>
         <AsyncLogger name="BUSINESS_LOGGER" level="INFO" additivity="false">
-            <AppenderRef ref="SocketAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="KafkaBusinessAppender"/>
         </AsyncLogger>
     </Loggers>
 

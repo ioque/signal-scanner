@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("DealEntity")
 public class DealEntity extends IntradayValueEntity {
     Boolean isBuy;
+
     Integer qnt;
 
     @Builder

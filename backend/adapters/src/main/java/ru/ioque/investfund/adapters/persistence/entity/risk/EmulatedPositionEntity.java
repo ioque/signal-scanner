@@ -31,13 +31,19 @@ public class EmulatedPositionEntity extends UuidIdentity {
     @ManyToOne
     @JoinColumn(name = "scanner_id")
     ScannerEntity scanner;
+
     @ManyToOne
     @JoinColumn(name = "instrument_id")
     InstrumentEntity instrument;
+
     Double openPrice;
+
     Double lastPrice;
+
     Double closePrice;
+
     Boolean isOpen;
+
     Double profit;
 
     @Builder

@@ -86,8 +86,8 @@ public class JsonHttpClient {
             throw new RuntimeException(errors.toString());
         }
         if (response.statusCode() != 200) {
-            String message = objectMapper.readTree(response.body()).get("message").asText();
-            throw new RuntimeException(message);
+            JsonNode message = objectMapper.readTree(response.body()).get("message");
+            throw new RuntimeException(message != null ? message.asText() : "");
         }
     }
 }

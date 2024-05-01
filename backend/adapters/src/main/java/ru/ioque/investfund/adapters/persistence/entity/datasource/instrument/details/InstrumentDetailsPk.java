@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue;
+package ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 @ToString
@@ -15,8 +17,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class IntradayPk {
-    private Long number;
+public class InstrumentDetailsPk {
+    private UUID instrumentId;
 
-    private String ticker;
+    public static InstrumentDetailsPk from(UUID instrumentId) {
+        return new InstrumentDetailsPk(instrumentId);
+    }
 }

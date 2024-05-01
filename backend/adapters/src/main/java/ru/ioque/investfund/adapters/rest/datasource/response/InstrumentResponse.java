@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -35,8 +35,8 @@ public class InstrumentResponse implements Serializable {
         return InstrumentResponse.builder()
             .id(instrument.getId())
             .ticker(instrument.getTicker())
-            .name(instrument.getName())
-            .shortName(instrument.getShortName())
+            .name(instrument.getDetails().getName())
+            .shortName(instrument.getDetails().getShortName())
             .updatable(instrument.getUpdatable())
             .historyValues(instrument
                 .getHistory()
@@ -47,27 +47,27 @@ public class InstrumentResponse implements Serializable {
             .lastUpdate(
                 instrument
                     .getTradingState()
-                    .map(TradingStateEmbeddable::getDateTime)
+                    .map(TradingStateEntity::getDateTime)
                     .orElse(null)
             )
             .todayValue(instrument
                 .getTradingState()
-                .map(TradingStateEmbeddable::getTodayValue)
+                .map(TradingStateEntity::getTodayValue)
                 .orElse(null)
             )
             .todayLastPrice(instrument
                 .getTradingState()
-                .map(TradingStateEmbeddable::getTodayLastPrice)
+                .map(TradingStateEntity::getTodayLastPrice)
                 .orElse(null)
             )
             .todayFirstPrice(instrument
                 .getTradingState()
-                .map(TradingStateEmbeddable::getTodayFirstPrice)
+                .map(TradingStateEntity::getTodayFirstPrice)
                 .orElse(null)
             )
             .lastIntradayNumber(instrument
                 .getTradingState()
-                .map(TradingStateEmbeddable::getLastIntradayNumber)
+                .map(TradingStateEntity::getLastIntradayNumber)
                 .orElse(null))
             .build();
     }

@@ -14,6 +14,7 @@ import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.List;
 import java.util.UUID;
@@ -102,11 +103,11 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
 
         final List<InstrumentEntity> stocks = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
-            .type("stock")
+            .type(InstrumentType.STOCK)
             .build());
         final List<InstrumentEntity> indexes = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
-            .type("index")
+            .type(InstrumentType.INDEX)
             .build());
 
         assertEquals(1, stocks.size());
@@ -199,7 +200,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                     .builder()
                     .ticker(
                         "SBER")
-                    .type("stock")
+                    .type(InstrumentType.STOCK)
                     .build()
             );
         List<InstrumentEntity> imoex = psqlDatasourceQueryService
@@ -208,7 +209,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                     .builder()
                     .ticker(
                         "IMOEX")
-                    .type("index")
+                    .type(InstrumentType.INDEX)
                     .build()
             );
 
@@ -239,13 +240,13 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
             .ticker(
                 "SBER")
             .shortName("Сбербанк-п")
-            .type("stock")
+            .type(InstrumentType.STOCK)
             .build());
         List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .ticker(
                 "IMOEX")
-            .type("index")
+            .type(InstrumentType.INDEX)
             .build());
 
         assertEquals(1, sberp.size());
@@ -341,14 +342,14 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
             .pageNumber(0)
             .pageSize(4)
             .orderDirection("DESC")
-            .orderField("shortName")
+            .orderField("details.shortName")
             .build());
         final List<InstrumentEntity> instruments2 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
             .builder()
             .pageNumber(0)
             .pageSize(4)
             .orderDirection("ASC")
-            .orderField("shortName")
+            .orderField("details.shortName")
             .build());
 
         assertEquals("AFKS", instruments.get(0).getTicker());

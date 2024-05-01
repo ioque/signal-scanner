@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
@@ -29,7 +29,7 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
         final List<InstrumentEntity> instrumentEntities = jpaInstrumentRepository.findAllByIdIn(instrumentIds.stream().map(InstrumentId::getUuid).toList());
         return instrumentEntities
             .stream()
-            .map(instrument -> buildSnapshot(instrument))
+            .map(PsqlTradingSnapshotsRepository::buildSnapshot)
             .toList();
     }
 
@@ -46,10 +46,10 @@ public class PsqlTradingSnapshotsRepository implements TradingSnapshotsRepositor
         return TradingSnapshot.builder()
             .instrumentId(InstrumentId.from(instrument.getId()))
             .ticker(Ticker.from(instrument.getTicker()))
-            .dateTime(instrument.getTradingState().map(TradingStateEmbeddable::getDateTime).orElse(null))
-            .firstPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayFirstPrice).orElse(null))
-            .lastPrice(instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(null))
-            .value(instrument.getTradingState().map(TradingStateEmbeddable::getTodayValue).orElse(null))
+            .dateTime(instrument.getTradingState().map(TradingStateEntity::getDateTime).orElse(null))
+            .firstPrice(instrument.getTradingState().map(TradingStateEntity::getTodayFirstPrice).orElse(null))
+            .lastPrice(instrument.getTradingState().map(TradingStateEntity::getTodayLastPrice).orElse(null))
+            .value(instrument.getTradingState().map(TradingStateEntity::getTodayValue).orElse(null))
             .waPriceSeries(instrument.getHistory()
                 .stream()
                 .filter(row -> Objects.nonNull(row.getWaPrice()) && row.getWaPrice() > 0)

@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CurrencyPairDto extends InstrumentDto {
+    final InstrumentType type = InstrumentType.CURRENCY_PAIR;
     @Min(value = 1, message = "Размер лота должен быть положительным целым числом.")
     Integer lotSize;
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Валюта номинала должна быть строкой, состоящей из латинских букв или цифр.")
@@ -32,7 +33,6 @@ public class CurrencyPairDto extends InstrumentDto {
     @Override
     public InstrumentDetails toDetails() {
         return CurrencyPairDetails.builder()
-            .ticker(Ticker.from(getTicker()))
             .faceUnit(faceUnit)
             .lotSize(lotSize)
             .shortName(getShortName())

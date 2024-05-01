@@ -31,8 +31,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DatasourceEntity extends UuidIdentity {
     String name;
+
     String url;
+
     String description;
+
     @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "datasource", fetch = FetchType.LAZY)
     Set<InstrumentEntity> instruments;

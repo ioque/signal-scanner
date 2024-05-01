@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.IndexEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.IndexDetailsEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.StockDetailsEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
-import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
+import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -99,27 +99,47 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
 
     private List<InstrumentEntity> getInstruments() {
         return List.of(
-            StockEntity.builder()
-                .id(AFKS_ID)
-                .ticker("AFKS")
+            createAfks(),
+            createImoex()
+        );
+    }
+
+    private static InstrumentEntity createImoex() {
+        final InstrumentEntity instrument = InstrumentEntity.builder()
+            .id(IMOEX_ID)
+            .ticker("IMOEX")
+            .updatable(true)
+            .build();
+        instrument.setDetails(
+            IndexDetailsEntity.builder()
+                .instrument(instrument)
+                .shortName("IMOEX")
+                .name("IMOEX")
+                .annualHigh(1D)
+                .annualLow(1D)
+                .build()
+        );
+        return instrument;
+    }
+
+    private static InstrumentEntity createAfks() {
+        InstrumentEntity instrument = InstrumentEntity.builder()
+            .id(AFKS_ID)
+            .ticker("AFKS")
+            .updatable(true)
+            .build();
+        instrument.setDetails(
+            StockDetailsEntity.builder()
+                .instrument(instrument)
                 .shortName("AFKS")
                 .name("AFKS")
                 .lotSize(100)
                 .isin("isin")
                 .listLevel(1)
                 .regNumber("regNumber")
-                .updatable(true)
-                .build(),
-            IndexEntity.builder()
-                .id(IMOEX_ID)
-                .ticker("IMOEX")
-                .shortName("IMOEX")
-                .name("IMOEX")
-                .annualHigh(1D)
-                .annualLow(1D)
-                .updatable(true)
                 .build()
         );
+        return instrument;
     }
 
     private List<ScannerEntity> getSignalScanners() {

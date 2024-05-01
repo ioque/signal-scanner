@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.CurrencyPairEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.FuturesEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.IndexEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.CurrencyPairDetailsEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.FuturesDetailsEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.IndexDetailsEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.StockDetailsEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
@@ -23,7 +23,7 @@ import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -149,100 +149,39 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .name("EXCHANGE")
             .url("http://datasource.ru")
             .build();
-        TradingStateEmbeddable tradingState = new TradingStateEmbeddable(
-            LocalDate.now(),
-            LocalTime.now(),
-            10D,
-            10D,
-            10D,
-            1L
+        datasource.setInstruments(
+            Set.of(
+                createStock(datasource),
+                createIndex(datasource),
+                createFutures(datasource),
+                createCurrencyPair(datasource)
+            )
         );
-        StockEntity stock = StockEntity.builder()
+        return datasource;
+    }
+
+    private InstrumentEntity createCurrencyPair(DatasourceEntity datasource) {
+        InstrumentEntity currencyPair = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .datasource(datasource)
-            .ticker("TEST_STOCK")
-            .name("ТЕСТОВАЯ АКЦИЯ")
-            .shortName("АКЦИЯ")
-            .lotSize(1)
-            .isin("ISIN")
-            .listLevel(1)
-            .regNumber("REG_NUMBER")
-            .tradingState(tradingState)
-            .build();
-        IndexEntity index = IndexEntity.builder()
-            .id(UUID.randomUUID())
-            .datasource(datasource)
-            .name("ТЕСТОВЫЙ ИНДЕКС")
-            .shortName("ИНДЕКС")
-            .ticker("TEST_INDEX")
-            .annualHigh(1D)
-            .annualLow(1D)
-            .tradingState(tradingState)
-            .build();
-        FuturesEntity futures = FuturesEntity.builder()
-            .id(UUID.randomUUID())
-            .datasource(datasource)
-            .ticker("TEST_FUTURES")
-            .name("ТЕСТОВЫЙ ФЬЮЧЕРС")
-            .shortName("ФЬЮЧЕРС")
-            .assetCode("FR")
-            .initialMargin(1D)
-            .highLimit(1D)
-            .lotVolume(1)
-            .tradingState(tradingState)
-            .build();
-        CurrencyPairEntity currencyPair = CurrencyPairEntity.builder()
-            .id(UUID.randomUUID())
-            .datasource(datasource)
-            .name("ТЕСТОВАЯ ВАЛЮТНАЯ ПАРА")
             .ticker("TEST_CURRENCY_PAIR")
-            .lotSize(1)
-            .faceUnit("RUR")
-            .tradingState(tradingState)
             .build();
-        stock.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(stock)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
+        currencyPair.setDetails(
+            CurrencyPairDetailsEntity.builder()
+                .instrument(currencyPair)
+                .name("ТЕСТОВАЯ ВАЛЮТНАЯ ПАРА")
+                .lotSize(1)
+                .faceUnit("RUR")
+                .build()
         );
-        index.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(index)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
-        );
-        futures.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(futures)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
+        currencyPair.setTradingState(
+            new TradingStateEntity(
+                currencyPair,
+                LocalDateTime.now(),
+                10D,
+                10D,
+                10D,
+                1L
             )
         );
         currencyPair.setHistory(
@@ -260,7 +199,139 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                     .build()
             )
         );
-        datasource.setInstruments(Set.of(stock, index, futures, currencyPair));
-        return datasource;
+        return currencyPair;
+    }
+
+    private InstrumentEntity createFutures(DatasourceEntity datasource) {
+        InstrumentEntity futures = InstrumentEntity.builder()
+            .id(UUID.randomUUID())
+            .datasource(datasource)
+            .ticker("TEST_FUTURES")
+            .build();
+        futures.setDetails(
+            FuturesDetailsEntity.builder()
+                .instrument(futures)
+                .name("ТЕСТОВЫЙ ФЬЮЧЕРС")
+                .shortName("ФЬЮЧЕРС")
+                .assetCode("FR")
+                .initialMargin(1D)
+                .highLimit(1D)
+                .lotVolume(1)
+                .build()
+        );
+        futures.setTradingState(
+            new TradingStateEntity(
+                futures,
+                LocalDateTime.now(),
+                10D,
+                10D,
+                10D,
+                1L
+            )
+        );
+        futures.setHistory(
+            List.of(
+                AggregatedHistoryEntity
+                    .builder()
+                    .instrument(futures)
+                    .date(LocalDate.now())
+                    .highPrice(1D)
+                    .lowPrice(1D)
+                    .openPrice(1D)
+                    .closePrice(1D)
+                    .value(1D)
+                    .waPrice(1D)
+                    .build()
+            )
+        );
+        return futures;
+    }
+
+    private InstrumentEntity createIndex(DatasourceEntity datasource) {
+        InstrumentEntity index = InstrumentEntity.builder()
+            .id(UUID.randomUUID())
+            .datasource(datasource)
+            .ticker("TEST_INDEX")
+            .build();
+        index.setDetails(
+            IndexDetailsEntity.builder()
+                .instrument(index)
+                .name("ТЕСТОВЫЙ ИНДЕКС")
+                .shortName("ИНДЕКС")
+                .annualHigh(1D)
+                .annualLow(1D)
+                .build()
+        );
+        index.setTradingState(
+            new TradingStateEntity(
+                index,
+                LocalDateTime.now(),
+                10D,
+                10D,
+                10D,
+                1L
+            )
+        );
+        index.setHistory(
+            List.of(
+                AggregatedHistoryEntity
+                    .builder()
+                    .instrument(index)
+                    .date(LocalDate.now())
+                    .highPrice(1D)
+                    .lowPrice(1D)
+                    .openPrice(1D)
+                    .closePrice(1D)
+                    .value(1D)
+                    .waPrice(1D)
+                    .build()
+            )
+        );
+        return index;
+    }
+
+    private InstrumentEntity createStock(DatasourceEntity datasource) {
+        InstrumentEntity stock = InstrumentEntity.builder()
+            .id(UUID.randomUUID())
+            .datasource(datasource)
+            .ticker("TEST_STOCK")
+            .build();
+        stock.setDetails(
+            StockDetailsEntity.builder()
+                .instrument(stock)
+                .name("ТЕСТОВАЯ АКЦИЯ")
+                .shortName("АКЦИЯ")
+                .lotSize(1)
+                .isin("ISIN")
+                .listLevel(1)
+                .regNumber("REG_NUMBER")
+                .build()
+        );
+        stock.setTradingState(
+            new TradingStateEntity(
+                stock,
+                LocalDateTime.now(),
+                10D,
+                10D,
+                10D,
+                1L
+            )
+        );
+        stock.setHistory(
+            List.of(
+                AggregatedHistoryEntity
+                    .builder()
+                    .instrument(stock)
+                    .date(LocalDate.now())
+                    .highPrice(1D)
+                    .lowPrice(1D)
+                    .openPrice(1D)
+                    .closePrice(1D)
+                    .value(1D)
+                    .waPrice(1D)
+                    .build()
+            )
+        );
+        return stock;
     }
 }

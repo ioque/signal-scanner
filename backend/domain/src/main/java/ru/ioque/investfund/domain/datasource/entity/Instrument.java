@@ -26,33 +26,28 @@ import java.util.TreeSet;
 public class Instrument extends Domain<InstrumentId> {
     InstrumentDetails details;
     Boolean updatable;
+    final Ticker ticker;
+    final InstrumentType type;
     TradingState tradingState;
     final TreeSet<AggregatedHistory> aggregateHistories;
 
     @Builder
     public Instrument(
         InstrumentId id,
-        InstrumentDetails details,
+        Ticker ticker,
         Boolean updatable,
-        Long lastTradingNumber,
-        LocalDate lastHistoryDate,
+        InstrumentType type,
+        InstrumentDetails details,
         TradingState tradingState,
         TreeSet<AggregatedHistory> aggregateHistories
     ) {
         super(id);
-        this.details = details;
+        this.type = type;
+        this.ticker = ticker;
         this.updatable = updatable;
+        this.details = details;
         this.tradingState = tradingState;
         this.aggregateHistories = aggregateHistories == null ? new TreeSet<>() : aggregateHistories;
-    }
-
-    public static Instrument of(InstrumentId id, InstrumentDetails details) {
-        return Instrument.builder()
-            .id(id)
-            .details(details)
-            .updatable(false)
-            .aggregateHistories(new TreeSet<>())
-            .build();
     }
 
     public void updateDetails(InstrumentDetails details) {
@@ -94,14 +89,6 @@ public class Instrument extends Domain<InstrumentId> {
 
     public Optional<TradingState> getTradingState() {
         return Optional.ofNullable(tradingState);
-    }
-
-    public Ticker getTicker() {
-        return details.getTicker();
-    }
-
-    public InstrumentType getType() {
-        return details.getType();
     }
 
     public LocalDate historyRightBound(LocalDate now) {

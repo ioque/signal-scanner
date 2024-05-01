@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import ru.ioque.investfund.adapters.integration.InfrastructureTest;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.IndexEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.StockEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScannerEntity;
@@ -17,6 +16,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPosition
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.query.PsqlEmulatedPositionQueryService;
 import ru.ioque.investfund.adapters.query.filter.EmulatedPositionFilterParams;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.List;
 import java.util.Set;
@@ -182,47 +182,39 @@ public class PsqlEmulatedPositionQueryServiceTest extends InfrastructureTest {
 
     private void prepareState() {
         final UUID datasourceId = UUID.randomUUID();
-        final StockEntity tgkn = StockEntity.builder()
+        final InstrumentEntity tgkn = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("TGKN")
-            .name("TGKN")
-            .shortName("TGKN")
+            .type(InstrumentType.STOCK)
             .build();
-        final StockEntity tgkb = StockEntity.builder()
+        final InstrumentEntity tgkb = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("TGKB")
-            .name("TGKB")
-            .shortName("TGKB")
             .build();
-        final StockEntity tgkr = StockEntity.builder()
+        final InstrumentEntity tgkr = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("TGKR")
-            .name("TGKR")
-            .shortName("TGKR")
+            .type(InstrumentType.STOCK)
             .build();
-        final StockEntity tgkt = StockEntity.builder()
+        final InstrumentEntity tgkt = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("TGKT")
-            .name("TGKT")
-            .shortName("TGKT")
+            .type(InstrumentType.STOCK)
             .build();
-        final StockEntity sber = StockEntity.builder()
+        final InstrumentEntity sber = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("SBER")
-            .name("SBER")
-            .shortName("SBER")
+            .type(InstrumentType.STOCK)
             .build();
-        final StockEntity sberp = StockEntity.builder()
+        final InstrumentEntity sberp = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("SBERP")
-            .name("SBERP")
-            .shortName("SBERP")
+            .type(InstrumentType.STOCK)
             .build();
-        final IndexEntity imoex = IndexEntity.builder()
+        final InstrumentEntity imoex = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .ticker("IMOEX")
-            .name("IMOEX")
-            .shortName("IMOEX")
+            .type(InstrumentType.INDEX)
             .build();
         final AnomalyVolumeScannerEntity anomalyVolumeScanner = AnomalyVolumeScannerEntity.builder()
             .id(SCANNER_ID_1)

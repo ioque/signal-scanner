@@ -10,14 +10,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
 import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Isin;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StockDto extends InstrumentDto {
+    final InstrumentType type = InstrumentType.STOCK;
     @Min(value = 1, message = "Размер лота должен быть положительным целым числом.")
     Integer lotSize;
     @Pattern(regexp = "\\b([A-Z]{2})((?![A-Z]{10}\\b)[A-Z0-9]{10})\\b", message = "Неккоретное значение ISIN.")
@@ -46,7 +47,6 @@ public class StockDto extends InstrumentDto {
     @Override
     public InstrumentDetails toDetails() {
         return StockDetails.builder()
-            .ticker(Ticker.from(getTicker()))
             .shortName(getShortName())
             .name(getName())
             .lotSize(lotSize)

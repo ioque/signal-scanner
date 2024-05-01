@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -19,5 +20,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AggregatedHistoryPk {
     private LocalDate date;
-    private String ticker;
+    private UUID instrumentId;
+
+    public static AggregatedHistoryPk from(UUID instrumentId, LocalDate date) {
+        return new AggregatedHistoryPk(date, instrumentId);
+    }
 }

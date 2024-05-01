@@ -10,13 +10,14 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.domain.core.ApplicationLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.List;
+import java.util.TreeSet;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -43,9 +44,16 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
         datasourceProvider
             .fetchInstruments(datasource)
             .stream()
-            .map(InstrumentDto::toDetails)
             .distinct()
-            .map(details -> Instrument.of(instrumentRepository.nextId(), details))
+            .map(dto -> Instrument.builder()
+                .id(instrumentRepository.nextId())
+                .ticker(Ticker.from(dto.getTicker()))
+                .updatable(false)
+                .type(dto.getType())
+                .details(dto.toDetails())
+                .aggregateHistories(new TreeSet<>())
+                .build()
+            )
             .forEach(datasource::addInstrument);
         datasourceRepository.save(datasource);
         return List.of(new InfoLog(

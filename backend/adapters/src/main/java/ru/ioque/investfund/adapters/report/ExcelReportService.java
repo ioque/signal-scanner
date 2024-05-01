@@ -13,13 +13,11 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.TradingStateEmbeddable;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.application.adapters.ReportService;
 
 import java.io.File;
@@ -32,8 +30,6 @@ import java.text.DecimalFormat;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ExcelReportService implements ReportService {
     JpaEmulatedPositionRepository emulatedPositionRepository;
-    JpaInstrumentRepository instrumentRepository;
-    JpaScannerRepository jpaScannerRepository;
     DecimalFormat formatter = new DecimalFormat("#,###.##");
 
     @Override
@@ -61,7 +57,7 @@ public class ExcelReportService implements ReportService {
                     .stream()
                     .filter(value -> value.getId().getInstrumentId().equals(instrument.getId()))
                     .findFirst().orElseThrow();
-                double closePrice = instrument.getTradingState().map(TradingStateEmbeddable::getTodayLastPrice).orElse(emulatedPositionEntity.getLastPrice());
+                double closePrice = instrument.getTradingState().map(TradingStateEntity::getTodayLastPrice).orElse(emulatedPositionEntity.getLastPrice());
                 double profit = (closePrice/emulatedPositionEntity.getOpenPrice() - 1) * 100;
                 buildCell(row, 0, instrument.getTicker(), style);
                 buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);

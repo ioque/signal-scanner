@@ -7,12 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -33,5 +36,6 @@ public abstract class InstrumentDto {
     @NotBlank(message = "Не заполнено полное наименование инструмента.")
     String name;
 
+    public abstract InstrumentType getType();
     public abstract InstrumentDetails toDetails();
 }
