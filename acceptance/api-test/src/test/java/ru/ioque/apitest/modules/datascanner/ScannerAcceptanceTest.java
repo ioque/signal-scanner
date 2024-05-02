@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -300,7 +301,6 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
         assertEquals("TGKN", signal.getTicker());
-        assertTrue(signal.getIsOpen());
         assertTrue(signal.getIsBuy());
         final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
         assertEquals("TGKN", emulatedPosition.getTicker());
@@ -410,7 +410,6 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
         assertEquals("SBERP", signal.getTicker());
-        assertTrue(signal.getIsOpen());
         assertTrue(signal.getIsBuy());
         final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
         assertEquals("SBERP", emulatedPosition.getTicker());
@@ -562,7 +561,6 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
         assertEquals("ROSN", signal.getTicker());
-        assertTrue(signal.getIsOpen());
         assertTrue(signal.getIsBuy());
         final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
         assertEquals("ROSN", emulatedPosition.getTicker());
@@ -657,7 +655,6 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
         assertEquals("SIBN", signal.getTicker());
-        assertTrue(signal.getIsOpen());
         assertTrue(signal.getIsBuy());
         final EmulatedPositionResponse emulatedPosition = getOpenEmulatedPositions().get(0);
         assertEquals("SIBN", emulatedPosition.getTicker());
@@ -740,8 +737,10 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
         integrateTradingData(datasourceId);
         assertTrue(waitOpenEmulatedPositions(0));
-        assertEquals(2, getSignalsBy(getFirstScannerId()).size());
-        assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
+        assertEquals(1, getSignalsBy(getFirstScannerId()).size());
+        final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
+        assertEquals("TGKN", signal.getTicker());
+        assertFalse(signal.getIsBuy());
     }
 
     @Test

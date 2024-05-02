@@ -29,14 +29,16 @@ import java.util.UUID;
 public class SignalEntity {
     @EmbeddedId
     SignalPk id;
+
     @ManyToOne
     @MapsId("scannerId")
     @JoinColumn(name="scanner_id", nullable=false)
     ScannerEntity scanner;
-    LocalDateTime dateTime;
+
     Double price;
+    boolean isBuy;
     String summary;
-    boolean isOpen;
+    LocalDateTime dateTime;
 
     @Builder
     public SignalEntity(
@@ -45,37 +47,34 @@ public class SignalEntity {
         UUID instrumentId,
         Double price,
         String summary,
-        boolean isBuy,
-        boolean isOpen
+        boolean isBuy
     ) {
-        this.id = new SignalPk(scanner.getId(), instrumentId, isBuy);
-        this.scanner = scanner;
-        this.dateTime = dateTime;
+        this.id = new SignalPk(scanner.getId(), instrumentId);
+        this.isBuy = isBuy;
         this.price = price;
         this.summary = summary;
-        this.isOpen = isOpen;
+        this.scanner = scanner;
+        this.dateTime = dateTime;
     }
 
     public Signal toDomain() {
         return Signal.builder()
-            .watermark(getDateTime())
-            .instrumentId(InstrumentId.from(getId().getInstrumentId()))
+            .isBuy(isBuy)
             .price(getPrice())
             .summary(getSummary())
-            .isBuy(getId().isBuy)
-            .isOpen(isOpen())
+            .watermark(getDateTime())
+            .instrumentId(InstrumentId.from(getId().getInstrumentId()))
             .build();
     }
 
     public static SignalEntity from(ScannerEntity scanner, Signal signal) {
         return SignalEntity.builder()
             .scanner(scanner)
-            .dateTime(signal.getWatermark())
-            .price(signal.getPrice())
-            .instrumentId(signal.getInstrumentId().getUuid())
-            .summary(signal.getSummary())
             .isBuy(signal.isBuy())
-            .isOpen(signal.isOpen())
+            .price(signal.getPrice())
+            .summary(signal.getSummary())
+            .dateTime(signal.getWatermark())
+            .instrumentId(signal.getInstrumentId().getUuid())
             .build();
     }
 }

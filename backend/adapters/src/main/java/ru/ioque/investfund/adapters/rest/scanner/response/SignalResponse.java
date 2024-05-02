@@ -12,7 +12,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.Ins
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -23,15 +23,15 @@ import java.time.format.DateTimeFormatter;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalResponse implements Serializable {
     String ticker;
-    String dateTime;
     Boolean isBuy;
-    Boolean isOpen;
+    String summary;
+    LocalDateTime dateTime;
     public static SignalResponse from(SignalEntity signalEntity, InstrumentEntity instrument) {
         return SignalResponse.builder()
+            .isBuy(signalEntity.isBuy())
             .ticker(instrument.getTicker())
-            .isBuy(signalEntity.getId().isBuy())
-            .isOpen(signalEntity.isOpen())
-            .dateTime(signalEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+            .summary(signalEntity.getSummary())
+            .dateTime(signalEntity.getDateTime())
             .build();
     }
 }

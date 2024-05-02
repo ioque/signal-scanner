@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @ToString
@@ -15,7 +17,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IntradayResponse {
-    String dateTime;
-    Double price;
     Long number;
+    Double price;
+    String ticker;
+    LocalDateTime dateTime;
 }

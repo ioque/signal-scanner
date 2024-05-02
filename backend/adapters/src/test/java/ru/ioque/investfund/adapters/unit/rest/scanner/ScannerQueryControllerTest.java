@@ -158,7 +158,6 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
         scanner.getSignals().add(SignalEntity.builder()
                 .scanner(scanner)
                 .price(10D)
-                .isOpen(true)
                 .isBuy(true)
                 .summary("summary")
                 .scanner(scanner)

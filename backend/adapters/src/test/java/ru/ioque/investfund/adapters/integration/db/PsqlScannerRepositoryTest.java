@@ -54,7 +54,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Signal signal = Signal.builder()
             .price(10D)
             .instrumentId(instrumentIds.get(0))
-            .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
             .build();
@@ -88,7 +87,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Signal signal = Signal.builder()
             .price(10D)
             .instrumentId(instrumentIds.get(0))
-            .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
             .build();
@@ -122,7 +120,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Signal signal = Signal.builder()
             .price(10D)
             .instrumentId(instrumentIds.get(0))
-            .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
             .build();
@@ -156,7 +153,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Signal signal = Signal.builder()
             .price(10D)
             .instrumentId(instrumentIds.get(0))
-            .isOpen(true)
             .isBuy(true)
             .watermark(lastExecutionDateTime)
             .build();

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @ToString
@@ -16,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalResponse {
     String ticker;
-    String dateTime;
     Boolean isBuy;
-    Boolean isOpen;
+    String summary;
+    LocalDateTime dateTime;
 }

@@ -111,8 +111,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
-        assertEquals(3, scanner.getSignals().size());
-        assertEquals(2, scanner.getSignals().stream().filter(Signal::isOpen).count());
+        assertEquals(2, scanner.getSignals().size());
+        assertEquals(1, scanner.getSignals().stream().filter(Signal::isBuy).count());
     }
 
     @Test
@@ -139,10 +139,8 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
-        assertEquals(2, scanner.getSignals().size());
-        assertEquals(1, scanner.getSignals().stream().filter(Signal::isOpen).count());
+        assertEquals(1, scanner.getSignals().size());
         assertEquals(1, scanner.getSignals().stream().filter(Signal::isBuy).count());
-        assertEquals(1, scanner.getSignals().stream().filter(Signal::isSell).count());
     }
 
     private ScannerId getScannerId() {
@@ -182,7 +180,6 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 Signal.builder()
                     .price(10D)
                     .isBuy(true)
-                    .isOpen(true)
                     .instrumentId(getInstrumentIdBy(TGKB))
                     .summary("summary")
                     .watermark(today)
@@ -190,7 +187,6 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
                 Signal.builder()
                     .price(10D)
                     .isBuy(true)
-                    .isOpen(true)
                     .instrumentId(getInstrumentIdBy(TGKN))
                     .summary("summary")
                     .watermark(today)
@@ -259,7 +255,6 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
             Signal.builder()
                 .price(10D)
                 .isBuy(false)
-                .isOpen(true)
                 .instrumentId(getInstrumentIdBy(TGKN))
                 .summary("summary")
                 .watermark(today)

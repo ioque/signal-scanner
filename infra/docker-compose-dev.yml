@@ -98,13 +98,6 @@ services:
     depends_on:
       - opensearch
 
-  data-prepper:
-    build:
-      dockerfile: containers/data-prepper/Dockerfile
-    ports:
-      - "21890:21890"
-      - "21891:21891"
-
 volumes:
   signal-scanner-db:
   opensearch-data:

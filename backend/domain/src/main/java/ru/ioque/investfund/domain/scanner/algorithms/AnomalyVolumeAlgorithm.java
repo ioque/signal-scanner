@@ -76,7 +76,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
-                        .isOpen(true)
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)
@@ -88,7 +87,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
-                        .isOpen(true)
                         .isBuy(false)
                         .watermark(watermark)
                         .summary(summary)

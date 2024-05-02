@@ -46,7 +46,6 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                 scanningResult.addSignal(
                     Signal.builder()
                         .instrumentId(snapshot.getInstrumentId())
-                        .isOpen(true)
                         .isBuy(true)
                         .summary(summary)
                         .watermark(watermark)

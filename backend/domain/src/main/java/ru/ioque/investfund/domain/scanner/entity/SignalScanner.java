@@ -129,16 +129,19 @@ public class SignalScanner extends Domain<ScannerId> {
     }
 
     private boolean registerNewSignal(Signal newSignal) {
-        Optional<Signal> signalSameByTicker =
-            signals.stream().filter(signal -> signal.sameByTicker(newSignal)).findFirst();
+        final Optional<Signal> signalSameByTicker = signals
+            .stream()
+            .filter(signal -> signal.sameByTicker(newSignal))
+            .findFirst();
+
         if (signalSameByTicker.isPresent()) {
             if (signalSameByTicker.get().isBuy() && newSignal.isSell()) {
-                signalSameByTicker.get().close();
+                signals.remove(signalSameByTicker.get());
                 signals.add(newSignal);
                 return true;
             }
             if (signalSameByTicker.get().isSell() && newSignal.isBuy()) {
-                signalSameByTicker.get().close();
+                signals.remove(signalSameByTicker.get());
                 signals.add(newSignal);
                 return true;
             }

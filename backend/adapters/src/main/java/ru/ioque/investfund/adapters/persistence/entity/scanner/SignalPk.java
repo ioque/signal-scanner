@@ -20,5 +20,4 @@ import java.util.UUID;
 public class SignalPk {
     UUID scannerId;
     UUID instrumentId;
-    boolean isBuy;
 }

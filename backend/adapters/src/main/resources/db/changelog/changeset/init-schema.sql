@@ -146,7 +146,6 @@ alter table scanner_entity_instrument_ids
 create table if not exists signal
 (
     is_buy        boolean not null,
-    is_open       boolean not null,
     price         double precision,
     date_time     timestamp(6),
     instrument_id uuid    not null,

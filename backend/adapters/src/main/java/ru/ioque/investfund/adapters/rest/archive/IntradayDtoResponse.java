@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -19,15 +19,17 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class IntradayDtoResponse implements Serializable {
-    String dateTime;
-    Double price;
     Long number;
+    Double price;
+    String ticker;
+    LocalDateTime dateTime;
 
     public static IntradayDtoResponse from(IntradayValueEntity intradayValueEntity) {
         return IntradayDtoResponse.builder()
-            .number(intradayValueEntity.getId().getNumber())
-            .dateTime(intradayValueEntity.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
             .price(intradayValueEntity.getPrice())
+            .dateTime(intradayValueEntity.getDateTime())
+            .ticker(intradayValueEntity.getId().getTicker())
+            .number(intradayValueEntity.getId().getNumber())
             .build();
     }
 }
