@@ -6,14 +6,6 @@
     group: root
     mode: '0644'
 
-- name: Copy kafka-init.sh
-  copy:
-    src: ../../../../infra/containers/kafka/kafka-init.sh
-    dest: ~/investment-fund/
-    owner: root
-    group: root
-    mode: '777'
-
 - name: Start
   shell: |
     export ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }} 
