@@ -138,7 +138,7 @@ services:
 
   logstash:
     build:
-      dockerfile: containers/logstash/Dockerfile
+      dockerfile: infra/containers/logstash/Dockerfile
     image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
     container_name: logstash
     ports:
