@@ -8,10 +8,13 @@
 
 - name: Start
   shell: |
-    export BACKEND_DB_HOST={{ lookup('ansible.builtin.env', 'BACKEND_DB_HOST') }} 
+    export ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }} 
     export BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }} 
-    export FRONTEND_API_HOST={{ lookup('ansible.builtin.env', 'FRONTEND_API_HOST') }} 
+    export TELEGRAM_BOT_TOKEN={{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') }} 
+    export KAFKA_HOST={{ lookup('ansible.builtin.env', 'KAFKA_HOST') }} 
     export FRONTEND_API_HTTP_MODE={{ lookup('ansible.builtin.env', 'FRONTEND_API_HTTP_MODE') }} 
+    export BACKEND_DB_HOST={{ lookup('ansible.builtin.env', 'BACKEND_DB_HOST') }} 
+    export FRONTEND_API_HOST={{ lookup('ansible.builtin.env', 'FRONTEND_API_HOST') }} 
     export COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }} 
     docker compose down -v --rmi all
     docker compose up --wait
