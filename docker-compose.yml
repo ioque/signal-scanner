@@ -19,9 +19,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - signal-scanner-db
-      - kafka
-      - kafka-init-topics
+      signal-scanner-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      kafka-init-topics:
+        condition: service_completed_successfully
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       KAFKA_HOST: ${KAFKA_HOST}
@@ -35,7 +38,6 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
-    restart: on-failure
 
   frontend:
     container_name: frontend
@@ -53,7 +55,6 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
-    restart: on-failure
 
   datasource:
     container_name: datasource
@@ -68,7 +69,6 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
-    restart: on-failure
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.1
@@ -79,14 +79,14 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    restart: on-failure
 
   kafka:
     image: confluentinc/cp-server:7.4.1
     hostname: kafka
     container_name: kafka
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_started
     ports:
       - "9092:9092"
       - "9997:9997"
@@ -103,12 +103,12 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
-    restart: on-failure
 
   kafka-init-topics:
     image: confluentinc/cp-kafka:7.4.1
     depends_on:
-      - kafka
+      kafka:
+        condition: service_started
     entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
@@ -138,7 +138,6 @@ services:
       KAFKA_CLUSTERS_0_METRICS_PORT: 9997
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
-    restart: on-failure
 
   opensearch:
     image: opensearchproject/opensearch:2.1.0
@@ -160,17 +159,18 @@ services:
     ports:
       - "9200:9200"
       - "9600:9600"
-    restart: on-failure
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2.1.0
     container_name: opensearch-dashboards
+    depends_on:
+      opensearch:
+        condition: service_started
     ports:
       - "5601:5601"
     environment:
       I18N_LOCALE: "ru"
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
-    restart: on-failure
 
   logstash:
     build:
@@ -183,8 +183,8 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
-      - opensearch
-    restart: on-failure
+      opensearch:
+        condition: service_started
 #  moex-datasource:
 #    container_name: moex-datasource
 #    build:
