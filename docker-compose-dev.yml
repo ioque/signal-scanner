@@ -44,16 +44,23 @@ services:
 
   kafka-init-topics:
     image: confluentinc/cp-kafka:7.4.1
-    volumes:
-      - ./data/message.json:/data/message.json
     depends_on:
       - kafka
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-               cub kafka-ready -b kafka:29092 1 30 && \
-               kafka-topics --create --topic commands --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
-               kafka-topics --create --topic events --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
-               kafka-topics --create --topic signal-scanner-business-log --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
-               kafka-topics --create --topic signal-scanner-technical-log --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092'"
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:29092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic commands --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic events --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic signal-scanner-business-log --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic signal-scanner-technical-log --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:29092 --list
+      "
 
   kafbat-ui:
     container_name: kafbat-ui
