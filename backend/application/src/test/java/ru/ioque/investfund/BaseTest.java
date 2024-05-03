@@ -119,7 +119,7 @@ public class BaseTest {
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                historyValues.add(buildTradingResultWith(ticker, cursor).build());
+                historyValues.add(buildAggregatedHistory(ticker, cursor).build());
             }
             cursor = cursor.plusDays(1);
         }
@@ -276,7 +276,7 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto buildFuturesDealResultBy(
+    protected AggregatedHistoryDto buildAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -294,25 +294,7 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto buildDeltaResultBy(
-        String ticker,
-        String tradeDate,
-        double openPrice,
-        double closePrice,
-        double value
-    ) {
-        return AggregatedHistoryDto.builder()
-            .ticker(ticker)
-            .tradeDate(LocalDate.parse(tradeDate))
-            .openPrice(openPrice)
-            .closePrice(closePrice)
-            .highPrice(1D)
-            .lowPrice(1D)
-            .value(value)
-            .build();
-    }
-
-    protected AggregatedHistoryDto buildDealResultBy(
+    protected AggregatedHistoryDto buildAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -332,7 +314,7 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto.AggregatedHistoryDtoBuilder buildTradingResultWith(
+    protected AggregatedHistoryDto.AggregatedHistoryDtoBuilder buildAggregatedHistory(
         String ticker,
         LocalDate localDate
     ) {
@@ -530,7 +512,7 @@ public class BaseTest {
     }
 
     protected AggregatedHistoryDto buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
-        return buildDeltaResultBy(IMOEX, tradeDate, openPrice, closePrice, value);
+        return buildAggregatedHistory(IMOEX, tradeDate, openPrice, closePrice, value);
     }
 
     protected IntradayDataDto buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -548,7 +530,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(TGKN, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(TGKN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -566,7 +548,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(TGKB, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(TGKB, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -580,7 +562,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(TATN, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(TATN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -588,7 +570,7 @@ public class BaseTest {
     }
 
     protected AggregatedHistoryDto buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
-        return buildFuturesDealResultBy(BRF4, tradeDate, openPrice, closePrice, value);
+        return buildAggregatedHistory(BRF4, tradeDate, openPrice, closePrice, value);
     }
 
     protected IntradayDataDto buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -602,7 +584,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(LKOH, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(LKOH, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -616,7 +598,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(SIBN, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(SIBN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -630,7 +612,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(ROSN, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(ROSN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -644,7 +626,7 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(SBER, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(SBER, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
     protected IntradayDataDto buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
@@ -658,6 +640,6 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return buildDealResultBy(SBERP, tradeDate, openPrice, closePrice, waPrice, value);
+        return buildAggregatedHistory(SBERP, tradeDate, openPrice, closePrice, waPrice, value);
     }
 }

@@ -52,10 +52,10 @@ public class TradingDataIntegrationTest extends BaseTest {
             buildDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
         );
         initHistoryValues(
-            buildTradingResultWith(AFKS, LocalDate.parse("2023-12-08")).build(),
-            buildTradingResultWith(AFKS, LocalDate.parse("2023-12-09")).build(),
-            buildTradingResultWith(AFKS, LocalDate.parse("2023-12-10")).build(),
-            buildTradingResultWith(AFKS, LocalDate.parse("2023-12-11")).build()
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-08")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-09")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-10")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-11")).build()
         );
 
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
@@ -185,7 +185,7 @@ public class TradingDataIntegrationTest extends BaseTest {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initIntradayValues(buildDealWith(AFKS,1L, LocalDateTime.parse("2023-12-07T11:00:00")));
-        initHistoryValues(buildDealResultBy(AFKS, "2024-01-03", 10D, 10D, 10D, 10D));
+        initHistoryValues(buildAggregatedHistory(AFKS, "2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
 
@@ -205,7 +205,7 @@ public class TradingDataIntegrationTest extends BaseTest {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
-        initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         clearLogs();
@@ -214,8 +214,8 @@ public class TradingDataIntegrationTest extends BaseTest {
             buildBuyDealBy(AFKS, 1L,"11:00:00", 10D, 10D, 1)
         );
         initHistoryValues(
-            buildDealResultBy(AFKS, "2023-12-06", 10D, 10D, 10D, 10D),
-            buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D)
+            buildAggregatedHistory(AFKS, "2023-12-06", 10D, 10D, 10D, 10D),
+            buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D)
         );
 
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
@@ -266,7 +266,7 @@ public class TradingDataIntegrationTest extends BaseTest {
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
         initIntradayValues(buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1));
-        initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         TradingDataIntegrated event = findTradingDataIntegrated().orElseThrow();
@@ -282,7 +282,7 @@ public class TradingDataIntegrationTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
-        initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         initIntradayValues(
             buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1),
             buildBuyDealBy(AFKS, 2L, "10:00:00", 11D, 10D, 1),
@@ -301,7 +301,7 @@ public class TradingDataIntegrationTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
-        initHistoryValues(buildDealResultBy(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));

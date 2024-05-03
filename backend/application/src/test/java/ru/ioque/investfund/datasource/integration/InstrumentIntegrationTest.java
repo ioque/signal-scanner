@@ -10,6 +10,7 @@ import ru.ioque.investfund.application.modules.datasource.handler.integration.In
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.StockDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,16 @@ public class InstrumentIntegrationTest extends BaseTest {
         initInstrumentDetails(
             imoex(),
             afks()
+        );
+        initHistoryValues(
+            buildAggregatedHistory(IMOEX, LocalDate.parse("2023-12-08")).build(),
+            buildAggregatedHistory(IMOEX, LocalDate.parse("2023-12-09")).build(),
+            buildAggregatedHistory(IMOEX, LocalDate.parse("2023-12-10")).build(),
+            buildAggregatedHistory(IMOEX, LocalDate.parse("2023-12-11")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-08")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-09")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-10")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-11")).build()
         );
 
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
