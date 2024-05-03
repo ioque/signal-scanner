@@ -1,0 +1,4 @@
+docker compose exec kafka kafka-topics.sh --create --if-not-exists --topic commands --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
+docker compose exec kafka kafka-topics.sh --create --if-not-exists --topic events --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
+docker compose exec kafka kafka-topics.sh --create --if-not-exists --topic signal-scanner-business-log --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
+docker compose exec kafka kafka-topics.sh --create --if-not-exists --topic signal-scanner-technical-log --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092

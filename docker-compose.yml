@@ -18,6 +18,9 @@ services:
     ports:
       - "8080:8080"
     environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      KAFKA_HOST: ${KAFKA_HOST:-localhost}
+      ROOT_LOG_LEVEL: ${ROOT_LOG_LEVEL:-INFO}
       DB_HOST: ${BACKEND_DB_HOST:-localhost}
       DB_PORT: "5432"
       SPRING_PROFILES_ACTIVE: ${BACKEND_ENV:-prod}
