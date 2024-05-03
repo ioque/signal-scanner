@@ -1,14 +1,14 @@
 package ru.ioque.investfund.adapters.query;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
 
 import java.util.List;
@@ -37,23 +37,29 @@ public class PsqlDatasourceQueryService {
             .orElseThrow(notFoundException(instrumentNotFoundMsg()));
     }
 
-    public List<InstrumentEntity> findInstruments(InstrumentFilterParams filterParams) {
-        if (filterParams.specificationIsEmpty() && filterParams.pageRequestIsEmpty()) return getAllInstruments();
-        if (filterParams.specificationIsEmpty()) return findInstruments(filterParams.pageRequest());
-        if (filterParams.pageRequestIsEmpty()) return findInstruments(filterParams.specification());
-        return jpaInstrumentRepository.findAll(filterParams.specification(), filterParams.pageRequest()).toList();
-    }
-
-    public List<InstrumentEntity> findInstruments(Specification<InstrumentEntity> specification) {
-        return jpaInstrumentRepository.findAll(specification);
-    }
-
-    public List<InstrumentEntity> findInstruments(PageRequest pageRequest) {
-        return jpaInstrumentRepository.findAll(pageRequest).toList();
-    }
-
-    public List<InstrumentEntity> getAllInstruments() {
-        return jpaInstrumentRepository.findAll();
+    public Pagination<InstrumentEntity> getPagination(InstrumentFilterParams filterParams) {
+        if (filterParams.pageRequestIsEmpty()) {
+            return new Pagination<>(0,0, 0, List.of());
+        }
+        if (filterParams.specificationIsEmpty()) {
+            final Page<InstrumentEntity> result = jpaInstrumentRepository.findAll(filterParams.pageRequest());
+            return new Pagination<>(
+                filterParams.pageRequest().getPageNumber(),
+                result.getTotalPages(),
+                result.getTotalElements(),
+                result.getContent()
+            );
+        }
+        final Page<InstrumentEntity> result = jpaInstrumentRepository.findAll(
+            filterParams.specification(),
+            filterParams.pageRequest()
+        );
+        return new Pagination<>(
+            filterParams.pageRequest().getPageNumber(),
+            result.getTotalPages(),
+            result.getTotalElements(),
+            result.getContent()
+        );
     }
 
     private String instrumentNotFoundMsg() {

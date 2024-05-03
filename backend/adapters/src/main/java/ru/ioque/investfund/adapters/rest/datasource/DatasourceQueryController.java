@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -42,7 +43,7 @@ public class DatasourceQueryController {
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument")
-    public List<InstrumentInListResponse> findInstruments(
+    public Pagination<InstrumentInListResponse> findInstruments(
         @PathVariable UUID datasourceId,
         @RequestParam(required = false) String ticker,
         @RequestParam(required = false) InstrumentType type,
@@ -53,7 +54,7 @@ public class DatasourceQueryController {
         @RequestParam(defaultValue = "ticker") String orderField
     ) {
         return psqlDatasourceQueryService
-            .findInstruments(
+            .getPagination(
                 InstrumentFilterParams.builder()
                     .datasourceId(datasourceId)
                     .ticker(ticker)
@@ -65,7 +66,6 @@ public class DatasourceQueryController {
                     .orderField(orderField)
                     .build()
             )
-            .stream()
-            .map(InstrumentInListResponse::from).toList();
+            .to(InstrumentInListResponse::from);
     }
 }

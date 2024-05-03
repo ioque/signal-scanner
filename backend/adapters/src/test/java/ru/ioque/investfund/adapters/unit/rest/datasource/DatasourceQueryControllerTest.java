@@ -16,6 +16,7 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.det
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
@@ -83,7 +84,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         List<InstrumentEntity> instrumentInLists = datasource().getInstruments().stream().toList();
 
         Mockito
-            .when(psqlDatasourceQueryService.findInstruments(new InstrumentFilterParams(
+            .when(psqlDatasourceQueryService.getPagination(new InstrumentFilterParams(
                 DATASOURCE_ID,
                 null,
                 null,
@@ -93,7 +94,14 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 "ASC",
                 "ticker"
             )))
-            .thenReturn(instrumentInLists);
+            .thenReturn(
+                new Pagination<>(
+                    0,
+                    1,
+                    4,
+                    instrumentInLists
+                )
+            );
 
         mvc
             .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID + "/instrument"))
@@ -103,10 +111,15 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                     .json(
                         objectMapper
                             .writeValueAsString(
-                                instrumentInLists
-                                    .stream()
-                                    .map(InstrumentInListResponse::from)
-                                    .toList()
+                                new Pagination<>(
+                                    0,
+                                    1,
+                                    4,
+                                    instrumentInLists
+                                        .stream()
+                                        .map(InstrumentInListResponse::from)
+                                        .toList()
+                                )
                             )
                     )
             );

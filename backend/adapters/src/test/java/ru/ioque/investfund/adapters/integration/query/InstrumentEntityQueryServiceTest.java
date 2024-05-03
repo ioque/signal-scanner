@@ -11,6 +11,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -58,9 +59,21 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         """)
     void testCase1() {
         saveExchangeWithStocks();
-        var list = psqlDatasourceQueryService.getAllInstruments();
-        assertEquals(2, list.size());
-        assertTrue(list.stream().map(InstrumentEntity::getTicker).toList().containsAll(List.of("AFKS", "SBER")));
+        final Pagination<InstrumentEntity> pagination = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(Integer.MAX_VALUE)
+                .build()
+            );
+        assertEquals(2, pagination.getTotalElements());
+        assertTrue(pagination
+            .getElements()
+            .stream()
+            .map(InstrumentEntity::getTicker)
+            .toList()
+            .containsAll(List.of("AFKS", "SBER"))
+        );
     }
 
     @Test
@@ -101,17 +114,26 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final List<InstrumentEntity> stocks = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .type(InstrumentType.STOCK)
-            .build());
-        final List<InstrumentEntity> indexes = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .type(InstrumentType.INDEX)
-            .build());
-
-        assertEquals(1, stocks.size());
-        assertEquals(1, indexes.size());
+        final Pagination<InstrumentEntity> stocks = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .type(InstrumentType.STOCK)
+                .build()
+            );
+        final Pagination<InstrumentEntity> indexes = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .type(InstrumentType.INDEX)
+                .build()
+            );
+        assertEquals(1, stocks.getTotalElements());
+        assertEquals(1, stocks.getElements().size());
+        assertEquals(1, indexes.getTotalElements());
+        assertEquals(1, indexes.getElements().size());
     }
 
     @Test
@@ -133,22 +155,39 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final List<InstrumentEntity> afks = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker("AFKS")
-            .build());
-        final List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker("IMOEX")
-            .build());
-        final List<InstrumentEntity> sbers = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker("SBER")
-            .build());
+        final Pagination<InstrumentEntity> afks = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("AFKS")
+                .build()
+            );
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("IMOEX")
+                .build()
+            );
+        final Pagination<InstrumentEntity> sbers = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("SBER")
+                .build()
+            );
 
-        assertEquals(1, afks.size());
-        assertEquals(1, imoex.size());
-        assertEquals(2, sbers.size());
+        assertEquals(1, afks.getTotalElements());
+        assertEquals(1, afks.getElements().size());
+
+        assertEquals(1, imoex.getTotalElements());
+        assertEquals(1, imoex.getElements().size());
+
+        assertEquals(2, sbers.getTotalElements());
+        assertEquals(1, sbers.getElements().size());
     }
 
     @Test
@@ -168,12 +207,17 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> instruments = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .shortName("Сбер")
-            .build());
+        final Pagination<InstrumentEntity> instruments = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(2)
+                .shortName("Сбер")
+                .build()
+            );
 
-        assertEquals(2, instruments.size());
+        assertEquals(2, instruments.getTotalElements());
+        assertEquals(2, instruments.getElements().size());
     }
 
     @Test
@@ -194,27 +238,30 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sber = psqlDatasourceQueryService
-            .findInstruments(
-                InstrumentFilterParams
-                    .builder()
-                    .ticker(
-                        "SBER")
-                    .type(InstrumentType.STOCK)
-                    .build()
+        final Pagination<InstrumentEntity> sber = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("SBER")
+                .type(InstrumentType.STOCK)
+                .build()
             );
-        List<InstrumentEntity> imoex = psqlDatasourceQueryService
-            .findInstruments(
-                InstrumentFilterParams
-                    .builder()
-                    .ticker(
-                        "IMOEX")
-                    .type(InstrumentType.INDEX)
-                    .build()
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("IMOEX")
+                .type(InstrumentType.INDEX)
+                .build()
             );
 
-        assertEquals(1, sber.size());
-        assertEquals(1, imoex.size());
+        assertEquals(1, sber.getTotalElements());
+        assertEquals(1, sber.getElements().size());
+
+        assertEquals(1, imoex.getTotalElements());
+        assertEquals(1, imoex.getElements().size());
     }
 
     @Test
@@ -235,22 +282,33 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        List<InstrumentEntity> sberp = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker(
-                "SBER")
-            .shortName("Сбербанк-п")
-            .type(InstrumentType.STOCK)
-            .build());
-        List<InstrumentEntity> imoex = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .ticker(
-                "IMOEX")
-            .type(InstrumentType.INDEX)
-            .build());
+        final Pagination<InstrumentEntity> sberp = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("SBER")
+                .shortName("Сбербанк-п")
+                .type(InstrumentType.STOCK)
+                .build()
+            );
 
-        assertEquals(1, sberp.size());
-        assertEquals(1, imoex.size());
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .ticker("IMOEX")
+                .shortName("Индекс")
+                .type(InstrumentType.INDEX)
+                .build()
+            );
+
+        assertEquals(1, sberp.getTotalElements());
+        assertEquals(1, sberp.getElements().size());
+
+        assertEquals(1, imoex.getTotalElements());
+        assertEquals(1, imoex.getElements().size());
     }
 
     @Test
@@ -271,51 +329,58 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
             )
         );
         datasourceRepository.save(datasource);
-        final List<InstrumentEntity> instruments1 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(0)
-            .pageSize(1)
-            .orderField("ticker")
-            .orderDirection("ASC")
-            .build());
-        final List<InstrumentEntity> instruments2 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(1)
-            .pageSize(1)
-            .orderField("ticker")
-            .orderDirection("ASC")
-            .build());
-        final List<InstrumentEntity> instruments3 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(1)
-            .pageSize(2)
-            .orderField("ticker")
-            .orderDirection("ASC")
-            .build());
-        final List<InstrumentEntity> instruments4 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(0)
-            .pageSize(3)
-            .orderField("ticker")
-            .orderDirection("ASC")
-            .build());
+        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(1)
+                .orderField("ticker")
+                .orderDirection("ASC")
+                .build()
+            );
+        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(1)
+                .pageSize(1)
+                .orderField("ticker")
+                .orderDirection("ASC")
+                .build()
+            );
+        final Pagination<InstrumentEntity> instruments3 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(1)
+                .pageSize(2)
+                .orderField("ticker")
+                .orderDirection("ASC")
+                .build()
+            );
+        final Pagination<InstrumentEntity> instruments4 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(3)
+                .orderField("ticker")
+                .orderDirection("ASC")
+                .build()
+            );
 
-        assertEquals(1, instruments1.size());
-        assertEquals(1, instruments2.size());
-        assertEquals(2, instruments3.size());
-        assertEquals(3, instruments4.size());
-        assertTrue(instruments1.stream().map(InstrumentEntity::getTicker).toList().contains("AFKS"));
-        assertTrue(instruments2.stream().map(InstrumentEntity::getTicker).toList().contains("IMOEX"));
-        assertTrue(instruments3
-            .stream()
-            .map(InstrumentEntity::getTicker)
-            .toList()
-            .containsAll(List.of("SBER", "SBERP")));
-        assertTrue(instruments4
-            .stream()
-            .map(InstrumentEntity::getTicker)
-            .toList()
-            .containsAll(List.of("AFKS", "IMOEX", "SBER")));
+        assertEquals(4, instruments1.getTotalElements());
+        assertEquals(4, instruments1.getTotalPages());
+        assertEquals(1, instruments1.getElements().size());
+
+        assertEquals(4, instruments2.getTotalElements());
+        assertEquals(4, instruments2.getTotalPages());
+        assertEquals(1, instruments2.getElements().size());
+
+        assertEquals(4, instruments3.getTotalElements());
+        assertEquals(2, instruments3.getTotalPages());
+        assertEquals(2, instruments3.getElements().size());
+
+        assertEquals(4, instruments4.getTotalElements());
+        assertEquals(2, instruments4.getTotalPages());
+        assertEquals(3, instruments4.getElements().size());
     }
 
     @Test
@@ -337,29 +402,33 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final List<InstrumentEntity> instruments = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(0)
-            .pageSize(4)
-            .orderDirection("DESC")
-            .orderField("details.shortName")
-            .build());
-        final List<InstrumentEntity> instruments2 = psqlDatasourceQueryService.findInstruments(InstrumentFilterParams
-            .builder()
-            .pageNumber(0)
-            .pageSize(4)
-            .orderDirection("ASC")
-            .orderField("details.shortName")
-            .build());
+        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(4)
+                .orderDirection("DESC")
+                .orderField("details.shortName")
+                .build()
+            );
+        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceQueryService
+            .getPagination(InstrumentFilterParams
+                .builder()
+                .pageNumber(0)
+                .pageSize(4)
+                .orderDirection("ASC")
+                .orderField("details.shortName")
+                .build()
+            );
 
-        assertEquals("AFKS", instruments.get(0).getTicker());
-        assertEquals("SBERP", instruments.get(1).getTicker());
-        assertEquals("SBER", instruments.get(2).getTicker());
-        assertEquals("IMOEX", instruments.get(3).getTicker());
+        assertEquals("AFKS", instruments1.getElements().get(0).getTicker());
+        assertEquals("SBERP", instruments1.getElements().get(1).getTicker());
+        assertEquals("SBER", instruments1.getElements().get(2).getTicker());
+        assertEquals("IMOEX", instruments1.getElements().get(3).getTicker());
 
-        assertEquals("IMOEX", instruments2.get(0).getTicker());
-        assertEquals("SBER", instruments2.get(1).getTicker());
-        assertEquals("SBERP", instruments2.get(2).getTicker());
-        assertEquals("AFKS", instruments2.get(3).getTicker());
+        assertEquals("IMOEX", instruments2.getElements().get(0).getTicker());
+        assertEquals("SBER", instruments2.getElements().get(1).getTicker());
+        assertEquals("SBERP", instruments2.getElements().get(2).getTicker());
+        assertEquals("AFKS", instruments2.getElements().get(3).getTicker());
     }
 }
