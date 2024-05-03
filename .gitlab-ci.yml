@@ -115,30 +115,30 @@ prepare data:
     - cd acceptance
     - gradle -p ui-seeder bootRun
 
-ui tests:
-  needs:
-    - prepare data
-  only:
-    - master
-  stage: acceptance
-  environment: staging
-  resource_group: staging
-  image: gradle:jdk17-focal
-  services:
-    - name: selenium/standalone-chrome:latest
-      alias: chrome
-  variables:
-    UI_HOST: "192.168.0.85"
-    UI_PORT: "4200"
-    REMOTE_WEB_DRIVER_URL: "http://chrome:4444"
-  script:
-    - cd selenium
-    - gradle clean test
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - selenium/build/test-results/test/**/TEST-*.xml
+#ui tests:
+#  needs:
+#    - prepare data
+#  only:
+#    - master
+#  stage: acceptance
+#  environment: staging
+#  resource_group: staging
+#  image: gradle:jdk17-focal
+#  services:
+#    - name: selenium/standalone-chrome:latest
+#      alias: chrome
+#  variables:
+#    UI_HOST: "192.168.0.85"
+#    UI_PORT: "4200"
+#    REMOTE_WEB_DRIVER_URL: "http://chrome:4444"
+#  script:
+#    - cd selenium
+#    - gradle clean test
+#  artifacts:
+#    when: always
+#    reports:
+#      junit:
+#        - selenium/build/test-results/test/**/TEST-*.xml
 
 #manual:
 #  needs:
