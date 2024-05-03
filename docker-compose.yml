@@ -32,11 +32,11 @@ services:
       timeout: 10s
     depends_on:
       signal-scanner-db:
-        condition: service_started
+        condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
       kafka-init-topics:
-        condition: service_started
+        condition: service_healthy
 
   frontend:
     container_name: frontend
@@ -101,7 +101,7 @@ services:
       KAFKA_JMX_HOSTNAME: kafka
     depends_on:
       zookeeper:
-        condition: service_started
+        condition: service_healthy
 
   kafka-init-topics:
     image: confluentinc/cp-kafka:7.4.1
@@ -137,7 +137,7 @@ services:
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
 
   opensearch:
     image: opensearchproject/opensearch:2.1.0
@@ -170,7 +170,7 @@ services:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
     depends_on:
       opensearch:
-        condition: service_started
+        condition: service_healthy
 
   logstash:
     build:
@@ -184,7 +184,7 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
       opensearch:
-        condition: service_started
+        condition: service_healthy
 #  moex-datasource:
 #    container_name: moex-datasource
 #    build:
