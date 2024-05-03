@@ -1,5 +1,12 @@
 import {Datasource, Instrument, InstrumentInList} from "../entities/Datasource";
-import {GetRequest} from "../../../share/api/restClient";
+import {GetRequest, QueryParam} from "../../../share/api/restClient";
+
+export type Pagination<T> = {
+    page: number;
+    totalPages: number;
+    totalElements: number;
+    elements: Array<T>
+}
 
 export const fetchDatasourceList = async (): Promise<Array<Datasource>> => {
     const response = await GetRequest("datasource", []);
@@ -11,8 +18,8 @@ export const fetchDatasource = async (datasourceId: string): Promise<Datasource>
     return await response.json();
 }
 
-export const fetchInstrumentList = async (datasourceId: string): Promise<Array<InstrumentInList>> => {
-    const response = await GetRequest("datasource/" + datasourceId + "/instrument", []);
+export const fetchInstrumentList = async (datasourceId: string, params: Array<QueryParam>): Promise<Pagination<InstrumentInList>> => {
+    const response = await GetRequest("datasource/" + datasourceId + "/instrument", params);
     return await response.json();
 }
 

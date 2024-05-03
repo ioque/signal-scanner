@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Datasource} from "../../entities/Datasource";
 import {fetchDatasourceList} from "../../api/dataSourceRestClient";
-import Table from "react-bootstrap/Table";
+import {Button, CardActions, CardContent, Card, Typography} from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 export default function DatasourceList() {
     const navigate = useNavigate();
@@ -17,25 +18,29 @@ export default function DatasourceList() {
     }, []);
 
     const listItems = datasourceList.map(datasource =>
-        <tr key={datasource.id} onClick={() => navigateToInstrumentList(datasource.id)}>
-            <td>{datasource.id}</td>
-            <td>{datasource.name}</td>
-            <td>{datasource.url}</td>
-        </tr>
+        <Grid item xs={8} key={datasource.id}>
+            <Card>
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        {datasource.name}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        Адрес шлюза: {datasource.url}
+                    </Typography>
+                    <Typography variant="body2">
+                        {datasource.description}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small" onClick={() => navigateToInstrumentList(datasource.id)}>Список инструментов</Button>
+                </CardActions>
+            </Card>
+        </Grid>
     );
 
     return (
-        <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>URL</th>
-            </tr>
-            </thead>
-            <tbody>
+        <Grid container spacing={2}>
             {listItems}
-            </tbody>
-        </Table>
+        </Grid>
     );
 }

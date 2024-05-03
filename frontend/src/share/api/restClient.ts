@@ -1,6 +1,6 @@
 export type QueryParam = {
     name: string;
-    value: string;
+    value: string | number;
 }
 
 const paramsToString = (params: Array<QueryParam>) => {
