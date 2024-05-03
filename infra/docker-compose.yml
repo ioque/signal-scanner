@@ -26,10 +26,8 @@ services:
       timeout: 10s
     depends_on:
       signal-scanner-db:
-        condition: service_healthy
+        condition: service_started
       kafka:
-        condition: service_healthy
-      kafka-init-topics:
         condition: service_healthy
 
   frontend:
@@ -89,15 +87,19 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      start_period: 15s
+      interval: 5s
+      timeout: 10s
+      retries: 10
     depends_on:
-      zookeeper:
-        condition: service_healthy
+      - zookeeper
 
   kafka-init-topics:
     image: confluentinc/cp-kafka:7.4.1
     depends_on:
-      kafka:
-        condition: service_started
+      - kafka
     entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
@@ -126,8 +128,7 @@ services:
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
 
   opensearch:
     image: opensearchproject/opensearch:2.1.0
@@ -159,8 +160,7 @@ services:
       I18N_LOCALE: "ru"
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
     depends_on:
-      opensearch:
-        condition: service_healthy
+      - opensearch
 
   logstash:
     image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
@@ -171,8 +171,7 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
-      opensearch:
-        condition: service_healthy
+      - opensearch
 
 #  moex-datasource:
 #    container_name: moex-datasource
