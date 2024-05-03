@@ -19,7 +19,7 @@ import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
-import ru.ioque.investfund.application.api.command.CommandBus;
+import ru.ioque.investfund.application.modules.api.CommandBus;
 
 import static org.mockito.Mockito.mock;
 

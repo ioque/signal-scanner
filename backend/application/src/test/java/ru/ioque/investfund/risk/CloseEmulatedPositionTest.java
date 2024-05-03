@@ -2,8 +2,8 @@ package ru.ioque.investfund.risk;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
-import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;

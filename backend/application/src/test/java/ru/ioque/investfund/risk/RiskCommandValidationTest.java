@@ -3,9 +3,9 @@ package ru.ioque.investfund.risk;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.risk.command.CloseEmulatedPosition;
-import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
-import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

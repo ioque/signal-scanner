@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.EventPublisher;
-import ru.ioque.investfund.application.api.event.IntegrationEvent;
+import ru.ioque.investfund.application.integration.IntegrationEvent;
 
 @Component
 @AllArgsConstructor

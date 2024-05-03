@@ -3,8 +3,8 @@ package ru.ioque.investfund.datasource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

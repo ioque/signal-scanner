@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
-import ru.ioque.investfund.application.telegrambot.command.PublishDailyReport;
-import ru.ioque.investfund.application.telegrambot.command.PublishHourlyReport;
-import ru.ioque.investfund.application.telegrambot.command.Subscribe;
-import ru.ioque.investfund.application.telegrambot.command.Unsubscribe;
+import ru.ioque.investfund.application.modules.telegrambot.command.PublishDailyReport;
+import ru.ioque.investfund.application.modules.telegrambot.command.PublishHourlyReport;
+import ru.ioque.investfund.application.modules.telegrambot.command.Subscribe;
+import ru.ioque.investfund.application.modules.telegrambot.command.Unsubscribe;
 
 @Slf4j
 @Component

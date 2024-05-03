@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
 
 import java.util.List;
 import java.util.UUID;

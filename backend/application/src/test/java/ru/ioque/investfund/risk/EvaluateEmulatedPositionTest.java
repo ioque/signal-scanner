@@ -2,8 +2,8 @@ package ru.ioque.investfund.risk;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.risk.command.EvaluateEmulatedPosition;
-import ru.ioque.investfund.application.risk.command.OpenEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
+import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 
 import java.util.List;

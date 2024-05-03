@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.application.datasource.event.TradingDataIntegrated;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasourceCommand;
+import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 

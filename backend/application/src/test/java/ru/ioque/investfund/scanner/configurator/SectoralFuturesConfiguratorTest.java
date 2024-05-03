@@ -2,8 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 

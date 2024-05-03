@@ -1,19 +1,17 @@
 package ru.ioque.investfund.fixture;
 
 import lombok.Getter;
-import ru.ioque.investfund.application.datasource.integration.dto.history.AggregatedHistoryDto;
-import ru.ioque.investfund.application.datasource.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.datasource.integration.dto.intraday.IntradayDataDto;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.InstrumentDto;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.IntradayDataDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class DatasourceStorage {
-    @Getter
     private final List<IntradayDataDto> intradayDataDtos = new ArrayList<>();
-    @Getter
     private final List<AggregatedHistoryDto> aggregatedHistoryDtos = new ArrayList<>();
-    @Getter
     private final List<InstrumentDto> instrumentDtos = new ArrayList<>();
 
     public List<AggregatedHistoryDto> getHistoryDataBy(String ticker) {

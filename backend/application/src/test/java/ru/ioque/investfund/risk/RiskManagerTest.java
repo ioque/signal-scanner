@@ -2,9 +2,9 @@ package ru.ioque.investfund.risk;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;

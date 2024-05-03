@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.datasource.integration.IntegrationValidationException;
-import ru.ioque.investfund.application.datasource.integration.dto.instrument.StockDto;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.IntegrationValidationException;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.StockDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import java.util.List;
