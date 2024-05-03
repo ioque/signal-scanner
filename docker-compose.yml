@@ -20,6 +20,7 @@ services:
     depends_on:
       - signal-scanner-db
       - kafka
+      - kafka-init-topics
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       KAFKA_HOST: ${KAFKA_HOST:-localhost}
@@ -97,6 +98,17 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
+
+  kafka-init-topics:
+    image: confluentinc/cp-kafka:7.4.1
+    depends_on:
+      - kafka
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+               cub kafka-ready -b kafka:29092 1 30 && \
+               kafka-topics --create --topic commands --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
+               kafka-topics --create --topic events --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
+               kafka-topics --create --topic signal-scanner-business-log --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092 \
+               kafka-topics --create --topic signal-scanner-technical-log --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server kafka:29092'"
 
   kafbat-ui:
     container_name: kafbat-ui

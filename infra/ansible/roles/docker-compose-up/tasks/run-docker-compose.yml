@@ -26,7 +26,6 @@
     export COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }} 
     docker compose down -v --rmi all
     docker compose up --wait
-    ./kafka-init.sh
     sleep 5
     exit 0
   args:
