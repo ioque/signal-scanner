@@ -8,18 +8,17 @@
 
 - name: Start
   shell: |
-    rm .env
-    touch .env
-    echo "ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }}" >> .env
-    echo "BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }}" >> .env
-    echo "TELEGRAM_BOT_TOKEN={{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') }}" >> .env
-    echo "KAFKA_HOST={{ lookup('ansible.builtin.env', 'KAFKA_HOST') }}" >> .env
-    echo "FRONTEND_API_HTTP_MODE={{ lookup('ansible.builtin.env', 'FRONTEND_API_HTTP_MODE') }}" >> .env
-    echo "BACKEND_DB_HOST={{ lookup('ansible.builtin.env', 'BACKEND_DB_HOST') }}" >> .env
-    echo "FRONTEND_API_HOST={{ lookup('ansible.builtin.env', 'FRONTEND_API_HOST') }}" >> .env
-    echo "COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }}" >> .env
+    export ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }} 
+    export BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }} 
+    export TELEGRAM_BOT_TOKEN={{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') }} 
+    export KAFKA_HOST={{ lookup('ansible.builtin.env', 'KAFKA_HOST') }} 
+    export FRONTEND_API_HTTP_MODE={{ lookup('ansible.builtin.env', 'FRONTEND_API_HTTP_MODE') }} 
+    export BACKEND_DB_HOST={{ lookup('ansible.builtin.env', 'BACKEND_DB_HOST') }} 
+    export FRONTEND_API_HOST={{ lookup('ansible.builtin.env', 'FRONTEND_API_HOST') }} 
+    export COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }} 
     docker compose down -v --rmi all
     docker compose up --wait
+    sleep 5
     exit 0
   args:
     chdir: ~/investment-fund
