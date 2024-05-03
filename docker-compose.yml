@@ -17,6 +17,9 @@ services:
       context: backend
     ports:
       - "8080:8080"
+    depends_on:
+      - signal-scanner-db
+      - kafka
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       KAFKA_HOST: ${KAFKA_HOST:-localhost}

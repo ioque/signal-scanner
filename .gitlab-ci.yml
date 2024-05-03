@@ -95,7 +95,7 @@ api tests:
     SPRING_PROFILES_ACTIVE: "staging"
   script:
     - cd acceptance
-    - gradle clean api-test:test -D
+    - gradle clean api-test:test
   artifacts:
     when: always
     reports:
