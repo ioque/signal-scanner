@@ -9,7 +9,6 @@ services:
       - "5432:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
-    restart: on-failure
 
   backend:
     container_name: backend
@@ -18,13 +17,6 @@ services:
       context: backend
     ports:
       - "8080:8080"
-    depends_on:
-      signal-scanner-db:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-      kafka-init-topics:
-        condition: service_completed_successfully
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       KAFKA_HOST: ${KAFKA_HOST}
@@ -38,6 +30,13 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+    depends_on:
+      signal-scanner-db:
+        condition: service_started
+      kafka:
+        condition: service_started
+      kafka-init-topics:
+        condition: service_started
 
   frontend:
     container_name: frontend
@@ -84,9 +83,6 @@ services:
     image: confluentinc/cp-server:7.4.1
     hostname: kafka
     container_name: kafka
-    depends_on:
-      zookeeper:
-        condition: service_started
     ports:
       - "9092:9092"
       - "9997:9997"
@@ -103,13 +99,16 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
+    depends_on:
+      zookeeper:
+        condition: service_started
 
   kafka-init-topics:
     image: confluentinc/cp-kafka:7.4.1
+    entrypoint: [ '/bin/sh', '-c' ]
     depends_on:
       kafka:
         condition: service_started
-    entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
       # blocks until kafka is reachable
@@ -130,14 +129,15 @@ services:
     image: ghcr.io/kafbat/kafka-ui:latest
     ports:
       - "8085:8080"
-    depends_on:
-      - kafka
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_METRICS_PORT: 9997
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
+    depends_on:
+      kafka:
+        condition: service_started
 
   opensearch:
     image: opensearchproject/opensearch:2.1.0
@@ -163,14 +163,14 @@ services:
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2.1.0
     container_name: opensearch-dashboards
-    depends_on:
-      opensearch:
-        condition: service_started
     ports:
       - "5601:5601"
     environment:
       I18N_LOCALE: "ru"
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+    depends_on:
+      opensearch:
+        condition: service_started
 
   logstash:
     build:

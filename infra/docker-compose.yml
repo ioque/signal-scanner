@@ -24,6 +24,13 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+    depends_on:
+      signal-scanner-db:
+        condition: service_started
+      kafka:
+        condition: service_started
+      kafka-init-topics:
+        condition: service_started
 
   frontend:
     container_name: frontend
@@ -66,8 +73,6 @@ services:
     image: confluentinc/cp-server:7.4.1
     hostname: kafka
     container_name: kafka
-    depends_on:
-      - zookeeper
     ports:
       - "9092:9092"
       - "9997:9997"
@@ -84,20 +89,45 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
+    depends_on:
+      zookeeper:
+        condition: service_started
+
+  kafka-init-topics:
+    image: confluentinc/cp-kafka:7.4.1
+    depends_on:
+      kafka:
+        condition: service_started
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:29092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic commands --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic events --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic signal-scanner-business-log --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic signal-scanner-technical-log --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:29092 --list
+      "
 
   kafbat-ui:
     container_name: kafbat-ui
     image: ghcr.io/kafbat/kafka-ui:latest
     ports:
       - "8085:8080"
-    depends_on:
-      - kafka
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_METRICS_PORT: 9997
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
+    depends_on:
+      kafka:
+        condition: service_started
 
   opensearch:
     image: opensearchproject/opensearch:2.1.0
@@ -128,6 +158,9 @@ services:
     environment:
       I18N_LOCALE: "ru"
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+    depends_on:
+      opensearch:
+        condition: service_started
 
   logstash:
     image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
@@ -138,7 +171,8 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
-      - opensearch
+      opensearch:
+        condition: service_started
 
 #  moex-datasource:
 #    container_name: moex-datasource
