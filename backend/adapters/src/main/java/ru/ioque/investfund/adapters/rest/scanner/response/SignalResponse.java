@@ -22,12 +22,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalResponse implements Serializable {
+    Double price;
     String ticker;
     Boolean isBuy;
     String summary;
     LocalDateTime dateTime;
     public static SignalResponse from(SignalEntity signalEntity, InstrumentEntity instrument) {
         return SignalResponse.builder()
+            .price(signalEntity.getPrice())
             .isBuy(signalEntity.isBuy())
             .ticker(instrument.getTicker())
             .summary(signalEntity.getSummary())

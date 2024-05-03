@@ -2,8 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {ScannerInList} from "../../entities/Scanner";
 import {useNavigate} from "react-router-dom";
 import {fetchScanners} from "../../api/scannerRestClient";
-import Table from "react-bootstrap/Table";
-import {Spinner} from "react-bootstrap";
+import {
+    Box,
+    Paper,
+    TableBody,
+    TableCell,
+    Table,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography, CircularProgress
+} from "@mui/material";
 
 export default function ScannerList() {
     const navigate = useNavigate();
@@ -15,37 +24,52 @@ export default function ScannerList() {
     }, []);
 
     const listItems = scanners.map((scanner, index) =>
-        <tr key={index} onClick={() => handleClick(scanner.id)}>
-            <td>{index}</td>
-            <td>{scanner.id}</td>
-            <td>{scanner.workPeriodInMinutes}</td>
-            <td>{scanner.description}</td>
-            <td>{scanner.signalCounts}</td>
-            <td>{scanner.lastExecutionDateTime == null ? "" : new Date(scanner.lastExecutionDateTime).toDateString()}</td>
-        </tr>
+        <TableRow
+            key={index}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            onDoubleClick={() => handleClick(scanner.id)}
+        >
+            <TableCell component="th" scope="row">{scanner.id}</TableCell>
+            <TableCell align="right">{scanner.description}</TableCell>
+            <TableCell align="right">{
+                scanner.lastExecutionDateTime == null ?
+                "" :
+                (new Date(scanner.lastExecutionDateTime).toDateString() + " " + new Date(scanner.lastExecutionDateTime).toTimeString())
+            }
+            </TableCell>
+        </TableRow>
     );
 
     if (!scanners || scanners.length === 0) {
-        return <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        return <CircularProgress />
     }
 
     return (
-        <Table striped bordered hover>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Идентификатор</th>
-                <th>Период работы в минутах</th>
-                <th>Описание</th>
-                <th>Кол-во сигналов</th>
-                <th>Последний запуск</th>
-            </tr>
-            </thead>
-            <tbody>
-            {listItems}
-            </tbody>
-        </Table>
+        <Box sx={{ width: '100%' }}>
+            <Paper sx={{ width: '100%', mb: 2, padding: 2 }}>
+                <Typography
+                    sx={{ flex: '1 1 100%' }}
+                    variant="h6"
+                    id="tableTitle"
+                    component="div"
+                >
+                    Список сканеров
+                </Typography>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Идентификатор</TableCell>
+                                <TableCell align="right">Описание</TableCell>
+                                <TableCell align="right">Последний запуск</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {listItems}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        </Box>
     );
 }

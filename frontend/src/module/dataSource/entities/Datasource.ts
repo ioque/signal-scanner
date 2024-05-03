@@ -7,6 +7,7 @@ export type Datasource = {
 
 export type Instrument = {
     id: string;
+    name: string;
     ticker: string;
     lastUpdate: Date;
     shortName: string;
@@ -30,6 +31,9 @@ export type HistoryValue = {
     tradeDate: Date;
     ticker: string;
     value: number;
+    waPrice: number | undefined;
+    lowPrice: number;
+    highPrice: number;
     openPrice: number;
     closePrice: number;
 }

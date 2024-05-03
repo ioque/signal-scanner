@@ -2,12 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {InstrumentInList} from "../../entities/Datasource";
 import {fetchInstrumentList} from "../../api/dataSourceRestClient";
-import Table from 'react-bootstrap/Table';
-import {Spinner} from "react-bootstrap";
 import {
-    Box,
+    Box, CircularProgress,
     FormControlLabel,
     Paper, Switch,
+    Table,
     TableBody,
     TableCell,
     TableContainer,
@@ -65,7 +64,7 @@ export default function InstrumentList(params: InstrumentListParams) {
     const [page, setPage] = React.useState(0);
     const [totalElements, setTotalElements] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -133,11 +132,8 @@ export default function InstrumentList(params: InstrumentListParams) {
     );
 
     if (!instruments || instruments.length === 0) {
-        return <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        return <CircularProgress />
     }
-
 
     return (
         <Box sx={{ width: '100%' }}>

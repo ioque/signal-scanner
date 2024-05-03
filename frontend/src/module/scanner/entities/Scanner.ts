@@ -19,10 +19,11 @@ export type ScannerInList = {
 }
 
 export type Signal = {
+    price: number;
     ticker: string;
+    summary: string;
     dateTime: Date;
     isBuy: boolean;
-    isOpen: boolean;
 }
 
 export type ScannerLog = {

@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalResponse {
+    Double price;
     String ticker;
     Boolean isBuy;
     String summary;

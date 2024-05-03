@@ -10,8 +10,20 @@ import {
     SectoralRetardAlgorithmConfig
 } from "../../entities/Scanner";
 import {fetchScanner} from "../../api/scannerRestClient";
-import {Accordion, Row, Spinner, Stack} from "react-bootstrap";
-import Table from "react-bootstrap/Table";
+import {
+    Box,
+    Card,
+    CardContent, CircularProgress, List, ListItem,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
+import ListItemText from "@mui/material/ListItemText";
 
 export type ScannerDetailsParams = {
     id: string
@@ -24,76 +36,126 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
     }, [params.id]);
 
     if (!scanner) {
-        return <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        return <CircularProgress />
     }
 
     const scannerConfigItem = () => {
         if (isAnomalyVolumeAlgorithmConfig(scanner.config)) {
             const config: AnomalyVolumeAlgorithmConfig = scanner.config;
-            return <Stack>
-                <Row>Величина scaleCoefficient: {config.scaleCoefficient}</Row>
-                <Row>Период исторических данных: {config.historyPeriod}</Row>
-                <Row>Тикер индекса: {config.indexTicker}</Row>
-            </Stack>
+            return <List sx={{padding: 1}}>
+                <ListItem>
+                    <ListItemText>
+                        Величина scaleCoefficient: {config.scaleCoefficient}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Период исторических данных: {config.historyPeriod}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Тикер индекса: {config.indexTicker}
+                    </ListItemText>
+                </ListItem>
+            </List>
         }
         if (isCorrelationSectoralAlgorithmConfig(scanner.config)) {
             const config: CorrelationSectoralAlgorithmConfig = scanner.config;
-            return <Stack>
-                <Row>Величина futuresOvernightScale: {config.futuresOvernightScale}</Row>
-                <Row>Величина stockOvernightScale: {config.stockOvernightScale}</Row>
-                <Row>Тикер фьючерса: {config.futuresTicker}</Row>
-            </Stack>
+            return <List sx={{padding: 1}}>
+                <ListItem>
+                    <ListItemText>
+                        Величина futuresOvernightScale: {config.futuresOvernightScale}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Величина stockOvernightScale: {config.stockOvernightScale}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        Тикер фьючерса: {config.futuresTicker}
+                    </ListItemText>
+                </ListItem>
+            </List>
         }
         if (isPrefSimpleConfig(scanner.config)) {
             const config: PrefSimpleAlgorithmConfig = scanner.config;
-            return <Stack>
-                <Row>Величина спреда: {config.spreadParam}</Row>
-            </Stack>
+            return <List sx={{padding: 1}}>
+                <ListItem>
+                    <ListItemText>
+                        Величина спреда: {config.spreadParam}
+                    </ListItemText>
+                </ListItem>
+            </List>
         }
         if (isSectoralRetardScannerConfig(scanner.config)) {
             const config: SectoralRetardAlgorithmConfig = scanner.config;
-            return <Stack>
-                <Row>Величина historyScale: {config.historyScale}</Row>
-                <Row>Величина intradayScale: {config.intradayScale}</Row>
-            </Stack>
+            return <List sx={{padding: 1}}>
+                <ListItem>
+                    <ListItemText>
+                        Величина historyScale: {config.historyScale}
+                    </ListItemText>
+                    <ListItemText>
+                        Величина intradayScale: {config.intradayScale}
+                    </ListItemText>
+                </ListItem>
+            </List>
         }
         return <p>Нет конфигурации</p>
     }
 
     const scannerItem =
-        <Accordion defaultActiveKey="1">
-            <Accordion.Item eventKey="0">
-                <Accordion.Header>{scanner.description}</Accordion.Header>
-                <Accordion.Body>
-                    {scannerConfigItem()}
-                </Accordion.Body>
-            </Accordion.Item>
-        </Accordion>;
+        <Card sx={{mb: 2}}>
+            <CardContent>
+                <Typography variant="h5" component="div">
+                    {scanner.description}
+                </Typography>
+                <Typography variant="h6" component="div">
+                    Конфигурация
+                </Typography>
+                {scannerConfigItem()}
+            </CardContent>
+        </Card>;
 
     const signals = scanner.signals.map((signal, index) =>
         <tr key={index}>
             <td>{signal.ticker}</td>
             <td>{new Date(signal.dateTime).toDateString()} {new Date(signal.dateTime).toTimeString()}</td>
-            <td>{signal.isBuy ? "Сигнал к покупке" : "Сигнал к продаже"}</td>
+            <td>{signal.isBuy ? "Покупка" : "Продаже"}</td>
+            <td>{signal.price}</td>
+            <td>{signal.summary}</td>
         </tr>
     );
 
-    return <>
+    return <Box sx={{width: '100%'}}>
         {scannerItem}
-        <h4>Сигналы</h4>
-        <Table striped bordered hover id="signalTable">
-            <thead>
-            <tr>
-                <th>Тикер</th>
-                <th>Дата и время</th>
-                <th>Тип сигнала</th>
-            </tr>
-            </thead>
-            <tbody>
-            {signals}
-            </tbody>
-        </Table>
-    </>
+        <Paper sx={{width: '100%', mb: 2, padding: 2}}>
+            <Typography
+                sx={{flex: '1 1 100%'}}
+                variant="h6"
+                id="tableTitle"
+                component="div"
+            >
+                Зафиксированные сигналы
+            </Typography>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Тикер</TableCell>
+                            <TableCell align="right">Дата и время</TableCell>
+                            <TableCell align="right" width={100}>Тип сигнала</TableCell>
+                            <TableCell align="right">Цена</TableCell>
+                            <TableCell align="right">Описание</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {signals}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
+    </Box>
 }
