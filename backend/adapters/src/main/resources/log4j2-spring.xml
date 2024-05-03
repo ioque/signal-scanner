@@ -16,8 +16,6 @@
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>
             <Property name="max.request.size">30000000</Property>
-            <Property name="request.timeout.ms">60000</Property>
-            <Property name="transaction.timeout.ms">60000</Property>
         </Kafka>
         <Failover name="KafkaAuditFailover" primary="KafkaTechAppender">
             <Failovers>
@@ -30,8 +28,6 @@
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>
             <Property name="max.request.size">30000000</Property>
-            <Property name="request.timeout.ms">60000</Property>
-            <Property name="transaction.timeout.ms">60000</Property>
         </Kafka>
         <Failover name="KafkaAuditFailover" primary="KafkaBusinessAppender">
             <Failovers>
