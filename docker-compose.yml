@@ -9,6 +9,7 @@ services:
       - "5432:5432"
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
+
   backend:
     container_name: backend
     image: 192.168.0.62:8002/ioque/backend:${COMMIT_TAG:-latest}
@@ -26,6 +27,7 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+
   frontend:
     container_name: frontend
     image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
@@ -42,6 +44,7 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+
   datasource:
     container_name: datasource
     build:
@@ -55,6 +58,96 @@ services:
       retries: 5
       start_period: 20s
       timeout: 10s
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-server:7.4.1
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9997:9997"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9997
+      KAFKA_JMX_HOSTNAME: kafka
+
+  kafbat-ui:
+    container_name: kafbat-ui
+    image: ghcr.io/kafbat/kafka-ui:latest
+    ports:
+      - "8085:8080"
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_METRICS_PORT: 9997
+      KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
+      KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.ssl.http.enabled=false
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Cz39qhr@WW
+      - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      I18N_LOCALE: "ru"
+      OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+
+  logstash:
+    build:
+      dockerfile: containers/logstash/Dockerfile
+    image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
+    container_name: logstash
+    ports:
+      - "5044:5044"
+      - "5046:5046"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - opensearch
 #  moex-datasource:
 #    container_name: moex-datasource
 #    build:
@@ -68,6 +161,9 @@ services:
 #      retries: 5
 #      start_period: 20s
 #      timeout: 10s
+
 volumes:
+  opensearch-data:
+    driver: local
   signal-scanner-db:
     driver: local
