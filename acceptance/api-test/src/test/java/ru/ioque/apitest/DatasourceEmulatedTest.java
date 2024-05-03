@@ -148,7 +148,7 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId) {
-        return datasourceClient().getInstruments(exchangeId, "");
+        return datasourceClient().getInstruments(exchangeId, "").getElements();
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId, Map<String, String> params) {
@@ -160,7 +160,7 @@ public abstract class DatasourceEmulatedTest {
                     .stream()
                     .map(entry -> entry.getKey() + "=" + entry.getValue())
                     .collect(Collectors.joining("&"))
-            );
+            ).getElements();
     }
 
     protected InstrumentResponse getInstrumentBy(UUID exchangeId, String ticker) {

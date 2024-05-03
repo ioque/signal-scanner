@@ -3,6 +3,7 @@ package ru.ioque.core.client.datasource;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import ru.ioque.core.client.JsonHttpClient;
+import ru.ioque.core.dto.Pagination;
 import ru.ioque.core.dto.datasource.request.DisableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.core.dto.datasource.request.DatasourceRequest;
@@ -53,7 +54,7 @@ public class DatasourceHttpClient extends JsonHttpClient {
     }
 
     @SneakyThrows
-    public List<InstrumentInListResponse> getInstruments(UUID datasourceId, String params) {
+    public Pagination<InstrumentInListResponse> getInstruments(UUID datasourceId, String params) {
         String path = "/api/datasource/" + datasourceId + "/instrument" + (params == null || params.isEmpty() ? "" : ("?" + params));
         return objectMapper.readValue(get(path), new TypeReference<>(){});
     }
