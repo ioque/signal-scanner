@@ -41,7 +41,7 @@ spring:
 
 logging-config:
   level: ${ROOT_LOG_LEVEL:INFO}
-  kafka_url: ${spring.kafka.bootstrap-servers}
+  kafka_url: ${KAFKA_HOST:localhost}:9092
 
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
