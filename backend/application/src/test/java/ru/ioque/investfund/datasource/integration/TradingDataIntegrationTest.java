@@ -1,4 +1,4 @@
-package ru.ioque.investfund.datasource;
+package ru.ioque.investfund.datasource.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +20,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DisplayName("DATASOURCE MANAGER TEST - INTEGRATION")
-public class DatasourceIntegrationTest extends BaseTest {
+@DisplayName("TRADING DATA INTEGRATION")
+public class TradingDataIntegrationTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
@@ -35,12 +35,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T5. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T1. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Запущена интеграция торговых данных по инструменту AFKS.
         Все данные источника валидны, дублирующих записей нет.
         Результат: сохранены текущие сделки и история торгов.
         """)
-    void testCase5() {
+    void testCase1() {
         final DatasourceId datasourceId = getDatasourceId();
         datasourceStorage().initInstrumentDetails(List.of(afks()));
         initTodayDateTime("2023-12-08T10:15:00");
@@ -68,12 +68,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T9. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T2. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Запущена интеграция торговых данных инструмента AFKS.
         Текущая дата 2023-12-19T10:00:00, неторговый день, сделок нет.
         Результат: Загружены данные итогов торгов.
         """)
-    void testCase9() {
+    void testCase2() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-19T10:00:00");
         integrateInstruments(datasourceId, afks());
@@ -95,12 +95,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T10. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T3. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Запущена интеграция торговых данных инструмента AFKS.
         В данных по сделкам есть дублирующие записи.
         Результат: дубликаты не сохранены, остальные сделки успешно сохранены.
         """)
-    void testCase10() {
+    void testCase3() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
@@ -121,12 +121,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T11. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T4. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         По инструменту AFKS сохранены сделки до 2023-12-07T12:00:00.
         Текущее время 2023-12-07T13:00:00. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: сохранены только новые сделки, прошедшие после 12:00:00.
         """)
-    void testCas11() {
+    void testCas4() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-07T12:00:00");
         integrateInstruments(datasourceId, afks());
@@ -153,12 +153,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T12. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T5. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         По инструменту AFKS сохранены итоги торгов по 2023-12-07.
         Текущее время 2023-12-09T13:00:00. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: добавлена история торгов за 2023-12-08.
         """)
-    void testCas12() {
+    void testCas5() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
@@ -176,11 +176,11 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T13. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T6. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Обновление инструмента AFKS не включено. Запущена интеграция торговых данных по инструменту AFKS.
         Результат: торговые данные не загружены.
         """)
-    void testCase13() {
+    void testCase6() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
@@ -195,12 +195,12 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T14. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        T7. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
         Данные торгов успешно проинтегрированы, обновление инструмента включено.
         Обновление инструмента выключается и запускается интеграция торговых данных.
         Результат: новые торговые данные не загружены.
         """)
-    void testCase14() {
+    void testCase7() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
@@ -227,11 +227,11 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T15. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        T8. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
         Попытка включить обновление по списку идентификаторов.
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
-    void testCase15() {
+    void testCase8() {
         DatasourceId datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
@@ -243,11 +243,11 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T16. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
+        T9. Источник биржевых данных не зарегистрирован, хранилище финансовых инструментов пустое.
         Попытка выключить обновление по списку идентификаторов.
         Результат: ошибка, "Биржа не зарегистрирована".
         """)
-    void testCase16() {
+    void testCase9() {
         DatasourceId datasourceId = getDatasourceId();
         commandBus().execute(new UnregisterDatasourceCommand(datasourceId));
         var error = assertThrows(
@@ -259,9 +259,9 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T17. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
+        T10. После успешной интеграции торговых данных создается событие "Торговые данные обновлены".
         """)
-    void testCase17() {
+    void testCase10() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         integrateInstruments(datasourceId, afks());
@@ -276,9 +276,9 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T18. У сделок одинаковое время, но разные номера. Все сделки сохранены.
+        T11. У сделок одинаковое время, но разные номера. Все сделки сохранены.
         """)
-    void testCase18() {
+    void testCase11() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
@@ -295,9 +295,9 @@ public class DatasourceIntegrationTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T19. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
+        T12. Одна и та же сделка интегрируется дважды. Сохранена одна сделка.
         """)
-    void testCase19() {
+    void testCase12() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         integrateInstruments(datasourceId, afks());
