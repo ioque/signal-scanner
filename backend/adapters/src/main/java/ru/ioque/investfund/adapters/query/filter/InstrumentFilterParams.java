@@ -58,9 +58,19 @@ public class InstrumentFilterParams {
         if (pageRequestIsEmpty()) {
             throw new RuntimeException();
         }
-        if (orderDirection == null || orderField == null) {
+        if (orderDirection == null || prepareOrderField() == null) {
             return PageRequest.of(pageNumber, pageSize);
         }
-        return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.valueOf(orderDirection), orderField));
+        return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.valueOf(orderDirection), prepareOrderField()));
+    }
+
+    private String prepareOrderField() {
+        if (orderField.equals("shortName")) {
+            return "details.shortName";
+        }
+        if (orderField.equals("todayValue") || orderField.equals("todayLastPrice")) {
+            return "tradingState." + orderField;
+        }
+        return orderField;
     }
 }

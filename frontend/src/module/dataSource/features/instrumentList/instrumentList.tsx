@@ -58,11 +58,10 @@ const headCells: readonly HeadCell[] = [
 
 export default function InstrumentList(params: InstrumentListParams) {
     const navigate = useNavigate();
-    const handleDoubleClick = (id: string) => navigate(`${id}`);
+    const handleDoubleClick = (ticker: string) => navigate(`${ticker}`);
     const [instruments, setInstruments] = useState<Array<InstrumentInList>>([]);
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof InstrumentInList>('ticker');
-    const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [totalElements, setTotalElements] = React.useState(0);
     const [dense, setDense] = React.useState(false);
@@ -83,8 +82,17 @@ export default function InstrumentList(params: InstrumentListParams) {
 
     const createSortHandler =
         (property: keyof InstrumentInList) => (event: React.MouseEvent<unknown>) => {
-            console.log(event, property);
+            handleRequestSort(event, property);
         };
+
+    const handleRequestSort = (
+        event: React.MouseEvent<unknown>,
+        property: keyof InstrumentInList,
+    ) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     useEffect(() => {
         fetchInstrumentList(params.datasourceId,[
@@ -97,11 +105,11 @@ export default function InstrumentList(params: InstrumentListParams) {
             setInstruments(data.elements)
             setTotalElements(data.totalElements)
         });
-    }, [page, params.datasourceId, rowsPerPage]);
+    }, [order, orderBy, page, params.datasourceId, rowsPerPage]);
 
     const listItems = instruments.map(instrument =>
         <TableRow
-            onDoubleClick={() => handleDoubleClick(instrument.id)}
+            onDoubleClick={() => handleDoubleClick(instrument.ticker)}
             style={{
                 height: (dense ? 33 : 53),
             }}
