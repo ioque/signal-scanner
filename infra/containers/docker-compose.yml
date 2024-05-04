@@ -15,9 +15,9 @@ services:
       - "8080:8080"
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_HOST: ${MACHINE_HOST}
       ROOT_LOG_LEVEL: ${ROOT_LOG_LEVEL:-INFO}
-      DB_HOST: ${BACKEND_DB_HOST}
+      DB_HOST: ${MACHINE_HOST}
       DB_PORT: "5432"
       SPRING_PROFILES_ACTIVE: ${BACKEND_ENV:-prod}
     healthcheck:
@@ -36,8 +36,8 @@ services:
     container_name: frontend
     image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
     environment:
-      API_HOST: ${FRONTEND_API_HOST}
-      API_HTTP_MODE: ${FRONTEND_API_HTTP_MODE}
+      API_HOST: ${MACHINE_HOST}
+      API_HTTP_MODE: ${API_HTTP_MODE}
     ports:
       - "4200:4200"
     healthcheck:

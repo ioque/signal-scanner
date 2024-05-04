@@ -67,10 +67,8 @@ deploy to stage:
     ROOT_LOG_LEVEL: "INFO"
     BACKEND_ENV: "staging"
     TELEGRAM_BOT_TOKEN: "INFO"
-    KAFKA_HOST: "192.168.0.85"
-    FRONTEND_API_HTTP_MODE: "http"
-    BACKEND_DB_HOST: "192.168.0.85"
-    FRONTEND_API_HOST: "192.168.0.85"
+    MACHINE_HOST: "192.168.0.85"
+    API_HTTP_MODE: "http"
   script:
     - mkdir ${CI_PROJECT_DIR}/secret
     - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key
