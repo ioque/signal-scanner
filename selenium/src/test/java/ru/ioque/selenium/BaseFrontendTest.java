@@ -58,24 +58,18 @@ public class BaseFrontendTest {
     protected void loadPageDatasourceList() {
         driver.get("http://" + getUiUrl() + "/datasource");
         new WebDriverWait(driver, Duration.ofSeconds(5))
-            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
-    }
-
-    protected void loadPageInstrumentList(String datasourceId) {
-        driver.get("http://" + getUiUrl() + "/datasource/" + datasourceId + "/instrument");
-        new WebDriverWait(driver, ofSeconds(5))
-            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
+            .until(ExpectedConditions.visibilityOfElementLocated(By.className("MuiCard-root")));
     }
 
     protected void loadPageScannerList() {
         driver.get("http://" + getUiUrl() + "/scanner");
         new WebDriverWait(driver, ofSeconds(5))
-            .until(ExpectedConditions.visibilityOfElementLocated(By.className("table")));
+            .until(ExpectedConditions.visibilityOfElementLocated(By.className("MuiTable-root")));
     }
 
     private ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         options.addArguments("disable-infobars");
         options.addArguments("--disable-extensions");
         options.addArguments("--start-maximized");

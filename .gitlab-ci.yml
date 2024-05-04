@@ -15,6 +15,7 @@ stages:
   - build
   - infrastructure
   - acceptance
+  - release
 
 application test:
   stage: test
@@ -66,7 +67,7 @@ deploy to stage:
   variables:
     ROOT_LOG_LEVEL: "INFO"
     BACKEND_ENV: "staging"
-    TELEGRAM_BOT_TOKEN: "INFO"
+    TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
     MACHINE_HOST: "192.168.0.85"
     API_HTTP_MODE: "http"
   script:
@@ -118,46 +119,50 @@ prepare data:
     - cd acceptance
     - gradle -p ui-seeder bootRun
 
-#ui tests:
-#  needs:
-#    - prepare data
-#  only:
-#    - master
-#  stage: acceptance
-#  environment: staging
-#  resource_group: staging
-#  image: gradle:jdk17-focal
-#  services:
-#    - name: selenium/standalone-chrome:latest
-#      alias: chrome
-#  variables:
-#    UI_HOST: "192.168.0.85"
-#    UI_PORT: "4200"
-#    REMOTE_WEB_DRIVER_URL: "http://chrome:4444"
-#  script:
-#    - cd selenium
-#    - gradle clean test
-#  artifacts:
-#    when: always
-#    reports:
-#      junit:
-#        - selenium/build/test-results/test/**/TEST-*.xml
+ui tests:
+  needs:
+    - prepare data
+  only:
+    - master
+  stage: acceptance
+  environment: staging
+  resource_group: staging
+  image: gradle:jdk17-focal
+  services:
+    - name: selenium/standalone-chrome:latest
+      alias: chrome
+  variables:
+    UI_HOST: "192.168.0.85"
+    UI_PORT: "4200"
+    REMOTE_WEB_DRIVER_URL: "http://chrome:4444"
+  script:
+    - cd selenium
+    - gradle clean test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - selenium/build/test-results/test/**/TEST-*.xml
 
-#manual:
-#  needs:
-#    - api tests
-#    - ui tests
-#  only:
-#    - master
-#  environment: manual
-#  resource_group: manual
-#  stage: release
-#  image: nexus.tecforce.ru:8423/tf-psb-sfmgoz-infra.gitlab-slave:0.1
-#  variables:
-#    API_HOST: "192.168.0.86"
-#    API_PORT: "8080"
-#    DATASOURCE_HOST: "192.168.0.86"
-#    DATASOURCE_PORT: "8082"
-#  # noinspection YAMLSchemaValidation
-#  script:
-#    - !reference [ .ansible-deploy ]
+production:
+  needs:
+    - api tests
+    - ui tests
+  only:
+    - master
+  when: manual
+  environment: production
+  resource_group: production
+  stage: release
+  image: '$NEXUS_URL/ioque/ansible'
+  variables:
+    ROOT_LOG_LEVEL: "WARN"
+    BACKEND_ENV: "production"
+    TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    MACHINE_HOST: "192.168.0.86"
+    API_HTTP_MODE: "http"
+  script:
+    - mkdir ${CI_PROJECT_DIR}/secret
+    - echo "$ANSIBLE_SSH_KEY" > ${CI_PROJECT_DIR}/secret/ansible.key
+    - chmod 400 ${CI_PROJECT_DIR}/secret/ansible.key
+    - !reference [ .ansible-deploy ]

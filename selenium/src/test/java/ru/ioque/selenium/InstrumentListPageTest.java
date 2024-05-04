@@ -4,57 +4,82 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.time.Duration.ofSeconds;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InstrumentListPageTest extends BaseFrontendTest {
     @Test
     @DisplayName("""
-        Тестирование взаимодействия с основными элементами страницы.
+        Тестирование взаимодействия с основными элементами страницы "Cписок инструментов".
         """)
     public void verifyPage() {
         loadPageDatasourceList();
-        final String datasourceId = driver
-            .findElement(By.className("table"))
-            .findElements(By.xpath("./child::*"))
-            .get(1)
-            .findElements(By.xpath("./child::*"))
-            .stream().map(row -> row.findElements((By.xpath("./child::*"))).get(0).getText())
-            .toList()
-            .get(0);
-        loadPageInstrumentList(datasourceId);
-        verifyExchangeElement();
-        verifyInstrumentList();
+        WebElement linkToInstrument = driver.findElement(By.className("MuiButton-root"));
+        linkToInstrument.click();
+        new WebDriverWait(driver, ofSeconds(5))
+            .until(ExpectedConditions.visibilityOfElementLocated(By.className("MuiTable-root")));
+        final InstrumentTableHeaderElement header = new InstrumentTableHeaderElement(
+            driver.findElement(By.className("MuiTableHead-root"))
+        );
+        final InstrumentTableContent content = new InstrumentTableContent(
+            driver.findElement(By.className("MuiTableBody-root"))
+        );
+        assertEquals("Тикер", header.tickerColumn.getText());
+        assertEquals("Наименование", header.shortNameColumn.getText());
+        assertEquals("Текущий объем", header.todayValueColumn.getText());
+        assertEquals("Последняя цена", header.todayPriceColumn.getText());
+        assertEquals(11, content.rows.size());
     }
 
-    private void verifyExchangeElement() {
-        var exchangeHeaderElement = driver.findElement(By.xpath ("//*[contains(text(),'Конфигурируемый источник данных')]"));
-        assertEquals("Конфигурируемый источник данных", exchangeHeaderElement.getText());
+    public class InstrumenTableContentRow {
+        String ticker;
+        String shortName;
+        String todayValue;
+        String todayPrice;
+
+        public InstrumenTableContentRow(WebElement row) {
+            List<WebElement> columns = row.findElements(By.className("MuiTableCell-root"));
+            ticker = columns.get(0).getText();
+            shortName = columns.get(1).getText();
+            todayValue = columns.get(2).getText();
+            todayPrice = columns.get(3).getText();
+        }
     }
 
-    private void verifyInstrumentList() {
-        var tableRows = driver
-            .findElement(By.className("table"))
-            .findElements(By.xpath("./child::*"))
-            .get(1)
-            .findElements(By.xpath("./child::*"));
-        assertEquals(11, tableRows.size());
-        assertTableRow(tableRows.get(0), "BRF4", "BR-1.24");
-        assertTableRow(tableRows.get(1), "USD000UTSTOM", "USDRUB_TOM");
-        assertTableRow(tableRows.get(2), "SIBN", "Газпромнефть");
-        assertTableRow(tableRows.get(3), "IMOEX", "Индекс фондового рынка мосбиржи");
-        assertTableRow(tableRows.get(4), "LKOH", "Лукойл");
-        assertTableRow(tableRows.get(5), "ROSN", "Роснефть");
-        assertTableRow(tableRows.get(6), "SBER", "Сбербанк");
-        assertTableRow(tableRows.get(7), "SBERP", "Сбербанк-п");
-        assertTableRow(tableRows.get(8), "TATN", "Татнефть");
-        assertTableRow(tableRows.get(9), "TGKB", "ТГК-11");
-        assertTableRow(tableRows.get(10), "TGKN", "ТГК-14");
+    public class InstrumentTableContent {
+        List<InstrumenTableContentRow> rows = new ArrayList<>();
+
+        public InstrumentTableContent(WebElement tableBody) {
+            rows.addAll(
+                tableBody
+                    .findElements(By.className("MuiTableRow-root"))
+                    .stream()
+                    .map(InstrumenTableContentRow::new)
+                    .toList()
+            );
+        }
     }
 
-    private void assertTableRow(WebElement webElement, String ticker, String shortName) {
-        var columns = webElement.findElements((By.xpath("./child::*")));
-        assertEquals(ticker, columns.get(0).getText());
-        assertEquals(shortName, columns.get(1).getText());
+    public class InstrumentTableHeaderElement {
+        WebElement tickerColumn;
+        WebElement shortNameColumn;
+        WebElement todayValueColumn;
+        WebElement todayPriceColumn;
+
+        public InstrumentTableHeaderElement(WebElement tableHeader) {
+            List<WebElement> headerColumns = tableHeader
+                .findElement(By.className("MuiTableRow-head"))
+                .findElements(By.className("MuiTableCell-head"));
+            tickerColumn = headerColumns.get(0);
+            shortNameColumn = headerColumns.get(1);
+            todayValueColumn = headerColumns.get(2);
+            todayPriceColumn = headerColumns.get(3);
+        }
     }
 }
