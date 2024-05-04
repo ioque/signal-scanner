@@ -34,7 +34,7 @@ public class BaseConfiguratorTest extends BaseTest {
     }
 
     protected ScannerId getFirstScannerId() {
-        return scannerRepository().getScannerMap().keySet().iterator().next();
+        return scannerRepository().getScanners().keySet().iterator().next();
     }
 
     protected SignalScanner getScanner(ScannerId scannerId) {

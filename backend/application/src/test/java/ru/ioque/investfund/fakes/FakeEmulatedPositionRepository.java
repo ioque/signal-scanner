@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FakeEmulatedPositionRepository implements EmulatedPositionRepository {
-    Map<EmulatedPositionId, EmulatedPosition> emulatedPositions = new ConcurrentHashMap<>();
+    public Map<EmulatedPositionId, EmulatedPosition> emulatedPositions = new ConcurrentHashMap<>();
 
     @Override
     public boolean existsOpenPositions() {
@@ -27,7 +27,10 @@ public class FakeEmulatedPositionRepository implements EmulatedPositionRepositor
 
     @Override
     public Optional<EmulatedPosition> findBy(InstrumentId instrumentId, ScannerId scannerId) {
-        return findAllBy(instrumentId).stream().filter(row -> row.getScanner().getId().equals(scannerId)).findFirst();
+        return findAllBy(instrumentId)
+            .stream()
+            .filter(row -> row.getScanner().getId().equals(scannerId) && row.getInstrument().getId().equals(instrumentId))
+            .findFirst();
     }
 
     @Override

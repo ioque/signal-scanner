@@ -15,16 +15,16 @@ import java.util.UUID;
 
 @Getter
 public class FakeScannerRepository implements ScannerRepository {
-    public Map<ScannerId, SignalScanner> scannerMap = new HashMap<>();
+    public Map<ScannerId, SignalScanner> scanners = new HashMap<>();
 
     @Override
     public void save(SignalScanner dataScanner) {
-        this.scannerMap.put(dataScanner.getId(), dataScanner);
+        this.scanners.put(dataScanner.getId(), dataScanner);
     }
 
     @Override
     public List<SignalScanner> findAllBy(DatasourceId datasourceId) {
-        return scannerMap
+        return scanners
             .values()
             .stream()
             .filter(row -> row.getDatasourceId().equals(datasourceId))
@@ -33,7 +33,7 @@ public class FakeScannerRepository implements ScannerRepository {
 
     @Override
     public Optional<SignalScanner> findBy(ScannerId scannerId) {
-        return Optional.ofNullable(scannerMap.get(scannerId));
+        return Optional.ofNullable(scanners.get(scannerId));
     }
 
     @Override

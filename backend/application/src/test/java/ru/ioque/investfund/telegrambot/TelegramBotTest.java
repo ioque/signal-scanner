@@ -182,7 +182,7 @@ public class TelegramBotTest extends BaseTest {
     }
 
     protected ScannerId getScannerId() {
-        return scannerRepository().getScannerMap().values().stream().findFirst().orElseThrow().getId();
+        return scannerRepository().getScanners().values().stream().findFirst().orElseThrow().getId();
     }
 
     protected Instrument getInstrumentBy(String ticker) {

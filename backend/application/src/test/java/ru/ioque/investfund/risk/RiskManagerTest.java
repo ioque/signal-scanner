@@ -49,6 +49,6 @@ public abstract class RiskManagerTest extends BaseTest {
     }
 
     protected ScannerId getScannerId() {
-        return scannerRepository().getScannerMap().values().stream().findFirst().orElseThrow().getId();
+        return scannerRepository().getScanners().values().stream().findFirst().orElseThrow().getId();
     }
 }

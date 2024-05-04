@@ -144,7 +144,7 @@ public class ProduceSignalTest extends BaseScannerTest {
     }
 
     private ScannerId getScannerId() {
-        return scannerRepository().getScannerMap().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
+        return scannerRepository().getScanners().values().stream().findFirst().map(SignalScanner::getId).orElseThrow();
     }
 
     private void prepareTestCase3() {
