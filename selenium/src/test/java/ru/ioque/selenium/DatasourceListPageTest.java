@@ -16,7 +16,7 @@ public class DatasourceListPageTest extends BaseFrontendTest {
         loadPageDatasourceList();
         final DatasourceCardContent cardContent = new DatasourceCardContent(driver.findElement(By.className("MuiCardContent-root")));
         assertEquals("Конфигурируемый источник данных", cardContent.title);
-        assertEquals("Адрес шлюза: http://localhost:8081", cardContent.gateway);
+        assertEquals("Адрес шлюза: http://" + uiHost + ":8081", cardContent.gateway);
         assertEquals("Конфигурируемый источник данных, использовать для тестирования алгоритмов.", cardContent.description);
     }
 
