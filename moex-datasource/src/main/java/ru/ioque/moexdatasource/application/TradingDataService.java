@@ -3,6 +3,7 @@ package ru.ioque.moexdatasource.application;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.ioque.moexdatasource.application.adapters.InstrumentRepo;
 import ru.ioque.moexdatasource.application.adapters.MoexProvider;
@@ -14,6 +15,7 @@ import ru.ioque.moexdatasource.domain.parser.IntradayValueMoexParser;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -24,6 +26,7 @@ public class TradingDataService {
     MoexProvider moexProvider;
 
     public List<HistoryValue> getHistory(String ticker, LocalDate from, LocalDate to) {
+        log.info("run fetch history by ticker {} from {} to {}", ticker, from, to);
         return instrumentRepo
             .findBy(ticker)
             .map(instrument ->
@@ -36,6 +39,7 @@ public class TradingDataService {
     }
 
     public List<IntradayValue> getIntradayValues(String ticker, long lastNumber) {
+        log.info("run fetch intraday by ticker {} and lastNumber {}", ticker, lastNumber);
         return instrumentRepo
             .findBy(ticker)
             .map(instrument ->

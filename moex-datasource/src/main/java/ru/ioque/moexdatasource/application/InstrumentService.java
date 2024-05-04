@@ -3,6 +3,7 @@ package ru.ioque.moexdatasource.application;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.ioque.moexdatasource.application.adapters.InstrumentRepo;
 import ru.ioque.moexdatasource.application.adapters.MoexProvider;
@@ -16,6 +17,7 @@ import ru.ioque.moexdatasource.domain.parser.InstrumentParser;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -29,6 +31,7 @@ public class InstrumentService {
     }
 
     public void downloadInstruments() {
+        log.info("run download instruments");
         List<Instrument> instruments = new ArrayList<>();
         instruments.addAll(
             instrumentParser
@@ -56,5 +59,6 @@ public class InstrumentService {
                     Index.class)
         );
         instrumentRepo.saveAll(instruments);
+        log.info("finish download instruments");
     }
 }

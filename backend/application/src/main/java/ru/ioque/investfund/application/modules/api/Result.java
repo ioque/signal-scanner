@@ -23,6 +23,9 @@ public class Result {
     public static Result success(List<ApplicationLog> logs) {
         return new Result(ResultType.SUCCESS, logs);
     }
+    public static Result error() {
+        return new Result(ResultType.ERROR, List.of());
+    }
     public static Result error(List<ApplicationLog> logs) {
         return new Result(ResultType.ERROR, logs);
     }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmulatedPositionRepository {
+    boolean existsOpenPositions();
     List<EmulatedPosition> findAllBy(InstrumentId instrumentId);
     Optional<EmulatedPosition> findBy(InstrumentId instrumentId, ScannerId scannerId);
     void saveAll(List<EmulatedPosition> emulatedPositions);

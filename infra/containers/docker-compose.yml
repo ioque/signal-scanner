@@ -2,7 +2,7 @@ version: "3.9"
 services:
   signal-scanner-db:
     container_name: signal-scanner-db
-    image: 192.168.0.62:8002/ioque/postgres:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/postgres:${COMMIT_TAG:-latest}
     ports:
       - "5432:5432"
     volumes:
@@ -10,7 +10,7 @@ services:
 
   backend:
     container_name: backend
-    image: 192.168.0.62:8002/ioque/backend:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/backend:${COMMIT_TAG:-latest}
     ports:
       - "8080:8080"
     environment:
@@ -36,7 +36,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/frontend:${COMMIT_TAG:-latest}
     environment:
       API_HOST: ${MACHINE_HOST}
       API_HTTP_MODE: ${API_HTTP_MODE}
@@ -51,7 +51,7 @@ services:
 
   datasource:
     container_name: datasource
-    image: 192.168.0.62:8002/ioque/datasource:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/datasource:${COMMIT_TAG:-latest}
     ports:
       - "8081:8081"
     healthcheck:
@@ -163,7 +163,7 @@ services:
       - logstash
 
   logstash:
-    image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/logstash:${COMMIT_TAG:-latest}
     container_name: logstash
     ports:
       - "5044:5044"
@@ -172,19 +172,18 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
       - elasticsearch
-#  moex-datasource:
-#    container_name: moex-datasource
-#    build:
-#      context: moex-datasource
-#    image: 192.168.0.62:8002/ioque/moex-datasource:${COMMIT_TAG:-latest}
-#    ports:
-#      - "8082:8081"
-#    healthcheck:
-#      test: wget --no-verbose --tries=1 --spider  http://localhost:8081/actuator/health || exit 1
-#      interval: 5s
-#      retries: 5
-#      start_period: 20s
-#      timeout: 10s
+
+  moex-datasource:
+    container_name: moex-datasource
+    image: 192.168.0.47:8002/ioque/moex-datasource:${COMMIT_TAG:-latest}
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider  http://localhost:8081/actuator/health || exit 1
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
 
 volumes:
   elasticsearch:

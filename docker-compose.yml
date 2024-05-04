@@ -29,3 +29,9 @@ services:
       dockerfile: infra/containers/logstash/Dockerfile
     image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
     container_name: logstash
+
+  moex-datasource:
+    container_name: moex-datasource
+    build:
+      context: moex-datasource
+    image: 192.168.0.62:8002/ioque/moex-datasource:${COMMIT_TAG:-latest}

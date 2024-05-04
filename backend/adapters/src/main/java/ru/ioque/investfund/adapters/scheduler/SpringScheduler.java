@@ -21,7 +21,7 @@ public class SpringScheduler {
     JpaDatasourceRepository jpaDatasourceRepository;
     CommandPublisher commandPublisher;
 
-    @Scheduled(cron = "0 */15 10-20 * * MON-FRI")
+    @Scheduled(cron = "0 */15 10-20 * * MON-SUN")
     public void integrateTradingData() {
         jpaDatasourceRepository.findAll().forEach(datasource -> commandPublisher.publish(
             new IntegrateTradingDataCommand(
@@ -30,12 +30,12 @@ public class SpringScheduler {
         ));
     }
 
-    @Scheduled(cron = "0 0 11-20 * * MON-FRI")
+    @Scheduled(cron = "0 0 11-20 * * MON-SUN")
     public void publishHourlyReport() {
         commandPublisher.publish(new PublishHourlyReport());
     }
 
-    @Scheduled(cron = "59 59 23 * * MON-FRI")
+    @Scheduled(cron = "59 59 23 * * MON-SUN")
     public void publishDailyReport() {
         commandPublisher.publish(new PublishDailyReport());
     }

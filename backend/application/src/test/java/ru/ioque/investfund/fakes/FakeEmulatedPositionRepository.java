@@ -16,6 +16,11 @@ public class FakeEmulatedPositionRepository implements EmulatedPositionRepositor
     Map<EmulatedPositionId, EmulatedPosition> emulatedPositions = new ConcurrentHashMap<>();
 
     @Override
+    public boolean existsOpenPositions() {
+        return emulatedPositions.values().stream().anyMatch(EmulatedPosition::getIsOpen);
+    }
+
+    @Override
     public List<EmulatedPosition> findAllBy(InstrumentId instrumentId) {
         return emulatedPositions.values().stream().toList();
     }

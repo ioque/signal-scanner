@@ -22,6 +22,12 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
 
     @Override
     @Transactional(readOnly = true)
+    public boolean existsOpenPositions() {
+        return emulatedPositionRepository.findAll().stream().anyMatch(EmulatedPositionEntity::getIsOpen);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<EmulatedPosition> findAllBy(InstrumentId instrumentId) {
         return emulatedPositionRepository
             .findAllByInstrumentId(instrumentId.getUuid())
