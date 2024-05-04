@@ -25,4 +25,9 @@ public class Dataset {
     List<? extends IntradayValue> intradayValues = new ArrayList<>();
     @Builder.Default
     List<HistoryValue> historyValues = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Dataset, tickers: " + instruments.stream().map(Instrument::getTicker).toList();
+    }
 }

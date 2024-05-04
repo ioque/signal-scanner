@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import ru.ioque.core.dataset.Dataset;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -28,6 +30,7 @@ public class DatasourceRestController {
     @SneakyThrows
     @PostMapping(value = "/api/dataset", produces = MediaType.APPLICATION_JSON_VALUE)
     public void initDataset(@RequestBody Dataset dataset) {
+        log.info("received new dataset: {}", dataset.toString());
         datasetRepository.initInstruments(dataset.getInstruments());
         datasetRepository.initIntradayValue(dataset.getIntradayValues());
         datasetRepository.initHistoryValues(dataset.getHistoryValues());
@@ -37,6 +40,7 @@ public class DatasourceRestController {
     @GetMapping(value = "/api/instruments", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Instrument> getInstruments(
     ) {
+        log.info("received getInstruments request");
         return datasetRepository.getInstruments();
     }
 
@@ -45,6 +49,7 @@ public class DatasourceRestController {
         @PathVariable String ticker,
         @RequestParam(required = false, defaultValue = "0") int start
     ) {
+        log.info("received getIntraday request {ticker={}, start={}", ticker, start);
         return datasetRepository.getIntradayValuesBy(ticker, start);
     }
 
@@ -54,6 +59,7 @@ public class DatasourceRestController {
         @RequestParam LocalDate from,
         @RequestParam LocalDate to
     ) {
+        log.info("received getHistory request {ticker={}, from={}, to={}", ticker, from, to);
         return datasetRepository.getHistoryValues(ticker, from, to);
     }
 }
