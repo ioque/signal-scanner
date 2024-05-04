@@ -50,4 +50,9 @@ public class FakeScannerRepository implements ScannerRepository {
     public ScannerId nextId() {
         return ScannerId.from(UUID.randomUUID());
     }
+
+    @Override
+    public void removeBy(ScannerId scannerId) {
+        scanners.remove(scannerId);
+    }
 }

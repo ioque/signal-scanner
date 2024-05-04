@@ -31,8 +31,8 @@ public abstract class CommandHandler<C> {
             final long start = System.currentTimeMillis();
             final Result result = execute(command);
             final long duration = System.currentTimeMillis() - start;
-            result.getLogs().forEach(applicationLog -> loggerProvider.log(trackId, applicationLog));
             if (result.isSuccess()) {
+                result.getLogs().forEach(applicationLog -> loggerProvider.log(trackId, applicationLog));
                 loggerProvider.log(
                     trackId,
                     new InfoLog(
@@ -45,17 +45,7 @@ public abstract class CommandHandler<C> {
                     )
                 );
             } else {
-                loggerProvider.log(
-                    trackId,
-                    new InfoLog(
-                        timestamp(),
-                        String.format(
-                            "Обработка команды %s завершилась с ошибкой, время выполнения составило %s мс",
-                            command,
-                            duration
-                        )
-                    )
-                );
+                result.throwError();
             }
         } catch (Exception exception) {
             loggerProvider.log(

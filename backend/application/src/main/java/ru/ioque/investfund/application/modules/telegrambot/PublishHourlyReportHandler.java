@@ -13,7 +13,6 @@ import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishHourlyReport;
-import ru.ioque.investfund.domain.core.ErrorLog;
 import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.io.File;
@@ -65,7 +64,7 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
                 ));
             }
         } catch (IOException e) {
-            return Result.error(List.of(new ErrorLog(dateTimeProvider.nowDateTime(), e.getMessage(), e)));
+            return Result.error(new RuntimeException(e.getMessage()));
         }
         return Result.success();
     }

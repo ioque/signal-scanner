@@ -18,6 +18,7 @@ import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPosi
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.ProduceSignalCommandHandler;
+import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.telegrambot.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.SubscribeHandler;
@@ -55,6 +56,7 @@ public class FakeDIContainer {
     CloseEmulatedPositionHandler closeEmulatedPositionHandler;
     EvaluateEmulatedPositionHandler evaluateEmulatedPositionHandler;
     OpenEmulatedPositionHandler openEmulatedPositionHandler;
+    RemoveScannerHandler removeScannerHandler;
     PublishSignalHandler publishSignalHandler;
     SubscribeHandler subscribeHandler;
     UnsubscribeHandler unsubscribeHandler;
@@ -78,6 +80,13 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
+        removeScannerHandler = new RemoveScannerHandler(
+          dateTimeProvider,
+          validator,
+          loggerProvider,
+          scannerRepository,
+          emulatedPositionRepository
+        );
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
@@ -207,7 +216,8 @@ public class FakeDIContainer {
                 openEmulatedPositionHandler,
                 publishSignalHandler,
                 subscribeHandler,
-                unsubscribeHandler
+                unsubscribeHandler,
+                removeScannerHandler
             )
         );
     }

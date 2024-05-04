@@ -45,7 +45,7 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Instrument instrument = instrumentRepository.getBy(command.getInstrumentId());
         if (emulatedPositionRepository.findBy(command.getInstrumentId(), command.getScannerId()).isPresent()) {
-            return Result.error(
+            return Result.success(
                 List.of(
                     new WarningLog(
                         dateTimeProvider.nowDateTime(),

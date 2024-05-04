@@ -7,28 +7,45 @@ import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradi
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
+import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RemoveScannerTest extends BaseConfiguratorTest {
     @Test
     @DisplayName("""
-        T1. Удаление сканера сигналов, по которому есть открытые позиции и сигналы.
+        T1. Удаление сканера сигналов, по которому есть открытые позиции.
         """)
     void testCase1() {
-        prepareState();
+        prepareTestCase1();
+
+        var error = assertThrows(
+            DomainException.class,
+            () -> commandBus().execute(new RemoveScanner(getFirstScannerId()))
+        );
+        assertEquals("Удаление сканера невозможно, есть эмуляции позиций.", error.getMessage());
+        assertEquals(2, emulatedPositionRepository().emulatedPositions.size());
+        assertEquals(1, scannerRepository().scanners.size());
+    }
+
+    @Test
+    @DisplayName("""
+        T2. Удаление сканера сигналов, по которому нет открытых позиций.
+        """)
+    void testCase2() {
+        prepareTestCase2();
 
         commandBus().execute(new RemoveScanner(getFirstScannerId()));
 
-        assertEquals(0, emulatedPositionRepository().emulatedPositions.size());
         assertEquals(0, scannerRepository().scanners.size());
     }
 
-    private void prepareState() {
+    private void prepareTestCase1() {
         initTodayDateTime("2023-12-22T13:00:00");
         initHistoryValues(
             buildTgkbHistoryValue("2023-12-19", 99.D, 99.D, 1D, 2000D),
@@ -85,5 +102,10 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
             );
         assertEquals(2, getScanner(getFirstScannerId()).getSignals().size());
         assertEquals(2, emulatedPositionRepository().emulatedPositions.size());
+    }
+
+    private void prepareTestCase2() {
+        commandBus().execute(buildCreateAnomalyVolumeScannerWith().build());
+        assertEquals(1, scannerRepository().scanners.size());
     }
 }
