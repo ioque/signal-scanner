@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.core.dataset.Dataset;
 
 @Component
-@Profile("local")
+@Profile("!staging")
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InternalDatasetManager implements DatasetManager {
