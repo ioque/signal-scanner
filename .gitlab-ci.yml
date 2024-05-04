@@ -90,10 +90,9 @@ api tests:
     API_HOST: "192.168.0.85"
     KAFKA_HOST: "192.168.0.85"
     DATASOURCE_HOST: "192.168.0.85"
-    SPRING_PROFILES_ACTIVE: "staging"
   script:
     - cd acceptance
-    - gradle clean api-test:test
+    - gradle clean api-test:test -Dspring.profiles.active=staging
   artifacts:
     when: always
     reports:
