@@ -31,6 +31,8 @@ services:
         condition: service_started
       kafka:
         condition: service_healthy
+      kafka-init-topics:
+        condition: service_completed_successfully
 
   frontend:
     container_name: frontend
@@ -102,7 +104,8 @@ services:
     image: confluentinc/cp-kafka:7.4.1
     entrypoint: [ '/bin/sh', '-c' ]
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     command: |
       "
       kafka-topics --bootstrap-server kafka:29092 --list
@@ -129,7 +132,8 @@ services:
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
 
   elasticsearch:
     image: elasticsearch:7.14.2
