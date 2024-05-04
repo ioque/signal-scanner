@@ -14,7 +14,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,8 +38,8 @@ public class CreateScannerRequest {
     @NotNull(message = "Не переданы параметры алгоритма.")
     @Valid AlgorithmPropertiesDto properties;
 
-    public CreateScannerCommand toCommand() {
-        return CreateScannerCommand.builder()
+    public CreateScanner toCommand() {
+        return CreateScanner.builder()
             .datasourceId(DatasourceId.from(datasourceId))
             .properties(properties.toDomain())
             .workPeriodInMinutes(workPeriodInMinutes)

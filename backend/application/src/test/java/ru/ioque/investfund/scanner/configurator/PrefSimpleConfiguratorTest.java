@@ -3,8 +3,8 @@ package ru.ioque.investfund.scanner.configurator;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 
@@ -103,8 +103,8 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             .spreadValue(1.0);
     }
 
-    private CreateScannerCommand.CreateScannerCommandBuilder buildCreatePrefSimpleScannerWith() {
-        return CreateScannerCommand.builder()
+    private CreateScanner.CreateScannerBuilder buildCreatePrefSimpleScannerWith() {
+        return CreateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -114,8 +114,8 @@ public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
             );
     }
 
-    private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdatePrefSimpleScannerWith() {
-        return UpdateScannerCommand.builder()
+    private UpdateScanner.UpdateScannerBuilder buildUpdatePrefSimpleScannerWith() {
+        return UpdateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

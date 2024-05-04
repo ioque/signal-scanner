@@ -11,7 +11,7 @@ import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.integration.event.DatasourceScanned;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
 import ru.ioque.investfund.domain.core.ApplicationLog;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCommand> {
+public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository snapshotsRepository;
     EventPublisher eventPublisher;
@@ -47,7 +47,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignalCom
     }
 
     @Override
-    protected Result businessProcess(ProduceSignalCommand command) {
+    protected Result businessProcess(ProduceSignal command) {
         final List<ApplicationLog> logs = scannerRepository
             .findAllBy(command.getDatasourceId())
             .stream()

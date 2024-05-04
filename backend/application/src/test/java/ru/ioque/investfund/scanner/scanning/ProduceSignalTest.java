@@ -8,8 +8,8 @@ import ru.ioque.investfund.application.modules.datasource.command.CreateDatasour
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProduceSignalCommandTest extends BaseScannerTest {
+public class ProduceSignalTest extends BaseScannerTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
@@ -39,7 +39,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
         initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(
-            CreateScannerCommand.builder()
+            CreateScanner.builder()
                 .datasourceId(getDatasourceId())
                 .workPeriodInMinutes(1)
                 .tickers(List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX)))
@@ -63,7 +63,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase1() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new ProduceSignalCommand(null, getToday()))
+            () -> commandBus().execute(new ProduceSignal(null, getToday()))
         );
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
     }
@@ -75,7 +75,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase2() {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new ProduceSignalCommand(getDatasourceId(), null))
+            () -> commandBus().execute(new ProduceSignal(getDatasourceId(), null))
         );
         assertEquals("Не передан watermark.", getMessage(exception));
     }
@@ -88,7 +88,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase3() {
         prepareTestCase3();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         final Optional<SignalRegistered> signalFoundEvent = findSignalFoundEvent();
         assertTrue(signalFoundEvent.isPresent());
@@ -108,7 +108,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase4() {
         prepareTestCase4();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(2, scanner.getSignals().size());
@@ -122,7 +122,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase5() {
         prepareTestCase5();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(0, scanner.getSignals().size());
@@ -136,7 +136,7 @@ public class ProduceSignalCommandTest extends BaseScannerTest {
     void testCase6() {
         prepareTestCase6();
 
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         SignalScanner scanner = scannerRepository().findAllBy(getDatasourceId()).stream().findFirst().orElseThrow();
         assertEquals(1, scanner.getSignals().size());

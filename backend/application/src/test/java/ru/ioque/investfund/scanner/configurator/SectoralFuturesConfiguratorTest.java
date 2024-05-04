@@ -2,8 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 
@@ -281,8 +281,8 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
         return "Параметр futuresOvernightScale должен быть больше 0.";
     }
 
-    private CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralFuturesScannerWith() {
-        return CreateScannerCommand.builder()
+    private CreateScanner.CreateScannerBuilder buildCreateSectoralFuturesScannerWith() {
+        return CreateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -296,8 +296,8 @@ public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
             );
     }
 
-    private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralFuturesScannerWith() {
-        return UpdateScannerCommand.builder()
+    private UpdateScanner.UpdateScannerBuilder buildUpdateSectoralFuturesScannerWith() {
+        return UpdateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

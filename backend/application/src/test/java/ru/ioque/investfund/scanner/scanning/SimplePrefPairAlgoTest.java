@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
@@ -389,7 +389,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initScanner(DatasourceId datasourceId, String... tickers) {
         commandBus().execute(
-            CreateScannerCommand.builder()
+            CreateScanner.builder()
                 .workPeriodInMinutes(1)
                 .description("Анализ пар преф-обычка.")
                 .datasourceId(datasourceId)

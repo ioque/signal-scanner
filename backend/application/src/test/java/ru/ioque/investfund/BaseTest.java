@@ -16,7 +16,7 @@ import ru.ioque.investfund.application.modules.datasource.handler.integration.dt
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.DealDto;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.DeltaDto;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.IntradayDataDto;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -174,7 +174,7 @@ public class BaseTest {
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
-        commandBus().execute(new ProduceSignalCommand(datasourceId, getToday()));
+        commandBus().execute(new ProduceSignal(datasourceId, getToday()));
     }
 
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {

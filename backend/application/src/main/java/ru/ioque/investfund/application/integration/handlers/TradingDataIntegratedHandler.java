@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.integration.EventHandler;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 @Component
@@ -30,7 +30,7 @@ public class TradingDataIntegratedHandler extends EventHandler<TradingDataIntegr
     @Override
     public void handle(TradingDataIntegrated event) {
         commandPublisher.publish(
-            ProduceSignalCommand.builder()
+            ProduceSignal.builder()
                 .datasourceId(DatasourceId.from(event.getDatasourceId()))
                 .watermark(event.getCreatedAt())
                 .build()

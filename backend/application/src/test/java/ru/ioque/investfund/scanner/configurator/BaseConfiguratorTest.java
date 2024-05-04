@@ -7,8 +7,8 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
@@ -60,7 +60,7 @@ public class BaseConfiguratorTest extends BaseTest {
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
-    protected void testAddNewScannerError(CreateScannerCommand command, String msg) {
+    protected void testAddNewScannerError(CreateScanner command, String msg) {
         var error = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(command)
@@ -68,7 +68,7 @@ public class BaseConfiguratorTest extends BaseTest {
         assertEquals(msg, getMessage(error));
     }
 
-    protected void testUpdateScannerError(UpdateScannerCommand command, String msg) {
+    protected void testUpdateScannerError(UpdateScanner command, String msg) {
         var error = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(command)
@@ -76,8 +76,8 @@ public class BaseConfiguratorTest extends BaseTest {
         assertEquals(msg, getMessage(error));
     }
 
-    protected CreateScannerCommand.CreateScannerCommandBuilder buildCreateAnomalyVolumeScannerWith() {
-        return CreateScannerCommand.builder()
+    protected CreateScanner.CreateScannerBuilder buildCreateAnomalyVolumeScannerWith() {
+        return CreateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -87,8 +87,8 @@ public class BaseConfiguratorTest extends BaseTest {
             );
     }
 
-    protected UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateAnomalyVolumeScannerWith() {
-        return UpdateScannerCommand.builder()
+    protected UpdateScanner.UpdateScannerBuilder buildUpdateAnomalyVolumeScannerWith() {
+        return UpdateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .tickers(getAnomalyVolumeTickers())

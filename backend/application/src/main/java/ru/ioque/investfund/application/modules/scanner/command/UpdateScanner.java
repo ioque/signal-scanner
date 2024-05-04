@@ -27,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateScannerCommand implements Command {
+public class UpdateScanner implements Command {
     @NotNull(message = "Не передан идентификатор сканера.")
     ScannerId scannerId;
     @NotNull(message = "Не передан период работы сканера.")

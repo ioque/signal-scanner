@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.Command;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-
-import java.time.LocalDateTime;
+import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 @Getter
 @Builder
@@ -21,9 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProduceSignalCommand implements Command {
-    @NotNull(message = "Не передан идентификатор источника данных.")
-    DatasourceId datasourceId;
-    @NotNull(message = "Не передан watermark.")
-    LocalDateTime watermark;
+public class RemoveScanner implements Command {
+    @NotNull(message = "Не передан идентификатор сканера.")
+    ScannerId scannerId;
 }

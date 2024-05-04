@@ -7,8 +7,8 @@ import ru.ioque.investfund.application.modules.datasource.command.CreateDatasour
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignalCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.application.modules.telegrambot.command.Subscribe;
 import ru.ioque.investfund.application.modules.telegrambot.command.Unsubscribe;
@@ -156,7 +156,7 @@ public class TelegramBotTest extends BaseTest {
         commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(
-            CreateScannerCommand.builder()
+            CreateScanner.builder()
                 .workPeriodInMinutes(1)
                 .description("Аномальные объемы, третий эшелон.")
                 .datasourceId(getDatasourceId())
@@ -171,7 +171,7 @@ public class TelegramBotTest extends BaseTest {
                 .build()
         );
         commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
-        commandBus().execute(new ProduceSignalCommand(getDatasourceId(), getToday()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), getToday()));
         commandBus().execute(new Subscribe(1L, "kukusuku"));
         clearLogs();
         telegramMessageSender().clear();

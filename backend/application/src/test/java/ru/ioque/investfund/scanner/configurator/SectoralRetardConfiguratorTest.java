@@ -3,8 +3,8 @@ package ru.ioque.investfund.scanner.configurator;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.scanner.command.CreateScannerCommand;
-import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
@@ -202,8 +202,8 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .historyScale(0.015);
     }
 
-    private CreateScannerCommand.CreateScannerCommandBuilder buildCreateSectoralRetardScannerWith() {
-        return CreateScannerCommand.builder()
+    private CreateScanner.CreateScannerBuilder buildCreateSectoralRetardScannerWith() {
+        return CreateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .datasourceId(getDatasourceId())
@@ -211,8 +211,8 @@ public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
             .properties(getDefaultProperties());
     }
 
-    private UpdateScannerCommand.UpdateScannerCommandBuilder buildUpdateSectoralRetardScannerWith() {
-        return UpdateScannerCommand.builder()
+    private UpdateScanner.UpdateScannerBuilder buildUpdateSectoralRetardScannerWith() {
+        return UpdateScanner.builder()
             .workPeriodInMinutes(1)
             .description("description")
             .scannerId(getFirstScannerId())

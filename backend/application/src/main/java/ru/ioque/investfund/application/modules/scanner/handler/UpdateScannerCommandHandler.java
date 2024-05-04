@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.scanner.command.UpdateScannerCommand;
+import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCommand> {
+public class UpdateScannerCommandHandler extends CommandHandler<UpdateScanner> {
     ScannerRepository scannerRepository;
     DatasourceRepository datasourceRepository;
 
@@ -36,7 +36,7 @@ public class UpdateScannerCommandHandler extends CommandHandler<UpdateScannerCom
     }
 
     @Override
-    protected Result businessProcess(UpdateScannerCommand command) {
+    protected Result businessProcess(UpdateScanner command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Datasource datasource = datasourceRepository.getBy(scanner.getDatasourceId());
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
