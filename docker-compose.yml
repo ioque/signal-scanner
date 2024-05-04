@@ -4,17 +4,17 @@ services:
     container_name: signal-scanner-db
     build:
       dockerfile: infra/containers/postgres/Dockerfile
-    image: 192.168.0.62:8002/ioque/postgres:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/postgres:${COMMIT_TAG:-latest}
 
   backend:
     container_name: backend
-    image: 192.168.0.62:8002/ioque/backend:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/backend:${COMMIT_TAG:-latest}
     build:
       context: backend
 
   frontend:
     container_name: frontend
-    image: 192.168.0.62:8002/ioque/frontend:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/frontend:${COMMIT_TAG:-latest}
     build:
       context: frontend
 
@@ -22,16 +22,16 @@ services:
     container_name: datasource
     build:
       context: acceptance
-    image: 192.168.0.62:8002/ioque/datasource:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/datasource:${COMMIT_TAG:-latest}
 
   logstash:
     build:
       dockerfile: infra/containers/logstash/Dockerfile
-    image: 192.168.0.62:8002/ioque/logstash:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/logstash:${COMMIT_TAG:-latest}
     container_name: logstash
 
   moex-datasource:
     container_name: moex-datasource
     build:
       context: moex-datasource
-    image: 192.168.0.62:8002/ioque/moex-datasource:${COMMIT_TAG:-latest}
+    image: 192.168.0.47:8002/ioque/moex-datasource:${COMMIT_TAG:-latest}
