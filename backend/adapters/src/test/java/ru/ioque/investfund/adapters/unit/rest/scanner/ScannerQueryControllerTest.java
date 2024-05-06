@@ -14,9 +14,13 @@ import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
+import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.AnomalyVolumeSignalScannerConfigResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,8 +38,9 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     @Autowired
     JpaInstrumentRepository instrumentEntityRepository;
 
+    private static final LocalDateTime NOW = LocalDateTime.now();
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
-    private static final UUID SIGNAL_ID = UUID.randomUUID();
+    private static final UUID SCANNER_ID = UUID.randomUUID();
     private static final UUID AFKS_ID = UUID.randomUUID();
     private static final UUID IMOEX_ID = UUID.randomUUID();
 
@@ -59,10 +64,14 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                     .json(
                         objectMapper
                             .writeValueAsString(
-                                signalProducers
-                                    .stream()
-                                    .map(SignalScannerInListResponse::from)
-                                    .toList()
+                                List.of(
+                                    SignalScannerInListResponse.builder()
+                                        .id(SCANNER_ID)
+                                        .status(ScannerStatus.ACTIVE)
+                                        .description(signalProducers.get(0).getDescription())
+                                        .lastExecutionDateTime(signalProducers.get(0).getLastExecutionDateTime())
+                                        .build()
+                                )
                             )
                     )
             );
@@ -86,13 +95,44 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             )
             .thenReturn(instruments);
         mvc
-            .perform(MockMvcRequestBuilders.get("/api/scanner/" + SIGNAL_ID))
+            .perform(MockMvcRequestBuilders.get("/api/scanner/" + SCANNER_ID))
             .andExpect(status().isOk())
             .andExpect(
                 content()
                     .json(
                         objectMapper
-                            .writeValueAsString(SignalScannerResponse.of(scanner, instruments))
+                            .writeValueAsString(
+                                SignalScannerResponse.builder()
+                                    .id(SCANNER_ID)
+                                    .status(ScannerStatus.ACTIVE)
+                                    .description(scanner.getDescription())
+                                    .config(
+                                        new AnomalyVolumeSignalScannerConfigResponse(
+                                            1.5,
+                                            180,
+                                            "IMOEX"
+                                        )
+                                    )
+                                    .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
+                                    .lastExecutionDateTime(scanner.getLastExecutionDateTime())
+                                    .instruments(instruments
+                                        .stream()
+                                        .map(InstrumentInListResponse::from)
+                                        .toList()
+                                    )
+                                    .signals(
+                                        List.of(
+                                            SignalResponse.builder()
+                                                .price(10D)
+                                                .isBuy(true)
+                                                .ticker("AFKS")
+                                                .summary("summary")
+                                                .dateTime(NOW)
+                                                .build()
+                                        )
+                                    )
+                                    .build()
+                            )
                     )
             );
     }
@@ -144,12 +184,13 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
 
     private List<ScannerEntity> getSignalScanners() {
         var scanner = new AnomalyVolumeScannerEntity(
-            SIGNAL_ID,
+            SCANNER_ID,
+            ScannerStatus.ACTIVE,
             1,
             "Описание",
             DATASOURCE_ID,
             List.of(AFKS_ID, IMOEX_ID),
-            LocalDateTime.now(),
+            NOW,
             new ArrayList<>(),
             1.5,
             180,
@@ -160,8 +201,7 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
                 .price(10D)
                 .isBuy(true)
                 .summary("summary")
-                .scanner(scanner)
-                .dateTime(LocalDateTime.now())
+                .dateTime(NOW)
                 .instrumentId(AFKS_ID)
             .build());
         return List.of(scanner);

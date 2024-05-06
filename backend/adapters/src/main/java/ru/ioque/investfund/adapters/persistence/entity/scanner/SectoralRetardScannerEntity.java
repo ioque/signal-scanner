@@ -12,6 +12,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,7 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
     @Builder
     public SectoralRetardScannerEntity(
         UUID id,
+        ScannerStatus status,
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
@@ -40,7 +42,7 @@ public class SectoralRetardScannerEntity extends ScannerEntity {
         Double historyScale,
         Double intradayScale
     ) {
-        super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
+        super(id, status, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.historyScale = historyScale;
         this.intradayScale = intradayScale;
     }

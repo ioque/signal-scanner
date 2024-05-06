@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,14 +24,14 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScannerInListResponse implements Serializable {
     UUID id;
+    ScannerStatus status;
     String description;
-    Integer workPeriodInMinutes;
-    Integer signalCounts;
     LocalDateTime lastExecutionDateTime;
 
     public static SignalScannerInListResponse from(ScannerEntity scanner) {
         return SignalScannerInListResponse.builder()
             .id(scanner.getId())
+            .status(scanner.getStatus())
             .description(scanner.getDescription())
             .lastExecutionDateTime(scanner.getLastExecutionDateTime())
             .build();

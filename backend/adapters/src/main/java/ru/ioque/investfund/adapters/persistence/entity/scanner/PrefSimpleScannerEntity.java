@@ -12,6 +12,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +31,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
     @Builder
     public PrefSimpleScannerEntity(
         UUID id,
+        ScannerStatus status,
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
@@ -38,7 +40,7 @@ public class PrefSimpleScannerEntity extends ScannerEntity {
         List<SignalEntity> signals,
         Double spreadParam
     ) {
-        super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
+        super(id, status, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.spreadParam = spreadParam;
     }
 

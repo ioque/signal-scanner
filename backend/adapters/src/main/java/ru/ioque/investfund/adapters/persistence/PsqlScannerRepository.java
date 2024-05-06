@@ -61,4 +61,9 @@ public class PsqlScannerRepository implements ScannerRepository {
     public ScannerId nextId() {
         return ScannerId.from(UUID.randomUUID());
     }
+
+    @Override
+    public void removeBy(ScannerId scannerId) {
+        signalScannerEntityRepository.deleteById(scannerId.getUuid());
+    }
 }

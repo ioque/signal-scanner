@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
     @Builder
     public AnomalyVolumeScannerEntity(
         UUID id,
+        ScannerStatus status,
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
@@ -43,7 +45,7 @@ public class AnomalyVolumeScannerEntity extends ScannerEntity {
         Integer historyPeriod,
         String indexTicker
     ) {
-        super(id, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
+        super(id, status, workPeriodInMinutes, description, datasourceId, instrumentIds, lastWorkDateTime, signals);
         this.scaleCoefficient = scaleCoefficient;
         this.historyPeriod = historyPeriod;
         this.indexTicker = indexTicker;

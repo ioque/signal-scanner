@@ -5,6 +5,8 @@ import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -26,6 +28,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProper
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
@@ -46,6 +49,8 @@ import java.util.stream.Collectors;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "SCANNER_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
 public abstract class ScannerEntity extends UuidIdentity {
+    @Enumerated(EnumType.STRING)
+    ScannerStatus status;
     Integer workPeriodInMinutes;
     String description;
     UUID datasourceId;
@@ -57,6 +62,7 @@ public abstract class ScannerEntity extends UuidIdentity {
 
     public ScannerEntity(
         UUID id,
+        ScannerStatus status,
         Integer workPeriodInMinutes,
         String description,
         UUID datasourceId,
@@ -65,6 +71,7 @@ public abstract class ScannerEntity extends UuidIdentity {
         List<SignalEntity> signals
     ) {
         super(id);
+        this.status = status;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;
@@ -76,6 +83,7 @@ public abstract class ScannerEntity extends UuidIdentity {
     public SignalScanner toDomain() {
         return SignalScanner.builder()
             .id(ScannerId.from(getId()))
+            .status(status)
             .properties(getAlgorithmProperties())
             .datasourceId(DatasourceId.from(getDatasourceId()))
             .workPeriodInMinutes(getWorkPeriodInMinutes())

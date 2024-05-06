@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScannerResponse implements Serializable {
     UUID id;
+    ScannerStatus status;
     String description;
     Integer workPeriodInMinutes;
     SignalConfigResponse config;
@@ -41,6 +43,7 @@ public class SignalScannerResponse implements Serializable {
     ) {
         return SignalScannerResponse.builder()
             .id(scanner.getId())
+            .status(scanner.getStatus())
             .description(scanner.getDescription())
             .config(SignalConfigResponse.from(scanner))
             .workPeriodInMinutes(scanner.getWorkPeriodInMinutes())
