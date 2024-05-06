@@ -35,4 +35,16 @@ public class ScannerHttpClient extends JsonHttpClient {
     public void updateScanner(UUID scannerId, UpdateScannerRequest request) {
         patch("/api/scanner/" + scannerId, objectMapper.writeValueAsString(request));
     }
+
+    public void removeScanner(UUID scannerId) {
+        delete("/api/scanner/" + scannerId);
+    }
+
+    public void activateScanner(UUID scannerId) {
+        patch("/api/scanner/" + scannerId + "/activate");
+    }
+
+    public void deactivateScanner(UUID scannerId) {
+        patch("/api/scanner/" + scannerId + "/deactivate");
+    }
 }

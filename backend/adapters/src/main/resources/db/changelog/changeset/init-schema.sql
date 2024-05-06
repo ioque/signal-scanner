@@ -105,7 +105,11 @@ create table if not exists scanner
     scanner_type             varchar(255) not null,
     description              varchar(255),
     futures_ticker           varchar(255),
-    index_ticker             varchar(255)
+    index_ticker             varchar(255),
+    status          varchar(255)
+        constraint instrument_type_check
+            check ((status)::text = ANY
+                   ((ARRAY ['INACTIVE'::character varying, 'ACTIVE'::character varying])::text[]))
 );
 
 alter table scanner

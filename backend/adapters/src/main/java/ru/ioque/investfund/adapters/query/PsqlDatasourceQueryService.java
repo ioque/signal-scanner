@@ -9,7 +9,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.Pagination;
-import ru.ioque.investfund.adapters.rest.ResourceNotFoundException;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +70,7 @@ public class PsqlDatasourceQueryService {
         return "Источник данных не зарегистрирован.";
     }
 
-    private Supplier<ResourceNotFoundException> notFoundException(String message) {
-        return () -> new ResourceNotFoundException(message);
+    private Supplier<EntityNotFoundException> notFoundException(String message) {
+        return () -> new EntityNotFoundException(message);
     }
 }

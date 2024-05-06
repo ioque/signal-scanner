@@ -22,6 +22,7 @@ import ru.ioque.core.dto.risk.response.EmulatedPositionResponse;
 import ru.ioque.core.dto.scanner.request.CreateScannerRequest;
 import ru.ioque.core.dto.scanner.response.SignalResponse;
 import ru.ioque.core.dto.scanner.response.SignalScannerInListResponse;
+import ru.ioque.core.dto.scanner.response.SignalScannerResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -93,8 +94,21 @@ public abstract class DatasourceEmulatedTest {
         signalScannerClient().createScanner(request);
     }
 
+
+    protected void removeScanner(UUID scannerId) {
+        signalScannerClient().removeScanner(scannerId);
+    }
+
+    protected void activateScanner(UUID scannerId) {
+        signalScannerClient().activateScanner(scannerId);
+    }
+
+    protected void deactivateScanner(UUID scannerId) {
+        signalScannerClient().deactivateScanner(scannerId);
+    }
+
     protected List<SignalResponse> getSignalsBy(UUID id) {
-        return signalScannerClient().getSignalScannerBy(id).getSignals();
+        return getScannerById(id).getSignals();
     }
 
     protected List<String> getTickers(UUID datasourceId) {
@@ -106,6 +120,10 @@ public abstract class DatasourceEmulatedTest {
 
     protected List<SignalScannerInListResponse> getSignalScanners() {
         return signalScannerClient().getDataScanners();
+    }
+
+    protected SignalScannerResponse getScannerById(UUID scannerId) {
+        return signalScannerClient().getSignalScannerBy(scannerId);
     }
 
     protected DatasourceResponse getDatasourceBy(UUID exchangeId) {

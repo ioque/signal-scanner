@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
@@ -59,6 +60,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
+            .status(ScannerStatus.ACTIVE)
             .datasourceId(MOEX_DATASOURCE_ID)
             .instrumentIds(instrumentIds)
             .properties(properties)
@@ -92,6 +94,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
+            .status(ScannerStatus.ACTIVE)
             .datasourceId(MOEX_DATASOURCE_ID)
             .instrumentIds(instrumentIds)
             .properties(properties)
@@ -125,6 +128,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
+            .status(ScannerStatus.ACTIVE)
             .datasourceId(MOEX_DATASOURCE_ID)
             .instrumentIds(instrumentIds)
             .properties(properties)
@@ -158,6 +162,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
+            .status(ScannerStatus.ACTIVE)
             .datasourceId(MOEX_DATASOURCE_ID)
             .instrumentIds(instrumentIds)
             .properties(properties)
@@ -211,6 +216,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
     ) {
         return SignalScanner.builder()
             .id(scannerId)
+            .status(ScannerStatus.ACTIVE)
             .datasourceId(datasourceId)
             .instrumentIds(instrumentIds)
             .properties(properties)

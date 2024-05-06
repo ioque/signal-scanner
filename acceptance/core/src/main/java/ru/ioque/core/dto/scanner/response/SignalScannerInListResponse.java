@@ -20,8 +20,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScannerInListResponse implements Serializable {
     UUID id;
+    ScannerStatus status;
     String description;
-    Integer workPeriodInMinutes;
-    Integer signalCounts;
     LocalDateTime lastExecutionDateTime;
 }

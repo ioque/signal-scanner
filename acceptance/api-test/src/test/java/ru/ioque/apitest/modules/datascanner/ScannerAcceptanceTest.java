@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("МОДУЛЬ \"СКАНЕР ДАННЫХ\"")
@@ -818,5 +819,44 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         assertTrue(waitScanningFinishedEvent(LocalDateTime.parse("2024-03-22T13:00:00")));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
+    }
+
+    @Test
+    @DisplayName("""
+        T11. Удаление сканера сигналов.
+        """)
+    void testCase11() {
+        final UUID datasourceId = getAllDatasource().get(0).getId();
+        initDataset(
+            Dataset.builder()
+                .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
+                .build()
+        );
+        integrateAllInstrumentFrom(datasourceId);
+        createScanner(
+            CreateScannerRequest.builder()
+                .workPeriodInMinutes(1)
+                .description("desc")
+                .datasourceId(datasourceId)
+                .tickers(getTickers(datasourceId))
+                .properties(
+                    AnomalyVolumePropertiesDto.builder()
+                        .historyPeriod(180)
+                        .scaleCoefficient(1.5)
+                        .indexTicker("IMOEX")
+                        .build()
+                )
+                .build()
+        );
+        final UUID scannerId = getFirstScannerId();
+
+        removeScanner(scannerId);
+
+        assertEquals(0, getSignalScanners().size());
+        var error = assertThrows(
+            RuntimeException.class,
+            () -> getScannerById(scannerId)
+        );
+        assertEquals(String.format("Сканер[id=%s] не существует.", scannerId), error.getMessage());
     }
 }

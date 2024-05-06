@@ -74,7 +74,18 @@ public class JsonHttpClient {
         checkError(client.send(request, BodyHandlers.ofString()));
     }
 
+    @SneakyThrows
+    protected void patch(String path) {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(new URI(apiUrl + path))
+            .header("Content-Type", "application/json")
+            .method("PATCH", HttpRequest.BodyPublishers.noBody())
+            .build();
+        checkError(client.send(request, BodyHandlers.ofString()));
+    }
+
     private void checkError(HttpResponse<String> response) throws JsonProcessingException {
+        System.out.println(response.body());
         if(response.statusCode() == 400) {
             List<String> errors = new ArrayList<>();
             JsonNode jsonNode = objectMapper.readTree(response.body()).get("errors");
@@ -87,6 +98,7 @@ public class JsonHttpClient {
         }
         if (response.statusCode() != 200) {
             JsonNode message = objectMapper.readTree(response.body()).get("message");
+            System.out.println(message);
             throw new RuntimeException(message != null ? message.asText() : "");
         }
     }

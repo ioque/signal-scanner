@@ -13,6 +13,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentReposi
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
+import ru.ioque.investfund.domain.core.EntityNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,11 @@ public class ScannerQueryController {
 
     @GetMapping("/api/scanner/{id}")
     public SignalScannerResponse getSignalScanner(@PathVariable UUID id) {
-        ScannerEntity scanner = signalScannerEntityRepository.findById(id).orElseThrow();
+        ScannerEntity scanner = signalScannerEntityRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException(String.format("Сканер[id=%s] не существует.", id))
+            );
         List<InstrumentEntity> instruments = instrumentEntityRepository.findAllByIdIn(scanner.getInstrumentIds());
         return SignalScannerResponse.of(scanner, instruments);
     }

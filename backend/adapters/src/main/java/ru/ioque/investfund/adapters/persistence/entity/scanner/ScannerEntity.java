@@ -111,6 +111,7 @@ public abstract class ScannerEntity extends UuidIdentity {
         AnomalyVolumeProperties properties = (AnomalyVolumeProperties) scannerDomain.getProperties();
         AnomalyVolumeScannerEntity scannerEntity = AnomalyVolumeScannerEntity.builder()
             .id(scannerDomain.getId().getUuid())
+            .status(scannerDomain.getStatus())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
@@ -133,6 +134,7 @@ public abstract class ScannerEntity extends UuidIdentity {
         SectoralRetardProperties properties = (SectoralRetardProperties) scannerDomain.getProperties();
         SectoralRetardScannerEntity scannerEntity = SectoralRetardScannerEntity.builder()
             .id(scannerDomain.getId().getUuid())
+            .status(scannerDomain.getStatus())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
@@ -154,6 +156,7 @@ public abstract class ScannerEntity extends UuidIdentity {
         SectoralFuturesProperties properties = (SectoralFuturesProperties) scannerDomain.getProperties();
         SectoralFuturesScannerEntity scannerEntity = SectoralFuturesScannerEntity.builder()
             .id(scannerDomain.getId().getUuid())
+            .status(scannerDomain.getStatus())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
@@ -176,6 +179,7 @@ public abstract class ScannerEntity extends UuidIdentity {
         PrefCommonProperties properties = (PrefCommonProperties) scannerDomain.getProperties();
         PrefSimpleScannerEntity scannerEntity = PrefSimpleScannerEntity.builder()
             .id(scannerDomain.getId().getUuid())
+            .status(scannerDomain.getStatus())
             .workPeriodInMinutes(scannerDomain.getWorkPeriodInMinutes())
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())

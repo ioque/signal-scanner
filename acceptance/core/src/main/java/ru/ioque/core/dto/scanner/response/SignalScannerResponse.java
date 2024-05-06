@@ -21,6 +21,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScannerResponse {
     UUID id;
+    ScannerStatus status;
     String description;
     Integer workPeriodInMinutes;
     LocalDateTime lastExecutionDateTime;
