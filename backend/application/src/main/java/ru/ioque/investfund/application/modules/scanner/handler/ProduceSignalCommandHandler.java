@@ -51,7 +51,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
         final List<ApplicationLog> logs = scannerRepository
             .findAllBy(command.getDatasourceId())
             .stream()
-            .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()))
+            .filter(scanner -> scanner.isTimeForExecution(command.getWatermark()) && scanner.isActive())
             .map(scanner -> runScanner(scanner, command.getWatermark()))
             .flatMap(Collection::stream)
             .toList();

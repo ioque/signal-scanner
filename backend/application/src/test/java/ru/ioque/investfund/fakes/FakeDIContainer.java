@@ -16,7 +16,9 @@ import ru.ioque.investfund.application.modules.datasource.handler.integration.In
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
+import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
+import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.ProduceSignalCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
@@ -60,6 +62,8 @@ public class FakeDIContainer {
     PublishSignalHandler publishSignalHandler;
     SubscribeHandler subscribeHandler;
     UnsubscribeHandler unsubscribeHandler;
+    DeactivateScannerHandler deactivateScannerHandler;
+    ActivateScannerHandler activateScannerHandler;
     CommandBus commandBus;
     Validator validator;
 
@@ -80,6 +84,18 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
+        deactivateScannerHandler = new DeactivateScannerHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            scannerRepository
+        );
+        activateScannerHandler = new ActivateScannerHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            scannerRepository
+        );
         removeScannerHandler = new RemoveScannerHandler(
           dateTimeProvider,
           validator,
@@ -217,7 +233,9 @@ public class FakeDIContainer {
                 publishSignalHandler,
                 subscribeHandler,
                 unsubscribeHandler,
-                removeScannerHandler
+                removeScannerHandler,
+                deactivateScannerHandler,
+                activateScannerHandler
             )
         );
     }

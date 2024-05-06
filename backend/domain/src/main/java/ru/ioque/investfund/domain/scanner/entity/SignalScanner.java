@@ -51,6 +51,7 @@ public class SignalScanner extends Domain<ScannerId> {
         List<Signal> signals
     ) {
         super(id);
+        this.status = status;
         this.workPeriodInMinutes = workPeriodInMinutes;
         this.description = description;
         this.datasourceId = datasourceId;
@@ -154,5 +155,17 @@ public class SignalScanner extends Domain<ScannerId> {
             return true;
         }
         return false;
+    }
+
+    public boolean isActive() {
+        return status.equals(ScannerStatus.ACTIVE);
+    }
+
+    public void activate() {
+        this.status = ScannerStatus.ACTIVE;
+    }
+
+    public void deactivate() {
+        this.status = ScannerStatus.INACTIVE;
     }
 }

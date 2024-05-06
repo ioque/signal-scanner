@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.scanner.command.ActivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.DeactivateScanner;
+import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
@@ -20,13 +21,16 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
         prepareTestCase();
 
         commandBus().execute(new DeactivateScanner(getFirstScannerId()));
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
 
         assertEquals(1, scannerRepository().scanners.size());
         assertEquals(0, getScanner(getFirstScannerId()).getSignals().size());
         assertEquals(ScannerStatus.INACTIVE, getScanner(getFirstScannerId()).getStatus());
 
         commandBus().execute(new ActivateScanner(getFirstScannerId()));
-        assertEquals(1, getScanner(getFirstScannerId()).getSignals().size());
+        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
+
+        assertEquals(2, getScanner(getFirstScannerId()).getSignals().size());
         assertEquals(ScannerStatus.ACTIVE, getScanner(getFirstScannerId()).getStatus());
     }
 

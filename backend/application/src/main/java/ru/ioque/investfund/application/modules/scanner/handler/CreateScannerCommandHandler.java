@@ -13,6 +13,7 @@ import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class CreateScannerCommandHandler extends CommandHandler<CreateScanner> {
         final List<InstrumentId> instrumentIds = datasource.findInstrumentIds(command.getTickers());
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerRepository.nextId())
+            .status(ScannerStatus.ACTIVE)
             .workPeriodInMinutes(command.getWorkPeriodInMinutes())
             .description(command.getDescription())
             .datasourceId(command.getDatasourceId())
