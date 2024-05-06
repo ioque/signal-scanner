@@ -112,6 +112,9 @@ export default function ScannerDetails(params: ScannerDetailsParams) {
                 <Typography variant="h5" component="div">
                     {scanner.description}
                 </Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {scanner.status}
+                </Typography>
                 <Typography variant="h6" component="div">
                     Конфигурация
                 </Typography>

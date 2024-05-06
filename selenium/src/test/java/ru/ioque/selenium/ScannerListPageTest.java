@@ -25,6 +25,7 @@ public class ScannerListPageTest extends BaseFrontendTest {
             driver.findElement(By.className("MuiTableBody-root"))
         );
         assertEquals("Идентификатор", header.idColumn.getText());
+        assertEquals("Статус", header.statusColumn.getText());
         assertEquals("Описание", header.descriptionColumn.getText());
         assertEquals("Последний запуск", header.lastExecutionDateTimeColumn.getText());
         assertEquals(4, content.rows.size());
@@ -32,15 +33,16 @@ public class ScannerListPageTest extends BaseFrontendTest {
 
     public class ScannerTableContentRow {
         String id;
+        String status;
         String description;
         String lastExecutionDateTime;
-        String todayPrice;
 
         public ScannerTableContentRow(WebElement row) {
             List<WebElement> columns = row.findElements(By.className("MuiTableCell-root"));
             id = columns.get(0).getText();
-            description = columns.get(1).getText();
-            lastExecutionDateTime = columns.get(2).getText();
+            status = columns.get(1).getText();
+            description = columns.get(2).getText();
+            lastExecutionDateTime = columns.get(3).getText();
         }
     }
 
@@ -60,6 +62,7 @@ public class ScannerListPageTest extends BaseFrontendTest {
 
     public class ScannerTableHeaderElement {
         WebElement idColumn;
+        WebElement statusColumn;
         WebElement descriptionColumn;
         WebElement lastExecutionDateTimeColumn;
 
@@ -68,8 +71,9 @@ public class ScannerListPageTest extends BaseFrontendTest {
                 .findElement(By.className("MuiTableRow-head"))
                 .findElements(By.className("MuiTableCell-head"));
             idColumn = headerColumns.get(0);
-            descriptionColumn = headerColumns.get(1);
-            lastExecutionDateTimeColumn = headerColumns.get(2);
+            statusColumn = headerColumns.get(1);
+            descriptionColumn = headerColumns.get(2);
+            lastExecutionDateTimeColumn = headerColumns.get(3);
         }
     }
 }

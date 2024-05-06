@@ -2,6 +2,7 @@ import {InstrumentInList} from "../../dataSource/entities/Datasource";
 
 export type Scanner = {
     id: string;
+    status: string;
     description: string;
     workPeriodInMinutes: number;
     lastExecutionDateTime: Date;
@@ -12,6 +13,7 @@ export type Scanner = {
 
 export type ScannerInList = {
     id: string;
+    status: string;
     description: string;
     workPeriodInMinutes: number;
     signalCounts: number;

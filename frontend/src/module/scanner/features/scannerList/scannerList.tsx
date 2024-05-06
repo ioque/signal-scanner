@@ -30,6 +30,7 @@ export default function ScannerList() {
             onDoubleClick={() => handleClick(scanner.id)}
         >
             <TableCell component="th" scope="row">{scanner.id}</TableCell>
+            <TableCell align="right">{scanner.status}</TableCell>
             <TableCell align="right">{scanner.description}</TableCell>
             <TableCell align="right">{
                 scanner.lastExecutionDateTime == null ?
@@ -60,6 +61,7 @@ export default function ScannerList() {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Идентификатор</TableCell>
+                                <TableCell align="right">Статус</TableCell>
                                 <TableCell align="right">Описание</TableCell>
                                 <TableCell align="right">Последний запуск</TableCell>
                             </TableRow>
