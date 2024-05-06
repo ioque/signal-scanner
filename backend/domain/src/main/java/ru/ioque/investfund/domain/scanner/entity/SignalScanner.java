@@ -29,6 +29,7 @@ import java.util.TreeSet;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain<ScannerId> {
     String description;
+    ScannerStatus status;
     final DatasourceId datasourceId;
     List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
@@ -42,6 +43,7 @@ public class SignalScanner extends Domain<ScannerId> {
         ScannerId id,
         Integer workPeriodInMinutes,
         String description,
+        ScannerStatus status,
         DatasourceId datasourceId,
         AlgorithmProperties properties,
         LocalDateTime lastExecutionDateTime,

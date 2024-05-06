@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DeactivateScanner implements Command {
+public class ActivateScanner implements Command {
     @NotNull(message = "Не передан идентификатор сканера.")
     ScannerId scannerId;
 }
