@@ -8,12 +8,14 @@
 
 - name: Start
   shell: |
-    export ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }} 
-    export BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }} 
-    export TELEGRAM_BOT_TOKEN={{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') }} 
-    export MACHINE_HOST={{ lookup('ansible.builtin.env', 'MACHINE_HOST') }} 
-    export API_HTTP_MODE={{ lookup('ansible.builtin.env', 'API_HTTP_MODE') }} 
-    export COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }} 
+    rm .env
+    touch .env
+    echo "ROOT_LOG_LEVEL={{ lookup('ansible.builtin.env', 'ROOT_LOG_LEVEL') }}" >> .env
+    echo "BACKEND_ENV={{ lookup('ansible.builtin.env', 'BACKEND_ENV') }}" >> .env
+    echo "TELEGRAM_BOT_TOKEN={{ lookup('ansible.builtin.env', 'TELEGRAM_BOT_TOKEN') }}" >> .env
+    echo "MACHINE_HOST={{ lookup('ansible.builtin.env', 'MACHINE_HOST') }}" >> .env
+    echo "API_HTTP_MODE={{ lookup('ansible.builtin.env', 'API_HTTP_MODE') }}" >> .env
+    echo "COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }}" >> .env
     docker compose down -v --rmi all
     docker compose up --wait
     exit 0

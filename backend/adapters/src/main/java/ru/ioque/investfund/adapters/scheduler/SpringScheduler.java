@@ -5,17 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.application.adapters.CommandPublisher;
 
 @Component
 @AllArgsConstructor
 @Profile("production")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SpringScheduler {
-    JpaDatasourceRepository jpaDatasourceRepository;
-    CommandPublisher commandPublisher;
-
 //    @Scheduled(cron = "0 */15 10-20 * * MON-SUN")
 //    public void integrateTradingData() {
 //        jpaDatasourceRepository.findAll().forEach(datasource -> commandPublisher.publish(
