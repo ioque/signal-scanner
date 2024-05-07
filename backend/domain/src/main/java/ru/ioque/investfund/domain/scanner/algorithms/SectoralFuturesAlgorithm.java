@@ -9,10 +9,10 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,32 +34,26 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final ScanningResult scanningResult = new ScanningResult();
+    public List<Signal> findSignals(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         final boolean futuresIsRiseOvernight = getFuturesStatistic(tradingSnapshots).isRiseOvernight(futuresOvernightScale);
         for (final TradingSnapshot snapshot : analyzeInstruments(tradingSnapshots)) {
             final boolean riseOvernight = snapshot.isRiseOvernight(stockOvernightScale);
-            final String summary = String.format(
-                """
-                Тренд инструмента %s;
-                Тренд фьючерса %s;""",
-                (riseOvernight ? "растущий" : "нисходящий"),
-                (futuresIsRiseOvernight ? "растущий" : "нисходящий")
-            );
-            scanningResult.addLog(String.format("Инструмент[ticker=%s], фьючерс[ticker=%s] | %s", snapshot.getTicker(), futuresTicker, summary));
             if (futuresIsRiseOvernight && riseOvernight) {
-                scanningResult.addSignal(
+                signals.add(
                     Signal.builder()
                         .instrumentId(snapshot.getInstrumentId())
                         .isBuy(true)
-                        .summary(summary)
+                        .summary("""
+                            Тренд инструмента растущий;
+                            Тренд фьючерса растущий;""")
                         .watermark(watermark)
                         .price(snapshot.getLastPrice())
                         .build()
                 );
             }
         }
-        return scanningResult;
+        return signals;
     }
 
     private TradingSnapshot getFuturesStatistic(List<TradingSnapshot> tradingSnapshots) {

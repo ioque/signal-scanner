@@ -13,8 +13,8 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
+import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -84,30 +84,24 @@ public class SignalScanner extends Domain<ScannerId> {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public List<Signal> scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+    public WorkScannerReport scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
         if (tradingSnapshots.isEmpty()) {
             throw new DomainException("Нет статистических данных для выбранных инструментов.");
         }
-        final AlgorithmFactory algorithmFactory = new AlgorithmFactory();
-        final ScannerAlgorithm algorithm = algorithmFactory.factoryBy(properties);
+        final ScannerAlgorithm algorithm = getScannerAlgorithm();
         lastExecutionDateTime = watermark;
-        logs.add(String.format(
-            "Начал работу сканер[id=%s], алгоритм %s.",
-            getId(),
-            getProperties().getType().getName()
-        ));
-        final ScanningResult result = algorithm.run(tradingSnapshots, watermark);
-        logs.addAll(result.getLogs());
-        final List<Signal> newSignals = deduplicationNewSignals(result.getSignals());
-        final List<Signal> registeredSignals = registerNewSignals(newSignals);
-        logs.add(String.format(
-            "Завершил работу сканер[id=%s], алгоритм %s. Найдено %s сигналов, зарегистрировано %s",
-            getId(),
-            getProperties().getType().getName(),
-            newSignals.size(),
-            registeredSignals.size()
-        ));
-        return registeredSignals;
+        final WorkScannerReport report = new WorkScannerReport();
+        report.addExistedSignals(signals);
+        final List<Signal> foundedSignals = deduplicationFoundedSignals(algorithm.findSignals(tradingSnapshots, watermark));
+        report.addFoundedSignals(foundedSignals);
+        final List<Signal> registeredSignals = registerFoundedSignals(foundedSignals);
+        report.addRegisteredSignals(registeredSignals);
+        return report;
+    }
+
+    private ScannerAlgorithm getScannerAlgorithm() {
+        final AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+        return algorithmFactory.factoryBy(properties);
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
@@ -119,7 +113,7 @@ public class SignalScanner extends Domain<ScannerId> {
         return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
-    private List<Signal> deduplicationNewSignals(List<Signal> signals) {
+    private List<Signal> deduplicationFoundedSignals(List<Signal> signals) {
         return signals.stream().filter(signal -> !containsSignal(signal)).toList();
     }
 
@@ -127,7 +121,7 @@ public class SignalScanner extends Domain<ScannerId> {
         return signals.stream().anyMatch(newSignal::sameByBusinessKey);
     }
 
-    private List<Signal> registerNewSignals(List<Signal> newSignals) {
+    private List<Signal> registerFoundedSignals(List<Signal> newSignals) {
         return newSignals.stream().filter(this::registerNewSignal).toList();
     }
 

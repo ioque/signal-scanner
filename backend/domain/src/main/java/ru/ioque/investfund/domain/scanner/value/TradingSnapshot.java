@@ -3,7 +3,6 @@ package ru.ioque.investfund.domain.scanner.value;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -17,7 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Builder
-@ToString
 @Getter(AccessLevel.PUBLIC)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TradingSnapshot {
@@ -112,7 +110,7 @@ public class TradingSnapshot {
             .map(TimeSeriesValue::getValue);
     }
 
-    private static LocalDate getPrevTradingDate(LocalDate tradingDate) {
+    private LocalDate getPrevTradingDate(LocalDate tradingDate) {
         LocalDate day = tradingDate.minusDays(1);
         if (day.getDayOfWeek().equals(DayOfWeek.SUNDAY)) day = day.minusDays(2);
         if (day.getDayOfWeek().equals(DayOfWeek.SATURDAY)) day = day.minusDays(1);
@@ -150,5 +148,19 @@ public class TradingSnapshot {
     @Override
     public int hashCode() {
         return Objects.hash(ticker);
+    }
+
+    @Override
+    public String toString() {
+        return "TradingSnapshot{" +
+            "instrumentId=" + instrumentId +
+            ", dateTime=" + dateTime +
+            ", ticker=" + ticker +
+            ", lastPrice=" + lastPrice +
+            ", firstPrice=" + firstPrice +
+            ", value=" + value +
+            ", isRiseToday=" + isRiseToday() +
+            ", historyMedianValue=" + getHistoryMedianValue(valueSeries.size()) +
+            '}';
     }
 }

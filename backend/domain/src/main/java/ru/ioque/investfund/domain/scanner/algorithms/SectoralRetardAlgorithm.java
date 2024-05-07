@@ -7,10 +7,10 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -28,33 +28,31 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        final ScanningResult scanningResult = new ScanningResult();
+    public List<Signal> findSignals(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         final List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
         final List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
         if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
             otherInstruments.forEach(snapshot -> {
-                final String summary = String.format(
-                    """
-                    Растущие инструменты сектора: %s
-                    Падающие инструменты сектора: %s
-                    """,
-                    riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
-                    otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
-                );
-                scanningResult.addLog(summary);
-                scanningResult.addSignal(
+                signals.add(
                     Signal.builder()
                         .instrumentId(snapshot.getInstrumentId())
                         .isBuy(true)
-                        .summary(summary)
+                        .summary(String.format(
+                            """
+                            Растущие инструменты сектора: %s
+                            Падающие инструменты сектора: %s
+                            """,
+                            riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
+                            otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
+                        ))
                         .watermark(watermark)
                         .price(snapshot.getLastPrice())
                         .build()
                 );
             });
         }
-        return scanningResult;
+        return signals;
     }
 
     private List<TradingSnapshot> getSectoralRetards(

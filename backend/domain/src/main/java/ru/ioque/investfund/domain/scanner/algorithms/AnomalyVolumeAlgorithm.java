@@ -9,11 +9,11 @@ import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.ScanningResult;
 import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,58 +44,80 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public ScanningResult run(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
-        ScanningResult scanningResult = new ScanningResult();
+    public List<Signal> findSignals(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
+        final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
+
+        if (indexIsRiseToday.isEmpty()) {
+            return signals;
+        }
+
         for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
             final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue(historyPeriod);
             final Double currentValue = tradingSnapshot.getValue();
-            if (medianValue.isEmpty() ||
-                currentValue == null ||
-                indexIsRiseToday.isEmpty() ||
-                tradingSnapshot.isRiseToday().isEmpty()) {
+            if (medianValue.isEmpty() || currentValue == null || tradingSnapshot.isRiseToday().isEmpty()) {
                 continue;
             }
             final double currentValueToMedianValue = currentValue / medianValue.get();
             DecimalFormat formatter = new DecimalFormat("#,###.##");
-            final String summary = String.format(
-                """
-                Медиана исторических объемов: %s;
-                Текущий объем: %s;
-                Отношение текущего объема к медиане: %s;
-                Тренд индекса %s.""",
-                formatter.format(medianValue.get()),
-                formatter.format(currentValue),
-                formatter.format(currentValueToMedianValue),
-                indexIsRiseToday.get() ? "растущий" : "нисходящий"
-            );
-            scanningResult.addLog(String.format("Инструмент[ticker=%s] | %s", tradingSnapshot.getTicker(), summary));
             if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot
                 .isRiseToday()
                 .get()) {
-                scanningResult.addSignal(
+                signals.add(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
                         .isBuy(true)
-                        .summary(summary)
+                        .summary(createSummary(
+                            formatter,
+                            medianValue.get(),
+                            currentValue,
+                            currentValueToMedianValue,
+                            true
+                        ))
                         .watermark(watermark)
                         .price(tradingSnapshot.getLastPrice())
                         .build()
                 );
             }
             if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
-                scanningResult.addSignal(
+                signals.add(
                     Signal.builder()
                         .instrumentId(tradingSnapshot.getInstrumentId())
                         .isBuy(false)
                         .watermark(watermark)
-                        .summary(summary)
+                        .summary(createSummary(
+                            formatter,
+                            medianValue.get(),
+                            currentValue,
+                            currentValueToMedianValue,
+                            indexIsRiseToday.get()
+                        ))
                         .price(tradingSnapshot.getLastPrice())
                         .build()
                 );
             }
         }
-        return scanningResult;
+        return signals;
+    }
+
+    private static String createSummary(
+        DecimalFormat formatter,
+        Double medianValue,
+        Double currentValue,
+        double currentValueToMedianValue,
+        Boolean indexIsRiseToday
+    ) {
+        return String.format(
+            """
+                Медиана исторических объемов: %s;
+                Текущий объем: %s;
+                Отношение текущего объема к медиане: %s;
+                Тренд индекса %s.""",
+            formatter.format(medianValue),
+            formatter.format(currentValue),
+            formatter.format(currentValueToMedianValue),
+            indexIsRiseToday ? "растущий" : "нисходящий"
+        );
     }
 
     private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {
