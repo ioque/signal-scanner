@@ -16,7 +16,7 @@
     echo "MACHINE_HOST={{ lookup('ansible.builtin.env', 'MACHINE_HOST') }}" >> .env
     echo "API_HTTP_MODE={{ lookup('ansible.builtin.env', 'API_HTTP_MODE') }}" >> .env
     echo "COMMIT_TAG={{ lookup('ansible.builtin.env', 'COMMIT_TAG') }}" >> .env
-    docker compose down -v --rmi all
+    docker compose down --rmi all
     docker compose up --wait
     exit 0
   args:
