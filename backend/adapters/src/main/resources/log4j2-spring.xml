@@ -44,6 +44,10 @@
         <Logger name="org.apache.kafka" level="WARN" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
         </Logger>
+        <Logger name="SCHEDULE_LOGGER" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="KafkaTechAppender"/>
+        </Logger>
         <AsyncLogger name="BUSINESS_LOGGER" level="INFO" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
             <AppenderRef ref="KafkaBusinessAppender"/>
