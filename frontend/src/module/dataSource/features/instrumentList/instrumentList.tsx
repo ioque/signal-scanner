@@ -3,18 +3,21 @@ import {useNavigate} from "react-router-dom";
 import {InstrumentInList} from "../../entities/Datasource";
 import {fetchInstrumentList} from "../../api/dataSourceRestClient";
 import {
-    Box, CircularProgress,
-    FormControlLabel,
-    Paper, Switch,
+    Box,
+    CircularProgress, IconButton,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead, TablePagination,
     TableRow,
-    TableSortLabel
+    TableSortLabel, useTheme
 } from "@mui/material";
-import { visuallyHidden } from '@mui/utils';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
 
 export type InstrumentListParams = {
     datasourceId: string,
@@ -26,6 +29,72 @@ interface HeadCell {
     id: keyof InstrumentInList;
     label: string;
     numeric: boolean;
+}
+
+interface TablePaginationActionsProps {
+    count: number;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (
+        event: React.MouseEvent<HTMLButtonElement>,
+        newPage: number,
+    ) => void;
+}
+
+function TablePaginationActions(props: TablePaginationActionsProps) {
+    const theme = useTheme();
+    const { count, page, rowsPerPage, onPageChange } = props;
+
+    const handleFirstPageButtonClick = (
+        event: React.MouseEvent<HTMLButtonElement>,
+    ) => {
+        onPageChange(event, 0);
+    };
+
+    const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onPageChange(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onPageChange(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
+    return (
+        <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+            <IconButton
+                onClick={handleFirstPageButtonClick}
+                disabled={page === 0}
+                aria-label="first page"
+            >
+                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+            </IconButton>
+            <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 0}
+                aria-label="previous page"
+            >
+                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            </IconButton>
+            <IconButton
+                onClick={handleNextButtonClick}
+                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                aria-label="next page"
+            >
+                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </IconButton>
+            <IconButton
+                onClick={handleLastPageButtonClick}
+                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                aria-label="last page"
+            >
+                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+            </IconButton>
+        </Box>
+    );
 }
 
 const headCells: readonly HeadCell[] = [
@@ -63,7 +132,6 @@ export default function InstrumentList(params: InstrumentListParams) {
     const [orderBy, setOrderBy] = React.useState<keyof InstrumentInList>('ticker');
     const [page, setPage] = React.useState(0);
     const [totalElements, setTotalElements] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -73,10 +141,6 @@ export default function InstrumentList(params: InstrumentListParams) {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
-
-    const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDense(event.target.checked);
     };
 
     const createSortHandler =
@@ -109,12 +173,7 @@ export default function InstrumentList(params: InstrumentListParams) {
     const listItems = instruments.map(instrument =>
         <TableRow
             onDoubleClick={() => handleDoubleClick(instrument.ticker)}
-            style={{
-                height: (dense ? 33 : 53),
-            }}
             hover
-            role="checkbox"
-            tabIndex={-1}
             key={instrument.id}
             sx={{ cursor: 'pointer' }}
         >
@@ -137,7 +196,7 @@ export default function InstrumentList(params: InstrumentListParams) {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+            <Paper sx={{ width: '100%', mb: 2, p: 1 }}>
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -172,12 +231,9 @@ export default function InstrumentList(params: InstrumentListParams) {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Уплотнить"
-            />
         </Box>
     );
 }

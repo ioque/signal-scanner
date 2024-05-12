@@ -11,8 +11,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography, CircularProgress
+    Typography, CircularProgress, IconButton
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 export default function ScannerList() {
     const navigate = useNavigate();
@@ -48,14 +49,19 @@ export default function ScannerList() {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, padding: 2 }}>
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    Список сканеров
-                </Typography>
+                <Box display="flex" justifyContent="space-between">
+                    <Typography
+                        sx={{ flex: '1 1 100%' }}
+                        variant="h6"
+                        id="tableTitle"
+                        component="div"
+                    >
+                        Список сканеров
+                    </Typography>
+                    <IconButton onClick={() => navigate("/create-scanner")}>
+                        <AddIcon />
+                    </IconButton>
+                </Box>
                 <TableContainer>
                     <Table>
                         <TableHead>

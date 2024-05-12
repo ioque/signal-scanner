@@ -10,6 +10,11 @@ import InstrumentDetailsPage from "./pages/InstrumentDetailsPage";
 import ScannerDetailsPage from "./pages/ScannerDetailsPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DatasourceListPage from "./pages/DatasourceListPage";
+import EmulatedPositionListPage from "./pages/EmulatedPositionListPage";
+import TelegramChatListPage from "./pages/TelegramChatListPage";
+import CreateScanner from "./module/scanner/features/createScanner/createScanner";
+import CreateDatasource from "./module/dataSource/features/createDatasource/createDatasource";
+import CreateDatasourcePage from "./pages/CreateDatasourcePage";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +25,10 @@ const router = createBrowserRouter([
             {
                 path: "datasource",
                 element: <DatasourceListPage />,
+            },
+            {
+                path: "registration-datasource",
+                element: <CreateDatasourcePage />,
             },
             {
                 path: "datasource/:datasourceId/instrument",
@@ -36,6 +45,18 @@ const router = createBrowserRouter([
             {
                 path: "scanner/:id",
                 element: <ScannerDetailsPage />
+            },
+            {
+                path: "create-scanner",
+                element: <CreateScanner />,
+            },
+            {
+                path: "emulated-position",
+                element: <EmulatedPositionListPage />,
+            },
+            {
+                path: "subscribers",
+                element: <TelegramChatListPage />,
             },
         ],
     },

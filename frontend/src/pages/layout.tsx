@@ -9,6 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import PeopleIcon from '@mui/icons-material/People';
+import WalletIcon from '@mui/icons-material/Wallet';
 import {
     Box,
     createTheme,
@@ -151,6 +153,24 @@ export default function Root() {
                                 <BarChartIcon />
                             </ListItemIcon>
                             <ListItemText primary="Сканеры"/>
+                        </ListItemButton>
+                        <ListItemButton
+                            component={Link}
+                            to={`/emulated-position`}
+                        >
+                            <ListItemIcon>
+                                <WalletIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Риск менеджмент"/>
+                        </ListItemButton>
+                        <ListItemButton
+                            component={Link}
+                            to={`/subscribers`}
+                        >
+                            <ListItemIcon>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Подписчики"/>
                         </ListItemButton>
                     </List>
                 </Drawer>
