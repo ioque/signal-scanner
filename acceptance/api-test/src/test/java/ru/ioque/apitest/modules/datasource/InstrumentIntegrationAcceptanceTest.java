@@ -43,7 +43,7 @@ public class InstrumentIntegrationAcceptanceTest extends DatasourceAcceptanceTes
         );
         initInstruments(instrumentList);
 
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         final List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
         assertEquals(4, instruments.size());
@@ -70,8 +70,8 @@ public class InstrumentIntegrationAcceptanceTest extends DatasourceAcceptanceTes
         );
         initInstruments(instrumentList);
 
-        integrateInstruments(datasourceId);
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         final List<InstrumentInListResponse> instruments = getInstruments(datasourceId);
         assertEquals(instrumentList.size(), instruments.size());
@@ -87,24 +87,29 @@ public class InstrumentIntegrationAcceptanceTest extends DatasourceAcceptanceTes
         final String expectedName = "ПАО Сбербанк 1";
         final String expectedShortName = "Сбербанк 1";
 
-        integrateInstruments(
-            datasourceId,
-            Stock.builder()
-                .ticker(ticker)
-                .lotSize(100)
-                .name("ПАО Сбербанк")
-                .shortName("Сбербанк")
-                .build()
+        initInstruments(
+            List.of(
+                Stock.builder()
+                    .ticker(ticker)
+                    .lotSize(100)
+                    .name("ПАО Сбербанк")
+                    .shortName("Сбербанк")
+                    .build()
+            )
         );
-        integrateInstruments(
-            datasourceId,
-            Stock.builder()
-                .ticker(ticker)
-                .lotSize(100)
-                .name(expectedName)
-                .shortName(expectedShortName)
-                .build()
+        synchronizeDatasource(datasourceId);
+        
+        initInstruments(
+            List.of(
+                Stock.builder()
+                    .ticker(ticker)
+                    .lotSize(100)
+                    .name(expectedName)
+                    .shortName(expectedShortName)
+                    .build()
+            )
         );
+        synchronizeDatasource(datasourceId);
 
         final InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, ticker);
         assertEquals(expectedName, instrumentResponse.getName());

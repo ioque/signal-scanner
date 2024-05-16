@@ -34,8 +34,18 @@ public class DatasourceHttpClient extends JsonHttpClient {
     }
 
     @SneakyThrows
-    public void integrateInstruments(UUID datasourceId) {
+    public void synchronizeDatasource(UUID datasourceId) {
         post("/api/datasource/" + datasourceId + "/instrument");
+    }
+
+    @SneakyThrows
+    public void runDatasource(UUID datasourceId) {
+        post("/api/datasource/" + datasourceId + "/run");
+    }
+
+    @SneakyThrows
+    public void stopDatasource(UUID datasourceId) {
+        post("/api/datasource/" + datasourceId + "/stop");
     }
 
     @SneakyThrows

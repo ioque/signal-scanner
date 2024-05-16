@@ -2,8 +2,8 @@ package ru.ioque.investfund.risk;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -16,7 +16,7 @@ public abstract class RiskManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -29,7 +29,7 @@ public abstract class RiskManagerTest extends BaseTest {
                 tgknDetails()
             )
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
+        commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .workPeriodInMinutes(1)

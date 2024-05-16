@@ -8,9 +8,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
-import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -24,34 +24,36 @@ import java.util.TreeSet;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Instrument extends Domain<InstrumentId> {
-    InstrumentDetails details;
+    InstrumentDetail detail;
     Boolean updatable;
-    final Ticker ticker;
-    final InstrumentType type;
     TradingState tradingState;
     final TreeSet<AggregatedHistory> aggregateHistories;
 
     @Builder
     public Instrument(
         InstrumentId id,
-        Ticker ticker,
         Boolean updatable,
-        InstrumentType type,
-        InstrumentDetails details,
+        InstrumentDetail detail,
         TradingState tradingState,
         TreeSet<AggregatedHistory> aggregateHistories
     ) {
         super(id);
-        this.type = type;
-        this.ticker = ticker;
         this.updatable = updatable;
-        this.details = details;
+        this.detail = detail;
         this.tradingState = tradingState;
         this.aggregateHistories = aggregateHistories == null ? new TreeSet<>() : aggregateHistories;
     }
 
-    public void updateDetails(InstrumentDetails details) {
-        this.details = details;
+    public Ticker getTicker() {
+        return detail.getTicker();
+    }
+
+    public InstrumentType getType() {
+        return detail.getType();
+    }
+
+    public void updateDetails(InstrumentDetail details) {
+        this.detail = details;
     }
 
     public boolean updateTradingState(TreeSet<IntradayData> intradayData) {

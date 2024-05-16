@@ -2,8 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
 import ru.ioque.investfund.application.modules.scanner.command.ActivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.DeactivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
@@ -49,7 +49,6 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
             buildImoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta(1L, "10:00:00", 3100D, 1_000_000D),
             buildImoexDelta(2L, "12:00:00", 3400D, 1_200_000D),
@@ -66,6 +65,7 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
             buildTgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
         commandBus()
             .execute(
                 buildCreateAnomalyVolumeScannerWith()
@@ -76,7 +76,7 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
                         .build())
                     .build()
             );
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
         assertEquals(ScannerStatus.ACTIVE, getScanner(getFirstScannerId()).getStatus());
     }
 }

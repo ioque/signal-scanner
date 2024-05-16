@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
 import ru.ioque.investfund.application.adapters.CommandPublisher;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishDailyReport;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishHourlyReport;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -37,7 +37,7 @@ public class SpringScheduler {
     public void integrateTradingData() {
         log.info("start integrate trading data, current time {}", dateTimeProvider.nowDateTime());
         jpaDatasourceRepository.findAll().forEach(datasource -> commandPublisher.publish(
-            new IntegrateTradingDataCommand(
+            new ExecuteDatasourceWorker(
                 DatasourceId.from(datasource.getId())
             )
         ));

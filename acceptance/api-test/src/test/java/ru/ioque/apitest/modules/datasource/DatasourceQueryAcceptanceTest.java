@@ -36,7 +36,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase3() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("ticker", "SBER")).size());
     }
@@ -48,7 +48,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase4() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("type", "STOCK")).size());
         assertEquals(1, getInstruments(datasourceId, Map.of("type", "CURRENCY_PAIR")).size());
@@ -63,7 +63,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase5() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(2, getInstruments(datasourceId, Map.of("shortname", "Сбер")).size());
     }
@@ -75,7 +75,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase6() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(1, getInstruments(datasourceId, Map.of("details.shortName", "BR", "type", "FUTURES")).size());
     }
@@ -87,7 +87,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase7() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(1, getInstruments(datasourceId, Map.of("ticker", "IMOEX", "type", "INDEX")).size());
     }
@@ -99,7 +99,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase8() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         assertEquals(
             2,
@@ -114,7 +114,7 @@ public class DatasourceQueryAcceptanceTest extends DatasourceAcceptanceTest {
     void testCase9() {
         final UUID datasourceId = getFirstDatasourceId();
         initInstruments(getInstrumentList());
-        integrateInstruments(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, "SBER");
         assertEquals("SBER", instrumentResponse.getTicker());

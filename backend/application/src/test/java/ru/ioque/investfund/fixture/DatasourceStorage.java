@@ -1,42 +1,39 @@
 package ru.ioque.investfund.fixture;
 
 import lombok.Getter;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.IntradayDataDto;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class DatasourceStorage {
-    private final List<IntradayDataDto> intradayDataDtos = new ArrayList<>();
-    private final List<AggregatedHistoryDto> aggregatedHistoryDtos = new ArrayList<>();
-    private final List<InstrumentDto> instrumentDtos = new ArrayList<>();
+    private final List<IntradayData> intradayDataDtos = new ArrayList<>();
+    private final List<AggregatedHistory> aggregatedHistoryDtos = new ArrayList<>();
+    private final List<InstrumentDetail> instrumentDtos = new ArrayList<>();
 
-    public List<AggregatedHistoryDto> getHistoryDataBy(String ticker) {
+    public List<AggregatedHistory> getHistoryDataBy(Ticker ticker) {
         return aggregatedHistoryDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
-    public List<IntradayDataDto> getDealsByTicker(String ticker) {
+    public List<IntradayData> getDealsByTicker(Ticker ticker) {
         return intradayDataDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
-    public List<InstrumentDto> getInstrumentBy(String ticker) {
-        return instrumentDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
-    }
-
-    public void initInstrumentDetails(List<InstrumentDto> details) {
+    public void initInstrumentDetails(List<InstrumentDetail> details) {
         this.instrumentDtos.clear();
         this.instrumentDtos.addAll(details);
     }
 
-    public void initDealDatas(List<IntradayDataDto> intradayValues) {
+    public void initDealDatas(List<IntradayData> intradayValues) {
         this.intradayDataDtos.clear();
         this.intradayDataDtos.addAll(intradayValues);
     }
 
-    public void initHistoryValues(List<AggregatedHistoryDto> historyValues) {
+    public void initHistoryValues(List<AggregatedHistory> historyValues) {
         this.aggregatedHistoryDtos.clear();
         this.aggregatedHistoryDtos.addAll(historyValues);
     }

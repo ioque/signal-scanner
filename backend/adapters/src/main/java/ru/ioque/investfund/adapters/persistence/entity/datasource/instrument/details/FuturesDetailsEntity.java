@@ -10,8 +10,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
-import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Entity
 @Getter
@@ -51,8 +52,9 @@ public class FuturesDetailsEntity extends InstrumentDetailsEntity {
     }
 
     @Override
-    public InstrumentDetails toDomain() {
-        return FuturesDetails.builder()
+    public InstrumentDetail toDomain() {
+        return FuturesDetail.builder()
+            .ticker(Ticker.from(instrument.getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotVolume(getLotVolume())

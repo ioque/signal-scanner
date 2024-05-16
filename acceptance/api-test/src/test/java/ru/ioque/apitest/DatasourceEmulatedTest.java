@@ -140,13 +140,27 @@ public abstract class DatasourceEmulatedTest {
     }
 
     protected void fullIntegrate(UUID datasourceId) {
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
     }
 
-    protected void integrateAllInstrumentFrom(UUID datasourceId) {
-        datasourceClient().integrateInstruments(datasourceId);
+    protected void synchronizeDatasource(UUID datasourceId) {
+        datasourceClient().synchronizeDatasource(datasourceId);
+    }
+
+    protected void prepareDatasource(UUID datasourceId) {
+        synchronizeDatasource(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        runDatasource(datasourceId);
+    }
+
+    protected void runDatasource(UUID datasourceId) {
+        datasourceClient().runDatasource(datasourceId);
+    }
+
+    protected void stopDatasource(UUID datasourceId) {
+        datasourceClient().stopDatasource(datasourceId);
     }
 
     protected void enableUpdateInstrumentBy(UUID exchangeId, List<String> tickers) {
@@ -157,11 +171,7 @@ public abstract class DatasourceEmulatedTest {
         datasourceClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
     }
 
-    protected void integrateAggregatedHistory(UUID datasourceId) {
-        datasourceClient().integrateTradingData(datasourceId);
-    }
-
-    protected void integrateTradingData(UUID datasourceId) {
+    protected void executeDatasourceWork(UUID datasourceId) {
         datasourceClient().integrateTradingData(datasourceId);
     }
 

@@ -3,10 +3,11 @@ package ru.ioque.investfund.telegrambot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
@@ -119,7 +120,7 @@ public class TelegramBotTest extends BaseTest {
     private void prepareState() {
         initTodayDateTime("2024-04-24T13:00:00");
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -153,8 +154,9 @@ public class TelegramBotTest extends BaseTest {
                 buildImoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
             )
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .workPeriodInMinutes(1)
@@ -170,7 +172,7 @@ public class TelegramBotTest extends BaseTest {
                 )
                 .build()
         );
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
         commandBus().execute(new ProduceSignal(getDatasourceId(), getToday()));
         commandBus().execute(new Subscribe(1L, "kukusuku"));
         clearLogs();

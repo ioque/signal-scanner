@@ -2,7 +2,7 @@ package ru.ioque.investfund.scanner.scanning;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -19,7 +19,7 @@ public class BaseScannerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")

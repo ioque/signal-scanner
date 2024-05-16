@@ -3,26 +3,25 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.CurrencyPairDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.FuturesDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.IndexDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.InstrumentDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.StockDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.ContractDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.DealDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.DeltaDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.IntradayDataDto;
+import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetail;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
+import ru.ioque.investfund.domain.datasource.value.details.IndexDetail;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetail;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
+import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
+import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
+import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
@@ -110,12 +109,12 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-    protected List<AggregatedHistoryDto> generateHistoryValues(
+    protected List<AggregatedHistory> generateHistoryValues(
         String ticker,
         LocalDate start,
         LocalDate stop
     ) {
-        final List<AggregatedHistoryDto> historyValues = new ArrayList<>();
+        final List<AggregatedHistory> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
@@ -126,24 +125,20 @@ public class BaseTest {
         return historyValues;
     }
 
-    protected void integrateInstruments(DatasourceId datasourceId, InstrumentDto... instrumentDtos) {
-        datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
-        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
+
+    protected void initInstrumentDetails(InstrumentDetail... instrumentDetails) {
+        datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDetails));
     }
 
-    protected void initInstrumentDetails(InstrumentDto... instrumentDtos) {
-        datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
-    }
-
-    protected void initHistoryValues(List<AggregatedHistoryDto> tradingResults) {
+    protected void initHistoryValues(List<AggregatedHistory> tradingResults) {
         datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initHistoryValues(AggregatedHistoryDto... aggregatedHistoryDtos) {
+    protected void initHistoryValues(AggregatedHistory... aggregatedHistoryDtos) {
         datasourceStorage().initHistoryValues(Arrays.asList(aggregatedHistoryDtos));
     }
 
-    protected void initIntradayValues(IntradayDataDto... intradayValues) {
+    protected void initIntradayValues(IntradayData... intradayValues) {
         datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
     }
 
@@ -173,8 +168,8 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
-        commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
         commandBus().execute(new ProduceSignal(datasourceId, getToday()));
     }
 
@@ -197,15 +192,15 @@ public class BaseTest {
     }
 
 
-    protected EnableUpdateInstrumentsCommand enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    protected EnableUpdateInstruments enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
     }
 
-    protected EnableUpdateInstrumentsCommand disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstrumentsCommand(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    protected EnableUpdateInstruments disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
     }
 
-    protected DealDto buildBuyDealBy(
+    protected Deal buildBuyDealBy(
         String ticker,
         Long number,
         String localTime,
@@ -213,8 +208,8 @@ public class BaseTest {
         Double value,
         Integer qnt
     ) {
-        return DealDto.builder()
-            .ticker(ticker)
+        return Deal.builder()
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .value(value)
@@ -224,7 +219,7 @@ public class BaseTest {
             .build();
     }
 
-    protected DealDto buildSellDealBy(
+    protected Deal buildSellDealBy(
         String ticker,
         Long number,
         String localTime,
@@ -232,8 +227,8 @@ public class BaseTest {
         Double value,
         Integer qnt
     ) {
-        return DealDto.builder()
-            .ticker(ticker)
+        return Deal.builder()
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .value(value)
@@ -243,7 +238,7 @@ public class BaseTest {
             .build();
     }
 
-    protected ContractDto buildContractBy(
+    protected Contract buildContractBy(
         String ticker,
         Long number,
         String localTime,
@@ -251,8 +246,8 @@ public class BaseTest {
         Double value,
         Integer qnt
     ) {
-        return ContractDto.builder()
-            .ticker(ticker)
+        return Contract.builder()
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .price(price)
@@ -261,15 +256,15 @@ public class BaseTest {
             .build();
     }
 
-    protected DeltaDto buildDeltaBy(
+    protected Delta buildDeltaBy(
         String ticker,
         Long number,
         String localTime,
         Double price,
         Double value
     ) {
-        return DeltaDto.builder()
-            .ticker(ticker)
+        return Delta.builder()
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTimeProvider().nowDate().atTime(LocalTime.parse(localTime)))
             .value(value)
@@ -277,16 +272,16 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto buildAggregatedHistory(
+    protected AggregatedHistory buildAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double value
     ) {
-        return AggregatedHistoryDto.builder()
-            .ticker(ticker)
-            .tradeDate(LocalDate.parse(tradeDate))
+        return AggregatedHistory.builder()
+            .ticker(Ticker.from(ticker))
+            .date(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
             .highPrice(1D)
@@ -295,7 +290,7 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto buildAggregatedHistory(
+    protected AggregatedHistory buildAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -303,9 +298,9 @@ public class BaseTest {
         Double waPrice,
         Double value
     ) {
-        return AggregatedHistoryDto.builder()
-            .ticker(ticker)
-            .tradeDate(LocalDate.parse(tradeDate))
+        return AggregatedHistory.builder()
+            .ticker(Ticker.from(ticker))
+            .date(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
             .closePrice(closePrice)
             .highPrice(1D)
@@ -315,13 +310,13 @@ public class BaseTest {
             .build();
     }
 
-    protected AggregatedHistoryDto.AggregatedHistoryDtoBuilder buildAggregatedHistory(
+    protected AggregatedHistory.AggregatedHistoryBuilder buildAggregatedHistory(
         String ticker,
         LocalDate localDate
     ) {
-        return AggregatedHistoryDto.builder()
-            .ticker(ticker)
-            .tradeDate(localDate)
+        return AggregatedHistory.builder()
+            .ticker(Ticker.from(ticker))
+            .date(localDate)
             .openPrice(1.0)
             .closePrice(1.0)
             .lowPrice(1.0)
@@ -330,9 +325,9 @@ public class BaseTest {
             .waPrice(1D);
     }
 
-    protected DealDto buildDealWith(String ticker, Long number, LocalDateTime dateTime) {
-        return DealDto.builder()
-            .ticker(ticker)
+    protected Deal buildDealWith(String ticker, Long number, LocalDateTime dateTime) {
+        return Deal.builder()
+            .ticker(Ticker.from(ticker))
             .number(number)
             .dateTime(dateTime)
             .value(10000.0)
@@ -342,10 +337,10 @@ public class BaseTest {
             .build();
     }
 
-    protected IndexDto imoex() {
-        return IndexDto
+    protected IndexDetail imoex() {
+        return IndexDetail
             .builder()
-            .ticker(IMOEX)
+            .ticker(Ticker.from(IMOEX))
             .name("Индекс МосБиржи")
             .shortName("Индекс МосБиржи")
             .annualLow(100D)
@@ -353,62 +348,62 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDto afks() {
-        return StockDto
+    protected StockDetail afks() {
+        return StockDetail
             .builder()
-            .ticker(AFKS)
+            .ticker(Ticker.from(AFKS))
             .shortName("ао Система")
             .name("АФК Система")
             .lotSize(10000)
             .regNumber("1-05-01669-A")
-            .isin("RU000A0DQZE3")
+            .isin(Isin.from("RU000A0DQZE3"))
             .listLevel(1)
             .build();
     }
 
-    protected StockDto sberp() {
-        return StockDto
+    protected StockDetail sberp() {
+        return StockDetail
             .builder()
-            .ticker(SBERP)
+            .ticker(Ticker.from(SBERP))
             .shortName("Сбер п")
             .name("Сбербанк П")
             .lotSize(100)
             .regNumber("20301481B")
-            .isin("RU0009029557")
+            .isin(Isin.from("RU0009029557"))
             .listLevel(1)
             .build();
     }
 
-    protected StockDto sber() {
-        return StockDto
+    protected StockDetail sber() {
+        return StockDetail
             .builder()
-            .ticker(SBER)
+            .ticker(Ticker.from(SBER))
             .shortName("Сбер")
             .name("Сбербанк")
             .lotSize(100)
             .regNumber("10301481B")
-            .isin("RU0009029540")
+            .isin(Isin.from("RU0009029540"))
             .listLevel(1)
             .build();
     }
 
-    protected StockDto sibn() {
-        return StockDto
+    protected StockDetail sibn() {
+        return StockDetail
             .builder()
-            .ticker(SIBN)
+            .ticker(Ticker.from(SIBN))
             .shortName("Газпромнефть")
             .name("Газпромнефть")
             .lotSize(100)
             .regNumber("1-01-00146-A")
-            .isin("RU0009062467")
+            .isin(Isin.from("RU0009062467"))
             .listLevel(1)
             .build();
     }
 
-    protected FuturesDto brf4() {
-        return FuturesDto
+    protected FuturesDetail brf4() {
+        return FuturesDetail
             .builder()
-            .ticker(BRF4)
+            .ticker(Ticker.from(BRF4))
             .name("Фьючерсный контракт BR-1.24")
             .shortName("BR-1.24")
             .assetCode("BR")
@@ -419,49 +414,49 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDto lkohDetails() {
-        return StockDto
+    protected StockDetail lkohDetails() {
+        return StockDetail
             .builder()
-            .ticker(LKOH)
+            .ticker(Ticker.from(LKOH))
             .shortName("Лукойл")
             .name("Лукойл")
             .lotSize(100)
             .regNumber("1-01-00077-A")
-            .isin("RU0009024277")
+            .isin(Isin.from("RU0009024277"))
             .listLevel(1)
             .build();
     }
 
-    protected StockDto tatnDetails() {
-        return StockDto
+    protected StockDetail tatnDetails() {
+        return StockDetail
             .builder()
-            .ticker(TATN)
+            .ticker(Ticker.from(TATN))
             .shortName("Татнефть")
             .name("Татнефть")
-            .isin("RU0009033591")
+            .isin(Isin.from("RU0009033591"))
             .regNumber("1-03-00161-A")
             .lotSize(100)
             .listLevel(1)
             .build();
     }
 
-    protected StockDto rosnDetails() {
-        return StockDto
+    protected StockDetail rosnDetails() {
+        return StockDetail
             .builder()
-            .ticker(ROSN)
+            .ticker(Ticker.from(ROSN))
             .shortName("Роснефть")
             .name("Роснефть")
-            .isin("RU000A0J2Q06")
+            .isin(Isin.from("RU000A0J2Q06"))
             .regNumber("1-02-00122-A")
             .lotSize(100)
             .listLevel(1)
             .build();
     }
 
-    protected CurrencyPairDto usdRubDetails() {
-        return CurrencyPairDto
+    protected CurrencyPairDetail usdRubDetails() {
+        return CurrencyPairDetail
             .builder()
-            .ticker(USD000UTSTOM)
+            .ticker(Ticker.from(USD000UTSTOM))
             .shortName("USDRUB_TOM")
             .name("USDRUB_TOM - USD/РУБ")
             .faceUnit("RUB")
@@ -469,27 +464,27 @@ public class BaseTest {
             .build();
     }
 
-    protected StockDto tgkbDetails() {
-        return StockDto
+    protected StockDetail tgkbDetails() {
+        return StockDetail
             .builder()
-            .ticker(TGKB)
+            .ticker(Ticker.from(TGKB))
             .name("TGKB")
             .shortName("TGKB")
-            .isin("RU000A0JNGS7")
+            .isin(Isin.from("RU000A0JNGS7"))
             .regNumber("1-01-10420-A")
             .listLevel(3)
             .lotSize(100)
             .build();
     }
 
-    protected StockDto tgknDetails() {
-        return StockDto
+    protected StockDetail tgknDetails() {
+        return StockDetail
             .builder()
-            .ticker(TGKN)
+            .ticker(Ticker.from(TGKN))
             .name("TGKN")
             .shortName("TGKN")
             .lotSize(100)
-            .isin("RU000A0H1ES3")
+            .isin(Isin.from("RU000A0H1ES3"))
             .regNumber("1-01-22451-F")
             .listLevel(2)
             .build();
@@ -508,23 +503,23 @@ public class BaseTest {
     protected final String BRF4 = "BRF4";
     protected final String IMOEX = "IMOEX";
 
-    protected IntradayDataDto buildImoexDelta(Long number, String localTime, Double price, Double value) {
+    protected IntradayData buildImoexDelta(Long number, String localTime, Double price, Double value) {
         return buildDeltaBy(IMOEX, number, localTime, price, value);
     }
 
-    protected AggregatedHistoryDto buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+    protected AggregatedHistory buildImoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
         return buildAggregatedHistory(IMOEX, tradeDate, openPrice, closePrice, value);
     }
 
-    protected IntradayDataDto buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildTgknSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildSellDealBy(TGKN, number, localTime, price, value, qnt);
     }
 
-    protected IntradayDataDto buildTgknBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildTgknBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TGKN, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildTgknHistoryValue(
+    protected AggregatedHistory buildTgknHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -534,15 +529,15 @@ public class BaseTest {
         return buildAggregatedHistory(TGKN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildTgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildSellDealBy(TGKB, number, localTime, price, value, qnt);
     }
 
-    protected IntradayDataDto buildTgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildTgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TGKB, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildTgkbHistoryValue(
+    protected AggregatedHistory buildTgkbHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -552,11 +547,11 @@ public class BaseTest {
         return buildAggregatedHistory(TGKB, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildTatnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(TATN, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildTatnHistoryValue(
+    protected AggregatedHistory buildTatnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -566,19 +561,19 @@ public class BaseTest {
         return buildAggregatedHistory(TATN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildBrf4Contract(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildContractBy(BRF4, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+    protected AggregatedHistory buildBrf4HistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
         return buildAggregatedHistory(BRF4, tradeDate, openPrice, closePrice, value);
     }
 
-    protected IntradayDataDto buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildLkohBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(LKOH, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildLkohHistoryValue(
+    protected AggregatedHistory buildLkohHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -588,11 +583,11 @@ public class BaseTest {
         return buildAggregatedHistory(LKOH, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildSibnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SIBN, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildSibnHistoryValue(
+    protected AggregatedHistory buildSibnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -602,11 +597,11 @@ public class BaseTest {
         return buildAggregatedHistory(SIBN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildRosnBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(ROSN, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildRosnHistoryValue(
+    protected AggregatedHistory buildRosnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -616,11 +611,11 @@ public class BaseTest {
         return buildAggregatedHistory(ROSN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildSberBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SBER, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildSberHistoryValue(
+    protected AggregatedHistory buildSberHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -630,11 +625,11 @@ public class BaseTest {
         return buildAggregatedHistory(SBER, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    protected IntradayDataDto buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
+    protected IntradayData buildSberpBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return buildBuyDealBy(SBERP, number, localTime, price, value, qnt);
     }
 
-    protected AggregatedHistoryDto buildSberpHistoryValue(
+    protected AggregatedHistory buildSberpHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,

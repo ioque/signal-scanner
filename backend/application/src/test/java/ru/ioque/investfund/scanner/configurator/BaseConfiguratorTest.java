@@ -4,9 +4,9 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -23,7 +23,7 @@ public class BaseConfiguratorTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -56,8 +56,8 @@ public class BaseConfiguratorTest extends BaseTest {
                 brf4(),
                 usdRubDetails())
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
     }
 
     protected void testAddNewScannerError(CreateScanner command, String msg) {

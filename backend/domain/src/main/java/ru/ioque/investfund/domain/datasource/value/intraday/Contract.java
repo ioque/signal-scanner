@@ -1,5 +1,7 @@
 package ru.ioque.investfund.domain.datasource.value.intraday;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Contract extends IntradayData {
+    @NotNull(message = "Не заполнено количество контрактов.")
+    @Min(value = 0, message = "Количество контрактов должно быть больше нуля.")
     Integer qnt;
 
     @Builder

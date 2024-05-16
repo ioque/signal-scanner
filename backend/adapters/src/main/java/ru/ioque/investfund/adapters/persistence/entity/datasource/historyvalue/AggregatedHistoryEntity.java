@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 
 import java.time.LocalDate;
 

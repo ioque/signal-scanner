@@ -4,10 +4,11 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
@@ -30,14 +31,14 @@ public class ProduceSignalTest extends BaseScannerTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
                 .build()
         );
         initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
+        commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .datasourceId(getDatasourceId())
@@ -157,7 +158,6 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta( 1L, "10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L, "12:00:00", 3100D, 2_000_000D),
@@ -167,8 +167,9 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
         clearLogs();
     }
 
@@ -205,7 +206,6 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta( 1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 2900D, 2_000_000D),
@@ -220,8 +220,9 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgkbBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgkbBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
         clearLogs();
     }
 
@@ -244,8 +245,8 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknSellDeal(4L,"11:01:00", 97D, 1000D, 1),
             buildTgknSellDeal(5L, "11:45:00", 96D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
         clearLogs();
     }
 
@@ -270,7 +271,6 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
-        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta(1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 3100D, 2_000_000D),
@@ -280,8 +280,9 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknBuyDeal(4L,"11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L,"11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new IntegrateTradingDataCommand(getDatasourceId()));
+        commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
+        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
         clearLogs();
     }
 

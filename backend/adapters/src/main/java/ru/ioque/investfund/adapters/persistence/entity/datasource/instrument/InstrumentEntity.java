@@ -25,7 +25,6 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tra
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,9 +91,7 @@ public class InstrumentEntity extends UuidIdentity {
         return Instrument.builder()
             .id(InstrumentId.from(getId()))
             .updatable(getUpdatable())
-            .type(getType())
-            .ticker(Ticker.from(getTicker()))
-            .details(getDetails().toDomain())
+            .detail(getDetails().toDomain())
             .tradingState(getTradingState().map(TradingStateEntity::toTradingState).orElse(null))
             .aggregateHistories(new TreeSet<>(
                 history.stream().map(AggregatedHistoryEntity::toDomain).toList()
@@ -111,7 +108,7 @@ public class InstrumentEntity extends UuidIdentity {
             .build();
         instrumentEntity
             .setDetails(
-                InstrumentDetailsEntity.of(instrumentEntity, domain.getDetails())
+                InstrumentDetailsEntity.of(instrumentEntity, domain.getDetail())
             );
         instrumentEntity
             .setTradingState(

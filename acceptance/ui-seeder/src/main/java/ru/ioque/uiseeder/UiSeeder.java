@@ -36,7 +36,7 @@ public class UiSeeder implements CommandLineRunner {
                 .build()
         );
         final UUID datasourceID = clientFacade.getDatasourceRestClient().getDatasourceList().get(0).getId();
-        clientFacade.getDatasourceRestClient().integrateInstruments(datasourceID);
+        clientFacade.getDatasourceRestClient().synchronizeDatasource(datasourceID);
         clientFacade.getDatasourceRestClient()
             .enableUpdateInstruments(
                 datasourceID,

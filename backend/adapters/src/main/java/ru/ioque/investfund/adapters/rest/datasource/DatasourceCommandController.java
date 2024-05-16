@@ -14,13 +14,15 @@ import ru.ioque.investfund.adapters.rest.datasource.request.DisableUpdateInstrum
 import ru.ioque.investfund.adapters.rest.datasource.request.EnableUpdateInstrumentRequest;
 import ru.ioque.investfund.adapters.rest.datasource.request.SaveDatasourceRequest;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.StopDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -36,7 +38,7 @@ public class DatasourceCommandController {
     @PostMapping("/api/datasource")
     public void createDatasource(@RequestBody SaveDatasourceRequest request) {
         commandBus.execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .url(request.getUrl())
@@ -47,7 +49,7 @@ public class DatasourceCommandController {
     @PatchMapping("/api/datasource/{datasourceId}")
     public void updateDatasource(@PathVariable UUID datasourceId, @RequestBody SaveDatasourceRequest request) {
         commandBus.execute(
-            UpdateDatasourceCommand.builder()
+            UpdateDatasource.builder()
                 .id(DatasourceId.from(datasourceId))
                 .name(request.getName())
                 .description(request.getDescription())
@@ -58,17 +60,27 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        commandBus.execute(new PrepareForWorkDatasource(DatasourceId.from(datasourceId)));
+        commandBus.execute(new SynchronizeDatasource(DatasourceId.from(datasourceId)));
+    }
+
+    @PostMapping("/api/datasource/{datasourceId}/run")
+    public void runDatasource(@PathVariable UUID datasourceId) {
+        commandBus.execute(new RunDatasourceWorker(DatasourceId.from(datasourceId)));
+    }
+
+    @PostMapping("/api/datasource/{datasourceId}/stop")
+    public void stopDatasource(@PathVariable UUID datasourceId) {
+        commandBus.execute(new StopDatasourceWorker(DatasourceId.from(datasourceId)));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        commandBus.execute(new IntegrateTradingDataCommand(DatasourceId.from(datasourceId)));
+        commandBus.execute(new ExecuteDatasourceWorker(DatasourceId.from(datasourceId)));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")
     public void enableUpdate(@PathVariable UUID datasourceId, @RequestBody EnableUpdateInstrumentRequest request) {
-        commandBus.execute(new EnableUpdateInstrumentsCommand(
+        commandBus.execute(new EnableUpdateInstruments(
                 DatasourceId.from(datasourceId),
                 request.getTickers().stream().map(Ticker::from).toList()
             )
@@ -77,7 +89,7 @@ public class DatasourceCommandController {
 
     @PatchMapping("/api/datasource/{datasourceId}/disable-update")
     public void disableUpdate(@PathVariable UUID datasourceId, @RequestBody DisableUpdateInstrumentRequest request) {
-        commandBus.execute(new DisableUpdateInstrumentsCommand(
+        commandBus.execute(new DisableUpdateInstruments(
                 DatasourceId.from(datasourceId),
                 request.getTickers().stream().map(Ticker::from).toList()
             )
@@ -86,6 +98,6 @@ public class DatasourceCommandController {
 
     @DeleteMapping("/api/datasource/{datasourceId}")
     public void removeDatasource(@PathVariable UUID datasourceId) {
-        commandBus.execute(new UnregisterDatasourceCommand(DatasourceId.from(datasourceId)));
+        commandBus.execute(new UnregisterDatasource(DatasourceId.from(datasourceId)));
     }
 }

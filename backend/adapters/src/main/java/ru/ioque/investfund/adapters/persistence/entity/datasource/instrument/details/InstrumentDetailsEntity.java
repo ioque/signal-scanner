@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetails;
-import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
-import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
-import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetails;
-import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
+import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetail;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
+import ru.ioque.investfund.domain.datasource.value.details.IndexDetail;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetail;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.Map;
@@ -52,21 +52,21 @@ public abstract class InstrumentDetailsEntity {
         this.name = name;
     }
 
-    public abstract InstrumentDetails toDomain();
+    public abstract InstrumentDetail toDomain();
 
-    public static InstrumentDetailsEntity of(InstrumentEntity instrument, InstrumentDetails details) {
+    public static InstrumentDetailsEntity of(InstrumentEntity instrument, InstrumentDetail details) {
         return instrumentMappers.get(instrument.getType()).apply(instrument, details);
     }
 
-    private static Map<InstrumentType, BiFunction<InstrumentEntity, InstrumentDetails, InstrumentDetailsEntity>> instrumentMappers = Map.of(
+    private static Map<InstrumentType, BiFunction<InstrumentEntity, InstrumentDetail, InstrumentDetailsEntity>> instrumentMappers = Map.of(
         InstrumentType.FUTURES, InstrumentDetailsEntity::toFuturesDetails,
         InstrumentType.STOCK, InstrumentDetailsEntity::toStockDetails,
         InstrumentType.CURRENCY_PAIR, InstrumentDetailsEntity::toCurrencyPairDetails,
         InstrumentType.INDEX, InstrumentDetailsEntity::toIndexDetails
     );
 
-    private static InstrumentDetailsEntity toIndexDetails(InstrumentEntity instrument, InstrumentDetails instrumentDetails) {
-        IndexDetails details = (IndexDetails) instrumentDetails;
+    private static InstrumentDetailsEntity toIndexDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
+        IndexDetail details = (IndexDetail) instrumentDetail;
         return IndexDetailsEntity.builder()
             .instrument(instrument)
             .name(details.getName())
@@ -76,8 +76,8 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toCurrencyPairDetails(InstrumentEntity instrument, InstrumentDetails instrumentDetails) {
-        CurrencyPairDetails details = (CurrencyPairDetails) instrumentDetails;
+    private static InstrumentDetailsEntity toCurrencyPairDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
+        CurrencyPairDetail details = (CurrencyPairDetail) instrumentDetail;
         return CurrencyPairDetailsEntity.builder()
             .instrument(instrument)
             .name(details.getName())
@@ -87,8 +87,8 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toStockDetails(InstrumentEntity instrument, InstrumentDetails instrumentDetails) {
-        StockDetails details = (StockDetails) instrumentDetails;
+    private static InstrumentDetailsEntity toStockDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
+        StockDetail details = (StockDetail) instrumentDetail;
         return StockDetailsEntity.builder()
             .instrument(instrument)
             .name(details.getName())
@@ -100,8 +100,8 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toFuturesDetails(InstrumentEntity instrument, InstrumentDetails instrumentDetails) {
-        FuturesDetails details = (FuturesDetails) instrumentDetails;
+    private static InstrumentDetailsEntity toFuturesDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
+        FuturesDetail details = (FuturesDetail) instrumentDetail;
         return FuturesDetailsEntity.builder()
             .instrument(instrument)
             .name(details.getName())

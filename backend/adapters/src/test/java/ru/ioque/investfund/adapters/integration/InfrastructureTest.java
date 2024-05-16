@@ -5,13 +5,12 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
-import ru.ioque.investfund.domain.datasource.value.details.FuturesDetails;
-import ru.ioque.investfund.domain.datasource.value.details.IndexDetails;
-import ru.ioque.investfund.domain.datasource.value.details.StockDetails;
+import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
+import ru.ioque.investfund.domain.datasource.value.details.IndexDetail;
+import ru.ioque.investfund.domain.datasource.value.details.StockDetail;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
-import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -72,10 +71,9 @@ public abstract class InfrastructureTest {
     protected Instrument createComp() {
         return Instrument.builder()
             .id(COMP_ID)
-            .ticker(COMP)
-            .type(InstrumentType.INDEX)
-            .details(
-                IndexDetails.builder()
+            .detail(
+                IndexDetail.builder()
+                    .ticker(COMP)
                     .name("NASDAQ Composite Index")
                     .shortName("NASDAQ Composite Index")
                     .build()
@@ -87,10 +85,9 @@ public abstract class InfrastructureTest {
     protected Instrument createApplp() {
         return Instrument.builder()
             .id(APPLP_ID)
-            .ticker(APPLP)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(APPLP)
                     .name("Apple Inc. Pref Stock")
                     .shortName("ApplePref")
                     .lotSize(1000)
@@ -105,10 +102,9 @@ public abstract class InfrastructureTest {
     protected Instrument createAppl() {
         return Instrument.builder()
             .id(APPL_ID)
-            .ticker(APPL)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(APPL)
                     .name("Apple Inc. Common Stock")
                     .shortName("AppleCommon")
                     .lotSize(1000)
@@ -124,10 +120,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(AFKS_ID)
-            .ticker(AFKS)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(AFKS)
                     .shortName("ао Система")
                     .name("АФК Система")
                     .lotSize(1000)
@@ -143,10 +138,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(SBER_ID)
-            .ticker(SBER)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(SBER)
                     .shortName("Сбербанк")
                     .name("ПАО Сбербанк")
                     .lotSize(1000)
@@ -162,10 +156,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(SBERP_ID)
-            .ticker(SBERP)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(SBERP)
                     .shortName("Сбербанк-п")
                     .name("ПАО Сбербанк-п")
                     .lotSize(1000)
@@ -181,10 +174,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(TGKN_ID)
-            .ticker(TGKN)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(TGKN)
                     .shortName("TGK НННН")
                     .name("fasfasfasfasf")
                     .lotSize(1000)
@@ -200,10 +192,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(TGKB_ID)
-            .ticker(TGKB)
-            .type(InstrumentType.STOCK)
-            .details(
-                StockDetails.builder()
+            .detail(
+                StockDetail.builder()
+                    .ticker(TGKB)
                     .shortName("ТГК ББББ")
                     .name("fasfasfasfasf")
                     .lotSize(1000)
@@ -219,10 +210,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(IMOEX_ID)
-            .ticker(IMOEX)
-            .type(InstrumentType.INDEX)
-            .details(
-                IndexDetails.builder()
+            .detail(
+                IndexDetail.builder()
+                    .ticker(IMOEX)
                     .shortName("Индекс мосбиржи")
                     .name("Индекс мосбиржи")
                     .build()
@@ -234,10 +224,9 @@ public abstract class InfrastructureTest {
         return Instrument
             .builder()
             .id(BRF4_ID)
-            .ticker(BRF4)
-            .type(InstrumentType.FUTURES)
-            .details(
-                FuturesDetails.builder()
+            .detail(
+                FuturesDetail.builder()
+                    .ticker(BRF4)
                     .shortName("Фьючерс Брент")
                     .name("Фьючерс Брент")
                     .build()

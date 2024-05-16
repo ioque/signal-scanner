@@ -3,8 +3,8 @@ package ru.ioque.investfund.datasource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +21,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         final String datasourceUrl = "http://localhost:8080";
 
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name(datasourceName)
                 .description(datasourceName)
                 .url(datasourceUrl)
@@ -42,7 +42,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         """)
     void testCase2() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа")
                 .description("Московская биржа")
                 .url("http://localhost:8080")
@@ -53,7 +53,7 @@ public class DatasourceConfiguratorTest extends BaseTest {
         final String datasourceUrl = "http://localhost:8082";
 
         commandBus().execute(
-            UpdateDatasourceCommand.builder()
+            UpdateDatasource.builder()
                 .id(getDatasourceId())
                 .name(datasourceName)
                 .description(datasourceDesc)
@@ -75,14 +75,14 @@ public class DatasourceConfiguratorTest extends BaseTest {
         """)
     void testCase3() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа 1")
                 .description("Московская биржа 1")
                 .url("http://localhost:8081")
                 .build()
         );
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .name("Московская биржа 2")
                 .description("Московская биржа 2")
                 .url("http://localhost:8082")

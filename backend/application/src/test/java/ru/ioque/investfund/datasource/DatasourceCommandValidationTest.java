@@ -4,13 +4,13 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
-import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
+import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
+import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -30,7 +30,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                CreateDatasourceCommand.builder()
+                CreateDatasource.builder()
                     .url("http://datasource.ru:8000")
                     .description("description")
                     .build()
@@ -48,7 +48,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                CreateDatasourceCommand.builder()
+                CreateDatasource.builder()
                     .url("http://datasource.ru")
                     .name("name")
                     .build()
@@ -66,7 +66,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                CreateDatasourceCommand.builder()
+                CreateDatasource.builder()
                     .description("description")
                     .name("name")
                     .build()
@@ -84,7 +84,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new UnregisterDatasourceCommand(null))
+            () -> commandBus().execute(new UnregisterDatasource(null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -98,7 +98,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(null, List.of(new Ticker(TGKN))))
+            () -> commandBus().execute(new EnableUpdateInstruments(null, List.of(new Ticker(TGKN))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -112,7 +112,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of()))
+            () -> commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), List.of()))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан список тикеров инструментов для активации обновления торговых данных.", getMessage(exception));
@@ -126,7 +126,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), null))
+            () -> commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан список тикеров инструментов для активации обновления торговых данных.", getMessage(exception));
@@ -140,7 +140,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
+            () -> commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
@@ -155,7 +155,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(null, List.of(new Ticker(TGKN))))
+            () -> commandBus().execute(new DisableUpdateInstruments(null, List.of(new Ticker(TGKN))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -169,7 +169,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of()))
+            () -> commandBus().execute(new DisableUpdateInstruments(getDatasourceId(), List.of()))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан список тикеров инструментов для активации обновления торговых данных.", getMessage(exception));
@@ -183,7 +183,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), null))
+            () -> commandBus().execute(new DisableUpdateInstruments(getDatasourceId(), null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан список тикеров инструментов для активации обновления торговых данных.", getMessage(exception));
@@ -197,7 +197,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new DisableUpdateInstrumentsCommand(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
+            () -> commandBus().execute(new DisableUpdateInstruments(getDatasourceId(), List.of(new Ticker(TGKN), new Ticker(""))))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Тикер должен быть непустой строкой, состоящей из латинских букв или цифр.", getMessage(exception));
@@ -211,7 +211,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new PrepareForWorkDatasource(null))
+            () -> commandBus().execute(new SynchronizeDatasource(null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -225,7 +225,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new IntegrateTradingDataCommand(null))
+            () -> commandBus().execute(new ExecuteDatasourceWorker(null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
@@ -239,7 +239,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                UpdateDatasourceCommand.builder()
+                UpdateDatasource.builder()
                     .id(DatasourceId.from(UUID.randomUUID()))
                     .url("http://datasource.ru:8000")
                     .description("description")
@@ -258,7 +258,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                UpdateDatasourceCommand.builder()
+                UpdateDatasource.builder()
                     .id(DatasourceId.from(UUID.randomUUID()))
                     .url("http://datasource.ru")
                     .name("name")
@@ -277,7 +277,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                UpdateDatasourceCommand.builder()
+                UpdateDatasource.builder()
                     .id(DatasourceId.from(UUID.randomUUID()))
                     .description("description")
                     .name("name")
@@ -296,7 +296,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
             () -> commandBus().execute(
-                UpdateDatasourceCommand.builder()
+                UpdateDatasource.builder()
                     .description("description")
                     .name("name")
                     .url("http://datasource.ru")
@@ -309,7 +309,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
 
     private void registerDatasource() {
         commandBus().execute(
-            CreateDatasourceCommand.builder()
+            CreateDatasource.builder()
                 .description("description")
                 .name("name")
                 .url("http://datasource.ru")

@@ -98,7 +98,7 @@ public class Datasource extends Domain<DatasourceId> {
         if (existed.isEmpty()) {
             instruments.add(instrument);
         } else {
-            existed.get().updateDetails(instrument.getDetails());
+            existed.get().updateDetails(instrument.getDetail());
         }
     }
 }

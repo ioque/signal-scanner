@@ -6,13 +6,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.handler.configurator.DisableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.configurator.EnableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.configurator.RegisterDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.configurator.UnregisterDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.configurator.UpdateDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.PrepareForWorkDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.IntegrateTradingDataHandler;
+import ru.ioque.investfund.application.modules.datasource.DatasourceWorkerManager;
+import ru.ioque.investfund.application.modules.datasource.handler.RunDatasourceWorkerHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.DisableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.EnableUpdateInstrumentHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.RegisterDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.UnregisterDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.ExecuteDatasourceWorkerHandler;
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
@@ -45,10 +47,11 @@ public class FakeDIContainer {
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
     FakeTelegramMessageSender telegramMessageSender;
+    FakeIntradayJournalPublisher intradayJournalPublisher;
     DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
-    PrepareForWorkDatasourceHandler integrateInstrumentsProcessor;
-    IntegrateTradingDataHandler integrateTradingDataProcessor;
+    SynchronizeDatasourceHandler integrateInstrumentsProcessor;
+    ExecuteDatasourceWorkerHandler integrateTradingDataProcessor;
     RegisterDatasourceHandler registerDatasourceProcessor;
     UnregisterDatasourceHandler unregisterDatasourceProcessor;
     UpdateDatasourceHandler updateDatasourceProcessor;
@@ -64,6 +67,8 @@ public class FakeDIContainer {
     UnsubscribeHandler unsubscribeHandler;
     DeactivateScannerHandler deactivateScannerHandler;
     ActivateScannerHandler activateScannerHandler;
+    RunDatasourceWorkerHandler runDatasourceWorkerHandler;
+    DatasourceWorkerManager datasourceWorkerManager;
     CommandBus commandBus;
     Validator validator;
 
@@ -84,6 +89,19 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
+        intradayJournalPublisher = new FakeIntradayJournalPublisher();
+        datasourceWorkerManager = new DatasourceWorkerManager(
+            exchangeProvider,
+            intradayJournalPublisher
+        );
+        runDatasourceWorkerHandler = new RunDatasourceWorkerHandler(
+            dateTimeProvider,
+            validator,
+            loggerProvider,
+            exchangeProvider,
+            datasourceWorkerManager,
+            datasourceRepository
+        );
         deactivateScannerHandler = new DeactivateScannerHandler(
             dateTimeProvider,
             validator,
@@ -115,7 +133,7 @@ public class FakeDIContainer {
             loggerProvider,
             datasourceRepository
         );
-        integrateInstrumentsProcessor = new PrepareForWorkDatasourceHandler(
+        integrateInstrumentsProcessor = new SynchronizeDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -123,11 +141,12 @@ public class FakeDIContainer {
             instrumentRepository,
             datasourceRepository
         );
-        integrateTradingDataProcessor = new IntegrateTradingDataHandler(
+        integrateTradingDataProcessor = new ExecuteDatasourceWorkerHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             exchangeProvider,
+            datasourceWorkerManager,
             datasourceRepository,
             intradayValueRepository,
             eventPublisher
@@ -235,7 +254,8 @@ public class FakeDIContainer {
                 unsubscribeHandler,
                 removeScannerHandler,
                 deactivateScannerHandler,
-                activateScannerHandler
+                activateScannerHandler,
+                runDatasourceWorkerHandler
             )
         );
     }

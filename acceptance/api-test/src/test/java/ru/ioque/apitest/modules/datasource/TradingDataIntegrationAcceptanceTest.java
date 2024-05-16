@@ -46,8 +46,7 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final UUID datasourceId = getFirstDatasourceId();
         final List<Instrument> instrumentList = getInstrumentList();
         initInstruments(instrumentList);
-        integrateInstruments(datasourceId);
-
+        synchronizeDatasource(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
         instrumentList.forEach(dto -> {
@@ -64,9 +63,8 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final UUID datasourceId = getFirstDatasourceId();
         final List<Instrument> instrumentList = getInstrumentList();
         initInstruments(instrumentList);
-        integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
+        prepareDatasource(datasourceId);
         disableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
         instrumentList.forEach(dto -> {
@@ -84,10 +82,8 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final List<Instrument> instrumentList = getInstrumentList();
         final List<HistoryValue> historyValues = getHistoryValues();
         initDataset(instrumentList, historyValues, List.of());
-        integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
-        integrateAggregatedHistory(datasourceId);
+        prepareDatasource(datasourceId);
 
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
@@ -104,10 +100,9 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final List<Instrument> instrumentList = getInstrumentList();
         final List<IntradayValue> intradayValues = getIntradayValues();
         initDataset(instrumentList, List.of(), intradayValues);
-        integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
-        integrateTradingData(datasourceId);
+        prepareDatasource(datasourceId);
+        executeDatasourceWork(datasourceId);
 
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
@@ -126,16 +121,14 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final UUID datasourceId = getFirstDatasourceId();
         final List<Instrument> instrumentList = getInstrumentList();
         initDataset(instrumentList, getHistoryValues(), List.of());
-        integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-        integrateAggregatedHistory(datasourceId);
+        prepareDatasource(datasourceId);
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
             assertEquals(3, instrumentResponse.getHistoryValues().size());
         });
 
         initDateTime(LocalDateTime.parse("2024-03-22T13:00:00"));
-        integrateAggregatedHistory(datasourceId);
+        prepareDatasource(datasourceId);
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
             assertEquals(4, instrumentResponse.getHistoryValues().size());
@@ -151,12 +144,11 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final List<Instrument> instrumentList = List.of(DefaultInstrumentSet.sber());
         final List<IntradayValue> intradayValues = List.of(Deal.builder().number(1L).ticker("SBER").qnt(100).isBuy(true).price(270D).value(270000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build());
         initDataset(instrumentList, List.of(), intradayValues);
-        integrateInstruments(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-        integrateTradingData(datasourceId);
+        prepareDatasource(datasourceId);
+        executeDatasourceWork(datasourceId);
         assertEquals(1, getIntradayValues(0, 10).size());
         initDataset(instrumentList, List.of(), getIntradayValues());
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
         assertEquals(4, getIntradayValues(0, 10).size());
     }
 

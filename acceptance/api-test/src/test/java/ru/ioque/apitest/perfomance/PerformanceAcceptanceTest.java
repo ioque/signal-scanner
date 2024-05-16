@@ -84,9 +84,10 @@ public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
+        prepareDatasource(datasourceId);
 
         long startMills = System.currentTimeMillis();
-        fullIntegrate(datasourceId);
+        executeDatasourceWork(datasourceId);
         long finishMills = System.currentTimeMillis();
         long seconds = ((finishMills - startMills) / 1000);
 

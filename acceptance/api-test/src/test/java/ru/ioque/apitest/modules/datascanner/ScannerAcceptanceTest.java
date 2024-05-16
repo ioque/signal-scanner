@@ -67,7 +67,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -99,7 +99,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .instruments(List.of(DefaultInstrumentSet.sber(), DefaultInstrumentSet.sberp()))
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -130,7 +130,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 ))
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -167,7 +167,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 ))
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
 
         createScanner(
             CreateScannerRequest.builder()
@@ -279,8 +279,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+
+        prepareDatasource(datasourceId);
+
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -296,7 +297,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+
+        executeDatasourceWork(datasourceId);
+        stopDatasource(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -393,7 +396,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+        synchronizeDatasource(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
         createScanner(
@@ -405,7 +408,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .properties(new PrefSimplePropertiesDto(1.0))
                 .build()
         );
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -539,9 +542,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .historyValues(historyValues)
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -556,7 +558,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -631,10 +633,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .intradayValues(intradayValues)
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
-
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -650,7 +650,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -695,8 +695,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -712,7 +712,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
+
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
 
@@ -736,7 +737,9 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+
+        prepareDatasource(datasourceId);
+        executeDatasourceWork(datasourceId);
         assertTrue(waitOpenEmulatedPositions(0));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
@@ -774,8 +777,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
@@ -791,7 +794,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+        executeDatasourceWork(datasourceId);
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
 
@@ -815,7 +818,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        integrateTradingData(datasourceId);
+        prepareDatasource(datasourceId);
+        executeDatasourceWork(datasourceId);
         assertTrue(waitScanningFinishedEvent(LocalDateTime.parse("2024-03-22T13:00:00")));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());
@@ -832,7 +836,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .instruments(List.of(DefaultInstrumentSet.imoex(), DefaultInstrumentSet.sber()))
                 .build()
         );
-        integrateAllInstrumentFrom(datasourceId);
+
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)
