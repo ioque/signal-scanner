@@ -10,7 +10,8 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -19,11 +20,11 @@ import java.util.TreeSet;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateInstrumentsCommand> {
+public class PrepareForWorkDatasourceHandler extends IntegrationHandler<PrepareForWorkDatasource> {
     InstrumentRepository instrumentRepository;
     DatasourceRepository datasourceRepository;
 
-    public IntegrateInstrumentsHandler(
+    public PrepareForWorkDatasourceHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -37,7 +38,7 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
     }
 
     @Override
-    protected Result businessProcess(IntegrateInstrumentsCommand command) {
+    protected Result businessProcess(PrepareForWorkDatasource command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         datasourceProvider
             .fetchInstruments(datasource)
@@ -53,6 +54,17 @@ public class IntegrateInstrumentsHandler extends IntegrationHandler<IntegrateIns
                 .build()
             )
             .forEach(datasource::addInstrument);
+        datasource.getInstruments().forEach(instrument -> {
+            instrument.updateAggregateHistory(
+                new TreeSet<>(
+                    datasourceProvider.fetchAggregateHistory(datasource, instrument)
+                        .stream()
+                        .map(AggregatedHistoryDto::toAggregateHistory)
+                        .filter(data -> !instrument.contains(data))
+                        .toList()
+                )
+            );
+        });
         datasourceRepository.save(datasource);
         return Result.success();
     }

@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.CurrencyPairDto;
@@ -128,7 +128,7 @@ public class BaseTest {
 
     protected void integrateInstruments(DatasourceId datasourceId, InstrumentDto... instrumentDtos) {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDtos));
-        commandBus().execute(new IntegrateInstrumentsCommand(datasourceId));
+        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
     }
 
     protected void initInstrumentDetails(InstrumentDto... instrumentDtos) {
@@ -173,6 +173,7 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
+        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
         commandBus().execute(new IntegrateTradingDataCommand(datasourceId));
         commandBus().execute(new ProduceSignal(datasourceId, getToday()));
     }

@@ -3,6 +3,7 @@ package ru.ioque.investfund.scanner.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
@@ -58,6 +59,7 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
             buildImoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
         );
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta(1L, "10:00:00", 3100D, 1_000_000D),
             buildImoexDelta(2L, "12:00:00", 3400D, 1_200_000D),

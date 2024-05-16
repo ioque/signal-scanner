@@ -11,7 +11,7 @@ import ru.ioque.investfund.application.modules.datasource.handler.configurator.E
 import ru.ioque.investfund.application.modules.datasource.handler.configurator.RegisterDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.configurator.UnregisterDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.configurator.UpdateDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.IntegrateInstrumentsHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.integration.PrepareForWorkDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.IntegrateTradingDataHandler;
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
@@ -47,7 +47,7 @@ public class FakeDIContainer {
     FakeTelegramMessageSender telegramMessageSender;
     DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
-    IntegrateInstrumentsHandler integrateInstrumentsProcessor;
+    PrepareForWorkDatasourceHandler integrateInstrumentsProcessor;
     IntegrateTradingDataHandler integrateTradingDataProcessor;
     RegisterDatasourceHandler registerDatasourceProcessor;
     UnregisterDatasourceHandler unregisterDatasourceProcessor;
@@ -115,7 +115,7 @@ public class FakeDIContainer {
             loggerProvider,
             datasourceRepository
         );
-        integrateInstrumentsProcessor = new IntegrateInstrumentsHandler(
+        integrateInstrumentsProcessor = new PrepareForWorkDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,

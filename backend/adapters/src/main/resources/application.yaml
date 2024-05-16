@@ -15,9 +15,9 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:54321}/postgres?reWriteBatchedInserts=true
-    username: postgres
-    password:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:54321}/${DB_NAME:postgres}?reWriteBatchedInserts=true
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:}
   kafka:
     bootstrap-servers: ${KAFKA_HOST:localhost}:9092
     producer:

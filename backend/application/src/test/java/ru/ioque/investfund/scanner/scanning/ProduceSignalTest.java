@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
@@ -37,7 +37,7 @@ public class ProduceSignalTest extends BaseScannerTest {
                 .build()
         );
         initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .datasourceId(getDatasourceId())
@@ -157,6 +157,7 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta( 1L, "10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L, "12:00:00", 3100D, 2_000_000D),
@@ -204,6 +205,7 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta( 1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 2900D, 2_000_000D),
@@ -268,6 +270,7 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
             buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         initIntradayValues(
             buildImoexDelta(1L,"10:00:00", 3000D, 1_000_000D),
             buildImoexDelta( 2L,"12:00:00", 3100D, 2_000_000D),

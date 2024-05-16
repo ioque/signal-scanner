@@ -33,4 +33,9 @@ public class FakeIntradayValueRepository implements IntradayValueRepository {
             this.intradayValues.get(ticker).addAll(values);
         });
     }
+
+    @Override
+    public void publish(IntradayData intradayData) {
+
+    }
 }

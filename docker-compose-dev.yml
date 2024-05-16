@@ -9,6 +9,15 @@ services:
     volumes:
       - signal-scanner-db:/var/lib/pgpro/std-15/data
 
+  archive-db:
+    container_name: archive-db
+    build:
+      context: infra/containers/postgres
+    ports:
+      - "54322:5432"
+    volumes:
+      - archive-db:/var/lib/pgpro/std-15/data
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.1
     hostname: zookeeper
@@ -125,4 +134,5 @@ services:
 
 volumes:
   signal-scanner-db:
+  archive-db:
   elasticsearch:

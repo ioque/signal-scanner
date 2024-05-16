@@ -118,7 +118,11 @@ public class Instrument extends Domain<InstrumentId> {
         return Boolean.TRUE.equals(updatable);
     }
 
-    private LocalDate getLastHistoryDate() {
+    public LocalDate getLastHistoryDate() {
         return aggregateHistories.last().getDate();
+    }
+
+    public boolean contains(AggregatedHistory data) {
+        return aggregateHistories.contains(data);
     }
 }

@@ -10,15 +10,13 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EventPublisher;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.integration.event.TradingStateChanged;
+import ru.ioque.investfund.application.modules.api.Result;
+import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.intraday.IntradayDataDto;
-import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
@@ -71,19 +69,15 @@ public class IntegrateTradingDataHandler extends IntegrationHandler<IntegrateTra
     }
 
     private void integrateTradingDataFor(Instrument instrument, Datasource datasource) {
-        final TreeSet<IntradayData> intradayData = new TreeSet<>(datasourceProvider.fetchIntradayValues(
-            datasource,
-            instrument
-        ).stream().map(IntradayDataDto::toIntradayValue).toList());
-        final TreeSet<AggregatedHistory> aggregateHistories = new TreeSet<>(datasourceProvider.fetchAggregateHistory(
-            datasource,
-            instrument
-        ).stream().map(AggregatedHistoryDto::toAggregateHistory).toList());
-        intradayValueRepository.saveAll(intradayData
-            .stream()
-            .filter(data -> data.getNumber() > instrument.getLastTradingNumber())
-            .toList());
-        instrument.updateAggregateHistory(aggregateHistories);
+        final TreeSet<IntradayData> intradayData =
+            new TreeSet<>(
+                datasourceProvider.fetchIntradayValues(datasource, instrument)
+                    .stream()
+                    .map(IntradayDataDto::toIntradayValue)
+                    .filter(data -> data.getNumber() > instrument.getLastTradingNumber())
+                    .toList()
+            );
+        intradayValueRepository.saveAll(intradayData);
         if (instrument.updateTradingState(intradayData)) {
             eventPublisher.publish(
                 TradingStateChanged.builder()

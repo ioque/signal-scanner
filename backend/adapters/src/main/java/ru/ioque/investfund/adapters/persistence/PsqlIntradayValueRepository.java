@@ -23,4 +23,9 @@ public class PsqlIntradayValueRepository implements IntradayValueRepository {
     public void saveAll(Collection<IntradayData> intradayData) {
         jpaIntradayValueRepository.saveAll(intradayData.stream().map(IntradayValueEntity::fromDomain).toList());
     }
+
+    @Override
+    public void publish(IntradayData intradayData) {
+
+    }
 }

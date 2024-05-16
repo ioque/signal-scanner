@@ -7,7 +7,7 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
@@ -211,7 +211,7 @@ public class DatasourceCommandValidationTest extends BaseTest {
         registerDatasource();
         final ConstraintViolationException exception = assertThrows(
             ConstraintViolationException.class,
-            () -> commandBus().execute(new IntegrateInstrumentsCommand(null))
+            () -> commandBus().execute(new PrepareForWorkDatasource(null))
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Не передан идентификатор источника данных.", getMessage(exception));

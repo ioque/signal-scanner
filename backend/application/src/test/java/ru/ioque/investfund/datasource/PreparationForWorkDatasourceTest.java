@@ -1,14 +1,15 @@
-package ru.ioque.investfund.datasource.integration;
+package ru.ioque.investfund.datasource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.IntegrationValidationException;
 import ru.ioque.investfund.application.modules.datasource.handler.integration.dto.instrument.StockDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
+import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("INSTRUMENT INTEGRATION TEST")
-public class InstrumentIntegrationTest extends BaseTest {
+@DisplayName("PREPARATION FOR WORK DATASOURCE TEST")
+public class PreparationForWorkDatasourceTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
@@ -52,7 +53,7 @@ public class InstrumentIntegrationTest extends BaseTest {
             buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-11")).build()
         );
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
 
         final Optional<Datasource> datasource = datasourceRepository().findBy(getDatasourceId());
         assertTrue(datasource.isPresent());
@@ -70,10 +71,10 @@ public class InstrumentIntegrationTest extends BaseTest {
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
         initInstrumentDetails(afks(), imoex(), brf4());
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         clearLogs();
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         assertEquals(3, getInstruments(getDatasourceId()).size());
         assertEquals(getDatasourceId(), datasourceRepository().findBy(getDatasourceId()).orElseThrow().getId());
     }
@@ -85,11 +86,11 @@ public class InstrumentIntegrationTest extends BaseTest {
     void testCase3() {
         initInstrumentDetails(afks(), imoex(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         clearLogs();
         initInstrumentDetails(afks(), imoex(), brf4(), lkohDetails(), rosnDetails(), sibn());
 
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
 
         assertEquals(6, getInstruments(getDatasourceId()).size());
     }
@@ -112,7 +113,7 @@ public class InstrumentIntegrationTest extends BaseTest {
                 .regNumber("1-05-01669-A")
                 .build()
         ));
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         assertEquals(1, getInstruments(getDatasourceId()).size());
     }
 
@@ -145,7 +146,7 @@ public class InstrumentIntegrationTest extends BaseTest {
         ));
         final IntegrationValidationException error = assertThrows(
             IntegrationValidationException.class,
-            () -> commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()))
+            () -> commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()))
         );
         assertEquals(3, error.getValidationErrors().size());
         assertEquals(2, error.getValidationErrors().get(0).getErrors().size());
@@ -159,5 +160,27 @@ public class InstrumentIntegrationTest extends BaseTest {
         assertTrue(error.getValidationErrors().get(2).getErrors().contains("Не заполнен тикер инструмента."));
         assertTrue(error.getValidationErrors().get(2).getErrors().contains("Не заполнено краткое наименование инструмента."));
         assertTrue(error.getValidationErrors().get(2).getErrors().contains("Не заполнено полное наименование инструмента."));
+    }
+
+    @Test
+    @DisplayName("""
+        T6. Источник биржевых данных зарегистрирован, хранилище финансовых инструментов не пустое.
+        По инструменту AFKS сохранены итоги торгов по 2023-12-07.
+        Текущее время 2023-12-09T13:00:00. Запущена интеграция инструментов.
+        Результат: добавлена история торгов за 2023-12-08.
+        """)
+    void testCase6() {
+        final DatasourceId datasourceId = getDatasourceId();
+        initTodayDateTime("2023-12-08T12:00:00");
+        initInstrumentDetails(afks());
+        initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
+        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
+        clearLogs();
+        initTodayDateTime("2023-12-09T13:00:00");
+        initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
+
+        commandBus().execute(new PrepareForWorkDatasource(datasourceId));
+
+        assertEquals(66, getHistoryValuesBy(AFKS).size());
     }
 }

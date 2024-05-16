@@ -17,7 +17,7 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstrumentsCommand;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasourceCommand;
@@ -58,7 +58,7 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/instrument")
     public void integrateInstruments(@PathVariable UUID datasourceId) {
-        commandBus.execute(new IntegrateInstrumentsCommand(DatasourceId.from(datasourceId)));
+        commandBus.execute(new PrepareForWorkDatasource(DatasourceId.from(datasourceId)));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/trading-data")

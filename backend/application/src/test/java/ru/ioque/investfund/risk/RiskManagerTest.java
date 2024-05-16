@@ -3,7 +3,7 @@ package ru.ioque.investfund.risk;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -29,7 +29,7 @@ public abstract class RiskManagerTest extends BaseTest {
                 tgknDetails()
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .workPeriodInMinutes(1)

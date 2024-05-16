@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasourceCommand;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstrumentsCommand;
-import ru.ioque.investfund.application.modules.datasource.command.IntegrateInstrumentsCommand;
+import ru.ioque.investfund.application.modules.datasource.command.PrepareForWorkDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.IntegrateTradingDataCommand;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
@@ -153,7 +153,7 @@ public class TelegramBotTest extends BaseTest {
                 buildImoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
             )
         );
-        commandBus().execute(new IntegrateInstrumentsCommand(getDatasourceId()));
+        commandBus().execute(new PrepareForWorkDatasource(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstrumentsCommand(getDatasourceId(), getTickers(getDatasourceId())));
         commandBus().execute(
             CreateScanner.builder()

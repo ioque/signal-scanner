@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntegrateInstrumentsCommand implements Command {
+public class PrepareForWorkDatasource implements Command {
     @NotNull(message = "Не передан идентификатор источника данных.")
     DatasourceId datasourceId;
 }

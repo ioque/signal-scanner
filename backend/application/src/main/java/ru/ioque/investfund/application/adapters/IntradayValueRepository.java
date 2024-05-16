@@ -6,4 +6,6 @@ import java.util.Collection;
 
 public interface IntradayValueRepository {
     void saveAll(Collection<IntradayData> intradayData);
+
+    void publish(IntradayData intradayData);
 }
