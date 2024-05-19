@@ -20,6 +20,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Dataset {
     @Builder.Default
+    WorkMode workMode = WorkMode.BATCH;
+    @Builder.Default
     List<? extends Instrument> instruments = new ArrayList<>();
     @Builder.Default
     List<? extends IntradayValue> intradayValues = new ArrayList<>();

@@ -16,8 +16,6 @@ public class InternalDatasetManager implements DatasetManager {
 
     @Override
     public void initDataset(Dataset dataset) {
-        datasetRepository.initInstruments(dataset.getInstruments());
-        datasetRepository.initIntradayValues(dataset.getIntradayValues());
-        datasetRepository.initHistoryValues(dataset.getHistoryValues());
+        datasetRepository.init(dataset);
     }
 }

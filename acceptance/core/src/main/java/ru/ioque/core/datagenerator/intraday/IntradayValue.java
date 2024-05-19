@@ -27,10 +27,15 @@ import java.time.LocalDateTime;
     @JsonSubTypes.Type(value = Delta.class, name = "Delta"),
     @JsonSubTypes.Type(value = Contract.class, name = "Contract") }
 )
-public abstract class IntradayValue {
+public abstract class IntradayValue implements Comparable<IntradayValue> {
     Long number;
     LocalDateTime dateTime;
     String ticker;
     Double value;
     Double price;
+
+    @Override
+    public int compareTo(IntradayValue intradayValue) {
+        return dateTime.compareTo(intradayValue.dateTime);
+    }
 }

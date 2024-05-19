@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.IntradayJournalPublisher;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
+import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_DATA_TOPIC;
+
 @Component
 @AllArgsConstructor
 @Profile("!tests")
@@ -14,6 +16,8 @@ public class KafkaIntradayJournalPublisher implements IntradayJournalPublisher {
     KafkaTemplate<String, IntradayData> kafkaTemplate;
 
     public void publish(IntradayData intradayData) {
-        kafkaTemplate.send("intraday-data", intradayData);
+        kafkaTemplate.send(INTRADAY_DATA_TOPIC,
+                intradayData.getTicker().getValue(),
+                intradayData);
     }
 }

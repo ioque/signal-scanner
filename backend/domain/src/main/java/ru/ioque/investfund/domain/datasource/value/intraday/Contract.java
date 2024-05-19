@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -13,9 +14,10 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Contract extends IntradayData {
     @NotNull(message = "Не заполнено количество контрактов.")
     @Min(value = 0, message = "Количество контрактов должно быть больше нуля.")

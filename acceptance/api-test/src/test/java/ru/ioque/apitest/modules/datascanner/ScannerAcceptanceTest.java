@@ -396,9 +396,8 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        synchronizeDatasource(datasourceId);
-        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
 
+        prepareDatasource(datasourceId);
         createScanner(
             CreateScannerRequest.builder()
                 .workPeriodInMinutes(1)

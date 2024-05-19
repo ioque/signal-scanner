@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HistoryValue {
+public class HistoryValue implements Comparable<HistoryValue> {
     LocalDate tradeDate;
     String ticker;
     Double openPrice;
@@ -32,5 +32,10 @@ public class HistoryValue {
 
     public boolean isBetween(LocalDate from, LocalDate till) {
         return (tradeDate.isAfter(from) || tradeDate.isEqual(from)) && (tradeDate.isBefore(till) || tradeDate.isEqual(till));
+    }
+
+    @Override
+    public int compareTo(HistoryValue historyValue) {
+        return tradeDate.compareTo(historyValue.tradeDate);
     }
 }
