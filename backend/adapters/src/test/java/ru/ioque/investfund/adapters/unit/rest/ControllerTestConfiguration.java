@@ -15,7 +15,7 @@ import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
-import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.EventJournal;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
@@ -34,8 +34,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public EventPublisher mockEventPublisher() {
-        return mock(EventPublisher.class);
+    public EventJournal mockEventPublisher() {
+        return mock(EventJournal.class);
     }
 
     @Bean

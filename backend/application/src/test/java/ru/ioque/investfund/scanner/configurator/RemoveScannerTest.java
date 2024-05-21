@@ -3,8 +3,8 @@ package ru.ioque.investfund.scanner.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
-import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
@@ -75,7 +75,7 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
             buildTgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
         commandBus()
             .execute(
                 buildCreateAnomalyVolumeScannerWith()
@@ -86,7 +86,7 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
                         .build())
                     .build()
             );
-        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(getDatasourceId()));
         commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
         eventPublisher()
             .getEvents()

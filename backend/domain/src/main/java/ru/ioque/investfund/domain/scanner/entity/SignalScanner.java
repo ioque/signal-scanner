@@ -36,7 +36,6 @@ public class SignalScanner extends Domain<ScannerId> {
     AlgorithmProperties properties;
     LocalDateTime lastExecutionDateTime;
     final List<Signal> signals;
-    final Set<String> logs = new TreeSet<>();
 
     @Builder
     public SignalScanner(

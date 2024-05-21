@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("EXECUTE DATASOURCE WORKER")
-public class ExecuteDatasourceWorkerTest extends BaseTest {
+public class PublishIntradayDataTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(
@@ -60,8 +60,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         clearLogs();
 
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new RunDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(1, getInstruments(datasourceId).size());
         assertEquals(3, getIntradayValuesBy(AFKS).size());
@@ -90,8 +90,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new RunDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(3, getIntradayValuesBy(AFKS).size());
     }
@@ -113,8 +113,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new RunDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initIntradayValues(
@@ -125,7 +125,7 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
             buildDealWith(AFKS, 5L, LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(5, getIntradayValuesBy(AFKS).size());
     }
@@ -144,8 +144,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         initHistoryValues(buildAggregatedHistory(AFKS, "2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
-        commandBus().execute(new RunDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(0, getHistoryValuesBy(AFKS).size());
         assertEquals(0, getIntradayValuesBy(AFKS).size());
@@ -165,8 +165,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new RunDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initIntradayValues(
             buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1),
@@ -174,7 +174,7 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         );
 
         commandBus().execute(disableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(1, getIntradayValuesBy(AFKS).size());
     }
@@ -223,7 +223,7 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         TradingDataIntegrated event = findTradingDataIntegrated().orElseThrow();
         assertEquals(datasourceId.getUuid(), event.getDatasourceId());
         assertEquals(dateTimeProvider().nowDateTime(), event.getCreatedAt());
@@ -245,7 +245,7 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         assertEquals(3, getIntradayValuesBy(AFKS).size());
     }
 
@@ -261,8 +261,8 @@ public class ExecuteDatasourceWorkerTest extends BaseTest {
         initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         assertEquals(1, getIntradayValuesBy(AFKS).size());
     }
 

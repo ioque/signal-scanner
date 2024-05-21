@@ -4,7 +4,7 @@ import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.CommandPublisher;
+import ru.ioque.investfund.application.adapters.CommandJournal;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.integration.EventHandler;
@@ -18,21 +18,21 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
-    CommandPublisher commandPublisher;
+    CommandJournal commandJournal;
 
     public SignalRegisteredHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        CommandPublisher commandPublisher
+        CommandJournal commandJournal
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.commandPublisher = commandPublisher;
+        this.commandJournal = commandJournal;
     }
 
     @Override
     public void handle(SignalRegistered event) {
-        commandPublisher.publish(
+        commandJournal.publish(
             PublishSignal.builder()
                 .isBuy(event.getIsBuy())
                 .scannerId(ScannerId.from(event.getScannerId()))
@@ -40,7 +40,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
                 .build()
         );
         if (event.getIsBuy()) {
-            commandPublisher.publish(
+            commandJournal.publish(
                 OpenEmulatedPosition.builder()
                     .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))
@@ -48,7 +48,7 @@ public class SignalRegisteredHandler extends EventHandler<SignalRegistered> {
                     .build()
             );
         } else {
-            commandPublisher.publish(
+            commandJournal.publish(
                 CloseEmulatedPosition.builder()
                     .price(event.getPrice())
                     .scannerId(ScannerId.from(event.getScannerId()))

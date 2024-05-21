@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.EventJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
@@ -30,7 +30,7 @@ import java.util.List;
 public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
     ScannerRepository scannerRepository;
     TradingSnapshotsRepository snapshotsRepository;
-    EventPublisher eventPublisher;
+    EventJournal eventJournal;
 
     public ProduceSignalCommandHandler(
         DateTimeProvider dateTimeProvider,
@@ -38,12 +38,12 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
         LoggerProvider loggerProvider,
         ScannerRepository scannerRepository,
         TradingSnapshotsRepository snapshotsRepository,
-        EventPublisher eventPublisher
+        EventJournal eventJournal
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.scannerRepository = scannerRepository;
         this.snapshotsRepository = snapshotsRepository;
-        this.eventPublisher = eventPublisher;
+        this.eventJournal = eventJournal;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
             .map(scanner -> runScanner(scanner, command.getWatermark()))
             .flatMap(Collection::stream)
             .toList();
-        eventPublisher.publish(DatasourceScanned.builder()
+        eventJournal.publish(DatasourceScanned.builder()
             .datasourceId(command.getDatasourceId().getUuid())
             .watermark(command.getWatermark())
             .createdAt(dateTimeProvider.nowDateTime())
@@ -89,9 +89,6 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
                 report.getRegisteredSignals()
             ))
         );
-        logs.addAll(scanner.getLogs().stream()
-            .map(log -> (ApplicationLog) new InfoLog(dateTimeProvider.nowDateTime(), log.replaceAll("\\n", " ")))
-            .toList());
         scannerRepository.save(scanner);
         report.getRegisteredSignals()
             .stream()
@@ -103,7 +100,7 @@ public class ProduceSignalCommandHandler extends CommandHandler<ProduceSignal> {
                 .createdAt(dateTimeProvider.nowDateTime())
                 .build()
             )
-            .forEach(eventPublisher::publish);
+            .forEach(eventJournal::publish);
         return logs;
     }
 }

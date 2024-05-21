@@ -7,69 +7,57 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.EventJournal;
+import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.application.adapters.IntradayValueRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.integration.event.TradingStateChanged;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.datasource.DatasourceWorkerManager;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ExecuteDatasourceWorkerHandler extends CommandHandler<ExecuteDatasourceWorker> {
+public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayData> {
     DatasourceProvider datasourceProvider;
-    DatasourceWorkerManager datasourceWorkerManager;
+    IntradayJournal intradayJournal;
     DatasourceRepository datasourceRepository;
     IntradayValueRepository intradayValueRepository;
-    EventPublisher eventPublisher;
+    EventJournal eventJournal;
 
-    public ExecuteDatasourceWorkerHandler(
+    public PublishIntradayDataHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
-        DatasourceWorkerManager datasourceWorkerManager,
+        IntradayJournal intradayJournal,
         DatasourceRepository datasourceRepository,
         IntradayValueRepository intradayValueRepository,
-        EventPublisher eventPublisher
+        EventJournal eventJournal
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.datasourceProvider = datasourceProvider;
-        this.datasourceWorkerManager = datasourceWorkerManager;
+        this.intradayJournal = intradayJournal;
         this.datasourceRepository = datasourceRepository;
         this.intradayValueRepository = intradayValueRepository;
-        this.eventPublisher = eventPublisher;
+        this.eventJournal = eventJournal;
     }
 
     @Override
-    protected Result businessProcess(ExecuteDatasourceWorker command) {
+    protected Result businessProcess(PublishIntradayData command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
-        datasourceWorkerManager.runWorkers(datasource.getId());
-        //TODO нижележащий код будет удален по мере рефакторинга
-        final ExecutorService service = Executors.newCachedThreadPool();
         for (Instrument instrument : datasource.getUpdatableInstruments()) {
-            service.execute(() -> integrateTradingDataFor(instrument, datasource));
-        }
-        service.shutdown();
-        try {
-            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+            integrateTradingDataFor(instrument, datasource);
         }
         datasourceRepository.save(datasource);
-        eventPublisher.publish(TradingDataIntegrated.builder()
+        eventJournal.publish(TradingDataIntegrated.builder()
             .datasourceId(datasource.getId().getUuid())
             .createdAt(dateTimeProvider.nowDateTime())
             .build());
@@ -84,9 +72,10 @@ public class ExecuteDatasourceWorkerHandler extends CommandHandler<ExecuteDataso
                     .filter(data -> data.getNumber() > instrument.getLastTradingNumber())
                     .toList()
             );
+        intradayData.forEach(intradayJournal::publish);
         intradayValueRepository.saveAll(intradayData);
         if (instrument.updateTradingState(intradayData)) {
-            eventPublisher.publish(
+            eventJournal.publish(
                 TradingStateChanged.builder()
                     .instrumentId(instrument.getId().getUuid())
                     .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(null))

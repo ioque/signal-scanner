@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.integration.event.SignalRegistered;
@@ -37,7 +37,7 @@ public class ProduceSignalTest extends BaseScannerTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        initInstrumentDetails(imoex(), tgkbDetails(), tgknDetails());
+        initInstrumentDetails(imoexDetails(), tgkbDetails(), tgknDetails());
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
@@ -168,8 +168,8 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
-        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(getDatasourceId()));
         clearLogs();
     }
 
@@ -221,8 +221,8 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgkbBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
-        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(getDatasourceId()));
         clearLogs();
     }
 
@@ -246,7 +246,7 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknSellDeal(5L, "11:45:00", 96D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(getDatasourceId()));
         clearLogs();
     }
 
@@ -281,8 +281,8 @@ public class ProduceSignalTest extends BaseScannerTest {
             buildTgknBuyDeal(5L,"11:45:00", 102D, 5000D, 1)
         );
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new ExecuteDatasourceWorker(getDatasourceId()));
-        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(getDatasourceId()));
+        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
         clearLogs();
     }
 

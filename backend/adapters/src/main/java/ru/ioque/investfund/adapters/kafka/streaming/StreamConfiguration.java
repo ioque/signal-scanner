@@ -6,6 +6,7 @@ import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
@@ -17,6 +18,7 @@ import static org.apache.kafka.streams.StreamsConfig.*;
 
 @Slf4j
 @Configuration
+@Profile("!tests")
 @EnableKafkaStreams
 public class StreamConfiguration {
     @Value(value = "${spring.kafka.bootstrap-servers}")
@@ -27,6 +29,7 @@ public class StreamConfiguration {
         Map<String, Object> props = new HashMap<>();
         props.put(APPLICATION_ID_CONFIG, "streams-app");
         props.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(COMMIT_INTERVAL_MS_CONFIG, 500);
         props.put(DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);

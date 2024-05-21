@@ -24,7 +24,7 @@ public abstract class RiskManagerTest extends BaseTest {
         );
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoex(),
+                imoexDetails(),
                 tgkbDetails(),
                 tgknDetails()
             )

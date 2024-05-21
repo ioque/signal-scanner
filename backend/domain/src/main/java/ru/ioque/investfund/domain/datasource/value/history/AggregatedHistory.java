@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -19,8 +20,9 @@ import java.time.LocalDate;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AggregatedHistory implements Comparable<AggregatedHistory> {
     @NotBlank(message = "Не заполнен тикер.")
     @Valid Ticker ticker;

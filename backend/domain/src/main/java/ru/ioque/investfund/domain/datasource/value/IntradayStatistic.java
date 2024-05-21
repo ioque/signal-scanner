@@ -13,26 +13,26 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InstrumentStatistic {
+public class IntradayStatistic {
     Ticker ticker;
     Double todayValue;
     Double todayLastPrice;
     Double todayFirstPrice;
 
-    public static InstrumentStatistic empty() {
-        return InstrumentStatistic.builder()
+    public static IntradayStatistic empty() {
+        return IntradayStatistic.builder()
                 .todayValue(0D)
                 .todayLastPrice(0D)
                 .todayFirstPrice(0D)
                 .build();
     }
 
-    public InstrumentStatistic add(String key, IntradayData data) {
+    public IntradayStatistic add(String key, IntradayData data) {
         final Ticker ticker = Ticker.from(key);
         if (this.ticker != null && !this.ticker.equals(ticker)) {
             throw new DomainException("Нельзя изменить ранее установленный тикер.");
         }
-        return InstrumentStatistic.builder()
+        return IntradayStatistic.builder()
                 .ticker(ticker)
                 .todayValue(todayValue + data.getValue())
                 .todayLastPrice(data.getPrice())

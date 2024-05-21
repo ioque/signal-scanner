@@ -1,5 +1,6 @@
 package ru.ioque.investfund.adapters.kafka.streaming;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -10,18 +11,21 @@ import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.ioque.investfund.domain.datasource.value.InstrumentStatistic;
+import org.springframework.context.annotation.Profile;
+import ru.ioque.investfund.domain.datasource.value.IntradayStatistic;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INSTRUMENT_STATISTIC_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_STATISTIC_TOPIC;
 import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_DATA_TOPIC;
 
+@Slf4j
 @Configuration
+@Profile("!tests")
 public class TopologyConfiguration {
     @Autowired
     private Serde<IntradayData> intradayDataSerde;
     @Autowired
-    private Serde<InstrumentStatistic> instrumentStatisticSerde;
+    private Serde<IntradayStatistic> intradayStatistic;
 
     @Bean
     public Topology createTopology(StreamsBuilder builder) {
@@ -31,26 +35,22 @@ public class TopologyConfiguration {
                         INTRADAY_DATA_TOPIC,
                         Consumed.with(tickerSerde, intradayDataSerde)
                 );
-        final var statistic = intraday
+        final var statistics = intraday
                 .groupByKey()
                 .aggregate(
-                        InstrumentStatistic::empty,
+                        IntradayStatistic::empty,
                         (k, v, a) -> a.add(k, v),
                         Materialized.with(
                                 tickerSerde,
-                                instrumentStatisticSerde
+                            intradayStatistic
                         )
                 );
-        statistic
+        statistics
                 .toStream()
-                .to(INSTRUMENT_STATISTIC_TOPIC, Produced.with(tickerSerde, instrumentStatisticSerde));
+                .to(INTRADAY_STATISTIC_TOPIC, Produced.with(tickerSerde, intradayStatistic));
 
         Topology topology = builder.build();
-
-        System.out.println("===============================");
-        System.out.println(topology.describe());
-        System.out.println("===============================");
-
+        log.info(topology.describe().toString());
         return topology;
     }
 }

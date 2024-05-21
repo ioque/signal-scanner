@@ -6,15 +6,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.DatasourceWorkerManager;
-import ru.ioque.investfund.application.modules.datasource.handler.RunDatasourceWorkerHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.UpdateAggregateHistoryHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.DisableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.EnableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.RegisterDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.UnregisterDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.ExecuteDatasourceWorkerHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.PublishIntradayDataHandler;
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
@@ -38,7 +37,7 @@ public class FakeDIContainer {
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
-    FakeEventPublisher eventPublisher;
+    FakeEventJournal eventPublisher;
     FakeTradingSnapshotsRepository tradingDataRepository;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
@@ -47,11 +46,11 @@ public class FakeDIContainer {
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
     FakeTelegramMessageSender telegramMessageSender;
-    FakeIntradayJournalPublisher intradayJournalPublisher;
+    FakeIntradayJournal intradayJournalPublisher;
     DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
     SynchronizeDatasourceHandler integrateInstrumentsProcessor;
-    ExecuteDatasourceWorkerHandler integrateTradingDataProcessor;
+    PublishIntradayDataHandler integrateTradingDataProcessor;
     RegisterDatasourceHandler registerDatasourceProcessor;
     UnregisterDatasourceHandler unregisterDatasourceProcessor;
     UpdateDatasourceHandler updateDatasourceProcessor;
@@ -67,8 +66,7 @@ public class FakeDIContainer {
     UnsubscribeHandler unsubscribeHandler;
     DeactivateScannerHandler deactivateScannerHandler;
     ActivateScannerHandler activateScannerHandler;
-    RunDatasourceWorkerHandler runDatasourceWorkerHandler;
-    DatasourceWorkerManager datasourceWorkerManager;
+    UpdateAggregateHistoryHandler updateAggregateHistoryHandler;
     CommandBus commandBus;
     Validator validator;
 
@@ -76,7 +74,7 @@ public class FakeDIContainer {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
-        eventPublisher = new FakeEventPublisher();
+        eventPublisher = new FakeEventJournal();
         dateTimeProvider = new FakeDateTimeProvider();
         datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
@@ -89,17 +87,13 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
-        intradayJournalPublisher = new FakeIntradayJournalPublisher();
-        datasourceWorkerManager = new DatasourceWorkerManager(
-            exchangeProvider,
-            intradayJournalPublisher
-        );
-        runDatasourceWorkerHandler = new RunDatasourceWorkerHandler(
+        intradayJournalPublisher = new FakeIntradayJournal();
+
+        updateAggregateHistoryHandler = new UpdateAggregateHistoryHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             exchangeProvider,
-            datasourceWorkerManager,
             datasourceRepository
         );
         deactivateScannerHandler = new DeactivateScannerHandler(
@@ -141,12 +135,12 @@ public class FakeDIContainer {
             instrumentRepository,
             datasourceRepository
         );
-        integrateTradingDataProcessor = new ExecuteDatasourceWorkerHandler(
+        integrateTradingDataProcessor = new PublishIntradayDataHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             exchangeProvider,
-            datasourceWorkerManager,
+            intradayJournalPublisher,
             datasourceRepository,
             intradayValueRepository,
             eventPublisher
@@ -255,7 +249,7 @@ public class FakeDIContainer {
                 removeScannerHandler,
                 deactivateScannerHandler,
                 activateScannerHandler,
-                runDatasourceWorkerHandler
+                updateAggregateHistoryHandler
             )
         );
     }

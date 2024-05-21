@@ -44,7 +44,7 @@ public class BaseConfiguratorTest extends BaseTest {
     private void prepareDatasource() {
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoex(),
+                imoexDetails(),
                 tgkbDetails(),
                 tgknDetails(),
                 sber(),

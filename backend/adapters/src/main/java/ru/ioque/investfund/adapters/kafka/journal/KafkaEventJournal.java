@@ -1,16 +1,16 @@
-package ru.ioque.investfund.adapters.kafka;
+package ru.ioque.investfund.adapters.kafka.journal;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.EventPublisher;
+import ru.ioque.investfund.application.adapters.EventJournal;
 import ru.ioque.investfund.application.integration.IntegrationEvent;
 
 @Component
 @AllArgsConstructor
 @Profile("!tests")
-public class KafkaEventPublisher implements EventPublisher {
+public class KafkaEventJournal implements EventJournal {
     KafkaTemplate<String, IntegrationEvent> kafkaTemplate;
 
     @Override

@@ -50,7 +50,7 @@ public class DatasourceHttpClient extends JsonHttpClient {
 
     @SneakyThrows
     public void integrateTradingData(UUID datasourceId) {
-        post("/api/datasource/" + datasourceId + "/trading-data");
+        post("/api/datasource/" + datasourceId + "/intraday-data");
     }
 
     @SneakyThrows

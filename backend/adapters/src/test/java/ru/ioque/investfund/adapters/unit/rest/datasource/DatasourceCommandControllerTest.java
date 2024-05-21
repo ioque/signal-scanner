@@ -54,11 +54,11 @@ public class DatasourceCommandControllerTest extends BaseControllerTest {
     @Test
     @SneakyThrows
     @DisplayName("""
-        T3. Выполнение запроса по эндпоинту POST /api/datasource/{datasourceId}/trading-data.
+        T3. Выполнение запроса по эндпоинту POST /api/datasource/{datasourceId}/intraday-data.
         """)
     public void testCase3() {
         mvc
-            .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/trading-data"))
+            .perform(MockMvcRequestBuilders.post("/api/datasource/" + DATASOURCE_ID + "/intraday-data"))
             .andExpect(status().isOk());
     }
 

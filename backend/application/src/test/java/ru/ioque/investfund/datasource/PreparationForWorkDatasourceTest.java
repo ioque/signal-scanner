@@ -39,7 +39,7 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
     void testCase1() {
         initTodayDateTime("2023-12-12T10:00:00");
         initInstrumentDetails(
-            imoex(),
+            imoexDetails(),
             afks()
         );
 
@@ -60,7 +60,7 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        initInstrumentDetails(afks(), imoex(), brf4());
+        initInstrumentDetails(afks(), imoexDetails(), brf4());
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         clearLogs();
 
@@ -74,11 +74,11 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
         T3. Повторная интеграция инструментов, в источнике данных появились новые инструменты.
         """)
     void testCase3() {
-        initInstrumentDetails(afks(), imoex(), brf4());
+        initInstrumentDetails(afks(), imoexDetails(), brf4());
         initTodayDateTime("2023-12-12T10:00:00");
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         clearLogs();
-        initInstrumentDetails(afks(), imoex(), brf4(), lkohDetails(), rosnDetails(), sibn());
+        initInstrumentDetails(afks(), imoexDetails(), brf4(), lkohDetails(), rosnDetails(), sibn());
 
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
 

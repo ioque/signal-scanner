@@ -465,7 +465,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     private void initTgknAndTgkbAndImoex(DatasourceId datasourceId) {
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoex(),
+                imoexDetails(),
                 tgkbDetails(),
                 tgknDetails()
             )

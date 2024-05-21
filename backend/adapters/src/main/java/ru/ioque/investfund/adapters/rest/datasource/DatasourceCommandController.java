@@ -17,10 +17,9 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
-import ru.ioque.investfund.application.modules.datasource.command.StopDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -63,19 +62,14 @@ public class DatasourceCommandController {
         commandBus.execute(new SynchronizeDatasource(DatasourceId.from(datasourceId)));
     }
 
-    @PostMapping("/api/datasource/{datasourceId}/run")
+    @PostMapping("/api/datasource/{datasourceId}/aggregate-history")
     public void runDatasource(@PathVariable UUID datasourceId) {
-        commandBus.execute(new RunDatasourceWorker(DatasourceId.from(datasourceId)));
+        commandBus.execute(new UpdateAggregateHistory(DatasourceId.from(datasourceId)));
     }
 
-    @PostMapping("/api/datasource/{datasourceId}/stop")
-    public void stopDatasource(@PathVariable UUID datasourceId) {
-        commandBus.execute(new StopDatasourceWorker(DatasourceId.from(datasourceId)));
-    }
-
-    @PostMapping("/api/datasource/{datasourceId}/trading-data")
+    @PostMapping("/api/datasource/{datasourceId}/intraday-data")
     public void integrateTradingData(@PathVariable UUID datasourceId) {
-        commandBus.execute(new ExecuteDatasourceWorker(DatasourceId.from(datasourceId)));
+        commandBus.execute(new PublishIntradayData(DatasourceId.from(datasourceId)));
     }
 
     @PatchMapping("/api/datasource/{datasourceId}/enable-update")

@@ -3,9 +3,9 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.command.RunDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.datasource.command.ExecuteDatasourceWorker;
+import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
@@ -27,7 +27,8 @@ import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
-import ru.ioque.investfund.fakes.FakeEventPublisher;
+import ru.ioque.investfund.fakes.FakeEventJournal;
+import ru.ioque.investfund.fakes.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
 import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
@@ -74,7 +75,7 @@ public class BaseTest {
         return fakeDIContainer.getCommandBus();
     }
 
-    protected final FakeEventPublisher eventPublisher() {
+    protected final FakeEventJournal eventPublisher() {
         return fakeDIContainer.getEventPublisher();
     }
 
@@ -88,6 +89,10 @@ public class BaseTest {
 
     protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
         return fakeDIContainer.getEmulatedPositionRepository();
+    }
+
+    protected final FakeIntradayJournal intradayJournalPublisher() {
+        return fakeDIContainer.getIntradayJournalPublisher();
     }
 
     protected LocalDate nowMinus1Days() {
@@ -168,8 +173,8 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new RunDatasourceWorker(getDatasourceId()));
-        commandBus().execute(new ExecuteDatasourceWorker(datasourceId));
+        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
+        commandBus().execute(new PublishIntradayData(datasourceId));
         commandBus().execute(new ProduceSignal(datasourceId, getToday()));
     }
 
@@ -337,7 +342,7 @@ public class BaseTest {
             .build();
     }
 
-    protected IndexDetail imoex() {
+    protected IndexDetail imoexDetails() {
         return IndexDetail
             .builder()
             .ticker(Ticker.from(IMOEX))
