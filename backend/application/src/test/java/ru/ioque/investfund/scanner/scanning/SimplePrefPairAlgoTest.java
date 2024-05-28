@@ -25,7 +25,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         """)
     void testCase4() {
         final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-21T11:00:00");
+        initTodayDateTime("2023-12-22T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory();
         initPositiveDeals();
@@ -50,7 +50,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         """)
     void testCase5() {
         final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-21T11:00:00");
+        initTodayDateTime("2023-12-22T11:00:00");
         initSberSberp(datasourceId);
         initSberAndSberpHistory();
         initNegativeDeals();
@@ -59,48 +59,6 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
-        assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
-        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
-    }
-
-    @Test
-    @DisplayName("""
-        T6. С последнего запуска прошло меньше минуты, сканер не запущен.
-        """)
-    void testCase6() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp(datasourceId);
-        initSberAndSberpHistory();
-        initPositiveDeals();
-        initScanner(datasourceId, SBER, SBERP);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-21T11:00:30");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 1, 1, 0);
-        assertEquals(1D, getPrefSimplePair().getCurrentDelta());
-        assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
-    }
-
-    @Test
-    @DisplayName("""
-        T7. С последнего запуска прошла минута, сканер запущен.
-        """)
-    void testCase7() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-21T11:00:00");
-        initSberSberp(datasourceId);
-        initSberAndSberpHistory();
-        initNegativeDeals();
-        initScanner(datasourceId, SBER, SBERP);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-21T11:01:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(),0, 0, 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }

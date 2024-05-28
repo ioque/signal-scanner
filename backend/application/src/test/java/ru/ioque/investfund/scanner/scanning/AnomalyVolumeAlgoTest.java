@@ -62,9 +62,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTgknBuySignalDataset();
         initTgknAndImoexScanner(datasourceId);
         runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-24T12:00:00");
-        initTgknSellSignalDataset();
 
+        initTodayDateTime("2023-12-25T12:00:00");
+        initTgknSellSignalDataset();
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 2, 1, 1);

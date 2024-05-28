@@ -6,10 +6,11 @@ import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface DatasourceProvider {
     List<InstrumentDetail> fetchInstruments(Datasource datasource);
-    List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument);
-    List<IntradayData> fetchIntradayValues(Datasource datasource, Instrument instrument);
+    List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument, LocalDate from, LocalDate to);
+    List<IntradayData> fetchIntradayValues(Datasource datasource, Instrument instrument, Long from);
 }

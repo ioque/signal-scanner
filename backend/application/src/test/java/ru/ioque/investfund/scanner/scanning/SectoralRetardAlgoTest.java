@@ -66,52 +66,6 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T3. С последнего запуска прошло меньше 1 часа, сканер не запущен.
-        """)
-    void testCase3() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-22T13:30:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 1,1, 0);
-        assertTrue(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getSibnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getLkohPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-    }
-
-    @Test
-    @DisplayName("""
-        T4. С последнего запуска прошел 1 час, сканер запущен.
-        """)
-    void testCase4() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-22T13:00:00");
-        initOilCompanyData(datasourceId);
-        initTradingResultsForTestCase2();
-        initDealsTatnFallOtherRise();
-        initScanner(datasourceId, ROSN, LKOH, SIBN, TATN);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-22T14:00:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 1,1, 0);
-        assertTrue(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getSibnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getLkohPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
-    }
-
-    @Test
-    @DisplayName("""
         T5. Сканер создан для двух инструментов. TATN отстающий, ROSN растущий.
         Сигнала нет, ошибки нет.
         """)

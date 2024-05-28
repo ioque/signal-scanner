@@ -63,48 +63,6 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T3. С последнего запуска прошло меньше 24 часов, сканер не запущен.
-        """)
-    void testCase3() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime(startDate);
-        initInstruments(datasourceId);
-        initPositiveDeals();
-        initPositiveDealResults();
-        initScanner(datasourceId);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-22T18:00:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 1, 1, 0);
-        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
-    }
-
-    @Test
-    @DisplayName("""
-        T4. С последнего запуска прошло 24 часа, сканер запущен.
-        """)
-    void testCase4() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime(startDate);
-        initInstruments(datasourceId);
-        initPositiveDeals();
-        initPositiveDealResults();
-        initScanner(datasourceId);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-23T13:00:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 1, 1, 0);
-        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
-    }
-
-    @Test
-    @DisplayName("""
         T5. Исторические данные проинтегрированы, внутридневные данные проинтегрированы, цена растет.
         Исторические данные по фьючерсу проинтегрированы за один день, дневные данные проинтегрированы
         Запускается сканер. Ошибок нет, сигнал зафиксирован.

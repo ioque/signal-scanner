@@ -49,10 +49,10 @@ public class PublishIntradayDataTest extends BaseTest {
             buildDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
         );
         initHistoryValues(
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-08")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-09")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-10")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-11")).build()
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-04")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-05")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-06")).build(),
+            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-07")).build()
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         clearLogs();

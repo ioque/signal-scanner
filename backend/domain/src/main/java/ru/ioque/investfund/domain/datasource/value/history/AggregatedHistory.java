@@ -50,4 +50,8 @@ public class AggregatedHistory implements Comparable<AggregatedHistory> {
     public int compareTo(AggregatedHistory aggregatedHistory) {
         return date.compareTo(aggregatedHistory.date);
     }
+
+    public boolean isBetween(LocalDate from, LocalDate to) {
+        return from.compareTo(date) * date.compareTo(to) >= 0;
+    }
 }

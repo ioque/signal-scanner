@@ -10,6 +10,7 @@ import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class FakeDatasourceProvider implements DatasourceProvider {
@@ -22,17 +23,24 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument) {
+    public List<InstrumentDetail> fetchInstruments(Datasource datasource) {
+        return datasourceStorage.getInstrumentDtos();
+    }
+
+    @Override
+    public List<AggregatedHistory> fetchAggregateHistory(
+        Datasource datasource,
+        Instrument instrument,
+        LocalDate from,
+        LocalDate to) {
         return datasourceStorage.getHistoryDataBy(instrument.getTicker());
     }
 
     @Override
-    public List<IntradayData> fetchIntradayValues(Datasource datasource, Instrument instrument) {
+    public List<IntradayData> fetchIntradayValues(
+        Datasource datasource,
+        Instrument instrument,
+        Long from) {
         return datasourceStorage.getDealsByTicker(instrument.getTicker());
-    }
-
-    @Override
-    public List<InstrumentDetail> fetchInstruments(Datasource datasource) {
-        return datasourceStorage.getInstrumentDtos();
     }
 }

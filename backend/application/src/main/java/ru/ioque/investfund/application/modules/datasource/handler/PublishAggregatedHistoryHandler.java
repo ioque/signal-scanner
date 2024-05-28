@@ -1,5 +1,7 @@
 package ru.ioque.investfund.application.modules.datasource.handler;
 
+import java.time.LocalDate;
+
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +20,7 @@ import ru.ioque.investfund.domain.datasource.entity.Instrument;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggregatedHistory> {
+
     DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
     AggregatedHistoryJournal aggregatedHistoryJournal;
@@ -40,8 +43,15 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
     protected Result businessProcess(PublishAggregatedHistory command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         for (Instrument instrument : datasource.getUpdatableInstruments()) {
+            final LocalDate from = aggregatedHistoryJournal
+                .getBy(instrument.getTicker())
+                .map(row -> row.getDate().plusDays(1))
+                .orElse(dateTimeProvider.nowDate().minusMonths(6));
+            final LocalDate to = dateTimeProvider.nowDate().minusDays(1);
             datasourceProvider
-                .fetchAggregateHistory(datasource, instrument)
+                .fetchAggregateHistory(datasource, instrument, from, to)
+                .stream()
+                .filter(row -> row.isBetween(from, to))
                 .forEach(aggregatedHistoryJournal::publish);
         }
         return Result.success();

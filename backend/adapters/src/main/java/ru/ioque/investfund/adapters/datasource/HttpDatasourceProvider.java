@@ -17,6 +17,7 @@ import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -24,7 +25,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class HttpDatasourceProvider implements DatasourceProvider {
     DatasourceRestClient moexClient;
-    DateTimeProvider dateTimeProvider;
 
     @Override
     @SneakyThrows
@@ -34,14 +34,9 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument) {
+    public List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument, LocalDate from, LocalDate to) {
         return moexClient
-            .fetchHistory(
-                datasource.getUrl(),
-                instrument.getTicker().getValue(),
-                instrument.historyLeftBound(dateTimeProvider.nowDate()),
-                instrument.historyRightBound(dateTimeProvider.nowDate())
-            )
+            .fetchHistory(datasource.getUrl(), instrument.getTicker().getValue(), from, to)
             .stream()
             .map(AggregatedHistoryDto::toAggregateHistory)
             .toList();
@@ -49,13 +44,9 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<IntradayData> fetchIntradayValues(Datasource datasource, Instrument instrument) {
+    public List<IntradayData> fetchIntradayValues(Datasource datasource, Instrument instrument, Long from) {
         return moexClient
-            .fetchIntradayValues(
-                datasource.getUrl(),
-                instrument.getTicker().getValue(),
-                instrument.getLastTradingNumber()
-            )
+            .fetchIntradayValues(datasource.getUrl(), instrument.getTicker().getValue(), from)
             .stream()
             .map(IntradayDataDto::toIntradayData)
             .toList();
