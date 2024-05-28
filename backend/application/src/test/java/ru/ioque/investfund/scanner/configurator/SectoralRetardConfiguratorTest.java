@@ -10,6 +10,8 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardPr
 
 import java.util.List;
 
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
+
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL RETARD SCANNER")
 public class SectoralRetardConfiguratorTest extends BaseConfiguratorTest {
     @Test

@@ -11,13 +11,14 @@ import ru.ioque.investfund.application.modules.datasource.command.PublishIntrada
 import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.fixture.DataFactory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("EXECUTE DATASOURCE WORKER")
 public class PublishIntradayDataTest extends BaseTest {
@@ -41,18 +42,18 @@ public class PublishIntradayDataTest extends BaseTest {
         """)
     void testCase1() {
         final DatasourceId datasourceId = getDatasourceId();
-        datasourceStorage().initInstrumentDetails(List.of(afks()));
+        datasourceStorage().initInstrumentDetails(List.of(instrumentFixture.afks()));
         initTodayDateTime("2023-12-08T10:15:00");
         initIntradayValues(
-            buildDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
-            buildDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
+            DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
+            DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
+            DataFactory.factoryDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
         );
         initHistoryValues(
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-04")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-05")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-06")).build(),
-            buildAggregatedHistory(AFKS, LocalDate.parse("2023-12-07")).build()
+            historyFixture.afksHistoryValue("2023-12-04", 10D, 10D, 10D, 10D),
+            historyFixture.afksHistoryValue("2023-12-05", 10D, 10D, 10D, 10D),
+            historyFixture.afksHistoryValue("2023-12-06", 10D, 10D, 10D, 10D),
+            historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D)
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         clearLogs();
@@ -76,14 +77,14 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase3() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
-        initInstrumentDetails(afks());
+        initInstrumentDetails(instrumentFixture.afks());
         clearLogs();
         initIntradayValues(
-            buildDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
-            buildDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
-            buildDealWith(AFKS,5L, LocalDateTime.parse("2023-12-08T10:15:00"))
+            DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
+            DataFactory.factoryDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
+            DataFactory.factoryDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
+            DataFactory.factoryDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
+            DataFactory.factoryDealWith(AFKS,5L, LocalDateTime.parse("2023-12-08T10:15:00"))
         );
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
@@ -104,10 +105,10 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCas4() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-07T12:00:00");
-        initInstrumentDetails(afks());
+        initInstrumentDetails(instrumentFixture.afks());
         initIntradayValues(
-            buildDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00"))
+            DataFactory.factoryDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
+            DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00"))
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
@@ -116,11 +117,11 @@ public class PublishIntradayDataTest extends BaseTest {
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
         initIntradayValues(
-            buildDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
-            buildDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00")),
-            buildDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-07T12:10:00")),
-            buildDealWith(AFKS, 4L, LocalDateTime.parse("2023-12-07T12:30:00")),
-            buildDealWith(AFKS, 5L, LocalDateTime.parse("2023-12-07T12:40:00"))
+            DataFactory.factoryDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
+            DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00")),
+            DataFactory.factoryDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-07T12:10:00")),
+            DataFactory.factoryDealWith(AFKS, 4L, LocalDateTime.parse("2023-12-07T12:30:00")),
+            DataFactory.factoryDealWith(AFKS, 5L, LocalDateTime.parse("2023-12-07T12:40:00"))
         );
 
         commandBus().execute(new PublishIntradayData(datasourceId));
@@ -137,9 +138,9 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase6() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
-        initInstrumentDetails(afks());
-        initIntradayValues(buildDealWith(AFKS,1L, LocalDateTime.parse("2023-12-07T11:00:00")));
-        initHistoryValues(buildAggregatedHistory(AFKS, "2024-01-03", 10D, 10D, 10D, 10D));
+        initInstrumentDetails(instrumentFixture.afks());
+        initIntradayValues(DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-07T11:00:00")));
+        initHistoryValues(historyFixture.afksHistoryValue("2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
@@ -159,16 +160,16 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase7() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
-        initInstrumentDetails(afks());
-        initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
+        initInstrumentDetails(instrumentFixture.afks());
+        initIntradayValues(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initIntradayValues(
-            buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1),
-            buildBuyDealBy(AFKS, 1L,"11:00:00", 10D, 10D, 1)
+            intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1),
+            intradayFixture.afksBuyDeal(1L,"11:00:00", 10D, 10D, 1)
         );
 
         commandBus().execute(disableUpdateInstrumentCommandFrom(datasourceId, AFKS));
@@ -216,9 +217,9 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase10() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
-        initInstrumentDetails(afks());
-        initIntradayValues(buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1));
-        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initInstrumentDetails(instrumentFixture.afks());
+        initIntradayValues(intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1));
+        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishIntradayData(datasourceId));
@@ -231,12 +232,12 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase11() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
-        initInstrumentDetails(afks());
-        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
+        initInstrumentDetails(instrumentFixture.afks());
+        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
         initIntradayValues(
-            buildBuyDealBy(AFKS, 1L,"10:00:00", 10D, 10D, 1),
-            buildBuyDealBy(AFKS, 2L, "10:00:00", 11D, 10D, 1),
-            buildBuyDealBy(AFKS, 3L, "10:00:00", 11D, 10D, 2)
+            intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1),
+            intradayFixture.afksBuyDeal(2L, "10:00:00", 11D, 10D, 1),
+            intradayFixture.afksBuyDeal(3L, "10:00:00", 11D, 10D, 2)
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
@@ -251,9 +252,9 @@ public class PublishIntradayDataTest extends BaseTest {
     void testCase12() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
-        initInstrumentDetails(afks());
-        initHistoryValues(buildAggregatedHistory(AFKS, "2023-12-07", 10D, 10D, 10D, 10D));
-        initIntradayValues(buildBuyDealBy(AFKS, 1L, "10:00:00", 10D, 10D, 1));
+        initInstrumentDetails(instrumentFixture.afks());
+        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
+        initIntradayValues(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishIntradayData(datasourceId));

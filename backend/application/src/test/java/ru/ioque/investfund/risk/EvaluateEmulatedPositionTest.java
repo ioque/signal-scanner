@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 public class EvaluateEmulatedPositionTest extends RiskManagerTest {
     @Test

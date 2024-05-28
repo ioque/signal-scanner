@@ -8,8 +8,10 @@ import ru.ioque.investfund.application.modules.datasource.command.CreateDatasour
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.fixture.DataFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("CREATE DATASOURCE WORKER TEST")
 public class UpdateAggregateHistoryTest extends BaseTest {
@@ -32,8 +34,8 @@ public class UpdateAggregateHistoryTest extends BaseTest {
     void testCase1() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
-        initInstrumentDetails(afks());
-        initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
+        initInstrumentDetails(instrumentFixture.afks());
+        initHistoryValues(DataFactory.generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
 
@@ -51,14 +53,14 @@ public class UpdateAggregateHistoryTest extends BaseTest {
     void testCase2() {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
-        initInstrumentDetails(afks());
-        initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
+        initInstrumentDetails(instrumentFixture.afks());
+        initHistoryValues(DataFactory.generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
-        initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
+        initHistoryValues(DataFactory.generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
 
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
 

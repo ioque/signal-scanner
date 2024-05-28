@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fixture;
+package ru.ioque.investfund.fakes;
 
 import lombok.Getter;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;

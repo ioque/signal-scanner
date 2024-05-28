@@ -12,6 +12,8 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
+
 public abstract class RiskManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
@@ -24,9 +26,9 @@ public abstract class RiskManagerTest extends BaseTest {
         );
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoexDetails(),
-                tgkbDetails(),
-                tgknDetails()
+                instrumentFixture.imoexDetails(),
+                instrumentFixture.tgkbDetails(),
+                instrumentFixture.tgknDetails()
             )
         );
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));

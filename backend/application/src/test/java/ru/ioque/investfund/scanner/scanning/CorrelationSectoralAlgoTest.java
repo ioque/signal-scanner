@@ -14,6 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("SCANNER MANAGER TEST - CORRELATION SECTORAL ALGORITHM")
 public class CorrelationSectoralAlgoTest extends BaseScannerTest {
@@ -73,9 +74,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals();
         initHistoryValues(
-            buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
-            buildTatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
-            buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
+            historyFixture.brf4HistoryValue("2023-12-21", 80D, 80D, 10D),
+            historyFixture.tatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
+            historyFixture.tatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
@@ -96,9 +97,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults();
         initIntradayValues(
-            buildTatnBuyDeal(1L, "10:00:00", 251.1D, 136926D, 1),
-            buildTatnBuyDeal(2L, "12:00:00", 247.1D, 136926D, 1),
-            buildTatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
+            intradayFixture.tatnBuyDeal(1L, "10:00:00", 251.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(2L, "12:00:00", 247.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
         );
         initScanner(datasourceId);
 
@@ -121,8 +122,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals();
         initHistoryValues(
-            buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
-            buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D)
+            historyFixture.brf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+            historyFixture.brf4HistoryValue("2023-12-21", 80D, 80D, 10D)
         );
         initScanner(datasourceId);
 
@@ -145,8 +146,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDealResults();
         initIntradayValues(
-            buildBrf4Contract(1L, "10:00:00", 78D, 78000D, 1),
-            buildBrf4Contract(2L, "12:00:00", 96D, 96000D, 1)
+            intradayFixture.brf4Contract(1L, "10:00:00", 78D, 78000D, 1),
+            intradayFixture.brf4Contract(2L, "12:00:00", 96D, 96000D, 1)
         );
         initScanner(datasourceId);
 
@@ -169,9 +170,9 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         initInstruments(datasourceId);
         initPositiveDeals();
         initHistoryValues(
-            buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
-            buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
-            buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
+            historyFixture.brf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+            historyFixture.brf4HistoryValue("2023-12-21", 80D, 80D, 10D),
+            historyFixture.tatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
         );
         initScanner(datasourceId);
 
@@ -203,40 +204,40 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
     private void initPositiveDealResults() {
         datasourceStorage().initHistoryValues(
             List.of(
-                buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
-                buildBrf4HistoryValue("2023-12-21", 80D, 80D, 10D),
-                buildTatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
-                buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
+                historyFixture.brf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+                historyFixture.brf4HistoryValue("2023-12-21", 80D, 80D, 10D),
+                historyFixture.tatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
+                historyFixture.tatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
             )
         );
     }
 
     private void initNegativeDealResults() {
         initHistoryValues(
-            buildBrf4HistoryValue("2023-12-20", 75D, 75D, 10D),
-            buildBrf4HistoryValue("2023-12-21", 80D, 74D, 10D),
-            buildTatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
-            buildTatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
+            historyFixture.brf4HistoryValue("2023-12-20", 75D, 75D, 10D),
+            historyFixture.brf4HistoryValue("2023-12-21", 80D, 74D, 10D),
+            historyFixture.tatnHistoryValue("2023-12-20", 251D, 252D, 1D, 1D),
+            historyFixture.tatnHistoryValue("2023-12-21", 252D, 253D, 1D, 1D)
         );
     }
 
     private void initNegativeDeals() {
         initIntradayValues(
-            buildBrf4Contract(1L,"10:00:00", 73D, 73000D, 1),
-            buildBrf4Contract(2L,"12:00:00", 72D, 73000D, 1),
-            buildTatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
-            buildTatnBuyDeal(2L,"12:00:00", 247.1D, 136926D, 1),
-            buildTatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
+            intradayFixture.brf4Contract(1L,"10:00:00", 73D, 73000D, 1),
+            intradayFixture.brf4Contract(2L,"12:00:00", 72D, 73000D, 1),
+            intradayFixture.tatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(2L,"12:00:00", 247.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(3L,"13:45:00", 280.1D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals() {
         initIntradayValues(
-            buildBrf4Contract(1L,"10:00:00", 78D, 78000D, 1),
-            buildBrf4Contract(2L,"12:00:00", 96D, 96000D, 1),
-            buildTatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
-            buildTatnBuyDeal(2L,"12:00:00", 247.1D, 136926D, 1),
-            buildTatnBuyDeal(3L, "13:45:00", 280.1D, 136926D, 1)
+            intradayFixture.brf4Contract(1L,"10:00:00", 78D, 78000D, 1),
+            intradayFixture.brf4Contract(2L,"12:00:00", 96D, 96000D, 1),
+            intradayFixture.tatnBuyDeal(1L,"10:00:00", 251.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(2L,"12:00:00", 247.1D, 136926D, 1),
+            intradayFixture.tatnBuyDeal(3L, "13:45:00", 280.1D, 136926D, 1)
         );
     }
 
@@ -244,8 +245,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         datasourceStorage()
             .initInstrumentDetails(
                 List.of(
-                    tatnDetails(),
-                    brf4()
+                    instrumentFixture.tatnDetails(),
+                    instrumentFixture.brf4()
                 )
             );
         commandBus().execute(new SynchronizeDatasource(datasourceId));

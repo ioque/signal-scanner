@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("SCANNER MANAGER TEST - SIMPLE-PREF PAIR ALGORITHM")
 public class SimplePrefPairAlgoTest extends BaseScannerTest {
@@ -75,13 +76,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D),
-            buildSberpHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
+            historyFixture.sberHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initIntradayValues(
-            buildSberpBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberpBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -104,13 +105,13 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D),
-            buildSberpHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
+            historyFixture.sberHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-14", 1D, 1D, 251.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initIntradayValues(
-            buildSberBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -133,12 +134,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 251.2, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 251.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initIntradayValues(
-            buildSberBuyDeal(1L, "10:54:00", 250D, 136926D, 1),
-            buildSberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L, "10:54:00", 250D, 136926D, 1),
+            intradayFixture.sberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -161,12 +162,12 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 251.2, 1D),
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 251.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 252.2, 1D)
         );
         initIntradayValues(
-            buildSberBuyDeal(1L, "10:54:00", 250D, 136926D, 1),
-            buildSberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L, "10:54:00", 250D, 136926D, 1),
+            intradayFixture.sberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -189,11 +190,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initIntradayValues(
-            buildSberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -216,11 +217,11 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initIntradayValues(
-            buildSberBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -243,8 +244,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -267,7 +268,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initIntradayValues(
-            buildSberBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -290,8 +291,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initHistoryValues(
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 254.2, 1D)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -314,7 +315,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-21T11:00:00");
         initSberSberp(datasourceId);
         initIntradayValues(
-            buildSberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
         initScanner(datasourceId, SBER, SBERP);
 
@@ -363,8 +364,8 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initSberSberp(DatasourceId datasourceId) {
         initInstrumentDetails(
-            sber(),
-            sberp()
+            instrumentFixture.sber(),
+            instrumentFixture.sberp()
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(new EnableUpdateInstruments(datasourceId, getTickers(datasourceId)));
@@ -372,34 +373,34 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
 
     private void initSberAndSberpHistory() {
         initHistoryValues(
-            buildSberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
-            buildSberHistoryValue("2023-12-16", 1D, 1D, 260.58, 1D),
-            buildSberHistoryValue("2023-12-17", 1D, 1D, 263.49, 1D),
-            buildSberHistoryValue("2023-12-18", 1D, 1D, 268.47, 1D),
-            buildSberHistoryValue("2023-12-19", 1D, 1D, 267.19, 1D),
-            buildSberHistoryValue("2023-12-20", 1D, 1D, 267.89, 1D),
-            buildSberHistoryValue("2023-12-21", 1D, 1D, 265.09, 1D),
-            buildSberpHistoryValue("2023-12-15", 1D, 1D, 258.95, 1D),
-            buildSberpHistoryValue("2023-12-16", 1D, 1D, 260.27, 1D),
-            buildSberpHistoryValue("2023-12-17", 1D, 1D, 263.05, 1D),
-            buildSberpHistoryValue("2023-12-18", 1D, 1D, 268.13, 1D),
-            buildSberpHistoryValue("2023-12-19", 1D, 1D, 267.02, 1D),
-            buildSberpHistoryValue("2023-12-20", 1D, 1D, 267.63, 1D),
-            buildSberpHistoryValue("2023-12-21", 1D, 1D, 264.87, 1D)
+            historyFixture.sberHistoryValue("2023-12-15", 1D, 1D, 259.2, 1D),
+            historyFixture.sberHistoryValue("2023-12-16", 1D, 1D, 260.58, 1D),
+            historyFixture.sberHistoryValue("2023-12-17", 1D, 1D, 263.49, 1D),
+            historyFixture.sberHistoryValue("2023-12-18", 1D, 1D, 268.47, 1D),
+            historyFixture.sberHistoryValue("2023-12-19", 1D, 1D, 267.19, 1D),
+            historyFixture.sberHistoryValue("2023-12-20", 1D, 1D, 267.89, 1D),
+            historyFixture.sberHistoryValue("2023-12-21", 1D, 1D, 265.09, 1D),
+            historyFixture.sberpHistoryValue("2023-12-15", 1D, 1D, 258.95, 1D),
+            historyFixture.sberpHistoryValue("2023-12-16", 1D, 1D, 260.27, 1D),
+            historyFixture.sberpHistoryValue("2023-12-17", 1D, 1D, 263.05, 1D),
+            historyFixture.sberpHistoryValue("2023-12-18", 1D, 1D, 268.13, 1D),
+            historyFixture.sberpHistoryValue("2023-12-19", 1D, 1D, 267.02, 1D),
+            historyFixture.sberpHistoryValue("2023-12-20", 1D, 1D, 267.63, 1D),
+            historyFixture.sberpHistoryValue("2023-12-21", 1D, 1D, 264.87, 1D)
         );
     }
 
     private void initNegativeDeals() {
         initIntradayValues(
-            buildSberBuyDeal(1L,  "10:55:00", 250.1D, 136926D, 1),
-            buildSberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L,  "10:55:00", 250.1D, 136926D, 1),
+            intradayFixture.sberpBuyDeal(1L, "10:54:00", 250D, 136926D, 1)
         );
     }
 
     private void initPositiveDeals() {
         initIntradayValues(
-            buildSberBuyDeal(1L,"10:55:00", 251D, 136926D, 1),
-            buildSberpBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
+            intradayFixture.sberBuyDeal(1L,"10:55:00", 251D, 136926D, 1),
+            intradayFixture.sberpBuyDeal(1L,"10:54:00", 250D, 136926D, 1)
         );
     }
 }

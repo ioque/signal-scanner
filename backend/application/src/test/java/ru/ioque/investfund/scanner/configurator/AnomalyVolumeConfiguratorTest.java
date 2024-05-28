@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
+
 @DisplayName("SCANNER MANAGER TEST - SAVE ANOMALY VOLUME SCANNER")
 public class AnomalyVolumeConfiguratorTest extends BaseConfiguratorTest {
     @Test

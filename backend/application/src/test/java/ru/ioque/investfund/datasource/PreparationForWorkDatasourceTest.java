@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("PREPARATION FOR WORK DATASOURCE TEST")
 public class PreparationForWorkDatasourceTest extends BaseTest {
@@ -39,8 +40,8 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
     void testCase1() {
         initTodayDateTime("2023-12-12T10:00:00");
         initInstrumentDetails(
-            imoexDetails(),
-            afks()
+            instrumentFixture.imoexDetails(),
+            instrumentFixture.afks()
         );
 
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
@@ -60,7 +61,7 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
         """)
     void testCase2() {
         initTodayDateTime("2023-12-12T10:00:00");
-        initInstrumentDetails(afks(), imoexDetails(), brf4());
+        initInstrumentDetails(instrumentFixture.afks(), instrumentFixture.imoexDetails(), instrumentFixture.brf4());
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         clearLogs();
 
@@ -74,11 +75,11 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
         T3. Повторная интеграция инструментов, в источнике данных появились новые инструменты.
         """)
     void testCase3() {
-        initInstrumentDetails(afks(), imoexDetails(), brf4());
+        initInstrumentDetails(instrumentFixture.afks(), instrumentFixture.imoexDetails(), instrumentFixture.brf4());
         initTodayDateTime("2023-12-12T10:00:00");
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         clearLogs();
-        initInstrumentDetails(afks(), imoexDetails(), brf4(), lkohDetails(), rosnDetails(), sibn());
+        initInstrumentDetails(instrumentFixture.afks(), instrumentFixture.imoexDetails(), instrumentFixture.brf4(), instrumentFixture.lkohDetails(), instrumentFixture.rosnDetails(), instrumentFixture.sibn());
 
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
 
@@ -92,7 +93,7 @@ public class PreparationForWorkDatasourceTest extends BaseTest {
     void testCase4() {
         initTodayDateTime("2023-12-12T10:00:00");
         datasourceStorage().initInstrumentDetails(List.of(
-            afks(),
+            instrumentFixture.afks(),
             StockDetail.builder()
                 .ticker(Ticker.from(AFKS))
                 .shortName("ао Супер Система")

@@ -9,6 +9,8 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesP
 
 import java.util.List;
 
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
+
 @DisplayName("SCANNER MANAGER TEST - SAVE SECTORAL CORRELATION SCANNER")
 public class SectoralFuturesConfiguratorTest extends BaseConfiguratorTest {
     @Test

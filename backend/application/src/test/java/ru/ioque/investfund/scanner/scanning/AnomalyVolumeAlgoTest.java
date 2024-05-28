@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("SCANNER MANAGER TEST - ANOMALY VOLUME ALGORITHM")
 public class AnomalyVolumeAlgoTest extends BaseScannerTest {
@@ -88,16 +88,16 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildImoexHistoryValue("2023-12-10", 99.D, 3000.0, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-20", 99.D, 2900.0, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-21", 100.D, 3000.0, 1_500_000.0)
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D),
+            historyFixture.imoexHistoryValue("2023-12-10", 99.D, 3000.0, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-20", 99.D, 2900.0, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-21", 100.D, 3000.0, 1_500_000.0)
         );
         initIntradayValues(
-            buildImoexDelta(1L,"10:00:00", 3000.0, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 2900.0, 2_000_000D)
+            intradayFixture.imoexDelta(1L,"10:00:00", 3000.0, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 2900.0, 2_000_000D)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -120,13 +120,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildImoexHistoryValue("2023-12-10", 3000.0, 3000.0, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-20", 2900.0, 2900.0, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-21", 3000.0, 3000.0, 1_500_000.0)
+            historyFixture.imoexHistoryValue("2023-12-10", 3000.0, 3000.0, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-20", 2900.0, 2900.0, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-21", 3000.0, 3000.0, 1_500_000.0)
         );
         initIntradayValues(
-            buildImoexDelta(1L,"10:00:00", 3000.0, 1_000_000D),
-            buildImoexDelta(2L,"12:00:00", 2900.0, 2_000_000D)
+            intradayFixture.imoexDelta(1L,"10:00:00", 3000.0, 1_000_000D),
+            intradayFixture.imoexDelta(2L,"12:00:00", 2900.0, 2_000_000D)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -149,17 +149,17 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D),
-            buildImoexHistoryValue("2023-12-10", 2900.0, 2900.0, 1_500_000D),
-            buildImoexHistoryValue("2023-12-20", 2900.0, 2900.0, 1_500_000D),
-            buildImoexHistoryValue("2023-12-21", 3000.0, 3000.0, 1_500_000D)
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D),
+            historyFixture.imoexHistoryValue("2023-12-10", 2900.0, 2900.0, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-20", 2900.0, 2900.0, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-21", 3000.0, 3000.0, 1_500_000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 3000.0, 1_000_000D),
-            buildImoexDelta(2L,"12:00:00", 2900.0, 2_000_000D),
-            buildTgknBuyDeal(1L,"10:00:00", 100D, 469D, 1)
+            intradayFixture.imoexDelta(1L, "10:00:00", 3000.0, 1_000_000D),
+            intradayFixture.imoexDelta(2L,"12:00:00", 2900.0, 2_000_000D),
+            intradayFixture.tgknBuyDeal(1L,"10:00:00", 100D, 469D, 1)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -182,14 +182,14 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildImoexHistoryValue("2023-12-10", 2900.D, 2900.D, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-20", 2900.D, 2900.D, 1_500_000.0),
-            buildImoexHistoryValue("2023-12-21", 3000.D, 3000.D, 1_500_000.0)
+            historyFixture.imoexHistoryValue("2023-12-10", 2900.D, 2900.D, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-20", 2900.D, 2900.D, 1_500_000.0),
+            historyFixture.imoexHistoryValue("2023-12-21", 3000.D, 3000.D, 1_500_000.0)
         );
         initIntradayValues(
-            buildTgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
-            buildTgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
-            buildTgknSellDeal(3L,"11:00:00", 100D, 6000D, 1)
+            intradayFixture.tgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
+            intradayFixture.tgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknSellDeal(3L,"11:00:00", 100D, 6000D, 1)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -212,16 +212,16 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
-            buildTgknBuyDeal(1L, "10:00:00", 100D, 6000D, 1),
-            buildTgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
-            buildTgknSellDeal(3L, "11:00:00", 103D, 6000D, 1)
+            intradayFixture.imoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
+            intradayFixture.tgknBuyDeal(1L, "10:00:00", 100D, 6000D, 1),
+            intradayFixture.tgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknSellDeal(3L, "11:00:00", 103D, 6000D, 1)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -244,13 +244,13 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 3000D, 2_000_000D)
+            intradayFixture.imoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 3000D, 2_000_000D)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -274,17 +274,17 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildImoexHistoryValue("2023-12-10", 2800D, 2800D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-20", 2800D, 2800D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
+            historyFixture.imoexHistoryValue("2023-12-10", 2800D, 2800D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-20", 2800D, 2800D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-21", 2800D, 2800D, 1_000_000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
-            buildTgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
-            buildTgknBuyDeal(2L, "10:03:00", 100D, 1000D, 1),
-            buildTgknSellDeal(3L, "11:00:00", 103D, 6000D, 1)
+            intradayFixture.imoexDelta(1L, "10:00:00", 2900D, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
+            intradayFixture.tgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
+            intradayFixture.tgknBuyDeal(2L, "10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknSellDeal(3L, "11:00:00", 103D, 6000D, 1)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -307,15 +307,15 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         initTodayDateTime("2023-12-22T13:00:00");
         initTgknAndTgkbAndImoex(datasourceId);
         initHistoryValues(
-            buildImoexHistoryValue("2023-12-21", 2800D, 2800D, 1_000_000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
+            historyFixture.imoexHistoryValue("2023-12-21", 2800D, 2800D, 1_000_000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 2800D, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
-            buildTgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
-            buildTgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
-            buildTgknSellDeal(3L, "11:00:00", 100D, 6000D, 1)
+            intradayFixture.imoexDelta(1L, "10:00:00", 2800D, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 3000D, 2_000_000D),
+            intradayFixture.tgknBuyDeal(1L,"10:00:00", 100D, 6000D, 1),
+            intradayFixture.tgknBuyDeal(2L,"10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknSellDeal(3L, "11:00:00", 100D, 6000D, 1)
         );
         initTgknAndImoexScanner(datasourceId);
 
@@ -347,75 +347,75 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     private void initTgknBuySignalDataset() {
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 2000D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1400D),
-            buildImoexHistoryValue("2023-12-10", 2900D, 2900D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-20", 2900D, 2900D, 1_500_000D),
-            buildImoexHistoryValue("2023-12-21", 3000D, 3000D, 2_000_000D)
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 99D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 99D, 2000D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 100D, 1400D),
+            historyFixture.imoexHistoryValue("2023-12-10", 2900D, 2900D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-20", 2900D, 2900D, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-21", 3000D, 3000D, 2_000_000D)
         );
         initIntradayValues(
-            buildImoexDelta( 1L, "10:00:00", 2800D, 100D),
-            buildImoexDelta( 2L, "12:00:00", 3200D, 200D),
-            buildTgknBuyDeal( 1L, "10:00:00", 100D, 5000D, 1),
-            buildTgknBuyDeal( 2L, "10:03:00", 100D, 1000D, 1),
-            buildTgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
-            buildTgknBuyDeal( 4L, "11:01:00", 100D, 1000D, 1),
-            buildTgknBuyDeal( 5L, "11:45:00", 102D, 5000D, 1)
+            intradayFixture.imoexDelta( 1L, "10:00:00", 2800D, 100D),
+            intradayFixture.imoexDelta( 2L, "12:00:00", 3200D, 200D),
+            intradayFixture.tgknBuyDeal( 1L, "10:00:00", 100D, 5000D, 1),
+            intradayFixture.tgknBuyDeal( 2L, "10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
+            intradayFixture.tgknBuyDeal( 4L, "11:01:00", 100D, 1000D, 1),
+            intradayFixture.tgknBuyDeal( 5L, "11:45:00", 102D, 5000D, 1)
         );
     }
 
     private void initTgknSellSignalDataset() {
         initHistoryValues(
-            buildTgknHistoryValue("2023-12-22", 99.D, 99.1D, 97D, 2000D),
-            buildTgknHistoryValue("2023-12-23", 99.D, 99.1D, 97D, 1000D),
-            buildTgknHistoryValue("2023-12-24", 97.2D, 97.1D, 97D, 1500D),
-            buildImoexHistoryValue("2023-12-22", 2900D, 2900D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
-            buildImoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
+            historyFixture.tgknHistoryValue("2023-12-22", 99.D, 99.1D, 97D, 2000D),
+            historyFixture.tgknHistoryValue("2023-12-23", 99.D, 99.1D, 97D, 1000D),
+            historyFixture.tgknHistoryValue("2023-12-24", 97.2D, 97.1D, 97D, 1500D),
+            historyFixture.imoexHistoryValue("2023-12-22", 2900D, 2900D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-23", 2900D, 2900D, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-24", 3000D, 3000D, 2_000_000D)
         );
         initIntradayValues(
-            buildImoexDelta( 3L,"10:00:00", 3000D, 1_000_000D),
-            buildImoexDelta( 4L,"12:00:00", 2900D, 2_000_000D),
-            buildTgknBuyDeal( 6L,"10:00:00", 98D, 5000D, 1),
-            buildTgknSellDeal(7L,"10:03:00", 97D, 1000D, 1),
-            buildTgknSellDeal(8L,"11:00:00", 98D, 1000D, 1),
-            buildTgknSellDeal(9L,"11:01:00", 97D, 1000D, 1),
-            buildTgknSellDeal(10L,"11:45:00", 96D, 5000D, 1)
+            intradayFixture.imoexDelta( 3L,"10:00:00", 3000D, 1_000_000D),
+            intradayFixture.imoexDelta( 4L,"12:00:00", 2900D, 2_000_000D),
+            intradayFixture.tgknBuyDeal( 6L,"10:00:00", 98D, 5000D, 1),
+            intradayFixture.tgknSellDeal(7L,"10:03:00", 97D, 1000D, 1),
+            intradayFixture.tgknSellDeal(8L,"11:00:00", 98D, 1000D, 1),
+            intradayFixture.tgknSellDeal(9L,"11:01:00", 97D, 1000D, 1),
+            intradayFixture.tgknSellDeal(10L,"11:45:00", 96D, 5000D, 1)
         );
     }
 
     private void initTgknAndTgkbAndImoexHistoryTradingData() {
         initHistoryValues(
-            buildTgkbHistoryValue("2023-12-19", 99.D, 99.D, 1D, 2000D),
-            buildTgkbHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildTgkbHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1500D),
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 1D, 3000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1150D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1100D),
-            buildImoexHistoryValue("2023-12-10", 2800D, 2900D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
-            buildImoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
+            historyFixture.tgkbHistoryValue("2023-12-19", 99.D, 99.D, 1D, 2000D),
+            historyFixture.tgkbHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1000D),
+            historyFixture.tgkbHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1500D),
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 1D, 3000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1150D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1100D),
+            historyFixture.imoexHistoryValue("2023-12-10", 2800D, 2900D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
         );
     }
 
     private void initTgknAndTgkbAndImoexIntradayData() {
         datasourceStorage().initDealDatas(
             List.of(
-                buildImoexDelta( 1L, "10:00:00", 2800D, 1_000_000D),
-                buildImoexDelta( 2L, "12:00:00", 3100D, 1_200_000D),
+                intradayFixture.imoexDelta( 1L, "10:00:00", 2800D, 1_000_000D),
+                intradayFixture.imoexDelta( 2L, "12:00:00", 3100D, 1_200_000D),
                 //TGKB
-                buildTgkbBuyDeal( 1L,"10:00:00", 100D, 6000D, 1),
-                buildTgkbBuyDeal( 2L,"10:16:00", 100D, 1000D, 1),
-                buildTgkbBuyDeal( 3L,"11:00:00", 100D, 1000D, 1),
-                buildTgkbBuyDeal( 4L,"11:10:00", 100D, 1000D, 1),
-                buildTgkbBuyDeal( 5L,"11:50:00", 102D, 6000D, 1),
+                intradayFixture.tgkbBuyDeal( 1L,"10:00:00", 100D, 6000D, 1),
+                intradayFixture.tgkbBuyDeal( 2L,"10:16:00", 100D, 1000D, 1),
+                intradayFixture.tgkbBuyDeal( 3L,"11:00:00", 100D, 1000D, 1),
+                intradayFixture.tgkbBuyDeal( 4L,"11:10:00", 100D, 1000D, 1),
+                intradayFixture.tgkbBuyDeal( 5L,"11:50:00", 102D, 6000D, 1),
                 //TGKN
-                buildTgknBuyDeal( 1L,"10:00:00", 100D, 5000D, 1),
-                buildTgknBuyDeal( 2L,"10:03:00", 100D, 1000D, 1),
-                buildTgknBuyDeal( 3L,"11:00:00", 100D, 1000D, 1),
-                buildTgknBuyDeal( 4L,"11:01:00", 100D, 1000D, 1),
-                buildTgknBuyDeal( 5L,"11:45:00", 102D, 5000D, 1)
+                intradayFixture.tgknBuyDeal( 1L,"10:00:00", 100D, 5000D, 1),
+                intradayFixture.tgknBuyDeal( 2L,"10:03:00", 100D, 1000D, 1),
+                intradayFixture.tgknBuyDeal( 3L,"11:00:00", 100D, 1000D, 1),
+                intradayFixture.tgknBuyDeal( 4L,"11:01:00", 100D, 1000D, 1),
+                intradayFixture.tgknBuyDeal( 5L,"11:45:00", 102D, 5000D, 1)
             )
         );
     }
@@ -423,9 +423,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
     private void initTgknAndTgkbAndImoex(DatasourceId datasourceId) {
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoexDetails(),
-                tgkbDetails(),
-                tgknDetails()
+                instrumentFixture.imoexDetails(),
+                instrumentFixture.tgkbDetails(),
+                instrumentFixture.tgknDetails()
             )
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));

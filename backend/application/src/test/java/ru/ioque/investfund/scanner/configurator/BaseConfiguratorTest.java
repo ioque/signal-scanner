@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 public class BaseConfiguratorTest extends BaseTest {
     @BeforeEach
@@ -44,17 +45,17 @@ public class BaseConfiguratorTest extends BaseTest {
     private void prepareDatasource() {
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoexDetails(),
-                tgkbDetails(),
-                tgknDetails(),
-                sber(),
-                sberp(),
-                rosnDetails(),
-                sibn(),
-                lkohDetails(),
-                tatnDetails(),
-                brf4(),
-                usdRubDetails())
+                instrumentFixture.imoexDetails(),
+                instrumentFixture.tgkbDetails(),
+                instrumentFixture.tgknDetails(),
+                instrumentFixture.sber(),
+                instrumentFixture.sberp(),
+                instrumentFixture.rosnDetails(),
+                instrumentFixture.sibn(),
+                instrumentFixture.lkohDetails(),
+                instrumentFixture.tatnDetails(),
+                instrumentFixture.brf4(),
+                instrumentFixture.usdRubDetails())
         );
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));

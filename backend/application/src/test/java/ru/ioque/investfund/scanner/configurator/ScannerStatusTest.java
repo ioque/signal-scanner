@@ -9,6 +9,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumePro
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 public class ScannerStatusTest extends BaseConfiguratorTest {
     @Test
@@ -36,31 +37,31 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
     private void prepareTestCase() {
         initTodayDateTime("2023-12-22T13:00:00");
         initHistoryValues(
-            buildTgkbHistoryValue("2023-12-19", 99.D, 99.D, 1D, 2000D),
-            buildTgkbHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1000D),
-            buildTgkbHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1500D),
-            buildTgknHistoryValue("2023-12-19", 99.D, 99.D, 1D, 3000D),
-            buildTgknHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1150D),
-            buildTgknHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1100D),
-            buildImoexHistoryValue("2023-12-10", 2800D, 2900D, 1_000_000D),
-            buildImoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
-            buildImoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
+            historyFixture.tgkbHistoryValue("2023-12-19", 99.D, 99.D, 1D, 2000D),
+            historyFixture.tgkbHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1000D),
+            historyFixture.tgkbHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1500D),
+            historyFixture.tgknHistoryValue("2023-12-19", 99.D, 99.D, 1D, 3000D),
+            historyFixture.tgknHistoryValue("2023-12-20", 99.D, 99.D, 1D, 1150D),
+            historyFixture.tgknHistoryValue("2023-12-21", 100.D, 100.D, 1D, 1100D),
+            historyFixture.imoexHistoryValue("2023-12-10", 2800D, 2900D, 1_000_000D),
+            historyFixture.imoexHistoryValue("2023-12-20", 2800D, 2900D, 1_500_000D),
+            historyFixture.imoexHistoryValue("2023-12-21", 2900D, 3000D, 2_000_000D)
         );
         initIntradayValues(
-            buildImoexDelta(1L, "10:00:00", 3100D, 1_000_000D),
-            buildImoexDelta(2L, "12:00:00", 3400D, 1_200_000D),
+            intradayFixture.imoexDelta(1L, "10:00:00", 3100D, 1_000_000D),
+            intradayFixture.imoexDelta(2L, "12:00:00", 3400D, 1_200_000D),
             //TGKB
-            buildTgkbBuyDeal(1L, "10:00:00", 100D, 6000D, 1),
-            buildTgkbBuyDeal(2L, "10:16:00", 100D, 1000D, 1),
-            buildTgkbBuyDeal(3L, "11:00:00", 100D, 1000D, 1),
-            buildTgkbBuyDeal(4L, "11:10:00", 100D, 1000D, 1),
-            buildTgkbBuyDeal(5L, "11:50:00", 102D, 6000D, 1),
+            intradayFixture.tgkbBuyDeal(1L, "10:00:00", 100D, 6000D, 1),
+            intradayFixture.tgkbBuyDeal(2L, "10:16:00", 100D, 1000D, 1),
+            intradayFixture.tgkbBuyDeal(3L, "11:00:00", 100D, 1000D, 1),
+            intradayFixture.tgkbBuyDeal(4L, "11:10:00", 100D, 1000D, 1),
+            intradayFixture.tgkbBuyDeal(5L, "11:50:00", 102D, 6000D, 1),
             //TGKN
-            buildTgknBuyDeal(1L, "10:00:00", 100D, 5000D, 1),
-            buildTgknBuyDeal(2L, "10:03:00", 100D, 1000D, 1),
-            buildTgknBuyDeal(3L, "11:00:00", 100D, 1000D, 1),
-            buildTgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
-            buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
+            intradayFixture.tgknBuyDeal(1L, "10:00:00", 100D, 5000D, 1),
+            intradayFixture.tgknBuyDeal(2L, "10:03:00", 100D, 1000D, 1),
+            intradayFixture.tgknBuyDeal(3L, "11:00:00", 100D, 1000D, 1),
+            intradayFixture.tgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
+            intradayFixture.tgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
         commandBus()
             .execute(

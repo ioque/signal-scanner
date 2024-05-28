@@ -9,6 +9,7 @@ import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("RISK COMMAND VALIDATION TEST")
 public class RiskCommandValidationTest extends RiskManagerTest {

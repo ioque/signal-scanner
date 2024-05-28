@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("SCANNER MANAGER TEST - UPDATE SCANNER")
 public class UpdateConfiguratorTest extends BaseConfiguratorTest {

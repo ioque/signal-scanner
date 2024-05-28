@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("TELEGRAM BOT TEST")
 public class TelegramBotTest extends BaseTest {
@@ -123,30 +124,30 @@ public class TelegramBotTest extends BaseTest {
         );
         datasourceStorage().initInstrumentDetails(
             List.of(
-                imoexDetails(),
-                tgkbDetails(),
-                tgknDetails()
+                instrumentFixture.imoexDetails(),
+                instrumentFixture.tgkbDetails(),
+                instrumentFixture.tgknDetails()
             )
         );
         datasourceStorage().initDealDatas(
             List.of(
-                buildImoexDelta(1L, "10:00:00", 2800D, 100D),
-                buildImoexDelta(2L, "12:00:00", 3200D, 200D),
-                buildTgknBuyDeal(1L, "10:00:00", 111D, 5000D, 1),
-                buildTgknBuyDeal(2L, "10:03:00", 112D, 1000D, 1),
-                buildTgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
-                buildTgknBuyDeal(4L, "11:01:00", 110D, 1000D, 1),
-                buildTgknBuyDeal(5L, "11:45:00", 114.5D, 5000D, 1)
+                intradayFixture.imoexDelta(1L, "10:00:00", 2800D, 100D),
+                intradayFixture.imoexDelta(2L, "12:00:00", 3200D, 200D),
+                intradayFixture.tgknBuyDeal(1L, "10:00:00", 111D, 5000D, 1),
+                intradayFixture.tgknBuyDeal(2L, "10:03:00", 112D, 1000D, 1),
+                intradayFixture.tgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
+                intradayFixture.tgknBuyDeal(4L, "11:01:00", 110D, 1000D, 1),
+                intradayFixture.tgknBuyDeal(5L, "11:45:00", 114.5D, 5000D, 1)
             )
         );
         datasourceStorage().initHistoryValues(
             List.of(
-                buildTgknHistoryValue("2024-04-21", 99.D, 99.D, 99D, 1000D),
-                buildTgknHistoryValue("2024-04-22", 99.D, 99.D, 99D, 2000D),
-                buildTgknHistoryValue("2024-04-23", 100.D, 100.D, 100D, 1400D),
-                buildImoexHistoryValue("2024-04-21", 2900D, 2900D, 1_000_000D),
-                buildImoexHistoryValue("2024-04-22", 2900D, 2900D, 1_500_000D),
-                buildImoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
+                historyFixture.tgknHistoryValue("2024-04-21", 99.D, 99.D, 99D, 1000D),
+                historyFixture.tgknHistoryValue("2024-04-22", 99.D, 99.D, 99D, 2000D),
+                historyFixture.tgknHistoryValue("2024-04-23", 100.D, 100.D, 100D, 1400D),
+                historyFixture.imoexHistoryValue("2024-04-21", 2900D, 2900D, 1_000_000D),
+                historyFixture.imoexHistoryValue("2024-04-22", 2900D, 2900D, 1_500_000D),
+                historyFixture.imoexHistoryValue("2024-04-23", 3000D, 3000D, 2_000_000D)
             )
         );
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));

@@ -28,7 +28,6 @@ import ru.ioque.investfund.application.modules.scanner.processor.StreamingScanne
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
-import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
 

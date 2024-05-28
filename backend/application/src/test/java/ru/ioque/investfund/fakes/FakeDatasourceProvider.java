@@ -8,7 +8,6 @@ import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
-import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.time.LocalDate;
 import java.util.List;

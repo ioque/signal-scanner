@@ -10,6 +10,8 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProper
 
 import java.util.List;
 
+import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
+
 @DisplayName("SCANNER MANAGER TEST - SAVE SIMPLE PREF SCANNER")
 public class PrefSimpleConfiguratorTest extends BaseConfiguratorTest {
     @Test
