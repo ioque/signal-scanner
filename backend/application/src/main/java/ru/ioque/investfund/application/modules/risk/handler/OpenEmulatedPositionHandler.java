@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosition> {
-    EmulatedPositionRepository emulatedPositionRepository;
+    EmulatedPositionJournal emulatedPositionJournal;
     InstrumentRepository instrumentRepository;
     ScannerRepository scannerRepository;
 
@@ -30,12 +30,12 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        EmulatedPositionRepository emulatedPositionRepository,
+        EmulatedPositionJournal emulatedPositionJournal,
         InstrumentRepository instrumentRepository,
         ScannerRepository scannerRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.emulatedPositionRepository = emulatedPositionRepository;
+        this.emulatedPositionJournal = emulatedPositionJournal;
         this.instrumentRepository = instrumentRepository;
         this.scannerRepository = scannerRepository;
     }
@@ -44,7 +44,7 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
     protected Result businessProcess(OpenEmulatedPosition command) {
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         final Instrument instrument = instrumentRepository.getBy(command.getInstrumentId());
-        if (emulatedPositionRepository.findBy(command.getInstrumentId(), command.getScannerId()).isPresent()) {
+        if (emulatedPositionJournal.findActualBy(command.getInstrumentId(), command.getScannerId()).isPresent()) {
             return Result.success(
                 List.of(
                     new WarningLog(
@@ -59,14 +59,14 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
             );
         }
         final EmulatedPosition emulatedPosition = EmulatedPosition.builder()
-            .id(emulatedPositionRepository.nextId())
+            .id(emulatedPositionJournal.nextId())
             .isOpen(true)
             .scanner(scanner)
             .instrument(instrument)
             .openPrice(command.getPrice())
             .build();
         emulatedPosition.updateLastPrice(command.getPrice());
-        emulatedPositionRepository.save(emulatedPosition);
+        emulatedPositionJournal.publish(emulatedPosition);
         return Result.success();
     }
 }

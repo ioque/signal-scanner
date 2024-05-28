@@ -17,7 +17,7 @@ public class SignalRegistrar {
     SignalJournal signalJournal;
 
     public void registerSignal(Signal signal) {
-        List<Signal> existedSignals = signalJournal.findAllBy(signal.getScannerId());
+        List<Signal> existedSignals = signalJournal.findActualBy(signal.getScannerId());
         if (containsSignal(existedSignals, signal)) {
             return;
         }

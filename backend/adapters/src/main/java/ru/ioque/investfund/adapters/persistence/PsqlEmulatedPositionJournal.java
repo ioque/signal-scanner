@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.risk.EmulatedPosition;
 import ru.ioque.investfund.domain.risk.EmulatedPositionId;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Component
 @AllArgsConstructor
-public class PsqlEmulatedPositionRepository implements EmulatedPositionRepository {
+public class PsqlEmulatedPositionJournal implements EmulatedPositionJournal {
     JpaEmulatedPositionRepository emulatedPositionRepository;
 
     @Override
@@ -38,7 +38,7 @@ public class PsqlEmulatedPositionRepository implements EmulatedPositionRepositor
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<EmulatedPosition> findBy(InstrumentId instrumentId, ScannerId scannerId) {
+    public Optional<EmulatedPosition> findActualBy(InstrumentId instrumentId, ScannerId scannerId) {
         return emulatedPositionRepository
             .findByInstrumentIdAndScannerId(instrumentId.getUuid(), scannerId.getUuid())
             .map(EmulatedPositionEntity::toDomain);

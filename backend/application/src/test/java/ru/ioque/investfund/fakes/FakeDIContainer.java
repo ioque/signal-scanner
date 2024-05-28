@@ -28,6 +28,10 @@ import ru.ioque.investfund.application.modules.scanner.processor.StreamingScanne
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
+import ru.ioque.investfund.fakes.journal.FakeAggregatedHistoryJournal;
+import ru.ioque.investfund.fakes.journal.FakeCommandJournal;
+import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
+import ru.ioque.investfund.fakes.journal.FakeSignalJournal;
 
 import java.util.List;
 
@@ -50,7 +54,7 @@ public class FakeDIContainer {
     FakeDatasourceRepository datasourceRepository;
     FakeInstrumentRepository instrumentRepository;
     FakeTelegramChatRepository telegramChatRepository;
-    FakeEmulatedPositionRepository emulatedPositionRepository;
+    FakeEmulatedPositionJournal emulatedPositionRepository;
 
     FakeTelegramMessageSender telegramMessageSender;
 
@@ -96,7 +100,7 @@ public class FakeDIContainer {
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
         scannerRepository = new FakeScannerRepository();
         telegramChatRepository = new FakeTelegramChatRepository();
-        emulatedPositionRepository = new FakeEmulatedPositionRepository();
+        emulatedPositionRepository = new FakeEmulatedPositionJournal();
         telegramMessageSender = new FakeTelegramMessageSender();
 
         searchContextManager = new SearchContextManager(instrumentRepository, aggregatedHistoryJournal);

@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ReportService;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishDailyReportHandler extends CommandHandler<PublishDailyReport> {
     ReportService reportService;
-    EmulatedPositionRepository emulatedPositionRepository;
+    EmulatedPositionJournal emulatedPositionJournal;
     TelegramChatRepository telegramChatRepository;
     TelegramMessageSender telegramMessageSender;
 
@@ -32,13 +32,13 @@ public class PublishDailyReportHandler extends CommandHandler<PublishDailyReport
         Validator validator,
         LoggerProvider loggerProvider,
         ReportService reportService,
-        EmulatedPositionRepository emulatedPositionRepository,
+        EmulatedPositionJournal emulatedPositionJournal,
         TelegramChatRepository telegramChatRepository,
         TelegramMessageSender telegramMessageSender
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.reportService = reportService;
-        this.emulatedPositionRepository = emulatedPositionRepository;
+        this.emulatedPositionJournal = emulatedPositionJournal;
         this.telegramChatRepository = telegramChatRepository;
         this.telegramMessageSender = telegramMessageSender;
     }
@@ -46,9 +46,6 @@ public class PublishDailyReportHandler extends CommandHandler<PublishDailyReport
     @Override
     protected Result businessProcess(PublishDailyReport command) {
         try {
-            if (!emulatedPositionRepository.existsOpenPositions()) {
-                return Result.success(List.of(new InfoLog(dateTimeProvider.nowDateTime(), "Нет открытых позиций.")));
-            }
             final File report = reportService.buildDailyReport();
             if (command.getChatId() != null) {
                 telegramMessageSender.sendMessage(

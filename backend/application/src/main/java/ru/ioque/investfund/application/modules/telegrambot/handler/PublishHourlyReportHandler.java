@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ReportService;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyReport> {
     ReportService reportService;
-    EmulatedPositionRepository emulatedPositionRepository;
+    EmulatedPositionJournal emulatedPositionJournal;
     TelegramMessageSender telegramMessageSender;
     TelegramChatRepository telegramChatRepository;
 
@@ -34,21 +34,18 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
         TelegramMessageSender telegramMessageSender,
         TelegramChatRepository telegramChatRepository,
         ReportService reportService,
-        EmulatedPositionRepository emulatedPositionRepository
+        EmulatedPositionJournal emulatedPositionJournal
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.reportService = reportService;
         this.telegramMessageSender = telegramMessageSender;
         this.telegramChatRepository = telegramChatRepository;
-        this.emulatedPositionRepository = emulatedPositionRepository;
+        this.emulatedPositionJournal = emulatedPositionJournal;
     }
 
     @Override
     protected Result businessProcess(PublishHourlyReport command) {
         try {
-            if (!emulatedPositionRepository.existsOpenPositions()) {
-                return Result.success(List.of(new InfoLog(dateTimeProvider.nowDateTime(), "Нет открытых позиций.")));
-            }
             final File report = reportService.buildHourlyReport();
             if (command.getChatId() != null) {
                 telegramMessageSender.sendMessage(

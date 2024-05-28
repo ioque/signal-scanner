@@ -14,7 +14,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepo
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
@@ -81,8 +81,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public EmulatedPositionRepository mockEmulatedPositionRepository() {
-        return mock(EmulatedPositionRepository.class);
+    public EmulatedPositionJournal mockEmulatedPositionRepository() {
+        return mock(EmulatedPositionJournal.class);
     }
 
     @Bean

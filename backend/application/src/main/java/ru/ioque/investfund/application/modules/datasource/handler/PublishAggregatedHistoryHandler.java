@@ -44,7 +44,7 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         for (final Instrument instrument : datasource.getUpdatableInstruments()) {
             final LocalDate from = aggregatedHistoryJournal
-                .getBy(instrument.getTicker())
+                .findActualBy(instrument.getTicker())
                 .map(row -> row.getDate().plusDays(1))
                 .orElse(dateTimeProvider.nowDate().minusMonths(6));
             final LocalDate to = dateTimeProvider.nowDate().minusDays(1);

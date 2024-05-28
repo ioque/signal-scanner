@@ -24,7 +24,7 @@ public class KafkaSignalJournal implements SignalJournal {
     }
 
     @Override
-    public List<Signal> findAllBy(ScannerId scannerId) {
+    public List<Signal> findActualBy(ScannerId scannerId) {
         return List.of();
     }
 }

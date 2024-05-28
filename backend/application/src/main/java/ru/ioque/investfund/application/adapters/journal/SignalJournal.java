@@ -7,5 +7,5 @@ import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 public interface SignalJournal {
     void publish(Signal signal);
-    List<Signal> findAllBy(ScannerId scannerId);
+    List<Signal> findActualBy(ScannerId scannerId);
 }

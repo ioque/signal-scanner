@@ -3,7 +3,7 @@ package ru.ioque.investfund.application.modules.risk.handler;
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.EmulatedPositionRepository;
+import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
@@ -13,22 +13,22 @@ import ru.ioque.investfund.domain.risk.EmulatedPosition;
 
 @Component
 public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPosition> {
-    final EmulatedPositionRepository emulatedPositionRepository;
+    final EmulatedPositionJournal emulatedPositionJournal;
 
     public CloseEmulatedPositionHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        EmulatedPositionRepository emulatedPositionRepository
+        EmulatedPositionJournal emulatedPositionJournal
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.emulatedPositionRepository = emulatedPositionRepository;
+        this.emulatedPositionJournal = emulatedPositionJournal;
     }
 
     @Override
     protected Result businessProcess(CloseEmulatedPosition command) {
-        final EmulatedPosition emulatedPosition = emulatedPositionRepository
-            .findBy(command.getInstrumentId(), command.getScannerId())
+        final EmulatedPosition emulatedPosition = emulatedPositionJournal
+            .findActualBy(command.getInstrumentId(), command.getScannerId())
             .orElseThrow(
                 () -> new EntityNotFoundException(
                     String.format(
@@ -39,7 +39,7 @@ public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPo
                 )
             );
         emulatedPosition.closePosition(command.getPrice());
-        emulatedPositionRepository.save(emulatedPosition);
+        emulatedPositionJournal.publish(emulatedPosition);
         return Result.success();
     }
 }

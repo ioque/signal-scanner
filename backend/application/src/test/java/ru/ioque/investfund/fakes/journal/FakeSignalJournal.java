@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes;
+package ru.ioque.investfund.fakes.journal;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +18,7 @@ public class FakeSignalJournal implements SignalJournal {
     }
 
     @Override
-    public List<Signal> findAllBy(ScannerId scannerId) {
+    public List<Signal> findActualBy(ScannerId scannerId) {
         return stream().filter(signal -> signal.getScannerId().equals(scannerId)).toList();
     }
 

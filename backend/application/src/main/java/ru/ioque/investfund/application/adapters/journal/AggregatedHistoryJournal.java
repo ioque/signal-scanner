@@ -9,5 +9,5 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 public interface AggregatedHistoryJournal {
     void publish(AggregatedHistory aggregatedHistory);
     List<AggregatedHistory> findAllBy(Ticker ticker);
-    Optional<AggregatedHistory> getBy(Ticker ticker);
+    Optional<AggregatedHistory> findActualBy(Ticker ticker);
 }

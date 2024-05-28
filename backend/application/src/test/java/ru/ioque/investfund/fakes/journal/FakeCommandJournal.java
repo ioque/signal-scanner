@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes;
+package ru.ioque.investfund.fakes.journal;
 
 import java.util.HashSet;
 import java.util.Set;

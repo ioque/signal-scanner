@@ -26,7 +26,7 @@ public class KafkaAggregatedHistoryJournal implements AggregatedHistoryJournal {
     }
 
     @Override
-    public Optional<AggregatedHistory> getBy(Ticker ticker) {
+    public Optional<AggregatedHistory> findActualBy(Ticker ticker) {
         return Optional.empty();
     }
 }

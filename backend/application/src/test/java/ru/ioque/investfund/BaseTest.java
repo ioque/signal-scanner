@@ -20,11 +20,11 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
-import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
-import ru.ioque.investfund.fakes.FakeIntradayJournal;
+import ru.ioque.investfund.fakes.FakeEmulatedPositionJournal;
+import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
-import ru.ioque.investfund.fakes.FakeSignalJournal;
+import ru.ioque.investfund.fakes.journal.FakeSignalJournal;
 import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
 import ru.ioque.investfund.fakes.FakeTelegramMessageSender;
 import ru.ioque.investfund.fakes.DatasourceStorage;
@@ -79,7 +79,7 @@ public class BaseTest {
         return fakeDIContainer.getTelegramMessageSender();
     }
 
-    protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
+    protected final FakeEmulatedPositionJournal emulatedPositionRepository() {
         return fakeDIContainer.getEmulatedPositionRepository();
     }
 

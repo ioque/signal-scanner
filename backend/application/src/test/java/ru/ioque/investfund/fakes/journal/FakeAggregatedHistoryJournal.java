@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes;
+package ru.ioque.investfund.fakes.journal;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +24,7 @@ public class FakeAggregatedHistoryJournal implements AggregatedHistoryJournal {
     }
 
     @Override
-    public Optional<AggregatedHistory> getBy(Ticker ticker) {
+    public Optional<AggregatedHistory> findActualBy(Ticker ticker) {
         return findAllBy(ticker).stream().max(AggregatedHistory::compareTo);
     }
 
