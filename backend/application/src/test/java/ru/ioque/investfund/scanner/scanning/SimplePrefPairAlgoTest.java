@@ -39,7 +39,7 @@ public class SimplePrefPairAlgoTest extends BaseScannerTest {
     }
 
     private PrefSimplePair getPrefSimplePair() {
-        return new PrefSimplePair(getSberp(), getSber());
+        return new PrefSimplePair(getSberpPerformance(), getSberPerformance());
     }
 
 

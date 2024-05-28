@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_STATISTIC_TOPIC;
@@ -25,7 +25,7 @@ public class TopologyConfiguration {
     @Autowired
     private Serde<IntradayData> intradayDataSerde;
     @Autowired
-    private Serde<InstrumentPerformance> intradayStatistic;
+    private Serde<IntradayPerformance> intradayStatistic;
 
     @Bean
     public Topology createTopology(StreamsBuilder builder) {
@@ -38,7 +38,7 @@ public class TopologyConfiguration {
         final var statistics = intraday
                 .groupByKey()
                 .aggregate(
-                        InstrumentPerformance::empty,
+                        IntradayPerformance::empty,
                         (k, v, a) -> a.add(k, v),
                         Materialized.with(
                                 tickerSerde,

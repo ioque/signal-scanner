@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +15,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandJournal;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.InstrumentRepository;
-import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.journal.SignalJournal;
 import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
-import ru.ioque.investfund.domain.scanner.entity.SearchContext;
+import ru.ioque.investfund.domain.scanner.value.SearchContext;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 
@@ -32,49 +30,42 @@ import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StreamingScannerEngine {
+    final SearchContextBuilder searchContextBuilder;
     final SignalJournal signalJournal;
     final CommandJournal commandJournal;
-    final ScannerRepository scannerRepository;
-    final InstrumentRepository instrumentRepository;
     final DateTimeProvider dateTimeProvider;
 
-    boolean active;
+    @Getter
     SearchContext searchContext;
     Map<Ticker, List<ScannerId>> subscribers;
     List<SignalScanner> scanners;
 
-    public void init(DatasourceId datasourceId) {
-        this.scanners = scannerRepository.findAllBy(datasourceId);
-        this.searchContext = new SearchContext(
-            scanners
-                .stream()
-                .map(SignalScanner::getInstrumentIds)
-                .flatMap(List::stream)
-                .distinct()
-                .map(instrumentRepository::getBy)
-                .toList()
-        );
-        this.active = true;
+    public void init(List<SignalScanner> scanners) {
+        this.scanners = scanners;
+        this.searchContext = searchContextBuilder.build(scanners);
     }
 
     @Async
-    public void process(InstrumentPerformance instrumentPerformance) {
-        Optional<Instrument> instrument = searchContext.getInstrumentBy(instrumentPerformance.getTicker());
-        if (!active || instrument.isEmpty()) {
+    public void process(IntradayPerformance intradayPerformance) {
+        if (searchContext == null) {
             return;
         }
-        log.info("receive {}", instrumentPerformance);
-        instrument.get().updatePerformance(instrumentPerformance);
+        Optional<InstrumentPerformance> instrument = searchContext.getInstrumentBy(intradayPerformance.getTicker());
+        if (instrument.isEmpty()) {
+            return;
+        }
+        log.info("receive {}", intradayPerformance);
+        instrument.get().updatePerformance(intradayPerformance);
         commandJournal.publish(new EvaluateEmulatedPosition(
-            instrument.get().getId(),
-            instrumentPerformance.getTodayLastPrice()
+            instrument.get().getInstrumentId(),
+            intradayPerformance.getTodayLastPrice()
         ));
         scanners.stream()
-            .filter(scanner -> scanner.getInstrumentIds().contains(instrument.get().getId()) && scanner.isActive())
+            .filter(scanner -> scanner.getInstrumentIds().contains(instrument.get().getInstrumentId()) && scanner.isActive())
             .forEach(scanner -> {
                 final LocalDateTime watermark = dateTimeProvider.nowDateTime();
                 log.info("scanner {} started scanning", scanner);
-                final List<Instrument> instruments = scanner
+                final List<InstrumentPerformance> instruments = scanner
                     .getInstrumentIds()
                     .stream()
                     .map(searchContext::getInstrumentBy)

@@ -1,6 +1,5 @@
-package ru.ioque.investfund.domain.datasource.value;
+package ru.ioque.investfund.domain.scanner.value;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.*;
@@ -16,7 +15,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InstrumentPerformance implements Comparable<InstrumentPerformance> {
+public class IntradayPerformance implements Comparable<IntradayPerformance> {
 
     Ticker ticker;
     Double todayValue;
@@ -24,16 +23,16 @@ public class InstrumentPerformance implements Comparable<InstrumentPerformance> 
     Double todayFirstPrice;
     LocalDateTime timestamp;
 
-    public static InstrumentPerformance empty() {
-        return InstrumentPerformance.builder()
+    public static IntradayPerformance empty() {
+        return IntradayPerformance.builder()
             .todayValue(0D)
             .todayLastPrice(0D)
             .todayFirstPrice(0D)
             .build();
     }
 
-    public static InstrumentPerformance from(IntradayData data) {
-        return InstrumentPerformance.builder()
+    public static IntradayPerformance from(IntradayData data) {
+        return IntradayPerformance.builder()
             .ticker(data.getTicker())
             .timestamp(data.getDateTime())
             .todayLastPrice(data.getPrice())
@@ -42,15 +41,15 @@ public class InstrumentPerformance implements Comparable<InstrumentPerformance> 
             .build();
     }
 
-    public InstrumentPerformance add(String key, IntradayData data) {
+    public IntradayPerformance add(String key, IntradayData data) {
         final Ticker ticker = Ticker.from(key);
         if (this.ticker != null && !this.ticker.equals(ticker)) {
             throw new DomainException("Нельзя изменить ранее установленный тикер.");
         }
         if(timestamp != null && data.getDateTime().toLocalDate().isAfter(timestamp.toLocalDate())) {
-            return InstrumentPerformance.from(data);
+            return IntradayPerformance.from(data);
         }
-        return InstrumentPerformance.builder()
+        return IntradayPerformance.builder()
             .ticker(ticker)
             .timestamp(data.getDateTime())
             .todayLastPrice(data.getPrice())
@@ -60,7 +59,7 @@ public class InstrumentPerformance implements Comparable<InstrumentPerformance> 
     }
 
     @Override
-    public int compareTo(InstrumentPerformance instrumentPerformance) {
-        return this.timestamp.compareTo(instrumentPerformance.timestamp);
+    public int compareTo(IntradayPerformance intradayPerformance) {
+        return this.timestamp.compareTo(intradayPerformance.timestamp);
     }
 }

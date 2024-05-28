@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.handler.UpdateAggregateHistoryHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.PublishAggregatedHistoryHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.DisableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.EnableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.RegisterDatasourceHandler;
@@ -22,10 +22,11 @@ import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerComm
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
+import ru.ioque.investfund.application.modules.scanner.processor.SearchContextBuilder;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
-import ru.ioque.investfund.application.modules.telegrambot.PublishSignalHandler;
-import ru.ioque.investfund.application.modules.telegrambot.SubscribeHandler;
-import ru.ioque.investfund.application.modules.telegrambot.UnsubscribeHandler;
+import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
+import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
+import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.util.List;
@@ -37,15 +38,16 @@ public class FakeDIContainer {
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
+    SearchContextBuilder searchContextBuilder;
 
     FakeCommandJournal commandJournal;
     FakeSignalJournal signalJournal;
     FakeIntradayJournal intradayJournal;
+    FakeAggregatedHistoryJournal aggregatedHistoryJournal;
 
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeInstrumentRepository instrumentRepository;
-    FakeIntradayValueRepository intradayValueRepository;
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
 
@@ -69,7 +71,7 @@ public class FakeDIContainer {
     UnsubscribeHandler unsubscribeHandler;
     DeactivateScannerHandler deactivateScannerHandler;
     ActivateScannerHandler activateScannerHandler;
-    UpdateAggregateHistoryHandler updateAggregateHistoryHandler;
+    PublishAggregatedHistoryHandler publishAggregatedHistoryHandler;
 
     CommandBus commandBus;
     Validator validator;
@@ -81,25 +83,30 @@ public class FakeDIContainer {
             validator = factory.getValidator();
         }
         commandJournal = new FakeCommandJournal();
+        aggregatedHistoryJournal = new FakeAggregatedHistoryJournal();
+        intradayJournal = new FakeIntradayJournal();
+        signalJournal = new FakeSignalJournal();
+
         dateTimeProvider = new FakeDateTimeProvider();
         datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
         datasourceRepository = new FakeDatasourceRepository();
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
-        intradayValueRepository = new FakeIntradayValueRepository();
         scannerRepository = new FakeScannerRepository();
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
-        intradayJournal = new FakeIntradayJournal();
-        signalJournal = new FakeSignalJournal();
-        updateAggregateHistoryHandler = new UpdateAggregateHistoryHandler(
+
+        searchContextBuilder = new SearchContextBuilder(instrumentRepository, aggregatedHistoryJournal);
+
+        publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             exchangeProvider,
-            datasourceRepository
+            datasourceRepository,
+            aggregatedHistoryJournal
         );
         deactivateScannerHandler = new DeactivateScannerHandler(
             dateTimeProvider,
@@ -204,6 +211,7 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
+            aggregatedHistoryJournal,
             scannerRepository,
             instrumentRepository,
             telegramChatRepository,
@@ -243,14 +251,13 @@ public class FakeDIContainer {
                 removeScannerHandler,
                 deactivateScannerHandler,
                 activateScannerHandler,
-                updateAggregateHistoryHandler
+                publishAggregatedHistoryHandler
             )
         );
         streamingScannerEngine = new StreamingScannerEngine(
+            searchContextBuilder,
             signalJournal,
             commandJournal,
-            scannerRepository,
-            instrumentRepository,
             dateTimeProvider
         );
     }

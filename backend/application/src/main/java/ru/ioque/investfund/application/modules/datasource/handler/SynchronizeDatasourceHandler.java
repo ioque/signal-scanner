@@ -57,7 +57,6 @@ public class SynchronizeDatasourceHandler extends CommandHandler<SynchronizeData
                 .id(instrumentRepository.nextId())
                 .updatable(false)
                 .detail(detail)
-                .aggregateHistories(new TreeSet<>())
                 .build()
             )
             .forEach(datasource::addInstrument);

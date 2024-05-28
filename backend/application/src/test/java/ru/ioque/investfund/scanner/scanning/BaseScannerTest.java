@@ -3,11 +3,10 @@ package ru.ioque.investfund.scanner.scanning;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.domain.datasource.entity.Datasource;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,53 +41,50 @@ public class BaseScannerTest extends BaseTest {
             .toList();
     }
 
-    protected Instrument getImoex() {
-        return getInstrumentBy(IMOEX);
+    protected InstrumentPerformance getImoexPerformance() {
+        return getInstrumentPerformanceBy(IMOEX);
     }
 
-    protected Instrument getTgkb() {
-        return getInstrumentBy(TGKB);
+    protected InstrumentPerformance getTgkbPerformance() {
+        return getInstrumentPerformanceBy(TGKB);
     }
 
-    protected Instrument getTgkn() {
-        return getInstrumentBy(TGKN);
+    protected InstrumentPerformance getTgknPerformance() {
+        return getInstrumentPerformanceBy(TGKN);
     }
 
-    protected Instrument getTatn() {
-        return getInstrumentBy(TATN);
+    protected InstrumentPerformance getTatnPerformance() {
+        return getInstrumentPerformanceBy(TATN);
     }
 
-    protected Instrument getBrf4() {
-        return getInstrumentBy(BRF4);
+    protected InstrumentPerformance getBrf4Performance() {
+        return getInstrumentPerformanceBy(BRF4);
     }
 
-    protected Instrument getRosn() {
-        return getInstrumentBy(ROSN);
+    protected InstrumentPerformance getRosnPerformance() {
+        return getInstrumentPerformanceBy(ROSN);
     }
 
-    protected Instrument getLkoh() {
-        return getInstrumentBy(LKOH);
+    protected InstrumentPerformance getLkohPerformance() {
+        return getInstrumentPerformanceBy(LKOH);
     }
 
-    protected Instrument getSibn() {
-        return getInstrumentBy(SIBN);
+    protected InstrumentPerformance getSibnPerformance() {
+        return getInstrumentPerformanceBy(SIBN);
     }
 
-    protected Instrument getSber() {
-        return getInstrumentBy(SBER);
+    protected InstrumentPerformance getSberPerformance() {
+        return getInstrumentPerformanceBy(SBER);
     }
 
-    protected Instrument getSberp() {
-        return getInstrumentBy(SBERP);
+    protected InstrumentPerformance getSberpPerformance() {
+        return getInstrumentPerformanceBy(SBERP);
     }
 
-    protected Instrument getInstrumentBy(String ticker) {
-        return datasourceRepository()
-            .getAll()
-            .stream()
-            .map(Datasource::getInstruments)
-            .flatMap(Collection::stream)
-            .filter(row -> row.getTicker().equals(new Ticker(ticker))).findFirst()
+    protected InstrumentPerformance getInstrumentPerformanceBy(String ticker) {
+        return streamingScannerEngine()
+            .getSearchContext()
+            .getInstrumentBy(new Ticker(ticker))
             .orElseThrow();
     }
 }

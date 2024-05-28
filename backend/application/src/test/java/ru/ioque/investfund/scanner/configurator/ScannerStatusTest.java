@@ -2,11 +2,8 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
-import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.scanner.command.ActivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.DeactivateScanner;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;

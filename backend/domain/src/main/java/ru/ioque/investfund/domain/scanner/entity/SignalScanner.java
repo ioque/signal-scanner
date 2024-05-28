@@ -7,12 +7,12 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 
 import java.time.Duration;
@@ -80,7 +80,7 @@ public class SignalScanner extends Domain<ScannerId> {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public synchronized WorkScannerReport scanning(List<Instrument> instruments, LocalDateTime watermark) {
+    public synchronized WorkScannerReport scanning(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
         final ScannerAlgorithm algorithm = getScannerAlgorithm();
         lastExecutionDateTime = watermark;
         final WorkScannerReport report = new WorkScannerReport();

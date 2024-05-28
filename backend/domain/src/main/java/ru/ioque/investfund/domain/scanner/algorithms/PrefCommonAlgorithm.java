@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
@@ -31,7 +30,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<Instrument> instruments, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
         List<Signal> signals = new ArrayList<>();
         findAllPrefAndSimplePairs(instruments).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
@@ -40,7 +39,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             DecimalFormat formatter = new DecimalFormat("#,###.##");
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
-                    .instrumentId(pair.getPref().getId())
+                    .instrumentId(pair.getPref().getInstrumentId())
                     .isBuy(true)
                     .summary(
                         String.format(
@@ -52,7 +51,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                         )
                     )
                     .watermark(watermark)
-                    .price(pair.getPref().getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
+                    .price(pair.getPref().getIntradayPerformance().map(IntradayPerformance::getTodayLastPrice).orElse(0D))
                     .build()
                 );
             }
@@ -60,17 +59,17 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
         return signals;
     }
 
-    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<Instrument> instruments) {
+    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<InstrumentPerformance> instruments) {
         return instruments
             .stream()
-            .filter(Instrument::isPref)
+            .filter(InstrumentPerformance::isPref)
             .map(pref -> new PrefSimplePair(pref, findSimplePair(instruments, pref)))
             .toList();
     }
 
-    private Instrument findSimplePair(
-        List<Instrument> instruments,
-        Instrument instrument
+    private InstrumentPerformance findSimplePair(
+        List<InstrumentPerformance> instruments,
+        InstrumentPerformance instrument
     ) {
         return instruments
             .stream()

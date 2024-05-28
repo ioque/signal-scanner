@@ -2,7 +2,7 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
+import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
@@ -70,7 +70,7 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
             buildTgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
+        commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
         commandBus()
             .execute(
                 buildCreateAnomalyVolumeScannerWith()

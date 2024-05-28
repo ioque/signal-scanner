@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

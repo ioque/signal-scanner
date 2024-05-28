@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
+import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
@@ -37,7 +37,7 @@ public class UpdateAggregateHistoryTest extends BaseTest {
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
 
-        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishAggregatedHistory(datasourceId));
 
         assertEquals(65, getHistoryValuesBy(AFKS).size());
     }
@@ -55,12 +55,12 @@ public class UpdateAggregateHistoryTest extends BaseTest {
         initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishAggregatedHistory(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-09T13:00:00");
         initHistoryValues(generateHistoryValues(AFKS, nowMinus3Month(), nowMinus1Days()));
 
-        commandBus().execute(new UpdateAggregateHistory(datasourceId));
+        commandBus().execute(new PublishAggregatedHistory(datasourceId));
 
         assertEquals(66, getHistoryValuesBy(AFKS).size());
     }

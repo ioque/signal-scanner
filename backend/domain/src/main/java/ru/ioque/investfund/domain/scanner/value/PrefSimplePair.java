@@ -2,9 +2,6 @@ package ru.ioque.investfund.domain.scanner.value;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
 
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
@@ -12,15 +9,15 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class PrefSimplePair {
-    Instrument pref;
-    Instrument simple;
+    InstrumentPerformance pref;
+    InstrumentPerformance simple;
 
     public Double getCurrentDelta() {
-        if (simple.getPerformance().isEmpty() || pref.getPerformance().isEmpty()) {
+        if (simple.getIntradayPerformance().isEmpty() || pref.getIntradayPerformance().isEmpty()) {
             return 0D;
         }
-        final InstrumentPerformance simpleState = simple.getPerformance().get();
-        final InstrumentPerformance prefState = pref.getPerformance().get();
+        final IntradayPerformance simpleState = simple.getIntradayPerformance().get();
+        final IntradayPerformance prefState = pref.getIntradayPerformance().get();
         if (simpleState.getTodayLastPrice() == null || prefState.getTodayLastPrice() == null) {
             return 0D;
         }
@@ -28,10 +25,10 @@ public class PrefSimplePair {
     }
 
     public Double getHistoryDelta() {
-        if (simple.getAggregateHistories().isEmpty()) return 0D;
-        if (pref.getAggregateHistories().isEmpty()) return 0D;
+        if (simple.getAggregatedHistories().isEmpty()) return 0D;
+        if (pref.getAggregatedHistories().isEmpty()) return 0D;
         final List<Double> historyDelta = simple
-            .getAggregateHistories()
+            .getAggregatedHistories()
             .stream()
             .map(row -> row.getWaPrice() - getWaPricePrefBy(row.getDate()))
             .sorted()
@@ -43,7 +40,7 @@ public class PrefSimplePair {
     }
 
     private Double getWaPricePrefBy(ChronoLocalDate time) {
-        return pref.getAggregateHistories()
+        return pref.getAggregatedHistories()
             .stream()
             .filter(pref -> pref.getDate().equals(time))
             .findFirst()

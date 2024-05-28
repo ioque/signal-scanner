@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.telegrambot;
+package ru.ioque.investfund.application.modules.telegrambot.handler;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.telegrambot.command.PublishDailyReport;
+import ru.ioque.investfund.application.modules.telegrambot.command.PublishHourlyReport;
 import ru.ioque.investfund.domain.core.InfoLog;
 
 import java.io.File;
@@ -21,45 +21,45 @@ import java.util.List;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class PublishDailyReportHandler extends CommandHandler<PublishDailyReport> {
+public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyReport> {
     ReportService reportService;
     EmulatedPositionRepository emulatedPositionRepository;
-    TelegramChatRepository telegramChatRepository;
     TelegramMessageSender telegramMessageSender;
+    TelegramChatRepository telegramChatRepository;
 
-    public PublishDailyReportHandler(
+    public PublishHourlyReportHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        ReportService reportService,
-        EmulatedPositionRepository emulatedPositionRepository,
+        TelegramMessageSender telegramMessageSender,
         TelegramChatRepository telegramChatRepository,
-        TelegramMessageSender telegramMessageSender
+        ReportService reportService,
+        EmulatedPositionRepository emulatedPositionRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.reportService = reportService;
-        this.emulatedPositionRepository = emulatedPositionRepository;
-        this.telegramChatRepository = telegramChatRepository;
         this.telegramMessageSender = telegramMessageSender;
+        this.telegramChatRepository = telegramChatRepository;
+        this.emulatedPositionRepository = emulatedPositionRepository;
     }
 
     @Override
-    protected Result businessProcess(PublishDailyReport command) {
+    protected Result businessProcess(PublishHourlyReport command) {
         try {
             if (!emulatedPositionRepository.existsOpenPositions()) {
                 return Result.success(List.of(new InfoLog(dateTimeProvider.nowDateTime(), "Нет открытых позиций.")));
             }
-            final File report = reportService.buildDailyReport();
+            final File report = reportService.buildHourlyReport();
             if (command.getChatId() != null) {
                 telegramMessageSender.sendMessage(
                     command.getChatId(),
-                    "Ежедневный отчет",
+                    "Ежечасный отчет",
                     report
                 );
             } else {
                 telegramChatRepository.findAll().forEach(telegramChat -> telegramMessageSender.sendMessage(
                     telegramChat.getChatId(),
-                    "Ежедневный отчет",
+                    "Ежечасный отчет",
                     report
                 ));
             }

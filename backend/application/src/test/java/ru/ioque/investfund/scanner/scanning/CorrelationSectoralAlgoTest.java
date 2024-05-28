@@ -37,8 +37,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(),1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -57,8 +57,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -78,8 +78,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -99,8 +99,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -147,8 +147,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertFalse(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertFalse(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -171,8 +171,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
-        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -195,8 +195,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0, 0, 0);
-        assertFalse(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertFalse(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     @Test
@@ -220,8 +220,8 @@ public class CorrelationSectoralAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(),1, 1, 0);
-        assertTrue(getTatn().isRiseOvernight(stockOvernightScale));
-        assertTrue(getBrf4().isRiseOvernight(futuresOvernightScale));
+        assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
+        assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
 
     private void initScanner(DatasourceId datasourceId) {

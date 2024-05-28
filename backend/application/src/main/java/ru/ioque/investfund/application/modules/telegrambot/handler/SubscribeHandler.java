@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.telegrambot;
+package ru.ioque.investfund.application.modules.telegrambot.handler;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;

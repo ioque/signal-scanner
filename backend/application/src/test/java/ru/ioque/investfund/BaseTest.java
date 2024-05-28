@@ -3,7 +3,7 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
+import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
@@ -11,7 +11,7 @@ import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetail;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetail;
@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class BaseTest {
@@ -159,11 +158,8 @@ public class BaseTest {
 
     protected List<AggregatedHistory> getHistoryValuesBy(String ticker) {
         return fakeDIContainer
-            .getDatasourceRepository()
-            .getInstrumentBy(Ticker.from(ticker))
-            .getAggregateHistories()
-            .stream()
-            .toList();
+            .getAggregatedHistoryJournal()
+            .findAllBy(Ticker.from(ticker));
     }
 
     protected DatasourceId getDatasourceId() {
@@ -179,22 +175,23 @@ public class BaseTest {
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
+        commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
         commandBus().execute(new PublishIntradayData(datasourceId));
-        streamingScannerEngine().init(datasourceId);
+        streamingScannerEngine().init(scannerRepository().findAllBy(getDatasourceId()));
         statisticStream().forEach(streamingScannerEngine()::process);
     }
 
-    private List<InstrumentPerformance> statisticStream() {
+    private List<IntradayPerformance> statisticStream() {
         final Map<Ticker, List<IntradayData>> tickerToIntraday = intradayJournal()
             .stream()
             .collect(Collectors.groupingBy(IntradayData::getTicker));
-        final List<InstrumentPerformance> statistics = new ArrayList<>();
+        final List<IntradayPerformance> statistics = new ArrayList<>();
         tickerToIntraday.forEach((ticker, intradayDataList) -> {
-            InstrumentPerformance instrumentPerformance = InstrumentPerformance.empty();
-            for (var intradayData : intradayDataList) {
-                instrumentPerformance = instrumentPerformance.add(ticker.getValue(), intradayData);
-                statistics.add(instrumentPerformance);
+            IntradayPerformance intradayPerformance = IntradayPerformance.empty();
+            List<IntradayData> sorted = intradayDataList.stream().sorted().toList();
+            for (var intradayData : sorted) {
+                intradayPerformance = intradayPerformance.add(ticker.getValue(), intradayData);
+                statistics.add(intradayPerformance);
             }
         });
         return statistics.stream().sorted().toList();

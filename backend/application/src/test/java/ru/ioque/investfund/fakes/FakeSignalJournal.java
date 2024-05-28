@@ -1,7 +1,8 @@
 package ru.ioque.investfund.fakes;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import ru.ioque.investfund.application.adapters.journal.SignalJournal;
@@ -9,7 +10,7 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 public class FakeSignalJournal implements SignalJournal {
-    public List<Signal> signals = new ArrayList<>();
+    public Set<Signal> signals = new HashSet<>();
 
     @Override
     public void publish(Signal signal) {
@@ -17,7 +18,7 @@ public class FakeSignalJournal implements SignalJournal {
     }
 
     @Override
-    public List<Signal> getBy(ScannerId scannerId) {
+    public List<Signal> findAllBy(ScannerId scannerId) {
         return stream().filter(signal -> signal.getScannerId().equals(scannerId)).toList();
     }
 

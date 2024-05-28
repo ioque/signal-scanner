@@ -13,7 +13,7 @@ import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPositio
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.COMMAND_TOPIC;
@@ -35,7 +35,7 @@ public class KafkaConsumer {
     }
 
     @KafkaListener(topics = INTRADAY_STATISTIC_TOPIC)
-    public void process(@Payload InstrumentPerformance statistics) {
+    public void process(@Payload IntradayPerformance statistics) {
         streamingScannerEngine.process(statistics);
     }
 
@@ -43,9 +43,7 @@ public class KafkaConsumer {
     public void processSignal(@Payload Signal signal) {
         commandJournal.publish(
             PublishSignal.builder()
-                .isBuy(signal.isBuy())
-                .scannerId(signal.getScannerId())
-                .instrumentId(signal.getInstrumentId())
+                .signal(signal)
                 .build()
         );
         if (signal.isBuy()) {

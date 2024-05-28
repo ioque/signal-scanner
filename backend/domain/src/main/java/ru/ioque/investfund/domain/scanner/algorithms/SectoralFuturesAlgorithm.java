@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -36,21 +35,21 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<Instrument> instruments, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
         final List<Signal> signals = new ArrayList<>();
         final boolean futuresIsRiseOvernight = getFuturesStatistic(instruments).isRiseOvernight(futuresOvernightScale);
-        for (final Instrument instrument : analyzeInstruments(instruments)) {
+        for (final InstrumentPerformance instrument : analyzeInstruments(instruments)) {
             final boolean riseOvernight = instrument.isRiseOvernight(stockOvernightScale);
             if (futuresIsRiseOvernight && riseOvernight) {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(instrument.getId())
+                        .instrumentId(instrument.getInstrumentId())
                         .isBuy(true)
                         .summary("""
                             Тренд инструмента растущий;
                             Тренд фьючерса растущий;""")
                         .watermark(watermark)
-                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getIntradayPerformance().map(IntradayPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
@@ -58,7 +57,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
         return signals;
     }
 
-    private Instrument getFuturesStatistic(List<Instrument> instruments) {
+    private InstrumentPerformance getFuturesStatistic(List<InstrumentPerformance> instruments) {
         return instruments
             .stream()
             .filter(row -> futuresTicker.equals(row.getTicker()))
@@ -66,7 +65,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
             .orElseThrow(() -> new DomainException("Не добавлен фьючерс на основной товар сектора."));
     }
 
-    private List<Instrument> analyzeInstruments(List<Instrument> instruments) {
+    private List<InstrumentPerformance> analyzeInstruments(List<InstrumentPerformance> instruments) {
         return instruments.stream().filter(row -> !row.getTicker().equals(futuresTicker)).toList();
     }
 }

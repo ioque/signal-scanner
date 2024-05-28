@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
+import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -46,7 +45,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(final List<Instrument> instruments, final LocalDateTime watermark) {
+    public List<Signal> findSignals(final List<InstrumentPerformance> instruments, final LocalDateTime watermark) {
         final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(instruments).isRiseToday();
 
@@ -54,9 +53,9 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
             return signals;
         }
 
-        for (final Instrument instrument : getAnalyzeStatistics(instruments)) {
+        for (final InstrumentPerformance instrument : getAnalyzeStatistics(instruments)) {
             final Optional<Double> medianValue = instrument.getHistoryMedianValue(historyPeriod);
-            final Optional<Double> currentValue = instrument.getPerformance().map(InstrumentPerformance::getTodayValue);
+            final Optional<Double> currentValue = instrument.getIntradayPerformance().map(IntradayPerformance::getTodayValue);
             if (medianValue.isEmpty() || currentValue.isEmpty() || instrument.isRiseToday().isEmpty()) {
                 continue;
             }
@@ -67,7 +66,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 .get()) {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(instrument.getId())
+                        .instrumentId(instrument.getInstrumentId())
                         .isBuy(true)
                         .summary(createSummary(
                             formatter,
@@ -77,14 +76,14 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                             true
                         ))
                         .watermark(watermark)
-                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getIntradayPerformance().map(IntradayPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
             if (currentValueToMedianValue > scaleCoefficient && !instrument.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(instrument.getId())
+                        .instrumentId(instrument.getInstrumentId())
                         .isBuy(false)
                         .watermark(watermark)
                         .summary(createSummary(
@@ -94,7 +93,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                             currentValueToMedianValue,
                             indexIsRiseToday.get()
                         ))
-                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getIntradayPerformance().map(IntradayPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
@@ -122,11 +121,11 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         );
     }
 
-    private List<Instrument> getAnalyzeStatistics(List<Instrument> instruments) {
+    private List<InstrumentPerformance> getAnalyzeStatistics(List<InstrumentPerformance> instruments) {
         return instruments.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
     }
 
-    private Instrument getMarketIndex(final List<Instrument> instruments) {
+    private InstrumentPerformance getMarketIndex(final List<InstrumentPerformance> instruments) {
         return instruments
             .stream()
             .filter(row -> row.getTicker().equals(indexTicker))

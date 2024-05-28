@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.Command;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 @Getter
 @Builder
@@ -20,7 +21,5 @@ import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PublishSignal implements Command {
-    Boolean isBuy;
-    ScannerId scannerId;
-    InstrumentId instrumentId;
+    Signal signal;
 }

@@ -4,12 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.application.modules.telegrambot.command.Subscribe;
 import ru.ioque.investfund.application.modules.telegrambot.command.Unsubscribe;
@@ -99,9 +96,7 @@ public class TelegramBotTest extends BaseTest {
         prepareState();
 
         commandBus().execute(new PublishSignal(
-            true,
-            getScannerId(),
-            getInstrumentIdBy(TGKN)
+            signalJournal().findAllBy(getScannerId()).stream().findFirst().orElseThrow()
         ));
 
         assertEquals("""
