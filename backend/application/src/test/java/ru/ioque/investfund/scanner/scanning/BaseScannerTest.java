@@ -8,7 +8,6 @@ import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,54 +42,53 @@ public class BaseScannerTest extends BaseTest {
             .toList();
     }
 
-    protected TradingSnapshot getImoexSnapshot() {
-        return getSnapshotBy(IMOEX);
+    protected Instrument getImoex() {
+        return getInstrumentBy(IMOEX);
     }
 
-    protected TradingSnapshot getTgkbSnapshot() {
-        return getSnapshotBy(TGKB);
+    protected Instrument getTgkb() {
+        return getInstrumentBy(TGKB);
     }
 
-    protected TradingSnapshot getTgknSnapshot() {
-        return getSnapshotBy(TGKN);
+    protected Instrument getTgkn() {
+        return getInstrumentBy(TGKN);
     }
 
-    protected TradingSnapshot getTatnSnapshot() {
-        return getSnapshotBy(TATN);
+    protected Instrument getTatn() {
+        return getInstrumentBy(TATN);
     }
 
-    protected TradingSnapshot getBrf4Snapshot() {
-        return getSnapshotBy(BRF4);
+    protected Instrument getBrf4() {
+        return getInstrumentBy(BRF4);
     }
 
-    protected TradingSnapshot getRosnSnapshot() {
-        return getSnapshotBy(ROSN);
+    protected Instrument getRosn() {
+        return getInstrumentBy(ROSN);
     }
 
-    protected TradingSnapshot getLkohSnapshot() {
-        return getSnapshotBy(LKOH);
+    protected Instrument getLkoh() {
+        return getInstrumentBy(LKOH);
     }
 
-    protected TradingSnapshot getSibnSnapshot() {
-        return getSnapshotBy(SIBN);
+    protected Instrument getSibn() {
+        return getInstrumentBy(SIBN);
     }
 
-    protected TradingSnapshot getSberSnapshot() {
-        return getSnapshotBy(SBER);
+    protected Instrument getSber() {
+        return getInstrumentBy(SBER);
     }
 
-    protected TradingSnapshot getSberpSnapshot() {
-        return getSnapshotBy(SBERP);
+    protected Instrument getSberp() {
+        return getInstrumentBy(SBERP);
     }
 
-    protected TradingSnapshot getSnapshotBy(String ticker) {
-        Instrument instrument = datasourceRepository()
+    protected Instrument getInstrumentBy(String ticker) {
+        return datasourceRepository()
             .getAll()
             .stream()
             .map(Datasource::getInstruments)
             .flatMap(Collection::stream)
             .filter(row -> row.getTicker().equals(new Ticker(ticker))).findFirst()
             .orElseThrow();
-        return tradingDataRepository().findAllBy(List.of(instrument.getId())).get(0);
     }
 }

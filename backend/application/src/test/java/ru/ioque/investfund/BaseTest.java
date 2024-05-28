@@ -33,7 +33,6 @@ import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
 import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
 import ru.ioque.investfund.fakes.FakeTelegramMessageSender;
-import ru.ioque.investfund.fakes.FakeTradingSnapshotsRepository;
 import ru.ioque.investfund.fixture.DatasourceStorage;
 
 import java.time.DayOfWeek;
@@ -61,10 +60,6 @@ public class BaseTest {
 
     protected FakeScannerRepository scannerRepository() {
         return fakeDIContainer.getScannerRepository();
-    }
-
-    protected FakeTradingSnapshotsRepository tradingDataRepository() {
-        return fakeDIContainer.getTradingDataRepository();
     }
 
     protected final FakeLoggerProvider loggerProvider() {

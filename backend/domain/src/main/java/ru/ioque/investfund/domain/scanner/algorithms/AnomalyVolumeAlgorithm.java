@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -44,55 +45,55 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(final List<TradingSnapshot> tradingSnapshots, final LocalDateTime watermark) {
+    public List<Signal> findSignals(final List<Instrument> instruments, final LocalDateTime watermark) {
         final List<Signal> signals = new ArrayList<>();
-        final Optional<Boolean> indexIsRiseToday = getMarketIndex(tradingSnapshots).isRiseToday();
+        final Optional<Boolean> indexIsRiseToday = getMarketIndex(instruments).isRiseToday();
 
         if (indexIsRiseToday.isEmpty()) {
             return signals;
         }
 
-        for (final TradingSnapshot tradingSnapshot : getAnalyzeStatistics(tradingSnapshots)) {
-            final Optional<Double> medianValue = tradingSnapshot.getHistoryMedianValue(historyPeriod);
-            final Double currentValue = tradingSnapshot.getValue();
-            if (medianValue.isEmpty() || currentValue == null || tradingSnapshot.isRiseToday().isEmpty()) {
+        for (final Instrument instrument : getAnalyzeStatistics(instruments)) {
+            final Optional<Double> medianValue = instrument.getHistoryMedianValue(historyPeriod);
+            final Optional<Double> currentValue = instrument.getTradingState().map(TradingState::getTodayValue);
+            if (medianValue.isEmpty() || currentValue.isEmpty() || instrument.isRiseToday().isEmpty()) {
                 continue;
             }
-            final double currentValueToMedianValue = currentValue / medianValue.get();
+            final double currentValueToMedianValue = currentValue.get() / medianValue.get();
             DecimalFormat formatter = new DecimalFormat("#,###.##");
-            if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && tradingSnapshot
+            if (currentValueToMedianValue > scaleCoefficient && indexIsRiseToday.get() && instrument
                 .isRiseToday()
                 .get()) {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(tradingSnapshot.getInstrumentId())
+                        .instrumentId(instrument.getId())
                         .isBuy(true)
                         .summary(createSummary(
                             formatter,
                             medianValue.get(),
-                            currentValue,
+                            currentValue.get(),
                             currentValueToMedianValue,
                             true
                         ))
                         .watermark(watermark)
-                        .price(tradingSnapshot.getLastPrice())
+                        .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
-            if (currentValueToMedianValue > scaleCoefficient && !tradingSnapshot.isRiseToday().get()) {
+            if (currentValueToMedianValue > scaleCoefficient && !instrument.isRiseToday().get()) {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(tradingSnapshot.getInstrumentId())
+                        .instrumentId(instrument.getId())
                         .isBuy(false)
                         .watermark(watermark)
                         .summary(createSummary(
                             formatter,
                             medianValue.get(),
-                            currentValue,
+                            currentValue.get(),
                             currentValueToMedianValue,
                             indexIsRiseToday.get()
                         ))
-                        .price(tradingSnapshot.getLastPrice())
+                        .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
@@ -120,12 +121,12 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
         );
     }
 
-    private List<TradingSnapshot> getAnalyzeStatistics(List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
+    private List<Instrument> getAnalyzeStatistics(List<Instrument> instruments) {
+        return instruments.stream().filter(row -> !row.getTicker().equals(indexTicker)).toList();
     }
 
-    private TradingSnapshot getMarketIndex(final List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots
+    private Instrument getMarketIndex(final List<Instrument> instruments) {
+        return instruments
             .stream()
             .filter(row -> row.getTicker().equals(indexTicker))
             .findFirst()

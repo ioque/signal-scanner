@@ -5,17 +5,17 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.adapters.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ScannerRepository;
 import ru.ioque.investfund.application.adapters.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
-import ru.ioque.investfund.application.adapters.TradingSnapshotsRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 
@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishSignalHandler extends CommandHandler<PublishSignal> {
     ScannerRepository scannerRepository;
-    TradingSnapshotsRepository tradingSnapshotsRepository;
+    InstrumentRepository instrumentRepository;
     TelegramChatRepository telegramChatRepository;
     TelegramMessageSender telegramMessageSender;
 
@@ -32,13 +32,13 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
         Validator validator,
         LoggerProvider loggerProvider,
         ScannerRepository scannerRepository,
-        TradingSnapshotsRepository tradingSnapshotsRepository,
+        InstrumentRepository instrumentRepository,
         TelegramChatRepository telegramChatRepository,
         TelegramMessageSender telegramMessageSender
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.scannerRepository = scannerRepository;
-        this.tradingSnapshotsRepository = tradingSnapshotsRepository;
+        this.instrumentRepository = instrumentRepository;
         this.telegramChatRepository = telegramChatRepository;
         this.telegramMessageSender = telegramMessageSender;
     }
@@ -47,7 +47,7 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
     protected Result businessProcess(PublishSignal command) {
         final DecimalFormat decimalFormat = new DecimalFormat("#.##");
         final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
-        final TradingSnapshot tradingSnapshot = tradingSnapshotsRepository.getBy(command.getInstrumentId());
+        final Instrument instrument = instrumentRepository.getBy(command.getInstrumentId());
         final Signal signal = scanner.getSignals()
             .stream()
             .filter(row -> row.getInstrumentId().equals(command.getInstrumentId()))
@@ -65,11 +65,11 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
                         %s
                         Изменение цены относительно цены закрытия предыдущего дня %s
                         """,
-                    tradingSnapshot.getTicker(),
+                    instrument.getTicker(),
                     signal.isBuy() ? "покупке" : "продаже",
                     scanner.getProperties().getType().getName(),
                     signal.getSummary(),
-                    tradingSnapshot
+                    instrument
                         .getPrevClosePrice()
                         .map(closePrice ->
                             decimalFormat.format((signal.getPrice() / closePrice - 1) * 100) + "%")

@@ -7,21 +7,18 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
-import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Getter
 @ToString(callSuper = true)
@@ -83,15 +80,12 @@ public class SignalScanner extends Domain<ScannerId> {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public WorkScannerReport scanning(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
-        if (tradingSnapshots.isEmpty()) {
-            throw new DomainException("Нет статистических данных для выбранных инструментов.");
-        }
+    public synchronized WorkScannerReport scanning(List<Instrument> instruments, LocalDateTime watermark) {
         final ScannerAlgorithm algorithm = getScannerAlgorithm();
         lastExecutionDateTime = watermark;
         final WorkScannerReport report = new WorkScannerReport();
         report.addExistedSignals(signals);
-        final List<Signal> foundedSignals = deduplicationFoundedSignals(algorithm.findSignals(tradingSnapshots, watermark));
+        final List<Signal> foundedSignals = deduplicationFoundedSignals(algorithm.findSignals(instruments, watermark));
         report.addFoundedSignals(foundedSignals);
         final List<Signal> registeredSignals = registerFoundedSignals(foundedSignals);
         report.addRegisteredSignals(registeredSignals);

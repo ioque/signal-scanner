@@ -36,10 +36,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0,0, 0);
-        assertFalse(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getSibnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getLkohSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -58,10 +58,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1,1, 0);
-        assertTrue(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getSibnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getLkohSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -81,10 +81,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1,1, 0);
-        assertTrue(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getSibnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getLkohSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -104,10 +104,10 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 1,1, 0);
-        assertTrue(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getSibnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getLkohSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getLkoh().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -126,8 +126,8 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(),  0,0, 0);
-        assertTrue(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     @Test
@@ -146,9 +146,9 @@ public class SectoralRetardAlgoTest extends BaseScannerTest {
         runWorkPipeline(datasourceId);
 
         assertSignals(getSignals(), 0,0, 0);
-        assertTrue(getSibnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertTrue(getRosnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
-        assertFalse(getTatnSnapshot().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getSibn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertTrue(getRosn().isRiseInLastTwoDay(historyScale, intradayScale));
+        assertFalse(getTatn().isRiseInLastTwoDay(historyScale, intradayScale));
     }
 
     private void initScanner(DatasourceId datasourceId, String... tickers) {

@@ -95,7 +95,7 @@ public class ProduceSignalTest extends BaseScannerTest {
         assertTrue(signalFoundEvent.isPresent());
         assertNotNull(signalFoundEvent.get());
         assertEquals(getScannerId().getUuid(), signalFoundEvent.get().getScannerId());
-        assertEquals(getTgknSnapshot().getInstrumentId().getUuid(), signalFoundEvent.get().getInstrumentId());
+        assertEquals(getTgkn().getId().getUuid(), signalFoundEvent.get().getInstrumentId());
         assertTrue(signalFoundEvent.get().getIsBuy());
         assertEquals(dateTimeProvider().nowDateTime(), signalFoundEvent.get().getCreatedAt());
     }

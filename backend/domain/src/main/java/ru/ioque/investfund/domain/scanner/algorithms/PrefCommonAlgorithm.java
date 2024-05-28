@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -29,16 +30,16 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<Instrument> instruments, LocalDateTime watermark) {
         List<Signal> signals = new ArrayList<>();
-        findAllPrefAndSimplePairs(tradingSnapshots).forEach(pair -> {
+        findAllPrefAndSimplePairs(instruments).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
             final double historyDelta = pair.getHistoryDelta();
             final double multiplier = currentDelta / historyDelta;
             DecimalFormat formatter = new DecimalFormat("#,###.##");
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
-                    .instrumentId(pair.getPref().getInstrumentId())
+                    .instrumentId(pair.getPref().getId())
                     .isBuy(true)
                     .summary(
                         String.format(
@@ -50,7 +51,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                         )
                     )
                     .watermark(watermark)
-                    .price(pair.getPref().getLastPrice())
+                    .price(pair.getPref().getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
                     .build()
                 );
             }
@@ -58,23 +59,23 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
         return signals;
     }
 
-    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<TradingSnapshot> tradingSnapshots) {
-        return tradingSnapshots
+    private List<PrefSimplePair> findAllPrefAndSimplePairs(List<Instrument> instruments) {
+        return instruments
             .stream()
-            .filter(TradingSnapshot::isPref)
-            .map(pref -> new PrefSimplePair(pref, findSimplePair(tradingSnapshots, pref)))
+            .filter(Instrument::isPref)
+            .map(pref -> new PrefSimplePair(pref, findSimplePair(instruments, pref)))
             .toList();
     }
 
-    private TradingSnapshot findSimplePair(
-        List<TradingSnapshot> tradingSnapshots,
-        TradingSnapshot tradingSnapshot
+    private Instrument findSimplePair(
+        List<Instrument> instruments,
+        Instrument instrument
     ) {
-        return tradingSnapshots
+        return instruments
             .stream()
-            .filter(tradingSnapshot::isSimplePair)
+            .filter(instrument::isSimplePair)
             .findFirst()
             .orElseThrow(() -> new DomainException(
-                "Для привилегированной акции " + tradingSnapshot.getTicker() + " не найдена обычная акция."));
+                "Для привилегированной акции " + instrument.getTicker() + " не найдена обычная акция."));
     }
 }

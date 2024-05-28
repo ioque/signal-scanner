@@ -6,6 +6,7 @@ import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -21,6 +22,11 @@ public class FakeInstrumentRepository implements InstrumentRepository {
                     String.format("Инструмент[id=%s] не существует.", instrumentId)
                 )
             );
+    }
+
+    @Override
+    public List<Instrument> findAllBy(List<InstrumentId> instrumentIds) {
+        return instrumentIds.stream().map(this::getBy).toList();
     }
 
     @Override

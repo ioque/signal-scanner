@@ -5,9 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.TradingSnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,26 +29,26 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<TradingSnapshot> tradingSnapshots, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<Instrument> instruments, LocalDateTime watermark) {
         final List<Signal> signals = new ArrayList<>();
-        final List<TradingSnapshot> riseInstruments = getRiseInstruments(tradingSnapshots);
-        final List<TradingSnapshot> otherInstruments = getSectoralRetards(tradingSnapshots, riseInstruments);
-        if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / tradingSnapshots.size() * 100) >= 70) {
+        final List<Instrument> riseInstruments = getRiseInstruments(instruments);
+        final List<Instrument> otherInstruments = getSectoralRetards(instruments, riseInstruments);
+        if (!otherInstruments.isEmpty() && Math.round((double) riseInstruments.size() / instruments.size() * 100) >= 70) {
             otherInstruments.forEach(snapshot -> {
                 signals.add(
                     Signal.builder()
-                        .instrumentId(snapshot.getInstrumentId())
+                        .instrumentId(snapshot.getId())
                         .isBuy(true)
                         .summary(String.format(
                             """
                             Растущие инструменты сектора: %s
                             Падающие инструменты сектора: %s
                             """,
-                            riseInstruments.stream().map(TradingSnapshot::getTicker).toList(),
-                            otherInstruments.stream().map(TradingSnapshot::getTicker).toList()
+                            riseInstruments.stream().map(Instrument::getTicker).toList(),
+                            otherInstruments.stream().map(Instrument::getTicker).toList()
                         ))
                         .watermark(watermark)
-                        .price(snapshot.getLastPrice())
+                        .price(snapshot.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             });
@@ -55,9 +56,9 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
         return signals;
     }
 
-    private List<TradingSnapshot> getSectoralRetards(
-        List<TradingSnapshot> tradingSnapshots,
-        List<TradingSnapshot> riseInstruments
+    private List<Instrument> getSectoralRetards(
+        List<Instrument> tradingSnapshots,
+        List<Instrument> riseInstruments
     ) {
         return tradingSnapshots
             .stream()
@@ -65,7 +66,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             .toList();
     }
 
-    private List<TradingSnapshot> getRiseInstruments(List<TradingSnapshot> tradingSnapshots) {
+    private List<Instrument> getRiseInstruments(List<Instrument> tradingSnapshots) {
         return tradingSnapshots
             .stream()
             .filter(row -> row.isRiseInLastTwoDay(historyScale, intradayScale))
