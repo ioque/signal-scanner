@@ -6,6 +6,7 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
+import ru.ioque.investfund.application.modules.scanner.processor.SearchContextManager;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
@@ -93,6 +94,10 @@ public class BaseTest {
         return fakeDIContainer.getStreamingScannerEngine();
     }
 
+    protected final SearchContextManager searchContextManager() {
+        return fakeDIContainer.getSearchContextManager();
+    }
+
     protected final FakeSignalJournal signalJournal() {
         return fakeDIContainer.getSignalJournal();
     }
@@ -177,7 +182,7 @@ public class BaseTest {
     protected void runWorkPipeline(DatasourceId datasourceId) {
         commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
         commandBus().execute(new PublishIntradayData(datasourceId));
-        streamingScannerEngine().init(scannerRepository().findAllBy(getDatasourceId()));
+        searchContextManager().initSearchContext(scannerRepository().findAllBy(getDatasourceId()));
         statisticStream().forEach(streamingScannerEngine()::process);
     }
 

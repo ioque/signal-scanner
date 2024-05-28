@@ -82,7 +82,7 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected InstrumentPerformance getInstrumentPerformanceBy(String ticker) {
-        return streamingScannerEngine()
+        return searchContextManager()
             .getSearchContext()
             .getInstrumentBy(new Ticker(ticker))
             .orElseThrow();

@@ -22,7 +22,7 @@ import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerComm
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
-import ru.ioque.investfund.application.modules.scanner.processor.SearchContextBuilder;
+import ru.ioque.investfund.application.modules.scanner.processor.SearchContextManager;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
@@ -38,7 +38,7 @@ public class FakeDIContainer {
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
-    SearchContextBuilder searchContextBuilder;
+    SearchContextManager searchContextManager;
 
     FakeCommandJournal commandJournal;
     FakeSignalJournal signalJournal;
@@ -98,7 +98,7 @@ public class FakeDIContainer {
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
 
-        searchContextBuilder = new SearchContextBuilder(instrumentRepository, aggregatedHistoryJournal);
+        searchContextManager = new SearchContextManager(instrumentRepository, aggregatedHistoryJournal);
 
         publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
             dateTimeProvider,
@@ -255,7 +255,7 @@ public class FakeDIContainer {
             )
         );
         streamingScannerEngine = new StreamingScannerEngine(
-            searchContextBuilder,
+            searchContextManager,
             signalJournal,
             commandJournal,
             dateTimeProvider
