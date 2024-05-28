@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -55,7 +56,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
 
         for (final Instrument instrument : getAnalyzeStatistics(instruments)) {
             final Optional<Double> medianValue = instrument.getHistoryMedianValue(historyPeriod);
-            final Optional<Double> currentValue = instrument.getTradingState().map(TradingState::getTodayValue);
+            final Optional<Double> currentValue = instrument.getPerformance().map(InstrumentPerformance::getTodayValue);
             if (medianValue.isEmpty() || currentValue.isEmpty() || instrument.isRiseToday().isEmpty()) {
                 continue;
             }
@@ -76,7 +77,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                             true
                         ))
                         .watermark(watermark)
-                        .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }
@@ -93,7 +94,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                             currentValueToMedianValue,
                             indexIsRiseToday.get()
                         ))
-                        .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }

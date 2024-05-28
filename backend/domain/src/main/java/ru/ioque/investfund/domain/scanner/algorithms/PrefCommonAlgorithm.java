@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -51,7 +52,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                         )
                     )
                     .watermark(watermark)
-                    .price(pair.getPref().getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
+                    .price(pair.getPref().getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
                     .build()
                 );
             }

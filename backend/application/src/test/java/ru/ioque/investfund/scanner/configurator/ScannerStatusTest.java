@@ -16,20 +16,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ScannerStatusTest extends BaseConfiguratorTest {
     @Test
     @DisplayName("""
-        T1. Деакативация сканера сигнала и повторная активация.
+        T1. Деактивация сканера сигнала и повторная активация.
         """)
     void testCase1() {
         prepareTestCase();
 
         commandBus().execute(new DeactivateScanner(getFirstScannerId()));
-        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        runWorkPipeline(getDatasourceId());
 
         assertEquals(1, scannerRepository().scanners.size());
         assertEquals(0, getScanner(getFirstScannerId()).getSignals().size());
         assertEquals(ScannerStatus.INACTIVE, getScanner(getFirstScannerId()).getStatus());
 
         commandBus().execute(new ActivateScanner(getFirstScannerId()));
-        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
+        runWorkPipeline(getDatasourceId());
 
         assertEquals(2, getScanner(getFirstScannerId()).getSignals().size());
         assertEquals(ScannerStatus.ACTIVE, getScanner(getFirstScannerId()).getStatus());
@@ -65,7 +65,6 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
             buildTgknBuyDeal(4L, "11:01:00", 100D, 1000D, 1),
             buildTgknBuyDeal(5L, "11:45:00", 102D, 5000D, 1)
         );
-        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
         commandBus()
             .execute(
                 buildCreateAnomalyVolumeScannerWith()
@@ -76,7 +75,6 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
                         .build())
                     .build()
             );
-        commandBus().execute(new PublishIntradayData(getDatasourceId()));
         assertEquals(ScannerStatus.ACTIVE, getScanner(getFirstScannerId()).getStatus());
     }
 }

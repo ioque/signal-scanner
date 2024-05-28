@@ -3,6 +3,7 @@ package ru.ioque.investfund.domain.scanner.value;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 
 import java.time.chrono.ChronoLocalDate;
@@ -15,11 +16,11 @@ public class PrefSimplePair {
     Instrument simple;
 
     public Double getCurrentDelta() {
-        if (simple.getTradingState().isEmpty() || pref.getTradingState().isEmpty()) {
+        if (simple.getPerformance().isEmpty() || pref.getPerformance().isEmpty()) {
             return 0D;
         }
-        final TradingState simpleState = simple.getTradingState().get();
-        final TradingState prefState = pref.getTradingState().get();
+        final InstrumentPerformance simpleState = simple.getPerformance().get();
+        final InstrumentPerformance prefState = pref.getPerformance().get();
         if (simpleState.getTodayLastPrice() == null || prefState.getTodayLastPrice() == null) {
             return 0D;
         }

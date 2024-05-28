@@ -11,7 +11,7 @@
                 pattern="%date %highlight{%-5level }%t %style{%c{1.}}{bright,yellow}: %m%n%throwable"/>
         </Console>
 
-        <Kafka name="KafkaTechAppender" topic="signal-scanner-technical-log" ignoreExceptions="false">
+        <Kafka name="KafkaTechAppender" topic="technical-log-topic" ignoreExceptions="false">
             <JsonTemplateLayout eventTemplateUri="classpath:JsonTemplateLayout.json" />
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>
@@ -23,7 +23,7 @@
             </Failovers>
         </Failover>
 
-        <Kafka name="KafkaBusinessAppender" topic="signal-scanner-business-log" ignoreExceptions="false">
+        <Kafka name="KafkaBusinessAppender" topic="business-log-topic" ignoreExceptions="false">
             <JsonTemplateLayout eventTemplateUri="classpath:JsonTemplateLayout.json" />
             <Property name="bootstrap.servers">${KAFKA_URL}</Property>
             <Property name="max.block.ms">1500</Property>

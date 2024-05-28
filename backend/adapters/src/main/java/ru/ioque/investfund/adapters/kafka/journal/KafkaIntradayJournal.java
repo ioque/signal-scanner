@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_DATA_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_DATA_TOPIC;
 
 @Component
 @Profile("!tests")

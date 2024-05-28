@@ -20,9 +20,9 @@ import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPosition
 import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
-import ru.ioque.investfund.application.modules.scanner.handler.ProduceSignalCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
+import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.application.modules.telegrambot.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.UnsubscribeHandler;
@@ -37,15 +37,20 @@ public class FakeDIContainer {
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
-    FakeEventJournal eventPublisher;
+
+    FakeCommandJournal commandJournal;
+    FakeSignalJournal signalJournal;
+    FakeIntradayJournal intradayJournal;
+
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeInstrumentRepository instrumentRepository;
     FakeIntradayValueRepository intradayValueRepository;
     FakeTelegramChatRepository telegramChatRepository;
     FakeEmulatedPositionRepository emulatedPositionRepository;
+
     FakeTelegramMessageSender telegramMessageSender;
-    FakeIntradayJournal intradayJournalPublisher;
+
     DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
     EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
     SynchronizeDatasourceHandler integrateInstrumentsProcessor;
@@ -54,7 +59,6 @@ public class FakeDIContainer {
     UnregisterDatasourceHandler unregisterDatasourceProcessor;
     UpdateDatasourceHandler updateDatasourceProcessor;
     CreateScannerCommandHandler createScannerProcessor;
-    ProduceSignalCommandHandler produceSignalProcessor;
     UpdateScannerCommandHandler updateScannerProcessor;
     CloseEmulatedPositionHandler closeEmulatedPositionHandler;
     EvaluateEmulatedPositionHandler evaluateEmulatedPositionHandler;
@@ -66,14 +70,17 @@ public class FakeDIContainer {
     DeactivateScannerHandler deactivateScannerHandler;
     ActivateScannerHandler activateScannerHandler;
     UpdateAggregateHistoryHandler updateAggregateHistoryHandler;
+
     CommandBus commandBus;
     Validator validator;
+
+    StreamingScannerEngine streamingScannerEngine;
 
     public FakeDIContainer() {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
-        eventPublisher = new FakeEventJournal();
+        commandJournal = new FakeCommandJournal();
         dateTimeProvider = new FakeDateTimeProvider();
         datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
@@ -85,8 +92,8 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionRepository();
         telegramMessageSender = new FakeTelegramMessageSender();
-        intradayJournalPublisher = new FakeIntradayJournal();
-
+        intradayJournal = new FakeIntradayJournal();
+        signalJournal = new FakeSignalJournal();
         updateAggregateHistoryHandler = new UpdateAggregateHistoryHandler(
             dateTimeProvider,
             validator,
@@ -138,10 +145,8 @@ public class FakeDIContainer {
             validator,
             loggerProvider,
             exchangeProvider,
-            intradayJournalPublisher,
-            datasourceRepository,
-            intradayValueRepository,
-            eventPublisher
+            intradayJournal,
+            datasourceRepository
         );
         registerDatasourceProcessor = new RegisterDatasourceHandler(
             dateTimeProvider,
@@ -174,14 +179,6 @@ public class FakeDIContainer {
             loggerProvider,
             scannerRepository,
             datasourceRepository
-        );
-        produceSignalProcessor = new ProduceSignalCommandHandler(
-            dateTimeProvider,
-            validator,
-            loggerProvider,
-            scannerRepository,
-            instrumentRepository,
-            eventPublisher
         );
         closeEmulatedPositionHandler = new CloseEmulatedPositionHandler(
             dateTimeProvider,
@@ -236,7 +233,6 @@ public class FakeDIContainer {
                 updateDatasourceProcessor,
                 unregisterDatasourceProcessor,
                 createScannerProcessor,
-                produceSignalProcessor,
                 updateScannerProcessor,
                 closeEmulatedPositionHandler,
                 evaluateEmulatedPositionHandler,
@@ -249,6 +245,13 @@ public class FakeDIContainer {
                 activateScannerHandler,
                 updateAggregateHistoryHandler
             )
+        );
+        streamingScannerEngine = new StreamingScannerEngine(
+            signalJournal,
+            commandJournal,
+            scannerRepository,
+            instrumentRepository,
+            dateTimeProvider
         );
     }
 

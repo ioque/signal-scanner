@@ -112,7 +112,7 @@ public class InstrumentEntity extends UuidIdentity {
             );
         instrumentEntity
             .setTradingState(
-                domain.getTradingState()
+                domain.getPerformance()
                     .map(tradingState -> TradingStateEntity.of(instrumentEntity, tradingState))
                     .orElse(null)
             );

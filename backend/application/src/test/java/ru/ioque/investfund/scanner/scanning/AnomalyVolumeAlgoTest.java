@@ -8,6 +8,7 @@ import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDat
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -379,9 +380,9 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
         Double prevPrevClosePrice,
         Boolean isRiseToday
     ) {
-        assertEquals(openPrice, tradingSnapshot.getTradingState().map(TradingState::getTodayFirstPrice).orElse(null));
-        assertEquals(lastPrice, tradingSnapshot.getTradingState().map(TradingState::getTodayLastPrice).orElse(null));
-        assertEquals(todayValue, tradingSnapshot.getTradingState().map(TradingState::getTodayValue).orElse(null));
+        assertEquals(openPrice, tradingSnapshot.getPerformance().map(InstrumentPerformance::getTodayFirstPrice).orElse(null));
+        assertEquals(lastPrice, tradingSnapshot.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(null));
+        assertEquals(todayValue, tradingSnapshot.getPerformance().map(InstrumentPerformance::getTodayValue).orElse(null));
         assertEquals(historyMedianValue, tradingSnapshot.getHistoryMedianValue(HISTORY_PERIOD).orElse(null));
         assertEquals(prevClosePrice, tradingSnapshot.getPrevClosePrice().orElse(null));
         assertEquals(prevPrevClosePrice, tradingSnapshot.getPrevPrevClosePrice().orElse(null));

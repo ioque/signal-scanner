@@ -119,6 +119,7 @@ public class SignalScanner extends Domain<ScannerId> {
     }
 
     private boolean registerNewSignal(Signal newSignal) {
+        newSignal.setScannerId(this.getId());
         final Optional<Signal> signalSameByTicker = signals
             .stream()
             .filter(signal -> signal.sameByTicker(newSignal))

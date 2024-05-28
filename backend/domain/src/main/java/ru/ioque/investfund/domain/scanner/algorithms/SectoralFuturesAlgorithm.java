@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
@@ -49,7 +50,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                             Тренд инструмента растущий;
                             Тренд фьючерса растущий;""")
                         .watermark(watermark)
-                        .price(instrument.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
+                        .price(instrument.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             }

@@ -2,17 +2,12 @@ package ru.ioque.investfund.scanner.configurator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.ioque.investfund.application.integration.event.SignalRegistered;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
-import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,19 +81,17 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
                         .build())
                     .build()
             );
-        commandBus().execute(new PublishIntradayData(getDatasourceId()));
-        commandBus().execute(new ProduceSignal(getDatasourceId(), dateTimeProvider().nowDateTime()));
-        eventPublisher()
-            .getEvents()
+
+        runWorkPipeline(getDatasourceId());
+
+        signalJournal()
             .stream()
-            .filter(event -> event.getClass().equals(SignalRegistered.class))
-            .map(SignalRegistered.class::cast)
             .forEach(event -> commandBus()
                 .execute(
                     OpenEmulatedPosition.builder()
                         .price(event.getPrice())
-                        .scannerId(ScannerId.from(event.getScannerId()))
-                        .instrumentId(InstrumentId.from(event.getInstrumentId()))
+                        .scannerId(event.getScannerId())
+                        .instrumentId(event.getInstrumentId())
                         .build()
                 )
             );

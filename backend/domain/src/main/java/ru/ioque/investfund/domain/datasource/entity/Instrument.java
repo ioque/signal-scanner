@@ -8,11 +8,9 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.IntradayStatistic;
-import ru.ioque.investfund.domain.datasource.value.TradingState;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -28,7 +26,7 @@ import java.util.TreeSet;
 public class Instrument extends Domain<InstrumentId> {
     InstrumentDetail detail;
     Boolean updatable;
-    TradingState tradingState;
+    InstrumentPerformance performance;
     final TreeSet<AggregatedHistory> aggregateHistories;
 
     @Builder
@@ -36,13 +34,13 @@ public class Instrument extends Domain<InstrumentId> {
         InstrumentId id,
         Boolean updatable,
         InstrumentDetail detail,
-        TradingState tradingState,
+        InstrumentPerformance performance,
         TreeSet<AggregatedHistory> aggregateHistories
     ) {
         super(id);
         this.updatable = updatable;
         this.detail = detail;
-        this.tradingState = tradingState;
+        this.performance = performance;
         this.aggregateHistories = aggregateHistories == null ? new TreeSet<>() : aggregateHistories;
     }
 
@@ -58,24 +56,8 @@ public class Instrument extends Domain<InstrumentId> {
         this.detail = details;
     }
 
-    public void updatePerformance(IntradayStatistic intradayStatistic) {
-
-    }
-
-    public boolean updateTradingState(TreeSet<IntradayData> intradayData) {
-        if (intradayData.isEmpty()) {
-            return false;
-        }
-        if (tradingState == null) {
-            tradingState = TradingState.from(intradayData);
-            return true;
-        }
-        IntradayData lastIntradayData = intradayData.last();
-        if (lastIntradayData.getNumber() > tradingState.getLastIntradayNumber()) {
-            tradingState = TradingState.of(tradingState, intradayData);
-            return true;
-        }
-        return false;
+    public void updatePerformance(InstrumentPerformance performance) {
+        this.performance = performance;
     }
 
     public void updateAggregateHistory(TreeSet<AggregatedHistory> aggregateHistories) {
@@ -95,8 +77,8 @@ public class Instrument extends Domain<InstrumentId> {
         );
     }
 
-    public Optional<TradingState> getTradingState() {
-        return Optional.ofNullable(tradingState);
+    public Optional<InstrumentPerformance> getPerformance() {
+        return Optional.ofNullable(performance);
     }
 
     public LocalDate historyRightBound(LocalDate now) {
@@ -108,10 +90,6 @@ public class Instrument extends Domain<InstrumentId> {
             return now.minusMonths(6);
         }
         return getLastHistoryDate().plusDays(1);
-    }
-
-    public Long getLastTradingNumber() {
-        return getTradingState().map(TradingState::getLastIntradayNumber).orElse(0L);
     }
 
     public void enableUpdate() {
@@ -146,22 +124,22 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public Optional<Boolean> isRiseToday() {
-        if (tradingState == null ||
-            tradingState.getTodayLastPrice() == null ||
-            tradingState.getTodayFirstPrice() == null) {
+        if (performance == null ||
+            performance.getTodayLastPrice() == null ||
+            performance.getTodayFirstPrice() == null) {
             return Optional.empty();
         }
         return getPrevClosePrice()
-            .map(prevClosePrice -> tradingState.getTodayLastPrice() > prevClosePrice &&
-                tradingState.getTodayLastPrice() > tradingState.getTodayFirstPrice());
+            .map(prevClosePrice -> performance.getTodayLastPrice() > prevClosePrice &&
+                performance.getTodayLastPrice() > performance.getTodayFirstPrice());
     }
 
     public boolean isRiseOvernight(double scale) {
-        if (tradingState == null || tradingState.getTodayLastPrice() == null) {
+        if (performance == null || performance.getTodayLastPrice() == null) {
             return false;
         }
         return getPrevClosePrice()
-            .filter(prevClosePrice -> ((tradingState.getTodayLastPrice() / prevClosePrice) - 1) > scale)
+            .filter(prevClosePrice -> ((performance.getTodayLastPrice() / prevClosePrice) - 1) > scale)
             .isPresent();
     }
 
@@ -173,12 +151,12 @@ public class Instrument extends Domain<InstrumentId> {
     }
 
     public boolean isRiseForToday(double scale) {
-        if (tradingState == null ||
-            tradingState.getTodayLastPrice() == null ||
-            tradingState.getTodayFirstPrice() == null) {
+        if (performance == null ||
+            performance.getTodayLastPrice() == null ||
+            performance.getTodayFirstPrice() == null) {
             return false;
         }
-        return ((tradingState.getTodayLastPrice()  / tradingState.getTodayFirstPrice() ) - 1) > scale;
+        return ((performance.getTodayLastPrice()  / performance.getTodayFirstPrice() ) - 1) > scale;
     }
 
     public boolean isRiseInLastTwoDay(double historyScale, double intradayScale) {

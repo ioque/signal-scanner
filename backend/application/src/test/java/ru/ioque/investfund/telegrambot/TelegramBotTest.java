@@ -156,7 +156,6 @@ public class TelegramBotTest extends BaseTest {
         );
         commandBus().execute(new SynchronizeDatasource(getDatasourceId()));
         commandBus().execute(new EnableUpdateInstruments(getDatasourceId(), getTickers(getDatasourceId())));
-        commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
         commandBus().execute(
             CreateScanner.builder()
                 .workPeriodInMinutes(1)
@@ -172,8 +171,7 @@ public class TelegramBotTest extends BaseTest {
                 )
                 .build()
         );
-        commandBus().execute(new PublishIntradayData(getDatasourceId()));
-        commandBus().execute(new ProduceSignal(getDatasourceId(), getToday()));
+        runWorkPipeline(getDatasourceId());
         commandBus().execute(new Subscribe(1L, "kukusuku"));
         clearLogs();
         telegramMessageSender().clear();

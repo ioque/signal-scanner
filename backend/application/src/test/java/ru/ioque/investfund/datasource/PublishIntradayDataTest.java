@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
-import ru.ioque.investfund.application.integration.event.TradingDataIntegrated;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
@@ -224,9 +223,6 @@ public class PublishIntradayDataTest extends BaseTest {
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishIntradayData(datasourceId));
-        TradingDataIntegrated event = findTradingDataIntegrated().orElseThrow();
-        assertEquals(datasourceId.getUuid(), event.getDatasourceId());
-        assertEquals(dateTimeProvider().nowDateTime(), event.getCreatedAt());
     }
 
     @Test
@@ -264,13 +260,5 @@ public class PublishIntradayDataTest extends BaseTest {
         commandBus().execute(new PublishIntradayData(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         assertEquals(1, getIntradayValuesBy(AFKS).size());
-    }
-
-    private Optional<TradingDataIntegrated> findTradingDataIntegrated() {
-        return eventPublisher()
-            .getEvents()
-            .stream().filter(row -> row.getClass().equals(TradingDataIntegrated.class))
-            .findFirst()
-            .map(TradingDataIntegrated.class::cast);
     }
 }

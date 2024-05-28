@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.TradingState;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -48,7 +49,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                             otherInstruments.stream().map(Instrument::getTicker).toList()
                         ))
                         .watermark(watermark)
-                        .price(snapshot.getTradingState().map(TradingState::getTodayLastPrice).orElse(0D))
+                        .price(snapshot.getPerformance().map(InstrumentPerformance::getTodayLastPrice).orElse(0D))
                         .build()
                 );
             });

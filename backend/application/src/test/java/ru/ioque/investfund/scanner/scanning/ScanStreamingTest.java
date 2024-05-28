@@ -1,10 +1,6 @@
 package ru.ioque.investfund.scanner.scanning;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +10,8 @@ import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDat
 import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.IntradayStatistic;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,24 +45,11 @@ public class ScanStreamingTest extends BaseScannerTest {
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(new EnableUpdateInstruments(datasourceId, getTickers(datasourceId)));
-        commandBus().execute(new UpdateAggregateHistory(datasourceId));
-        commandBus().execute(new PublishIntradayData(datasourceId));
         initDefaultScanner(datasourceId);
 
-        final Map<Ticker, List<IntradayData>> tickerToIntraday = intradayJournalPublisher()
-            .stream()
-            .collect(Collectors.groupingBy(IntradayData::getTicker));
-        final List<IntradayStatistic> statistics = new ArrayList<>();
-        tickerToIntraday.forEach((ticker, intradayDataList) -> {
-            IntradayStatistic intradayStatistic = IntradayStatistic.empty();
-            for (var intradayData : intradayDataList) {
-                statistics.add(intradayStatistic.add(ticker.getValue(), intradayData));
-            }
-        });
-        assertEquals(2, statistics.stream().filter(row -> row.getTicker().equals(Ticker.from("IMOEX"))).count());
-        assertEquals(5, statistics.stream().filter(row -> row.getTicker().equals(Ticker.from("TGKN"))).count());
+        runWorkPipeline(datasourceId);
 
-        SignalScanner scanner = scannerRepository().getScanners().values().stream().findFirst().orElseThrow();
+        assertEquals(1, signalJournal().stream().count());
     }
 
     private void initDefaultScanner(DatasourceId datasourceId) {

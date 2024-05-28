@@ -6,11 +6,12 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregateHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.scanner.command.ProduceSignal;
+import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetail;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
 import ru.ioque.investfund.domain.datasource.value.details.IndexDetail;
@@ -27,10 +28,10 @@ import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
-import ru.ioque.investfund.fakes.FakeEventJournal;
 import ru.ioque.investfund.fakes.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
+import ru.ioque.investfund.fakes.FakeSignalJournal;
 import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
 import ru.ioque.investfund.fakes.FakeTelegramMessageSender;
 import ru.ioque.investfund.fixture.DatasourceStorage;
@@ -42,6 +43,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -70,10 +74,6 @@ public class BaseTest {
         return fakeDIContainer.getCommandBus();
     }
 
-    protected final FakeEventJournal eventPublisher() {
-        return fakeDIContainer.getEventPublisher();
-    }
-
     protected final FakeTelegramChatRepository telegramChatRepository() {
         return fakeDIContainer.getTelegramChatRepository();
     }
@@ -86,8 +86,16 @@ public class BaseTest {
         return fakeDIContainer.getEmulatedPositionRepository();
     }
 
-    protected final FakeIntradayJournal intradayJournalPublisher() {
-        return fakeDIContainer.getIntradayJournalPublisher();
+    protected final FakeIntradayJournal intradayJournal() {
+        return fakeDIContainer.getIntradayJournal();
+    }
+
+    protected final StreamingScannerEngine streamingScannerEngine() {
+        return fakeDIContainer.getStreamingScannerEngine();
+    }
+
+    protected final FakeSignalJournal signalJournal() {
+        return fakeDIContainer.getSignalJournal();
     }
 
     protected LocalDate nowMinus1Days() {
@@ -143,7 +151,10 @@ public class BaseTest {
     }
 
     protected List<IntradayData> getIntradayValuesBy(String ticker) {
-        return fakeDIContainer.getIntradayValueRepository().getAllBy(Ticker.from(ticker)).toList();
+        return fakeDIContainer.getIntradayJournal()
+            .stream()
+            .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
+            .toList();
     }
 
     protected List<AggregatedHistory> getHistoryValuesBy(String ticker) {
@@ -170,7 +181,23 @@ public class BaseTest {
     protected void runWorkPipeline(DatasourceId datasourceId) {
         commandBus().execute(new UpdateAggregateHistory(getDatasourceId()));
         commandBus().execute(new PublishIntradayData(datasourceId));
-        commandBus().execute(new ProduceSignal(datasourceId, getToday()));
+        streamingScannerEngine().init(datasourceId);
+        statisticStream().forEach(streamingScannerEngine()::process);
+    }
+
+    private List<InstrumentPerformance> statisticStream() {
+        final Map<Ticker, List<IntradayData>> tickerToIntraday = intradayJournal()
+            .stream()
+            .collect(Collectors.groupingBy(IntradayData::getTicker));
+        final List<InstrumentPerformance> statistics = new ArrayList<>();
+        tickerToIntraday.forEach((ticker, intradayDataList) -> {
+            InstrumentPerformance instrumentPerformance = InstrumentPerformance.empty();
+            for (var intradayData : intradayDataList) {
+                instrumentPerformance = instrumentPerformance.add(ticker.getValue(), intradayData);
+                statistics.add(instrumentPerformance);
+            }
+        });
+        return statistics.stream().sorted().toList();
     }
 
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {

@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.kafka.streaming;
+package ru.ioque.investfund.adapters.kafka.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ru.ioque.investfund.domain.datasource.value.IntradayStatistic;
+import ru.ioque.investfund.domain.datasource.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_STATISTIC_TOPIC;
-import static ru.ioque.investfund.adapters.kafka.streaming.TopicConfiguration.INTRADAY_DATA_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_STATISTIC_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_DATA_TOPIC;
 
 @Slf4j
 @Configuration
@@ -25,7 +25,7 @@ public class TopologyConfiguration {
     @Autowired
     private Serde<IntradayData> intradayDataSerde;
     @Autowired
-    private Serde<IntradayStatistic> intradayStatistic;
+    private Serde<InstrumentPerformance> intradayStatistic;
 
     @Bean
     public Topology createTopology(StreamsBuilder builder) {
@@ -38,7 +38,7 @@ public class TopologyConfiguration {
         final var statistics = intraday
                 .groupByKey()
                 .aggregate(
-                        IntradayStatistic::empty,
+                        InstrumentPerformance::empty,
                         (k, v, a) -> a.add(k, v),
                         Materialized.with(
                                 tickerSerde,
