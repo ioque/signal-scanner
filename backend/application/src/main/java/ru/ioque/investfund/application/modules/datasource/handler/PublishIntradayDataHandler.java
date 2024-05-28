@@ -44,7 +44,7 @@ public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayDa
     @Override
     protected Result businessProcess(PublishIntradayData command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
-        for (Instrument instrument : datasource.getUpdatableInstruments()) {
+        for (final Instrument instrument : datasource.getUpdatableInstruments()) {
             final Long from = numbers.getOrDefault(instrument.getTicker(), 0L);
             datasourceProvider
                 .fetchIntradayValues(datasource, instrument, from)

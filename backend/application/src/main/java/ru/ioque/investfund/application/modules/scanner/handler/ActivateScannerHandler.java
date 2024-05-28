@@ -29,7 +29,7 @@ public class ActivateScannerHandler extends CommandHandler<ActivateScanner> {
 
     @Override
     protected Result businessProcess(ActivateScanner command) {
-        SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
+        final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         scanner.activate();
         scannerRepository.save(scanner);
         return Result.success();

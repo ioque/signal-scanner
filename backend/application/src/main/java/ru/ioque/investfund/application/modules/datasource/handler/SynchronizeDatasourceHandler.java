@@ -49,7 +49,7 @@ public class SynchronizeDatasourceHandler extends CommandHandler<SynchronizeData
             .stream()
             .distinct()
             .toList();
-        DomainValidator<InstrumentDetail> domainValidator = new DomainValidator<>(this.validator);
+        final DomainValidator<InstrumentDetail> domainValidator = new DomainValidator<>(this.validator);
         domainValidator.validate(details);
         details
             .stream()

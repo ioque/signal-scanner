@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.datasource.client.DatasourceRestClient;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
-import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.adapters.datasource.dto.history.AggregatedHistoryDto;
 import ru.ioque.investfund.adapters.datasource.dto.instrument.InstrumentDto;
 import ru.ioque.investfund.adapters.datasource.dto.intraday.IntradayDataDto;

@@ -42,7 +42,7 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
     @Override
     protected Result businessProcess(PublishAggregatedHistory command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
-        for (Instrument instrument : datasource.getUpdatableInstruments()) {
+        for (final Instrument instrument : datasource.getUpdatableInstruments()) {
             final LocalDate from = aggregatedHistoryJournal
                 .getBy(instrument.getTicker())
                 .map(row -> row.getDate().plusDays(1))

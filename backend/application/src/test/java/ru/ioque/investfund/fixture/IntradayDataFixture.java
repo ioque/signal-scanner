@@ -26,10 +26,6 @@ public class IntradayDataFixture {
         return DataFactory.factoryDealFrom(TGKN, number, createDateTime(localTime), price, value, qnt, true);
     }
 
-    public IntradayData tgkbSellDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
-        return DataFactory.factoryDealFrom(TGKB, number, createDateTime(localTime), price, value, qnt, false);
-    }
-
     public IntradayData tgkbBuyDeal(Long number, String localTime, Double price, Double value, Integer qnt) {
         return DataFactory.factoryDealFrom(TGKB, number, createDateTime(localTime), price, value, qnt, true);
     }

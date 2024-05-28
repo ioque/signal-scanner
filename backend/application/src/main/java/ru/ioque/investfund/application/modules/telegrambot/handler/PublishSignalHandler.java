@@ -55,8 +55,7 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
         final Signal signal = command.getSignal();
         final Instrument instrument = instrumentRepository.getBy(signal.getInstrumentId());
         final SignalScanner scanner = scannerRepository.getBy(signal.getScannerId());
-        final AggregatedHistory aggregatedHistory = aggregatedHistoryJournal.getBy(instrument.getTicker())
-            .orElseThrow();
+        final AggregatedHistory aggregatedHistory = aggregatedHistoryJournal.getBy(instrument.getTicker()).orElseThrow();
         telegramChatRepository
             .findAll()
             .forEach(chat -> telegramMessageSender.sendMessage(

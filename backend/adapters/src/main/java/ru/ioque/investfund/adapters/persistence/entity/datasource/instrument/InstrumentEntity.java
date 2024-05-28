@@ -5,10 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -19,16 +17,11 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.InstrumentDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
 import java.util.UUID;
 
 @Getter
@@ -44,10 +37,6 @@ public class InstrumentEntity extends UuidIdentity {
 
     @OneToOne(mappedBy = "instrument", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    TradingStateEntity tradingState;
-
-    @OneToOne(mappedBy = "instrument", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     InstrumentDetailsEntity details;
 
     @Column(nullable = false)
@@ -58,10 +47,6 @@ public class InstrumentEntity extends UuidIdentity {
     @Enumerated(EnumType.STRING)
     InstrumentType type;
 
-    @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "instrument", fetch = FetchType.LAZY)
-    List<AggregatedHistoryEntity> history;
-
     @Builder
     public InstrumentEntity(
         UUID id,
@@ -69,22 +54,14 @@ public class InstrumentEntity extends UuidIdentity {
         Boolean updatable,
         InstrumentType type,
         DatasourceEntity datasource,
-        TradingStateEntity tradingState,
-        InstrumentDetailsEntity details,
-        List<AggregatedHistoryEntity> history
+        InstrumentDetailsEntity details
     ) {
         super(id);
         this.ticker = ticker;
         this.type = type;
-        this.history = history;
         this.updatable = updatable;
         this.datasource = datasource;
-        this.tradingState = tradingState;
         this.details = details;
-    }
-
-    public Optional<TradingStateEntity> getTradingState() {
-        return Optional.ofNullable(tradingState);
     }
 
     public Instrument toDomain() {
@@ -92,10 +69,6 @@ public class InstrumentEntity extends UuidIdentity {
             .id(InstrumentId.from(getId()))
             .updatable(getUpdatable())
             .detail(getDetails().toDomain())
-            .tradingState(getTradingState().map(TradingStateEntity::toTradingState).orElse(null))
-            .aggregateHistories(new TreeSet<>(
-                history.stream().map(AggregatedHistoryEntity::toDomain).toList()
-            ))
             .build();
     }
 
@@ -109,20 +82,6 @@ public class InstrumentEntity extends UuidIdentity {
         instrumentEntity
             .setDetails(
                 InstrumentDetailsEntity.of(instrumentEntity, domain.getDetail())
-            );
-        instrumentEntity
-            .setTradingState(
-                domain.getPerformance()
-                    .map(tradingState -> TradingStateEntity.of(instrumentEntity, tradingState))
-                    .orElse(null)
-            );
-        instrumentEntity
-            .setHistory(
-                domain
-                    .getAggregateHistories()
-                    .stream()
-                    .map(row -> AggregatedHistoryEntity.fromDomain(instrumentEntity, row))
-                    .toList()
             );
         return instrumentEntity;
     }

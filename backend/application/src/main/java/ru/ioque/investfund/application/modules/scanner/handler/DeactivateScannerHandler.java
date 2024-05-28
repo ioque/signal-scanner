@@ -29,7 +29,7 @@ public class DeactivateScannerHandler extends CommandHandler<DeactivateScanner> 
 
     @Override
     protected Result businessProcess(DeactivateScanner command) {
-        SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
+        final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
         scanner.deactivate();
         scannerRepository.save(scanner);
         return Result.success();
