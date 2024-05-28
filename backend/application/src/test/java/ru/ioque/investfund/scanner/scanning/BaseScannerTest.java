@@ -36,7 +36,7 @@ public class BaseScannerTest extends BaseTest {
         return scannerRepository()
             .findAllBy(getDatasourceId())
             .stream()
-            .map(SignalScanner::getSignals)
+            .map(scanner -> signalJournal().findAllBy(scanner.getId()))
             .flatMap(Collection::stream)
             .toList();
     }

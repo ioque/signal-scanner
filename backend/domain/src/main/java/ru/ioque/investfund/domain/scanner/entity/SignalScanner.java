@@ -1,5 +1,10 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -13,18 +18,13 @@ import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
 import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain<ScannerId> {
+
     String description;
     ScannerStatus status;
     final DatasourceId datasourceId;
@@ -80,16 +80,11 @@ public class SignalScanner extends Domain<ScannerId> {
         return Optional.ofNullable(lastExecutionDateTime);
     }
 
-    public synchronized WorkScannerReport scanning(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
-        final ScannerAlgorithm algorithm = getScannerAlgorithm();
-        lastExecutionDateTime = watermark;
-        final WorkScannerReport report = new WorkScannerReport();
-        report.addExistedSignals(signals);
-        final List<Signal> foundedSignals = deduplicationFoundedSignals(algorithm.findSignals(instruments, watermark));
-        report.addFoundedSignals(foundedSignals);
-        final List<Signal> registeredSignals = registerFoundedSignals(foundedSignals);
-        report.addRegisteredSignals(registeredSignals);
-        return report;
+    public synchronized List<Signal> scanning(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
+        return getScannerAlgorithm()
+            .findSignals(instruments, watermark).stream()
+            .peek(signal -> signal.setScannerId(getId()))
+            .toList();
     }
 
     private ScannerAlgorithm getScannerAlgorithm() {
@@ -98,51 +93,14 @@ public class SignalScanner extends Domain<ScannerId> {
     }
 
     public boolean isTimeForExecution(LocalDateTime nowDateTime) {
-        if (getLastExecutionDateTime().isEmpty()) return true;
+        if (getLastExecutionDateTime().isEmpty()) {
+            return true;
+        }
         return isTimeForExecution(getLastExecutionDateTime().get(), nowDateTime);
     }
 
     private boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
         return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
-    }
-
-    private List<Signal> deduplicationFoundedSignals(List<Signal> signals) {
-        return signals.stream().filter(signal -> !containsSignal(signal)).toList();
-    }
-
-    private boolean containsSignal(Signal newSignal) {
-        return signals.stream().anyMatch(newSignal::sameByBusinessKey);
-    }
-
-    private List<Signal> registerFoundedSignals(List<Signal> newSignals) {
-        return newSignals.stream().filter(this::registerNewSignal).toList();
-    }
-
-    private boolean registerNewSignal(Signal newSignal) {
-        newSignal.setScannerId(this.getId());
-        final Optional<Signal> signalSameByTicker = signals
-            .stream()
-            .filter(signal -> signal.sameByTicker(newSignal))
-            .findFirst();
-
-        if (signalSameByTicker.isPresent()) {
-            if (signalSameByTicker.get().isBuy() && newSignal.isSell()) {
-                signals.remove(signalSameByTicker.get());
-                signals.add(newSignal);
-                return true;
-            }
-            if (signalSameByTicker.get().isSell() && newSignal.isBuy()) {
-                signals.remove(signalSameByTicker.get());
-                signals.add(newSignal);
-                return true;
-            }
-            return false;
-        }
-        if (newSignal.isBuy()) {
-            signals.add(newSignal);
-            return true;
-        }
-        return false;
     }
 
     public boolean isActive() {

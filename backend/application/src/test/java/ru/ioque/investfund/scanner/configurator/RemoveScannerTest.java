@@ -95,7 +95,7 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
                         .build()
                 )
             );
-        assertEquals(2, getScanner(getFirstScannerId()).getSignals().size());
+        assertEquals(2, signalJournal().stream().count());
         assertEquals(2, emulatedPositionRepository().emulatedPositions.size());
     }
 

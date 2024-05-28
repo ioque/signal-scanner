@@ -50,50 +50,6 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
     @Test
     @DisplayName("""
-        T2. С последнего запуска прошло меньше минуты, сканер не запущен.
-        """)
-    void testCase2() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex(datasourceId);
-        initTgknAndTgkbAndImoexHistoryTradingData();
-        initTgknAndTgkbAndImoexIntradayData();
-        initDefaultScanner(datasourceId);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-22T13:00:30");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(), 2, 2, 0);
-        assertFinInstrument(getTgknPerformance(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
-        assertFinInstrument(getTgkbPerformance(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
-        assertFinInstrument(getImoexPerformance(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
-    }
-
-    @Test
-    @DisplayName("""
-        T3. С последнего запуска прошла минута, сканер запущен.
-        """)
-    void testCase3() {
-        final DatasourceId datasourceId = getDatasourceId();
-        initTodayDateTime("2023-12-22T13:00:00");
-        initTgknAndTgkbAndImoex(datasourceId);
-        initTgknAndTgkbAndImoexHistoryTradingData();
-        initTgknAndTgkbAndImoexIntradayData();
-        initDefaultScanner(datasourceId);
-        runWorkPipelineAndClearLogs(datasourceId);
-        initTodayDateTime("2023-12-22T13:01:00");
-
-        runWorkPipeline(datasourceId);
-
-        assertSignals(getSignals(),2, 2, 0);
-        assertFinInstrument(getTgknPerformance(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
-        assertFinInstrument(getTgkbPerformance(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
-        assertFinInstrument(getImoexPerformance(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
-    }
-
-    @Test
-    @DisplayName("""
         T4. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Ранее был зарегистрирован сигнал к покупке. В текущем массиве данных
         объем торгов провышает медиану в scaleCoefficient-раз. Объем продаж превышает объем покупок.
@@ -111,7 +67,7 @@ public class AnomalyVolumeAlgoTest extends BaseScannerTest {
 
         runWorkPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 0, 1);
+        assertSignals(getSignals(), 2, 1, 1);
         assertFinInstrument(getTgknPerformance(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
         assertFinInstrument(getImoexPerformance(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }

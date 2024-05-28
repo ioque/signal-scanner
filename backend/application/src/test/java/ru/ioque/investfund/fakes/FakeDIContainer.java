@@ -23,6 +23,7 @@ import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScanner
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.processor.SearchContextManager;
+import ru.ioque.investfund.application.modules.scanner.processor.SignalRegistrar;
 import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
@@ -39,6 +40,7 @@ public class FakeDIContainer {
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
     SearchContextManager searchContextManager;
+    SignalRegistrar signalRegistrar;
 
     FakeCommandJournal commandJournal;
     FakeSignalJournal signalJournal;
@@ -99,6 +101,7 @@ public class FakeDIContainer {
         telegramMessageSender = new FakeTelegramMessageSender();
 
         searchContextManager = new SearchContextManager(instrumentRepository, aggregatedHistoryJournal);
+        signalRegistrar = new SignalRegistrar(signalJournal);
 
         publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
             dateTimeProvider,
@@ -256,7 +259,7 @@ public class FakeDIContainer {
         );
         streamingScannerEngine = new StreamingScannerEngine(
             searchContextManager,
-            signalJournal,
+            signalRegistrar,
             commandJournal,
             dateTimeProvider
         );

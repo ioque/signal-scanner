@@ -13,12 +13,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.CommandJournal;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.journal.SignalJournal;
 import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
-import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 
 @Slf4j
 @Component
@@ -26,13 +23,9 @@ import ru.ioque.investfund.domain.scanner.value.WorkScannerReport;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StreamingScannerEngine {
     final SearchContextManager searchContextManager;
-    final SignalJournal signalJournal;
+    final SignalRegistrar signalRegistrar;
     final CommandJournal commandJournal;
     final DateTimeProvider dateTimeProvider;
-
-    public void init(List<SignalScanner> scanners) {
-        searchContextManager.initSearchContext(scanners);
-    }
 
     @Async
     public void process(IntradayPerformance intradayPerformance) {
@@ -63,9 +56,7 @@ public class StreamingScannerEngine {
                     .map(row -> row.orElse(null))
                     .filter(Objects::nonNull)
                     .toList();
-                final WorkScannerReport report = scanner.scanning(instruments, watermark);
-                report.getRegisteredSignals().forEach(signalJournal::publish);
-                log.info("result scanning: {}", report);
+                scanner.scanning(instruments, watermark).forEach(signalRegistrar::registerSignal);
             });
     }
 }

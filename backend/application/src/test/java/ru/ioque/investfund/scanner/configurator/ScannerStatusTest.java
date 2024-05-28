@@ -28,7 +28,7 @@ public class ScannerStatusTest extends BaseConfiguratorTest {
         commandBus().execute(new ActivateScanner(getFirstScannerId()));
         runWorkPipeline(getDatasourceId());
 
-        assertEquals(2, getScanner(getFirstScannerId()).getSignals().size());
+        assertEquals(2, signalJournal().stream().count());
         assertEquals(ScannerStatus.ACTIVE, getScanner(getFirstScannerId()).getStatus());
     }
 
