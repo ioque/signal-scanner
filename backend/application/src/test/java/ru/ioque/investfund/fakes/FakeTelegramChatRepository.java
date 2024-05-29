@@ -1,6 +1,6 @@
 package ru.ioque.investfund.fakes;
 
-import ru.ioque.investfund.application.adapters.TelegramChatRepository;
+import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.domain.telegrambot.TelegramChat;
 
 import java.util.List;

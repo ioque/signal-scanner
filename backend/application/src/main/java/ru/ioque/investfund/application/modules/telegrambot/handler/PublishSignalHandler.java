@@ -7,17 +7,17 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.InstrumentRepository;
+import ru.ioque.investfund.application.adapters.repository.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.TelegramChatRepository;
+import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
+import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
-import ru.ioque.investfund.application.adapters.journal.AggregatedHistoryJournal;
+import ru.ioque.investfund.application.adapters.journal.AggregatedTotalsJournal;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
@@ -25,7 +25,7 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishSignalHandler extends CommandHandler<PublishSignal> {
 
-    AggregatedHistoryJournal aggregatedHistoryJournal;
+    AggregatedTotalsJournal aggregatedTotalsJournal;
     ScannerRepository scannerRepository;
     InstrumentRepository instrumentRepository;
     TelegramChatRepository telegramChatRepository;
@@ -35,14 +35,14 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
-        AggregatedHistoryJournal aggregatedHistoryJournal,
+        AggregatedTotalsJournal aggregatedTotalsJournal,
         ScannerRepository scannerRepository,
         InstrumentRepository instrumentRepository,
         TelegramChatRepository telegramChatRepository,
         TelegramMessageSender telegramMessageSender
     ) {
         super(dateTimeProvider, validator, loggerProvider);
-        this.aggregatedHistoryJournal = aggregatedHistoryJournal;
+        this.aggregatedTotalsJournal = aggregatedTotalsJournal;
         this.scannerRepository = scannerRepository;
         this.instrumentRepository = instrumentRepository;
         this.telegramChatRepository = telegramChatRepository;
@@ -55,7 +55,7 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
         final Signal signal = command.getSignal();
         final Instrument instrument = instrumentRepository.getBy(signal.getInstrumentId());
         final SignalScanner scanner = scannerRepository.getBy(signal.getScannerId());
-        final AggregatedHistory aggregatedHistory = aggregatedHistoryJournal.findActualBy(instrument.getTicker()).orElseThrow();
+        final AggregatedTotals aggregatedTotals = aggregatedTotalsJournal.findActualBy(instrument.getTicker()).orElseThrow();
         telegramChatRepository
             .findAll()
             .forEach(chat -> telegramMessageSender.sendMessage(
@@ -72,7 +72,7 @@ public class PublishSignalHandler extends CommandHandler<PublishSignal> {
                         signal.isBuy() ? "покупке" : "продаже",
                         scanner.getProperties().getType().getName(),
                         signal.getSummary(),
-                        decimalFormat.format((signal.getPrice() / aggregatedHistory.getClosePrice() - 1) * 100) + "%")
+                        decimalFormat.format((signal.getPrice() / aggregatedTotals.getClosePrice() - 1) * 100) + "%")
                 )
             );
         return Result.success();

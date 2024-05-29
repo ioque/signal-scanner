@@ -1,6 +1,7 @@
 package ru.ioque.investfund.application.modules.api;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
@@ -25,6 +26,7 @@ public class CommandBus {
         });
     }
 
+    @Async
     @SuppressWarnings("unchecked")
     public void execute(Command command) {
         Optional

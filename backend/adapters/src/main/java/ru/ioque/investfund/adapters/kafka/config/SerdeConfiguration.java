@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 @Configuration
@@ -25,7 +25,7 @@ public class SerdeConfiguration {
     }
 
     @Bean
-    public Serde<AggregatedHistory> aggregatedHistorySerde() {
-        return Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(AggregatedHistory.class));
+    public Serde<AggregatedTotals> aggregatedHistorySerde() {
+        return Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(AggregatedTotals.class));
     }
 }

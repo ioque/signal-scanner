@@ -18,7 +18,7 @@ public class FakeSignalJournal implements SignalJournal {
     }
 
     @Override
-    public List<Signal> findActualBy(ScannerId scannerId) {
+    public List<Signal> findAllBy(ScannerId scannerId) {
         return stream().filter(signal -> signal.getScannerId().equals(scannerId)).toList();
     }
 

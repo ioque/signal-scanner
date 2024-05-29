@@ -13,7 +13,7 @@ import ru.ioque.investfund.adapters.datasource.dto.intraday.IntradayDataDto;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
 
     @Override
     @SneakyThrows
-    public List<AggregatedHistory> fetchAggregateHistory(Datasource datasource, Instrument instrument, LocalDate from, LocalDate to) {
+    public List<AggregatedTotals> fetchAggregateHistory(Datasource datasource, Instrument instrument, LocalDate from, LocalDate to) {
         return moexClient
             .fetchHistory(datasource.getUrl(), instrument.getTicker().getValue(), from, to)
             .stream()

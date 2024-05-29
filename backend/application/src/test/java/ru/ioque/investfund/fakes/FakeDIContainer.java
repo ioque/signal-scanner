@@ -28,8 +28,7 @@ import ru.ioque.investfund.application.modules.scanner.processor.StreamingScanne
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
-import ru.ioque.investfund.fakes.journal.FakeAggregatedHistoryJournal;
-import ru.ioque.investfund.fakes.journal.FakeCommandJournal;
+import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsJournal;
 import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.journal.FakeSignalJournal;
 
@@ -45,10 +44,9 @@ public class FakeDIContainer {
     SearchContextManager searchContextManager;
     SignalRegistrar signalRegistrar;
 
-    FakeCommandJournal commandJournal;
     FakeSignalJournal signalJournal;
     FakeIntradayJournal intradayJournal;
-    FakeAggregatedHistoryJournal aggregatedHistoryJournal;
+    FakeAggregatedTotalsJournal aggregatedHistoryJournal;
 
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
@@ -87,8 +85,7 @@ public class FakeDIContainer {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
-        commandJournal = new FakeCommandJournal();
-        aggregatedHistoryJournal = new FakeAggregatedHistoryJournal();
+        aggregatedHistoryJournal = new FakeAggregatedTotalsJournal();
         intradayJournal = new FakeIntradayJournal();
         signalJournal = new FakeSignalJournal();
 
@@ -263,7 +260,6 @@ public class FakeDIContainer {
         streamingScannerEngine = new StreamingScannerEngine(
             searchContextManager,
             signalRegistrar,
-            commandJournal,
             dateTimeProvider
         );
     }

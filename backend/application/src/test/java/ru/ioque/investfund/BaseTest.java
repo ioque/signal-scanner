@@ -14,7 +14,7 @@ import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fakes.FakeDIContainer;
@@ -123,12 +123,12 @@ public class BaseTest {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDetails));
     }
 
-    protected void initHistoryValues(List<AggregatedHistory> tradingResults) {
+    protected void initHistoryValues(List<AggregatedTotals> tradingResults) {
         datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initHistoryValues(AggregatedHistory... aggregatedHistoryDtos) {
-        datasourceStorage().initHistoryValues(Arrays.asList(aggregatedHistoryDtos));
+    protected void initHistoryValues(AggregatedTotals... aggregatedTotalsDtos) {
+        datasourceStorage().initHistoryValues(Arrays.asList(aggregatedTotalsDtos));
     }
 
     protected void initIntradayValues(IntradayData... intradayValues) {
@@ -142,7 +142,7 @@ public class BaseTest {
             .toList();
     }
 
-    protected List<AggregatedHistory> getHistoryValuesBy(String ticker) {
+    protected List<AggregatedTotals> getHistoryValuesBy(String ticker) {
         return fakeDIContainer
             .getAggregatedHistoryJournal()
             .findAllBy(Ticker.from(ticker));
@@ -172,7 +172,7 @@ public class BaseTest {
             IntradayPerformance intradayPerformance = IntradayPerformance.empty();
             List<IntradayData> sorted = intradayDataList.stream().sorted().toList();
             for (var intradayData : sorted) {
-                intradayPerformance = intradayPerformance.add(ticker.getValue(), intradayData);
+                intradayPerformance = intradayPerformance.add(intradayData);
                 statistics.add(intradayPerformance);
             }
         });

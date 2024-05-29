@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.InstrumentRepository;
-import ru.ioque.investfund.application.adapters.journal.AggregatedHistoryJournal;
+import ru.ioque.investfund.application.adapters.repository.InstrumentRepository;
+import ru.ioque.investfund.application.adapters.journal.AggregatedTotalsJournal;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
@@ -19,7 +19,7 @@ import ru.ioque.investfund.domain.scanner.value.SearchContext;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchContextManager {
     final InstrumentRepository instrumentRepository;
-    final AggregatedHistoryJournal aggregatedHistoryJournal;
+    final AggregatedTotalsJournal aggregatedTotalsJournal;
 
     @Getter
     SearchContext searchContext;
@@ -39,7 +39,7 @@ public class SearchContextManager {
                     return InstrumentPerformance.builder()
                         .ticker(instrument.getTicker())
                         .instrumentId(instrument.getId())
-                        .aggregatedHistories(aggregatedHistoryJournal.findAllBy(instrument.getTicker()))
+                        .aggregatedHistories(aggregatedTotalsJournal.findAllBy(instrument.getTicker()))
                         .build();
                 })
                 .toList()

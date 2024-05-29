@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AggregatedHistory implements Comparable<AggregatedHistory> {
+public class AggregatedTotals implements Comparable<AggregatedTotals> {
     @NotBlank(message = "Не заполнен тикер.")
     @Valid Ticker ticker;
     @NotNull(message = "Не заполнена дата агрегированных итогов.")
@@ -47,8 +47,8 @@ public class AggregatedHistory implements Comparable<AggregatedHistory> {
     Double value;
 
     @Override
-    public int compareTo(AggregatedHistory aggregatedHistory) {
-        return date.compareTo(aggregatedHistory.date);
+    public int compareTo(AggregatedTotals aggregatedTotals) {
+        return date.compareTo(aggregatedTotals.date);
     }
 
     public boolean isBetween(LocalDate from, LocalDate to) {

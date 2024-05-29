@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.ioque.investfund.application.adapters.CommandJournal;
+import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishDailyReport;
 import ru.ioque.investfund.application.modules.telegrambot.command.PublishHourlyReport;
 import ru.ioque.investfund.application.modules.telegrambot.command.Subscribe;
@@ -19,14 +19,14 @@ import ru.ioque.investfund.application.modules.telegrambot.command.Unsubscribe;
 @Profile("!tests")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SignalTelegramBot extends TelegramBot {
-    CommandJournal commandJournal;
+    CommandBus commandBus;
 
     public SignalTelegramBot(
         @Value("${telegram-bot.token}") String botToken,
-        CommandJournal commandJournal
+        CommandBus commandBus
     ) {
         super(botToken);
-        this.commandJournal = commandJournal;
+        this.commandBus = commandBus;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SignalTelegramBot extends TelegramBot {
             switch (update.getMessage().getText()) {
                 case "/start":
                 case "/subscribe":
-                    commandJournal.publish(
+                    commandBus.execute(
                         new Subscribe(
                             update.getMessage().getChatId(),
                             update.getMessage().getChat().getFirstName()
@@ -43,13 +43,13 @@ public class SignalTelegramBot extends TelegramBot {
                     );
                     break;
                 case "/unsubscribe":
-                    commandJournal.publish(new Unsubscribe(update.getMessage().getChatId()));
+                    commandBus.execute(new Unsubscribe(update.getMessage().getChatId()));
                     break;
                 case "/hourly_report":
-                    commandJournal.publish(new PublishHourlyReport(update.getMessage().getChatId()));
+                    commandBus.execute(new PublishHourlyReport(update.getMessage().getChatId()));
                     break;
                 case "/daily_report":
-                    commandJournal.publish(new PublishDailyReport(update.getMessage().getChatId()));
+                    commandBus.execute(new PublishDailyReport(update.getMessage().getChatId()));
                     break;
             }
         }

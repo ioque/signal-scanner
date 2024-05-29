@@ -41,8 +41,8 @@ public class IntradayPerformance implements Comparable<IntradayPerformance> {
             .build();
     }
 
-    public IntradayPerformance add(String key, IntradayData data) {
-        final Ticker ticker = Ticker.from(key);
+    public IntradayPerformance add(IntradayData data) {
+        final Ticker ticker = data.getTicker();
         if (this.ticker != null && !this.ticker.equals(ticker)) {
             throw new DomainException("Нельзя изменить ранее установленный тикер.");
         }

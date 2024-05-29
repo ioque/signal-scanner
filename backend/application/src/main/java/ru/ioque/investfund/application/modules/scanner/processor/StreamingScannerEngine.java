@@ -11,9 +11,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.CommandJournal;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 
@@ -24,7 +22,6 @@ import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 public class StreamingScannerEngine {
     final SearchContextManager searchContextManager;
     final SignalRegistrar signalRegistrar;
-    final CommandJournal commandJournal;
     final DateTimeProvider dateTimeProvider;
 
     @Async
@@ -40,10 +37,6 @@ public class StreamingScannerEngine {
         }
         log.info("receive {}", intradayPerformance);
         instrument.get().updatePerformance(intradayPerformance);
-        commandJournal.publish(new EvaluateEmulatedPosition(
-            instrument.get().getInstrumentId(),
-            intradayPerformance.getTodayLastPrice()
-        ));
         searchContextManager.getScanners().stream()
             .filter(scanner -> scanner.getInstrumentIds().contains(instrument.get().getInstrumentId()) && scanner.isActive())
             .forEach(scanner -> {

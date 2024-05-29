@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;

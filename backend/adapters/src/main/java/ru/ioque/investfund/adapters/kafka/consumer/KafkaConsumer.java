@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-import ru.ioque.investfund.application.adapters.CommandJournal;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.api.Command;
 import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
@@ -16,7 +15,6 @@ import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.COMMAND_TOPIC;
 import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_STATISTIC_TOPIC;
 import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.SIGNAL_TOPIC;
 
@@ -26,13 +24,7 @@ import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.SIGNA
 @Profile("!tests")
 public class KafkaConsumer {
     private final CommandBus commandBus;
-    private final CommandJournal commandJournal;
     private final StreamingScannerEngine streamingScannerEngine;
-
-    @KafkaListener(topics = COMMAND_TOPIC)
-    public void processCommand(@Payload Command command) {
-        commandBus.execute(command);
-    }
 
     @KafkaListener(topics = INTRADAY_STATISTIC_TOPIC)
     public void process(@Payload IntradayPerformance statistics) {
@@ -41,13 +33,13 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = SIGNAL_TOPIC)
     public void processSignal(@Payload Signal signal) {
-        commandJournal.publish(
+        commandBus.execute(
             PublishSignal.builder()
                 .signal(signal)
                 .build()
         );
         if (signal.isBuy()) {
-            commandJournal.publish(
+            commandBus.execute(
                 OpenEmulatedPosition.builder()
                     .price(signal.getPrice())
                     .scannerId(signal.getScannerId())
@@ -55,7 +47,7 @@ public class KafkaConsumer {
                     .build()
             );
         } else {
-            commandJournal.publish(
+            commandBus.execute(
                 CloseEmulatedPosition.builder()
                     .price(signal.getPrice())
                     .scannerId(signal.getScannerId())

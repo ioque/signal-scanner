@@ -3,7 +3,7 @@ package ru.ioque.investfund.adapters.integration.db;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 

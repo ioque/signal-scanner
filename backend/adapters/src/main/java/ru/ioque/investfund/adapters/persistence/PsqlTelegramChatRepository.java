@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.adapters.persistence.entity.telegrambot.TelegramChatEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepository;
-import ru.ioque.investfund.application.adapters.TelegramChatRepository;
+import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.domain.telegrambot.TelegramChat;
 
 import java.util.List;

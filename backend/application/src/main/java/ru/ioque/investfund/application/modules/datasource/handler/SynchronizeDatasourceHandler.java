@@ -5,9 +5,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.InstrumentRepository;
+import ru.ioque.investfund.application.adapters.repository.InstrumentRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
@@ -18,7 +18,6 @@ import ru.ioque.investfund.domain.datasource.validator.DomainValidator;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 
 import java.util.List;
-import java.util.TreeSet;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)

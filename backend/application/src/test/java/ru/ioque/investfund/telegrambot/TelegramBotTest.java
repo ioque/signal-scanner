@@ -97,7 +97,7 @@ public class TelegramBotTest extends BaseTest {
         prepareState();
 
         commandBus().execute(new PublishSignal(
-            signalJournal().findActualBy(getScannerId()).stream().findFirst().orElseThrow()
+            signalJournal().findAllBy(getScannerId()).stream().findFirst().orElseThrow()
         ));
 
         assertEquals("""

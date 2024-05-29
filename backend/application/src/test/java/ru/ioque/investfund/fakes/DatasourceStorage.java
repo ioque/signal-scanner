@@ -2,7 +2,7 @@ package ru.ioque.investfund.fakes;
 
 import lombok.Getter;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 public class DatasourceStorage {
     private final List<IntradayData> intradayDataDtos = new ArrayList<>();
-    private final List<AggregatedHistory> aggregatedHistoryDtos = new ArrayList<>();
+    private final List<AggregatedTotals> aggregatedTotalsDtos = new ArrayList<>();
     private final List<InstrumentDetail> instrumentDtos = new ArrayList<>();
 
-    public List<AggregatedHistory> getHistoryDataBy(Ticker ticker) {
-        return aggregatedHistoryDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
+    public List<AggregatedTotals> getHistoryDataBy(Ticker ticker) {
+        return aggregatedTotalsDtos.stream().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     public List<IntradayData> getDealsByTicker(Ticker ticker) {
@@ -33,8 +33,8 @@ public class DatasourceStorage {
         this.intradayDataDtos.addAll(intradayValues);
     }
 
-    public void initHistoryValues(List<AggregatedHistory> historyValues) {
-        this.aggregatedHistoryDtos.clear();
-        this.aggregatedHistoryDtos.addAll(historyValues);
+    public void initHistoryValues(List<AggregatedTotals> historyValues) {
+        this.aggregatedTotalsDtos.clear();
+        this.aggregatedTotalsDtos.addAll(historyValues);
     }
 }

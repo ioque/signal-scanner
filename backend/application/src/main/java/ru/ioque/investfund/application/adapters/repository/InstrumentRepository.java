@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.adapters;
+package ru.ioque.investfund.application.adapters.repository;
 
 import java.util.List;
 

@@ -6,19 +6,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 public class DataFactory {
-    public static List<AggregatedHistory> generateHistoryValues(
+    public static List<AggregatedTotals> generateHistoryValues(
         String ticker,
         LocalDate start,
         LocalDate stop
     ) {
-        final List<AggregatedHistory> historyValues = new ArrayList<>();
+        final List<AggregatedTotals> historyValues = new ArrayList<>();
         var cursor = start;
         while (cursor.isBefore(stop) || cursor.isEqual(stop)) {
             if (!cursor.getDayOfWeek().equals(DayOfWeek.SUNDAY) && !cursor.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
@@ -83,14 +83,14 @@ public class DataFactory {
             .build();
     }
 
-    public static AggregatedHistory factoryAggregatedHistory(
+    public static AggregatedTotals factoryAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
         Double closePrice,
         Double value
     ) {
-        return AggregatedHistory.builder()
+        return AggregatedTotals.builder()
             .ticker(Ticker.from(ticker))
             .date(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -101,7 +101,7 @@ public class DataFactory {
             .build();
     }
 
-    public static AggregatedHistory factoryAggregatedHistory(
+    public static AggregatedTotals factoryAggregatedHistory(
         String ticker,
         String tradeDate,
         Double openPrice,
@@ -109,7 +109,7 @@ public class DataFactory {
         Double waPrice,
         Double value
     ) {
-        return AggregatedHistory.builder()
+        return AggregatedTotals.builder()
             .ticker(Ticker.from(ticker))
             .date(LocalDate.parse(tradeDate))
             .openPrice(openPrice)
@@ -121,11 +121,11 @@ public class DataFactory {
             .build();
     }
 
-    public static AggregatedHistory.AggregatedHistoryBuilder factoryAggregatedHistory(
+    public static AggregatedTotals.AggregatedTotalsBuilder factoryAggregatedHistory(
         String ticker,
         LocalDate localDate
     ) {
-        return AggregatedHistory.builder()
+        return AggregatedTotals.builder()
             .ticker(Ticker.from(ticker))
             .date(localDate)
             .openPrice(1.0)

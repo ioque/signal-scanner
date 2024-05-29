@@ -7,11 +7,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.application.adapters.InstrumentRepository;
+import ru.ioque.investfund.application.adapters.repository.InstrumentRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -31,6 +32,11 @@ public class PsqlInstrumentRepository implements InstrumentRepository {
                     String.format("Инструмент[id=%s] не существует.", instrumentId)
                 )
             );
+    }
+
+    @Override
+    public List<Instrument> findAllBy(List<InstrumentId> instrumentIds) {
+        return List.of();
     }
 
     @Override

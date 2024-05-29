@@ -1,7 +1,7 @@
 package ru.ioque.investfund.fakes;
 
 import lombok.Getter;
-import ru.ioque.investfund.application.adapters.ScannerRepository;
+import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;

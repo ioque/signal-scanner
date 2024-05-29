@@ -12,11 +12,11 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepository;
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.application.adapters.DatasourceRepository;
+import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
-import ru.ioque.investfund.application.adapters.ScannerRepository;
-import ru.ioque.investfund.application.adapters.TelegramChatRepository;
+import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
+import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 

@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
@@ -19,7 +19,7 @@ public class InstrumentPerformance {
     private final Ticker ticker;
     private final InstrumentId instrumentId;
     private IntradayPerformance intradayPerformance;
-    private List<AggregatedHistory> aggregatedHistories;
+    private List<AggregatedTotals> aggregatedHistories;
 
     public Optional<IntradayPerformance> getIntradayPerformance() {
         return Optional.ofNullable(intradayPerformance);
@@ -32,7 +32,7 @@ public class InstrumentPerformance {
     public Optional<Double> getHistoryMedianValue(int period) {
         if (aggregatedHistories.isEmpty()) return Optional.empty();
         if (aggregatedHistories.size() < period) return Optional.empty();
-        var sortedValues = aggregatedHistories.stream().mapToDouble(AggregatedHistory::getValue).sorted().toArray();
+        var sortedValues = aggregatedHistories.stream().mapToDouble(AggregatedTotals::getValue).sorted().toArray();
         var n = sortedValues.length;
         if (n % 2 != 0) {
             return Optional.of(sortedValues[(n / 2)]);
@@ -83,15 +83,15 @@ public class InstrumentPerformance {
     public Optional<Double> getPrevPrevClosePrice() {
         final Optional<LocalDate> lastTradingDate = aggregatedHistories
             .stream()
-            .max(AggregatedHistory::compareTo)
-            .map(AggregatedHistory::getDate)
+            .max(AggregatedTotals::compareTo)
+            .map(AggregatedTotals::getDate)
             .map(LocalDate.class::cast);
         if (lastTradingDate.isEmpty()) return Optional.empty();
         final LocalDate prevLastTradingDate = getPrevTradingDate(lastTradingDate.get());
         return aggregatedHistories.stream()
             .filter(row -> row.getDate().equals(prevLastTradingDate))
             .findFirst()
-            .map(AggregatedHistory::getClosePrice);
+            .map(AggregatedTotals::getClosePrice);
     }
 
     private LocalDate getPrevTradingDate(LocalDate tradingDate) {
@@ -104,10 +104,10 @@ public class InstrumentPerformance {
     public Optional<Double> getPrevClosePrice() {
         return aggregatedHistories
             .stream()
-            .max(AggregatedHistory::compareTo)
+            .max(AggregatedTotals::compareTo)
             .stream()
             .findFirst()
-            .map(AggregatedHistory::getClosePrice);
+            .map(AggregatedTotals::getClosePrice);
     }
 
     public boolean isPref() {

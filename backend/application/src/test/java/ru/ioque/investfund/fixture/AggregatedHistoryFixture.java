@@ -1,16 +1,16 @@
 package ru.ioque.investfund.fixture;
 
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 public class AggregatedHistoryFixture {
 
-    public AggregatedHistory imoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
+    public AggregatedTotals imoexHistoryValue(String tradeDate, Double openPrice, Double closePrice, Double value) {
         return DataFactory.factoryAggregatedHistory(IMOEX, tradeDate, openPrice, closePrice, value);
     }
 
-    public AggregatedHistory afksHistoryValue(
+    public AggregatedTotals afksHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -20,7 +20,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(AFKS, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory tgknHistoryValue(
+    public AggregatedTotals tgknHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -30,7 +30,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(TGKN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory tgkbHistoryValue(
+    public AggregatedTotals tgkbHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -40,7 +40,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(TGKB, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory tatnHistoryValue(
+    public AggregatedTotals tatnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -51,12 +51,12 @@ public class AggregatedHistoryFixture {
     }
 
 
-    public AggregatedHistory brf4HistoryValue(String tradeDate, Double openPrice, Double closePrice,
+    public AggregatedTotals brf4HistoryValue(String tradeDate, Double openPrice, Double closePrice,
         Double value) {
         return DataFactory.factoryAggregatedHistory(BRF4, tradeDate, openPrice, closePrice, value);
     }
 
-    public AggregatedHistory lkohHistoryValue(
+    public AggregatedTotals lkohHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -66,7 +66,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(LKOH, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory sibnHistoryValue(
+    public AggregatedTotals sibnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -76,7 +76,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(SIBN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory rosnHistoryValue(
+    public AggregatedTotals rosnHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -86,7 +86,7 @@ public class AggregatedHistoryFixture {
         return DataFactory.factoryAggregatedHistory(ROSN, tradeDate, openPrice, closePrice, waPrice, value);
     }
 
-    public AggregatedHistory sberHistoryValue(
+    public AggregatedTotals sberHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,
@@ -97,7 +97,7 @@ public class AggregatedHistoryFixture {
     }
 
 
-    public AggregatedHistory sberpHistoryValue(
+    public AggregatedTotals sberpHistoryValue(
         String tradeDate,
         Double openPrice,
         Double closePrice,

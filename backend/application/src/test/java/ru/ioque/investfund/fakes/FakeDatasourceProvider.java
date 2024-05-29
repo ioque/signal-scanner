@@ -6,7 +6,7 @@ import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
-import ru.ioque.investfund.domain.datasource.value.history.AggregatedHistory;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ public class FakeDatasourceProvider implements DatasourceProvider {
     }
 
     @Override
-    public List<AggregatedHistory> fetchAggregateHistory(
+    public List<AggregatedTotals> fetchAggregateHistory(
         Datasource datasource,
         Instrument instrument,
         LocalDate from,
