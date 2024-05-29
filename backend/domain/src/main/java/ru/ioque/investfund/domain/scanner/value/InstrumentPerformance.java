@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class InstrumentPerformance {
     private final Ticker ticker;
     private final InstrumentId instrumentId;
     private IntradayPerformance intradayPerformance;
-    private List<AggregatedTotals> aggregatedHistories;
+    private TreeSet<AggregatedTotals> aggregatedHistories;
 
     public Optional<IntradayPerformance> getIntradayPerformance() {
         return Optional.ofNullable(intradayPerformance);

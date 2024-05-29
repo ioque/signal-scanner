@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.kafka.journal;
+package ru.ioque.investfund.adapters.kafka;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.INTRADAY_DATA_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.INTRADAY_DATA_TOPIC;
 
 @Component
 @Profile("!tests")

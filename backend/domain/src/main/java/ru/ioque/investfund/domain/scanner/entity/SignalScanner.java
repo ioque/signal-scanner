@@ -31,8 +31,6 @@ public class SignalScanner extends Domain<ScannerId> {
     List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
     AlgorithmProperties properties;
-    LocalDateTime lastExecutionDateTime;
-    final List<Signal> signals;
 
     @Builder
     public SignalScanner(
@@ -42,9 +40,7 @@ public class SignalScanner extends Domain<ScannerId> {
         ScannerStatus status,
         DatasourceId datasourceId,
         AlgorithmProperties properties,
-        LocalDateTime lastExecutionDateTime,
-        List<InstrumentId> instrumentIds,
-        List<Signal> signals
+        List<InstrumentId> instrumentIds
     ) {
         super(id);
         this.status = status;
@@ -52,9 +48,7 @@ public class SignalScanner extends Domain<ScannerId> {
         this.description = description;
         this.datasourceId = datasourceId;
         this.properties = properties;
-        this.lastExecutionDateTime = lastExecutionDateTime;
         this.instrumentIds = instrumentIds;
-        this.signals = signals;
     }
 
     public void updateWorkPeriod(Integer workPeriodInMinutes) {
@@ -76,10 +70,6 @@ public class SignalScanner extends Domain<ScannerId> {
         this.properties = properties;
     }
 
-    public Optional<LocalDateTime> getLastExecutionDateTime() {
-        return Optional.ofNullable(lastExecutionDateTime);
-    }
-
     public synchronized List<Signal> scanning(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
         return getScannerAlgorithm()
             .findSignals(instruments, watermark).stream()
@@ -90,17 +80,6 @@ public class SignalScanner extends Domain<ScannerId> {
     private ScannerAlgorithm getScannerAlgorithm() {
         final AlgorithmFactory algorithmFactory = new AlgorithmFactory();
         return algorithmFactory.factoryBy(properties);
-    }
-
-    public boolean isTimeForExecution(LocalDateTime nowDateTime) {
-        if (getLastExecutionDateTime().isEmpty()) {
-            return true;
-        }
-        return isTimeForExecution(getLastExecutionDateTime().get(), nowDateTime);
-    }
-
-    private boolean isTimeForExecution(LocalDateTime lastExecution, LocalDateTime nowDateTime) {
-        return Duration.between(lastExecution, nowDateTime).toMinutes() >= workPeriodInMinutes;
     }
 
     public boolean isActive() {

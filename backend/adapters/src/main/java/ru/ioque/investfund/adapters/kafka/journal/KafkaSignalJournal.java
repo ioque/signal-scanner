@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.adapters.journal.SignalJournal;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-import static ru.ioque.investfund.adapters.kafka.config.TopicConfiguration.SIGNAL_TOPIC;
+import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.SIGNAL_TOPIC;
 
 @Component
 @Profile("!tests")

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,5 +38,14 @@ public class Signal {
 
     public boolean isSell() {
         return !isBuy;
+    }
+
+    @Override
+    public String toString() {
+        return "Signal{" +
+            "price='" + price + '\'' +
+            "isBuy='" + isBuy + '\'' +
+            "summary='" + summary + '\'' +
+            '}';
     }
 }

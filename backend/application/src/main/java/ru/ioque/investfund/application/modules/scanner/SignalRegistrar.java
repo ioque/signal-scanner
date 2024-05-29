@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.scanner.processor;
+package ru.ioque.investfund.application.modules.scanner;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public class SignalRegistrar {
     SignalJournal signalJournal;
 
     public void registerSignal(Signal signal) {
-        List<Signal> existedSignals = signalJournal.findAllBy(signal.getScannerId());
+        final List<Signal> existedSignals = signalJournal.findAllBy(signal.getScannerId());
         if (containsSignal(existedSignals, signal)) {
             return;
         }

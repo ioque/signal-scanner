@@ -21,6 +21,9 @@ public class PrefSimplePair {
         if (simpleState.getTodayLastPrice() == null || prefState.getTodayLastPrice() == null) {
             return 0D;
         }
+        if (simpleState.getTodayLastPrice() == 0 || prefState.getTodayLastPrice() == 0) {
+            return 0D;
+        }
         return simpleState.getTodayLastPrice() - prefState.getTodayLastPrice();
     }
 

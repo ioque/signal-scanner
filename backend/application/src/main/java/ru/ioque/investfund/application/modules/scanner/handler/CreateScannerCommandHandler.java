@@ -49,8 +49,6 @@ public class CreateScannerCommandHandler extends CommandHandler<CreateScanner> {
             .datasourceId(command.getDatasourceId())
             .instrumentIds(instrumentIds)
             .properties(command.getProperties())
-            .signals(new ArrayList<>())
-            .lastExecutionDateTime(null)
             .build();
         scannerRepository.save(scanner);
         return Result.success();

@@ -6,13 +6,11 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.scanner.processor.SearchContextManager;
-import ru.ioque.investfund.application.modules.scanner.processor.StreamingScannerEngine;
+import ru.ioque.investfund.application.modules.scanner.SignalScannerProcessor;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
@@ -37,8 +35,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BaseTest {
     private final FakeDIContainer fakeDIContainer = new FakeDIContainer();
@@ -87,12 +83,8 @@ public class BaseTest {
         return fakeDIContainer.getIntradayJournal();
     }
 
-    protected final StreamingScannerEngine streamingScannerEngine() {
-        return fakeDIContainer.getStreamingScannerEngine();
-    }
-
-    protected final SearchContextManager searchContextManager() {
-        return fakeDIContainer.getSearchContextManager();
+    protected final SignalScannerProcessor pipelineManager() {
+        return fakeDIContainer.getSignalScannerProcessor();
     }
 
     protected final FakeSignalJournal signalJournal() {
@@ -159,24 +151,11 @@ public class BaseTest {
     protected void runWorkPipeline(DatasourceId datasourceId) {
         commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
         commandBus().execute(new PublishIntradayData(datasourceId));
-        searchContextManager().initSearchContext(scannerRepository().findAllBy(getDatasourceId()));
-        statisticStream().forEach(streamingScannerEngine()::process);
-    }
-
-    private List<IntradayPerformance> statisticStream() {
-        final Map<Ticker, List<IntradayData>> tickerToIntraday = intradayJournal()
+        pipelineManager().init(getDatasourceId());
+        intradayJournal()
             .stream()
-            .collect(Collectors.groupingBy(IntradayData::getTicker));
-        final List<IntradayPerformance> statistics = new ArrayList<>();
-        tickerToIntraday.forEach((ticker, intradayDataList) -> {
-            IntradayPerformance intradayPerformance = IntradayPerformance.empty();
-            List<IntradayData> sorted = intradayDataList.stream().sorted().toList();
-            for (var intradayData : sorted) {
-                intradayPerformance = intradayPerformance.add(intradayData);
-                statistics.add(intradayPerformance);
-            }
-        });
-        return statistics.stream().sorted().toList();
+            .sorted()
+            .forEach(pipelineManager()::process);
     }
 
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {

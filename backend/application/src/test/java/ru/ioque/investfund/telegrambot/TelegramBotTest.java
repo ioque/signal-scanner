@@ -105,10 +105,10 @@ public class TelegramBotTest extends BaseTest {
             Зафиксирован сигнал к покупке, алгоритм "Аномальные объемы"
                         
             Медиана исторических объемов: 1,400;
-            Текущий объем: 13,000;
-            Отношение текущего объема к медиане: 9.29;
+            Текущий объем: 6,000;
+            Отношение текущего объема к медиане: 4.29;
             Тренд индекса растущий.    
-            Изменение цены относительно цены закрытия предыдущего дня 14.5%
+            Изменение цены относительно цены закрытия предыдущего дня 12%
             """,
             telegramMessageSender().messages.get(1L).get(0));
     }
@@ -135,8 +135,8 @@ public class TelegramBotTest extends BaseTest {
                 intradayFixture.imoexDelta(2L, "12:00:00", 3200D, 200D),
                 intradayFixture.tgknBuyDeal(1L, "10:00:00", 111D, 5000D, 1),
                 intradayFixture.tgknBuyDeal(2L, "10:03:00", 112D, 1000D, 1),
-                intradayFixture.tgknSellDeal(3L, "11:00:00", 100D, 1000D, 1),
-                intradayFixture.tgknBuyDeal(4L, "11:01:00", 110D, 1000D, 1),
+                intradayFixture.tgknSellDeal(3L, "11:00:00", 112D, 1000D, 1),
+                intradayFixture.tgknBuyDeal(4L, "11:01:00", 113D, 1000D, 1),
                 intradayFixture.tgknBuyDeal(5L, "11:45:00", 114.5D, 5000D, 1)
             )
         );

@@ -23,8 +23,9 @@ public class IntradayPerformance implements Comparable<IntradayPerformance> {
     Double todayFirstPrice;
     LocalDateTime timestamp;
 
-    public static IntradayPerformance empty() {
+    public static IntradayPerformance of(Ticker ticker) {
         return IntradayPerformance.builder()
+            .ticker(ticker)
             .todayValue(0D)
             .todayLastPrice(0D)
             .todayFirstPrice(0D)
