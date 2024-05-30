@@ -281,7 +281,7 @@ public class PublishIntradayDataTest extends BaseTest {
 
     private List<IntradayData> getIntradayValuesBy(String ticker) {
         return intradayJournal()
-            .stream()
+            .getAll()
             .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
             .toList();
     }

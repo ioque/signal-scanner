@@ -20,7 +20,7 @@ public class FakeAggregatedTotalsJournal implements AggregatedTotalsJournal {
 
     @Override
     public List<AggregatedTotals> findAllBy(Ticker ticker) {
-        return stream().filter(row -> row.getTicker().equals(ticker)).toList();
+        return getAll().filter(row -> row.getTicker().equals(ticker)).toList();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class FakeAggregatedTotalsJournal implements AggregatedTotalsJournal {
         return findAllBy(ticker).stream().max(AggregatedTotals::compareTo);
     }
 
-    public Stream<AggregatedTotals> stream() {
+    public Stream<AggregatedTotals> getAll() {
         return histories.stream();
     }
 }

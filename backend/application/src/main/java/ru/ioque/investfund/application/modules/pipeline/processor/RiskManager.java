@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.domain.pipeline.Processor;
+import ru.ioque.investfund.application.modules.pipeline.core.Processor;
 import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;

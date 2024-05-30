@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
 import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
-import ru.ioque.investfund.domain.pipeline.Processor;
+import ru.ioque.investfund.application.modules.pipeline.core.Processor;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;

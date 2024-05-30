@@ -82,7 +82,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertEquals(1, signalJournal().stream().count());
+        assertEquals(1, signalJournal().getAll().count());
     }
 
     @Test

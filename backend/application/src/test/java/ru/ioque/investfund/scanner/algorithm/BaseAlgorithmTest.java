@@ -36,7 +36,7 @@ public class BaseAlgorithmTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        intradayJournal().subscribe(signalScannerProcessor());
+        intradayJournal().stream().subscribe(signalProducer()::process);
         loggerProvider().clearLogs();
     }
 

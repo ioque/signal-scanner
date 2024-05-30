@@ -20,6 +20,7 @@ import ru.ioque.investfund.application.modules.pipeline.SignalRegistry;
 import ru.ioque.investfund.application.modules.pipeline.processor.PositionManager;
 import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
 import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
+import ru.ioque.investfund.application.modules.pipeline.processor.TelegramPublisher;
 import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
@@ -75,6 +76,7 @@ public class FakeDIContainer {
     SignalProducer signalProducer;
     RiskManager riskManager;
     PositionManager positionManager;
+    TelegramPublisher telegramPublisher;
 
     CommandBus commandBus;
     Validator validator;
@@ -237,6 +239,7 @@ public class FakeDIContainer {
         );
         riskManager = new RiskManager(pipelineContext);
         positionManager = new PositionManager(pipelineContext, emulatedPositionJournal);
+        telegramPublisher = new TelegramPublisher(pipelineContext, telegramMessageSender, telegramChatRepository);
     }
 
     private FakeDatasourceProvider getFakeExchangeProvider() {

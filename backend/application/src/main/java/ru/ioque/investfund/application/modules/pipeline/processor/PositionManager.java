@@ -3,7 +3,7 @@ package ru.ioque.investfund.application.modules.pipeline.processor;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
-import ru.ioque.investfund.domain.pipeline.Processor;
+import ru.ioque.investfund.application.modules.pipeline.core.Processor;
 import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
 import ru.ioque.investfund.domain.position.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.Signal;

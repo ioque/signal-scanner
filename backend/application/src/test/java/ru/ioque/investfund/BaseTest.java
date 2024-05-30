@@ -5,7 +5,10 @@ import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.pipeline.PipelineConfigurator;
+import ru.ioque.investfund.application.modules.pipeline.processor.PositionManager;
+import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
 import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
+import ru.ioque.investfund.application.modules.pipeline.processor.TelegramPublisher;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -85,8 +88,20 @@ public class BaseTest {
         return fakeDIContainer.getAggregatedTotalsJournal();
     }
 
-    protected final SignalProducer signalScannerProcessor() {
+    protected final SignalProducer signalProducer() {
         return fakeDIContainer.getSignalProducer();
+    }
+
+    protected final RiskManager riskManager() {
+        return fakeDIContainer.getRiskManager();
+    }
+
+    protected final PositionManager positionManager() {
+        return fakeDIContainer.getPositionManager();
+    }
+
+    protected final TelegramPublisher telegramPublisher() {
+        return fakeDIContainer.getTelegramPublisher();
     }
 
     protected final FakeSignalJournal signalJournal() {
