@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import ru.ioque.investfund.application.adapters.journal.Processor;
+import ru.ioque.investfund.domain.pipeline.Processor;
 import ru.ioque.investfund.application.adapters.journal.SignalJournal;
-import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 

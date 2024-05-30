@@ -7,11 +7,10 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.pipeline.processor.EvaluateRiskProcessor;
+import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
 import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
 import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
-import ru.ioque.investfund.application.modules.telegrambot.command.PublishSignal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
@@ -25,7 +24,7 @@ import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.SIGNAL_TOPIC
 public class KafkaConsumer {
     private final CommandBus commandBus;
     private final SignalProducer signalProducer;
-    private final EvaluateRiskProcessor riskManager;
+    private final RiskManager riskManager;
 
     @KafkaListener(topics = INTRADAY_DATA_TOPIC)
     public void process(@Payload IntradayData intradayData) {

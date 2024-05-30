@@ -9,25 +9,22 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.handler.PublishAggregatedHistoryHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.DisableUpdateInstrumentHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.EnableUpdateInstrumentHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.RegisterDatasourceHandler;
-import ru.ioque.investfund.application.modules.datasource.handler.UnregisterDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.CreateDatasourceHandler;
+import ru.ioque.investfund.application.modules.datasource.handler.RemoveDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.PublishIntradayDataHandler;
 import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
-import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.PipelineConfigurator;
 import ru.ioque.investfund.application.modules.pipeline.SignalRegistry;
-import ru.ioque.investfund.application.modules.pipeline.processor.EmulatedPositionManager;
-import ru.ioque.investfund.application.modules.pipeline.processor.EvaluateRiskProcessor;
+import ru.ioque.investfund.application.modules.pipeline.processor.PositionManager;
+import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
 import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
-import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
-import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
-import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
 import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsJournal;
@@ -46,7 +43,7 @@ public class FakeDIContainer {
 
     FakeSignalJournal signalJournal;
     FakeIntradayJournal intradayJournal;
-    FakeAggregatedTotalsJournal aggregatedHistoryJournal;
+    FakeAggregatedTotalsJournal aggregatedTotalsJournal;
     FakeEmulatedPositionJournal emulatedPositionJournal;
 
     FakeScannerRepository scannerRepository;
@@ -56,19 +53,16 @@ public class FakeDIContainer {
 
     FakeTelegramMessageSender telegramMessageSender;
 
-    DisableUpdateInstrumentHandler disableUpdateInstrumentProcessor;
-    EnableUpdateInstrumentHandler enableUpdateInstrumentProcessor;
-    SynchronizeDatasourceHandler integrateInstrumentsProcessor;
-    PublishIntradayDataHandler integrateTradingDataProcessor;
-    RegisterDatasourceHandler registerDatasourceProcessor;
-    UnregisterDatasourceHandler unregisterDatasourceProcessor;
-    UpdateDatasourceHandler updateDatasourceProcessor;
-    CreateScannerCommandHandler createScannerProcessor;
-    UpdateScannerCommandHandler updateScannerProcessor;
+    DisableUpdateInstrumentHandler disableUpdateInstrumentHandler;
+    EnableUpdateInstrumentHandler enableUpdateInstrumentHandler;
+    SynchronizeDatasourceHandler synchronizeDatasourceHandler;
+    PublishIntradayDataHandler publishIntradayDataHandler;
+    CreateDatasourceHandler createDatasourceHandler;
+    RemoveDatasourceHandler removeDatasourceHandler;
+    UpdateDatasourceHandler updateDatasourceHandler;
+    CreateScannerCommandHandler createScannerHandler;
+    UpdateScannerCommandHandler updateScannerHandler;
     RemoveScannerHandler removeScannerHandler;
-    CloseEmulatedPositionHandler closeEmulatedPositionHandler;
-    OpenEmulatedPositionHandler openEmulatedPositionHandler;
-    PublishSignalHandler publishSignalHandler;
     SubscribeHandler subscribeHandler;
     UnsubscribeHandler unsubscribeHandler;
     DeactivateScannerHandler deactivateScannerHandler;
@@ -77,10 +71,10 @@ public class FakeDIContainer {
 
     PipelineContext pipelineContext;
     SignalRegistry signalRegistry;
-    PipelineManager pipelineManager;
+    PipelineConfigurator pipelineConfigurator;
     SignalProducer signalProducer;
-    EvaluateRiskProcessor evaluateRiskProcessor;
-    EmulatedPositionManager emulatedPositionManager;
+    RiskManager riskManager;
+    PositionManager positionManager;
 
     CommandBus commandBus;
     Validator validator;
@@ -89,7 +83,7 @@ public class FakeDIContainer {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
-        aggregatedHistoryJournal = new FakeAggregatedTotalsJournal();
+        aggregatedTotalsJournal = new FakeAggregatedTotalsJournal();
         intradayJournal = new FakeIntradayJournal();
         signalJournal = new FakeSignalJournal();
 
@@ -110,7 +104,7 @@ public class FakeDIContainer {
             loggerProvider,
             exchangeProvider,
             datasourceRepository,
-            aggregatedHistoryJournal
+            aggregatedTotalsJournal
         );
         deactivateScannerHandler = new DeactivateScannerHandler(
             dateTimeProvider,
@@ -131,19 +125,19 @@ public class FakeDIContainer {
           scannerRepository,
             emulatedPositionJournal
         );
-        disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
+        disableUpdateInstrumentHandler = new DisableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        enableUpdateInstrumentProcessor = new EnableUpdateInstrumentHandler(
+        enableUpdateInstrumentHandler = new EnableUpdateInstrumentHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        integrateInstrumentsProcessor = new SynchronizeDatasourceHandler(
+        synchronizeDatasourceHandler = new SynchronizeDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -151,7 +145,7 @@ public class FakeDIContainer {
             instrumentRepository,
             datasourceRepository
         );
-        integrateTradingDataProcessor = new PublishIntradayDataHandler(
+        publishIntradayDataHandler = new PublishIntradayDataHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
@@ -159,61 +153,37 @@ public class FakeDIContainer {
             intradayJournal,
             datasourceRepository
         );
-        registerDatasourceProcessor = new RegisterDatasourceHandler(
+        createDatasourceHandler = new CreateDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        unregisterDatasourceProcessor = new UnregisterDatasourceHandler(
+        removeDatasourceHandler = new RemoveDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        updateDatasourceProcessor = new UpdateDatasourceHandler(
+        updateDatasourceHandler = new UpdateDatasourceHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             datasourceRepository
         );
-        createScannerProcessor = new CreateScannerCommandHandler(
+        createScannerHandler = new CreateScannerCommandHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             scannerRepository,
             datasourceRepository
         );
-        updateScannerProcessor = new UpdateScannerCommandHandler(
+        updateScannerHandler = new UpdateScannerCommandHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
             scannerRepository,
             datasourceRepository
-        );
-        closeEmulatedPositionHandler = new CloseEmulatedPositionHandler(
-            dateTimeProvider,
-            validator,
-            loggerProvider,
-            emulatedPositionJournal
-        );
-        openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
-            dateTimeProvider,
-            validator,
-            loggerProvider,
-            emulatedPositionJournal,
-            instrumentRepository,
-            scannerRepository
-        );
-        publishSignalHandler = new PublishSignalHandler(
-            dateTimeProvider,
-            validator,
-            loggerProvider,
-            aggregatedHistoryJournal,
-            scannerRepository,
-            instrumentRepository,
-            telegramChatRepository,
-            telegramMessageSender
         );
         subscribeHandler = new SubscribeHandler(
             dateTimeProvider,
@@ -231,18 +201,15 @@ public class FakeDIContainer {
         );
         commandBus = new CommandBus(
             List.of(
-                disableUpdateInstrumentProcessor,
-                enableUpdateInstrumentProcessor,
-                integrateInstrumentsProcessor,
-                integrateTradingDataProcessor,
-                registerDatasourceProcessor,
-                updateDatasourceProcessor,
-                unregisterDatasourceProcessor,
-                createScannerProcessor,
-                updateScannerProcessor,
-                closeEmulatedPositionHandler,
-                openEmulatedPositionHandler,
-                publishSignalHandler,
+                disableUpdateInstrumentHandler,
+                enableUpdateInstrumentHandler,
+                synchronizeDatasourceHandler,
+                publishIntradayDataHandler,
+                createDatasourceHandler,
+                updateDatasourceHandler,
+                removeDatasourceHandler,
+                createScannerHandler,
+                updateScannerHandler,
                 subscribeHandler,
                 unsubscribeHandler,
                 removeScannerHandler,
@@ -254,12 +221,12 @@ public class FakeDIContainer {
 
         pipelineContext = new PipelineContext();
         signalRegistry = new SignalRegistry();
-        pipelineManager = new PipelineManager(
+        pipelineConfigurator = new PipelineConfigurator(
             pipelineContext,
             signalRegistry,
             scannerRepository,
             instrumentRepository,
-            aggregatedHistoryJournal,
+            aggregatedTotalsJournal,
             signalJournal
         );
         signalProducer = new SignalProducer(
@@ -268,8 +235,8 @@ public class FakeDIContainer {
             dateTimeProvider,
             signalJournal
         );
-        evaluateRiskProcessor = new EvaluateRiskProcessor(pipelineContext);
-        emulatedPositionManager = new EmulatedPositionManager(pipelineContext, emulatedPositionJournal);
+        riskManager = new RiskManager(pipelineContext);
+        positionManager = new PositionManager(pipelineContext, emulatedPositionJournal);
     }
 
     private FakeDatasourceProvider getFakeExchangeProvider() {

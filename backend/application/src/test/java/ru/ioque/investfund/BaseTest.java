@@ -3,15 +3,12 @@ package ru.ioque.investfund;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
-import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.PipelineConfigurator;
 import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
@@ -20,6 +17,7 @@ import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
 import ru.ioque.investfund.fakes.FakeEmulatedPositionJournal;
+import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsJournal;
 import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
@@ -31,7 +29,6 @@ import ru.ioque.investfund.fixture.AggregatedHistoryFixture;
 import ru.ioque.investfund.fixture.InstrumentDetailsFixture;
 import ru.ioque.investfund.fixture.IntradayDataFixture;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +81,10 @@ public class BaseTest {
         return fakeDIContainer.getIntradayJournal();
     }
 
+    protected final FakeAggregatedTotalsJournal aggregatedTotalsJournal() {
+        return fakeDIContainer.getAggregatedTotalsJournal();
+    }
+
     protected final SignalProducer signalScannerProcessor() {
         return fakeDIContainer.getSignalProducer();
     }
@@ -92,16 +93,8 @@ public class BaseTest {
         return fakeDIContainer.getSignalJournal();
     }
 
-    protected final PipelineManager pipelineManager() {
-        return fakeDIContainer.getPipelineManager();
-    }
-
-    protected LocalDate nowMinus1Days() {
-        return dateTimeProvider().nowDateTime().toLocalDate().minusDays(1);
-    }
-
-    protected LocalDate nowMinus3Month() {
-        return dateTimeProvider().nowDateTime().minusMonths(3).toLocalDate();
+    protected final PipelineConfigurator pipelineManager() {
+        return fakeDIContainer.getPipelineConfigurator();
     }
 
     protected List<Instrument> getInstruments(DatasourceId datasourceId) {
@@ -115,34 +108,20 @@ public class BaseTest {
         dateTimeProvider().setNow(LocalDateTime.parse(dateTime));
     }
 
-
     protected void initInstrumentDetails(InstrumentDetail... instrumentDetails) {
         datasourceStorage().initInstrumentDetails(Arrays.asList(instrumentDetails));
     }
 
-    protected void initHistoryValues(List<AggregatedTotals> tradingResults) {
+    protected void initAggregatedTotals(List<AggregatedTotals> tradingResults) {
         datasourceStorage().initHistoryValues(tradingResults);
     }
 
-    protected void initHistoryValues(AggregatedTotals... aggregatedTotalsDtos) {
+    protected void initAggregatedTotals(AggregatedTotals... aggregatedTotalsDtos) {
         datasourceStorage().initHistoryValues(Arrays.asList(aggregatedTotalsDtos));
     }
 
-    protected void initIntradayValues(IntradayData... intradayValues) {
-        datasourceStorage().initDealDatas(Arrays.asList(intradayValues));
-    }
-
-    protected List<IntradayData> getIntradayValuesBy(String ticker) {
-        return fakeDIContainer.getIntradayJournal()
-            .stream()
-            .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
-            .toList();
-    }
-
-    protected List<AggregatedTotals> getHistoryValuesBy(String ticker) {
-        return fakeDIContainer
-            .getAggregatedHistoryJournal()
-            .findAllBy(Ticker.from(ticker));
+    protected void initIntradayData(IntradayData... intradayData) {
+        datasourceStorage().initDealDatas(Arrays.asList(intradayData));
     }
 
     protected DatasourceId getDatasourceId() {
@@ -153,37 +132,13 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
-    protected void buildPipeline() {
-        fakeDIContainer.getPipelineManager().initializePipeline(getDatasourceId());
-        intradayJournal().subscribe(signalScannerProcessor());
-        intradayJournal().subscribe(fakeDIContainer.getEvaluateRiskProcessor());
-        signalJournal().subscribe(fakeDIContainer.getEmulatedPositionManager());
-    }
-
-    protected void runWorkPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
-        buildPipeline();
-        commandBus().execute(new PublishIntradayData(datasourceId));
-    }
-
-    protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {
-        runWorkPipeline(datasourceId);
-        loggerProvider().clearLogs();
-    }
-
     protected List<Ticker> getTickers(DatasourceId datasourceId) {
         return getInstruments(datasourceId).stream().map(Instrument::getTicker).toList();
-    }
-
-
-    protected InstrumentId getInstrumentIdBy(String ticker) {
-        return datasourceRepository().getInstrumentBy(Ticker.from(ticker)).getId();
     }
 
     protected String getMessage(ConstraintViolationException exception) {
         return exception.getConstraintViolations().stream().findFirst().map(ConstraintViolation::getMessage).orElseThrow();
     }
-
 
     protected EnableUpdateInstruments enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
         return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());

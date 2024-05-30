@@ -70,8 +70,8 @@ public class PipelineContext {
             .toList();
     }
 
-    public boolean containsTicker(Ticker ticker) {
-        return tickerToIdMap.containsKey(ticker);
+    public SignalScanner getScanner(ScannerId scannerId) {
+        return scanners.get(scannerId);
     }
 
     public void updateIntradayPerformance(IntradayData intradayData) {

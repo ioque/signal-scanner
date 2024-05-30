@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
-import ru.ioque.investfund.application.adapters.journal.Processor;
+import ru.ioque.investfund.domain.pipeline.Processor;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 @Slf4j

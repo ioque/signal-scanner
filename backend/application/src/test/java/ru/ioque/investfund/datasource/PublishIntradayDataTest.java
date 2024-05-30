@@ -1,5 +1,6 @@
 package ru.ioque.investfund.datasource;
 
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,9 +9,12 @@ import ru.ioque.investfund.application.modules.datasource.command.CreateDatasour
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.RemoveDatasource;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fixture.DataFactory;
 
 import java.time.LocalDateTime;
@@ -20,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
-@DisplayName("EXECUTE DATASOURCE WORKER")
+@DisplayName("PUBLISH INTRADAY DATA TEST")
 public class PublishIntradayDataTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
@@ -44,12 +48,12 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         datasourceStorage().initInstrumentDetails(List.of(instrumentFixture.afks()));
         initTodayDateTime("2023-12-08T10:15:00");
-        initIntradayValues(
+        initIntradayData(
             DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
             DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-08T10:03:00")),
             DataFactory.factoryDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-08T10:15:00"))
         );
-        initHistoryValues(
+        initAggregatedTotals(
             historyFixture.afksHistoryValue("2023-12-04", 10D, 10D, 10D, 10D),
             historyFixture.afksHistoryValue("2023-12-05", 10D, 10D, 10D, 10D),
             historyFixture.afksHistoryValue("2023-12-06", 10D, 10D, 10D, 10D),
@@ -79,7 +83,7 @@ public class PublishIntradayDataTest extends BaseTest {
         initTodayDateTime("2023-12-08T10:15:00");
         initInstrumentDetails(instrumentFixture.afks());
         clearLogs();
-        initIntradayValues(
+        initIntradayData(
             DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-08T10:00:00")),
             DataFactory.factoryDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
             DataFactory.factoryDealWith(AFKS,2L, LocalDateTime.parse("2023-12-08T10:03:00")),
@@ -106,7 +110,7 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-07T12:00:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initIntradayValues(
+        initIntradayData(
             DataFactory.factoryDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
             DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00"))
         );
@@ -116,7 +120,7 @@ public class PublishIntradayDataTest extends BaseTest {
         commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
-        initIntradayValues(
+        initIntradayData(
             DataFactory.factoryDealWith(AFKS, 1L, LocalDateTime.parse("2023-12-07T11:00:00")),
             DataFactory.factoryDealWith(AFKS, 2L, LocalDateTime.parse("2023-12-07T11:30:00")),
             DataFactory.factoryDealWith(AFKS, 3L, LocalDateTime.parse("2023-12-07T12:10:00")),
@@ -139,8 +143,8 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initIntradayValues(DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-07T11:00:00")));
-        initHistoryValues(historyFixture.afksHistoryValue("2024-01-03", 10D, 10D, 10D, 10D));
+        initIntradayData(DataFactory.factoryDealWith(AFKS,1L, LocalDateTime.parse("2023-12-07T11:00:00")));
+        initAggregatedTotals(historyFixture.afksHistoryValue("2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
@@ -161,13 +165,13 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initIntradayValues(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
+        initIntradayData(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
-        initIntradayValues(
+        initIntradayData(
             intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1),
             intradayFixture.afksBuyDeal(1L,"11:00:00", 10D, 10D, 1)
         );
@@ -186,7 +190,7 @@ public class PublishIntradayDataTest extends BaseTest {
         """)
     void testCase8() {
         DatasourceId datasourceId = getDatasourceId();
-        commandBus().execute(new UnregisterDatasource(datasourceId));
+        commandBus().execute(new RemoveDatasource(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
             () -> commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS))
@@ -202,7 +206,7 @@ public class PublishIntradayDataTest extends BaseTest {
         """)
     void testCase9() {
         DatasourceId datasourceId = getDatasourceId();
-        commandBus().execute(new UnregisterDatasource(datasourceId));
+        commandBus().execute(new RemoveDatasource(datasourceId));
         var error = assertThrows(
             EntityNotFoundException.class,
             () -> commandBus().execute(disableUpdateInstrumentCommandFrom(datasourceId, AFKS))
@@ -218,8 +222,8 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T12:00:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initIntradayValues(intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1));
-        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
+        initIntradayData(intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1));
+        initAggregatedTotals(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishIntradayData(datasourceId));
@@ -233,8 +237,8 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
-        initIntradayValues(
+        initAggregatedTotals(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
+        initIntradayData(
             intradayFixture.afksBuyDeal(1L,"10:00:00", 10D, 10D, 1),
             intradayFixture.afksBuyDeal(2L, "10:00:00", 11D, 10D, 1),
             intradayFixture.afksBuyDeal(3L, "10:00:00", 11D, 10D, 2)
@@ -253,12 +257,36 @@ public class PublishIntradayDataTest extends BaseTest {
         final DatasourceId datasourceId = getDatasourceId();
         initTodayDateTime("2023-12-08T10:15:00");
         initInstrumentDetails(instrumentFixture.afks());
-        initHistoryValues(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
-        initIntradayValues(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
+        initAggregatedTotals(historyFixture.afksHistoryValue("2023-12-07", 10D, 10D, 10D, 10D));
+        initIntradayData(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
         commandBus().execute(new PublishIntradayData(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         assertEquals(1, getIntradayValuesBy(AFKS).size());
+    }
+
+    @Test
+    @DisplayName("""
+        T12. В команде на запуск интеграции торговых данных не передан идентификатор источника данных.
+        """)
+    void testCase14() {
+        final ConstraintViolationException exception = assertThrows(
+            ConstraintViolationException.class,
+            () -> commandBus().execute(new PublishIntradayData(null))
+        );
+        assertEquals(1, exception.getConstraintViolations().size());
+        assertEquals("Не передан идентификатор источника данных.", getMessage(exception));
+    }
+
+    private List<IntradayData> getIntradayValuesBy(String ticker) {
+        return intradayJournal()
+            .stream()
+            .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
+            .toList();
+    }
+
+    private List<AggregatedTotals> getHistoryValuesBy(String ticker) {
+        return aggregatedTotalsJournal().findAllBy(Ticker.from(ticker));
     }
 }

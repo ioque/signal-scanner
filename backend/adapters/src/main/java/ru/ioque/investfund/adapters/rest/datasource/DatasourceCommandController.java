@@ -20,7 +20,7 @@ import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateIn
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.datasource.command.UnregisterDatasource;
+import ru.ioque.investfund.application.modules.datasource.command.RemoveDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -92,6 +92,6 @@ public class DatasourceCommandController {
 
     @DeleteMapping("/api/datasource/{datasourceId}")
     public void removeDatasource(@PathVariable UUID datasourceId) {
-        commandBus.execute(new UnregisterDatasource(DatasourceId.from(datasourceId)));
+        commandBus.execute(new RemoveDatasource(DatasourceId.from(datasourceId)));
     }
 }
