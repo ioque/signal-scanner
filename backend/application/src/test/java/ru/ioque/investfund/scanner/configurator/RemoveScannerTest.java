@@ -3,7 +3,6 @@ package ru.ioque.investfund.scanner.configurator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
-import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -85,17 +84,6 @@ public class RemoveScannerTest extends BaseConfiguratorTest {
 
         runWorkPipeline(getDatasourceId());
 
-        signalJournal()
-            .stream()
-            .forEach(event -> commandBus()
-                .execute(
-                    OpenEmulatedPosition.builder()
-                        .price(event.getPrice())
-                        .scannerId(event.getScannerId())
-                        .instrumentId(event.getInstrumentId())
-                        .build()
-                )
-            );
         assertEquals(2, signalJournal().stream().count());
         assertEquals(2, emulatedPositionRepository().emulatedPositions.size());
     }

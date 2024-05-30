@@ -9,7 +9,7 @@ import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 
 @Component
 public class CloseEmulatedPositionHandler extends CommandHandler<CloseEmulatedPosition> {

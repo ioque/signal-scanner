@@ -14,10 +14,13 @@ import ru.ioque.investfund.application.modules.datasource.handler.UnregisterData
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.PublishIntradayDataHandler;
-import ru.ioque.investfund.application.modules.risk.processor.RiskProcessor;
-import ru.ioque.investfund.application.modules.scanner.processor.SignalProducer;
+import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
+import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.SignalRegistry;
+import ru.ioque.investfund.application.modules.pipeline.processor.EmulatedPositionManager;
+import ru.ioque.investfund.application.modules.pipeline.processor.EvaluateRiskProcessor;
+import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
-import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
@@ -44,12 +47,12 @@ public class FakeDIContainer {
     FakeSignalJournal signalJournal;
     FakeIntradayJournal intradayJournal;
     FakeAggregatedTotalsJournal aggregatedHistoryJournal;
+    FakeEmulatedPositionJournal emulatedPositionJournal;
 
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeInstrumentRepository instrumentRepository;
     FakeTelegramChatRepository telegramChatRepository;
-    FakeEmulatedPositionJournal emulatedPositionRepository;
 
     FakeTelegramMessageSender telegramMessageSender;
 
@@ -62,10 +65,9 @@ public class FakeDIContainer {
     UpdateDatasourceHandler updateDatasourceProcessor;
     CreateScannerCommandHandler createScannerProcessor;
     UpdateScannerCommandHandler updateScannerProcessor;
-    CloseEmulatedPositionHandler closeEmulatedPositionHandler;
-    EvaluateEmulatedPositionHandler evaluateEmulatedPositionHandler;
-    OpenEmulatedPositionHandler openEmulatedPositionHandler;
     RemoveScannerHandler removeScannerHandler;
+    CloseEmulatedPositionHandler closeEmulatedPositionHandler;
+    OpenEmulatedPositionHandler openEmulatedPositionHandler;
     PublishSignalHandler publishSignalHandler;
     SubscribeHandler subscribeHandler;
     UnsubscribeHandler unsubscribeHandler;
@@ -73,8 +75,12 @@ public class FakeDIContainer {
     ActivateScannerHandler activateScannerHandler;
     PublishAggregatedHistoryHandler publishAggregatedHistoryHandler;
 
+    PipelineContext pipelineContext;
+    SignalRegistry signalRegistry;
+    PipelineManager pipelineManager;
     SignalProducer signalProducer;
-    RiskProcessor riskProcessor;
+    EvaluateRiskProcessor evaluateRiskProcessor;
+    EmulatedPositionManager emulatedPositionManager;
 
     CommandBus commandBus;
     Validator validator;
@@ -95,7 +101,7 @@ public class FakeDIContainer {
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
         scannerRepository = new FakeScannerRepository();
         telegramChatRepository = new FakeTelegramChatRepository();
-        emulatedPositionRepository = new FakeEmulatedPositionJournal();
+        emulatedPositionJournal = new FakeEmulatedPositionJournal();
         telegramMessageSender = new FakeTelegramMessageSender();
 
         publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
@@ -123,7 +129,7 @@ public class FakeDIContainer {
           validator,
           loggerProvider,
           scannerRepository,
-          emulatedPositionRepository
+            emulatedPositionJournal
         );
         disableUpdateInstrumentProcessor = new DisableUpdateInstrumentHandler(
             dateTimeProvider,
@@ -189,19 +195,13 @@ public class FakeDIContainer {
             dateTimeProvider,
             validator,
             loggerProvider,
-            emulatedPositionRepository
-        );
-        evaluateEmulatedPositionHandler = new EvaluateEmulatedPositionHandler(
-            dateTimeProvider,
-            validator,
-            loggerProvider,
-            emulatedPositionRepository
+            emulatedPositionJournal
         );
         openEmulatedPositionHandler = new OpenEmulatedPositionHandler(
             dateTimeProvider,
             validator,
             loggerProvider,
-            emulatedPositionRepository,
+            emulatedPositionJournal,
             instrumentRepository,
             scannerRepository
         );
@@ -241,7 +241,6 @@ public class FakeDIContainer {
                 createScannerProcessor,
                 updateScannerProcessor,
                 closeEmulatedPositionHandler,
-                evaluateEmulatedPositionHandler,
                 openEmulatedPositionHandler,
                 publishSignalHandler,
                 subscribeHandler,
@@ -253,14 +252,24 @@ public class FakeDIContainer {
             )
         );
 
-        signalProducer = new SignalProducer(
-            dateTimeProvider,
+        pipelineContext = new PipelineContext();
+        signalRegistry = new SignalRegistry();
+        pipelineManager = new PipelineManager(
+            pipelineContext,
+            signalRegistry,
             scannerRepository,
             instrumentRepository,
             aggregatedHistoryJournal,
             signalJournal
         );
-        riskProcessor = new RiskProcessor();
+        signalProducer = new SignalProducer(
+            pipelineContext,
+            signalRegistry,
+            dateTimeProvider,
+            signalJournal
+        );
+        evaluateRiskProcessor = new EvaluateRiskProcessor(pipelineContext);
+        emulatedPositionManager = new EmulatedPositionManager(pipelineContext, emulatedPositionJournal);
     }
 
     private FakeDatasourceProvider getFakeExchangeProvider() {

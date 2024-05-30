@@ -6,7 +6,7 @@ import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPositio
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.Optional;
@@ -14,12 +14,11 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
-public class CloseEmulatedPositionTest extends RiskManagerTest {
+public class CloseEmulatedPositionTest extends EmulatedPositionManagerTest {
     @Test
     @DisplayName("""
         T1. Закрытие позиции по инструменту TGKN.
@@ -42,14 +41,11 @@ public class CloseEmulatedPositionTest extends RiskManagerTest {
         );
         final Optional<EmulatedPosition> actualPosition = emulatedPositionRepository().findActualBy(getInstrumentIdBy(TGKN), getScannerId());
         assertTrue(actualPosition.isPresent());
-        assertNotNull(actualPosition.get().getId());
         assertFalse(actualPosition.get().getIsOpen());
         assertEquals(122D, actualPosition.get().getClosePrice());
         assertEquals(102D, actualPosition.get().getOpenPrice());
-        assertEquals(122D, actualPosition.get().getLastPrice());
-        assertEquals(20, Math.round(actualPosition.get().getProfit()));
-        assertEquals(getInstrumentIdBy(TGKN), actualPosition.get().getInstrument().getId());
-        assertEquals(getScannerId(), actualPosition.get().getScanner().getId());
+        assertEquals(getInstrumentIdBy(TGKN), actualPosition.get().getInstrumentId());
+        assertEquals(getScannerId(), actualPosition.get().getScannerId());
     }
 
     @Test

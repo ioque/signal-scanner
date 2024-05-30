@@ -6,7 +6,8 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.scanner.processor.SignalProducer;
+import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -76,7 +77,7 @@ public class BaseTest {
     }
 
     protected final FakeEmulatedPositionJournal emulatedPositionRepository() {
-        return fakeDIContainer.getEmulatedPositionRepository();
+        return fakeDIContainer.getEmulatedPositionJournal();
     }
 
     protected final FakeIntradayJournal intradayJournal() {
@@ -89,6 +90,10 @@ public class BaseTest {
 
     protected final FakeSignalJournal signalJournal() {
         return fakeDIContainer.getSignalJournal();
+    }
+
+    protected final PipelineManager pipelineManager() {
+        return fakeDIContainer.getPipelineManager();
     }
 
     protected LocalDate nowMinus1Days() {
@@ -149,13 +154,15 @@ public class BaseTest {
     }
 
     protected void buildPipeline() {
+        fakeDIContainer.getPipelineManager().initializePipeline(getDatasourceId());
         intradayJournal().subscribe(signalScannerProcessor());
+        intradayJournal().subscribe(fakeDIContainer.getEvaluateRiskProcessor());
+        signalJournal().subscribe(fakeDIContainer.getEmulatedPositionManager());
     }
 
     protected void runWorkPipeline(DatasourceId datasourceId) {
-        buildPipeline();
         commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
-        signalScannerProcessor().init(datasourceId);
+        buildPipeline();
         commandBus().execute(new PublishIntradayData(datasourceId));
     }
 

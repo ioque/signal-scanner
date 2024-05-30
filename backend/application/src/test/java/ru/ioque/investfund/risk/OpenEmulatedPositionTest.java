@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
-public class OpenEmulatedPositionTest extends RiskManagerTest {
+public class OpenEmulatedPositionTest extends EmulatedPositionManagerTest {
     @Test
     @DisplayName("""
         T1. Открытие позиции по инструменту TGKN.
@@ -34,14 +34,11 @@ public class OpenEmulatedPositionTest extends RiskManagerTest {
 
         final List<EmulatedPosition> positions = emulatedPositionRepository().findAllBy(getInstrumentIdBy(TGKN));
         assertEquals(1, positions.size());
-        assertNotNull(positions.get(0).getId());
         assertTrue(positions.get(0).getIsOpen());
         assertNull(positions.get(0).getClosePrice());
         assertEquals(102D, positions.get(0).getOpenPrice());
-        assertEquals(102D, positions.get(0).getLastPrice());
-        assertEquals(0, positions.get(0).getProfit());
-        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrument().getId());
-        assertEquals(getScannerId(), positions.get(0).getScanner().getId());
+        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrumentId());
+        assertEquals(getScannerId(), positions.get(0).getScannerId());
     }
 
     @Test
@@ -105,13 +102,10 @@ public class OpenEmulatedPositionTest extends RiskManagerTest {
 
         final List<EmulatedPosition> positions = emulatedPositionRepository().findAllBy(getInstrumentIdBy(TGKN));
         assertEquals(1, positions.size());
-        assertNotNull(positions.get(0).getId());
         assertTrue(positions.get(0).getIsOpen());
         assertNull(positions.get(0).getClosePrice());
         assertEquals(102D, positions.get(0).getOpenPrice());
-        assertEquals(102D, positions.get(0).getLastPrice());
-        assertEquals(0, positions.get(0).getProfit());
-        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrument().getId());
-        assertEquals(getScannerId(), positions.get(0).getScanner().getId());
+        assertEquals(getInstrumentIdBy(TGKN), positions.get(0).getInstrumentId());
+        assertEquals(getScannerId(), positions.get(0).getScannerId());
     }
 }

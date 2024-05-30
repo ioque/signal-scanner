@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
-public abstract class RiskManagerTest extends BaseTest {
+public abstract class EmulatedPositionManagerTest extends BaseTest {
     @BeforeEach
     void beforeEach() {
         commandBus().execute(

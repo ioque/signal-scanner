@@ -15,8 +15,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
-import ru.ioque.investfund.domain.risk.EmulatedPositionId;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 
 import java.util.UUID;
 

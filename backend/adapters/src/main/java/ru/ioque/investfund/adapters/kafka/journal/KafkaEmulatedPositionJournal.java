@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
-import ru.ioque.investfund.domain.risk.EmulatedPositionId;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 
 @Component

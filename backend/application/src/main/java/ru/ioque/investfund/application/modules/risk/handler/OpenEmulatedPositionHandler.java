@@ -14,7 +14,7 @@ import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 import ru.ioque.investfund.domain.core.WarningLog;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
-import ru.ioque.investfund.domain.risk.EmulatedPosition;
+import ru.ioque.investfund.domain.position.EmulatedPosition;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;
@@ -59,13 +59,11 @@ public class OpenEmulatedPositionHandler extends CommandHandler<OpenEmulatedPosi
             );
         }
         final EmulatedPosition emulatedPosition = EmulatedPosition.builder()
-            .id(emulatedPositionJournal.nextId())
             .isOpen(true)
-            .scanner(scanner)
-            .instrument(instrument)
+            .scannerId(scanner.getId())
+            .instrumentId(instrument.getId())
             .openPrice(command.getPrice())
             .build();
-        emulatedPosition.updateLastPrice(command.getPrice());
         emulatedPositionJournal.publish(emulatedPosition);
         return Result.success();
     }

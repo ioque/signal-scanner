@@ -1,4 +1,4 @@
-package ru.ioque.investfund.domain.scanner;
+package ru.ioque.investfund.application.modules.pipeline;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,18 +8,23 @@ import java.util.Optional;
 import java.util.Set;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Component;
 import ru.ioque.investfund.domain.scanner.entity.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-@AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalRegistry {
-    Map<ScannerId, Set<Signal>> registeredSignals = new HashMap<>();
+    @Getter
+    boolean initialized = false;
+    final Map<ScannerId, Set<Signal>> registeredSignals = new HashMap<>();
 
-    public SignalRegistry(List<Signal> signals) {
+    public void initialize(List<Signal> signals) {
+        registeredSignals.clear();
         signals.forEach(this::register);
+        initialized = true;
     }
 
     public boolean register(Signal newSignal) {

@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.risk.command.CloseEmulatedPosition;
-import ru.ioque.investfund.application.modules.risk.command.EvaluateEmulatedPosition;
 import ru.ioque.investfund.application.modules.risk.command.OpenEmulatedPosition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.*;
 
 @DisplayName("RISK COMMAND VALIDATION TEST")
-public class RiskCommandValidationTest extends RiskManagerTest {
+public class RiskCommandValidationTest extends EmulatedPositionManagerTest {
     @Test
     @DisplayName("""
         T1. В команде на открытие позиции не указан идентификатор инструмента.
@@ -195,75 +194,5 @@ public class RiskCommandValidationTest extends RiskManagerTest {
         );
         assertEquals(1, exception.getConstraintViolations().size());
         assertEquals("Цена закрытия должна быть больше нуля.", getMessage(exception));
-    }
-
-    @Test
-    @DisplayName("""
-        T11. В команде на оценку позиций по инструменту не указан идентификатор инструмента.
-        """)
-    void testCase11() {
-        final ConstraintViolationException exception = assertThrows(
-            ConstraintViolationException.class,
-            () -> commandBus().execute(
-                EvaluateEmulatedPosition.builder()
-                    .price(100D)
-                    .build()
-            )
-        );
-        assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не указан идентификатор инструмента.", getMessage(exception));
-    }
-
-    @Test
-    @DisplayName("""
-        T12. В команде на оценку позиций по инструменту не указана последняя цена инструмента.
-        """)
-    void testCase12() {
-        final ConstraintViolationException exception = assertThrows(
-            ConstraintViolationException.class,
-            () -> commandBus().execute(
-                EvaluateEmulatedPosition.builder()
-                    .instrumentId(getInstrumentIdBy(TGKN))
-                    .build()
-            )
-        );
-        assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Не указана последняя цена инструмента.", getMessage(exception));
-    }
-
-    @Test
-    @DisplayName("""
-        T13. В команде на оценку позиций по инструменту последняя цена инструмента меньше нуля.
-        """)
-    void testCase13() {
-        final ConstraintViolationException exception = assertThrows(
-            ConstraintViolationException.class,
-            () -> commandBus().execute(
-                EvaluateEmulatedPosition.builder()
-                    .instrumentId(getInstrumentIdBy(TGKN))
-                    .price(-100D)
-                    .build()
-            )
-        );
-        assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Последняя цена инструмента должна быть больше нуля.", getMessage(exception));
-    }
-
-    @Test
-    @DisplayName("""
-        T14. В команде на оценку позиций по инструменту последняя цена инструмента нулевая.
-        """)
-    void testCase14() {
-        final ConstraintViolationException exception = assertThrows(
-            ConstraintViolationException.class,
-            () -> commandBus().execute(
-                EvaluateEmulatedPosition.builder()
-                    .instrumentId(getInstrumentIdBy(TGKN))
-                    .price(0D)
-                    .build()
-            )
-        );
-        assertEquals(1, exception.getConstraintViolations().size());
-        assertEquals("Последняя цена инструмента должна быть больше нуля.", getMessage(exception));
     }
 }

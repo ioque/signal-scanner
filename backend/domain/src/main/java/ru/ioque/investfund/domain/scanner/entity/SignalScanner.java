@@ -1,9 +1,7 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.AccessLevel;
 import lombok.Builder;

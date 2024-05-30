@@ -3,6 +3,7 @@ package ru.ioque.investfund.scanner.scanning;
 import org.junit.jupiter.api.BeforeEach;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
+import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
@@ -82,8 +83,7 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected InstrumentPerformance getInstrumentPerformanceBy(String ticker) {
-        return signalScannerProcessor()
-            .getSignalProducerContext()
-            .getInstrumentPerformance(signalScannerProcessor().getSignalProducerContext().findIdBy(new Ticker(ticker)));
+        final PipelineContext pipelineContext = pipelineManager().getPipelineContext();
+        return pipelineContext.getInstrumentPerformance(pipelineContext.findInstrumentId(new Ticker(ticker)));
     }
 }
