@@ -14,7 +14,8 @@ import ru.ioque.investfund.application.modules.datasource.handler.UnregisterData
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.PublishIntradayDataHandler;
-import ru.ioque.investfund.application.modules.scanner.SignalScannerProcessor;
+import ru.ioque.investfund.application.modules.risk.processor.RiskProcessor;
+import ru.ioque.investfund.application.modules.scanner.processor.SignalProducer;
 import ru.ioque.investfund.application.modules.risk.handler.CloseEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.EvaluateEmulatedPositionHandler;
 import ru.ioque.investfund.application.modules.risk.handler.OpenEmulatedPositionHandler;
@@ -23,7 +24,6 @@ import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerComm
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
-import ru.ioque.investfund.application.modules.scanner.SignalRegistrar;
 import ru.ioque.investfund.application.modules.telegrambot.handler.PublishSignalHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
@@ -73,8 +73,8 @@ public class FakeDIContainer {
     ActivateScannerHandler activateScannerHandler;
     PublishAggregatedHistoryHandler publishAggregatedHistoryHandler;
 
-    SignalScannerProcessor signalScannerProcessor;
-    SignalRegistrar signalRegistrar;
+    SignalProducer signalProducer;
+    RiskProcessor riskProcessor;
 
     CommandBus commandBus;
     Validator validator;
@@ -97,8 +97,6 @@ public class FakeDIContainer {
         telegramChatRepository = new FakeTelegramChatRepository();
         emulatedPositionRepository = new FakeEmulatedPositionJournal();
         telegramMessageSender = new FakeTelegramMessageSender();
-
-        signalRegistrar = new SignalRegistrar(signalJournal);
 
         publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
             dateTimeProvider,
@@ -254,13 +252,15 @@ public class FakeDIContainer {
                 publishAggregatedHistoryHandler
             )
         );
-        signalScannerProcessor = new SignalScannerProcessor(
-            signalRegistrar,
+
+        signalProducer = new SignalProducer(
             dateTimeProvider,
             scannerRepository,
             instrumentRepository,
-            aggregatedHistoryJournal
+            aggregatedHistoryJournal,
+            signalJournal
         );
+        riskProcessor = new RiskProcessor();
     }
 
     private FakeDatasourceProvider getFakeExchangeProvider() {

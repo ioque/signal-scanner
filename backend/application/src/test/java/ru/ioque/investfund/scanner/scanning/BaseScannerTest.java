@@ -82,8 +82,8 @@ public class BaseScannerTest extends BaseTest {
     }
 
     protected InstrumentPerformance getInstrumentPerformanceBy(String ticker) {
-        return pipelineManager()
-            .getSignalScannerContext()
-            .getInstrumentPerformance(pipelineManager().getSignalScannerContext().findIdBy(new Ticker(ticker)));
+        return signalScannerProcessor()
+            .getSignalProducerContext()
+            .getInstrumentPerformance(signalScannerProcessor().getSignalProducerContext().findIdBy(new Ticker(ticker)));
     }
 }

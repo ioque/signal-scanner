@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Signal {
+public class Signal implements Comparable<Signal> {
     @Setter
     ScannerId scannerId;
     InstrumentId instrumentId;
@@ -47,5 +47,10 @@ public class Signal {
             "isBuy='" + isBuy + '\'' +
             "summary='" + summary + '\'' +
             '}';
+    }
+
+    @Override
+    public int compareTo(Signal signal) {
+        return watermark.compareTo(signal.watermark);
     }
 }

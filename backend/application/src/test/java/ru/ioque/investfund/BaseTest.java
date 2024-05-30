@@ -6,7 +6,7 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.scanner.SignalScannerProcessor;
+import ru.ioque.investfund.application.modules.scanner.processor.SignalProducer;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
@@ -83,8 +83,8 @@ public class BaseTest {
         return fakeDIContainer.getIntradayJournal();
     }
 
-    protected final SignalScannerProcessor pipelineManager() {
-        return fakeDIContainer.getSignalScannerProcessor();
+    protected final SignalProducer signalScannerProcessor() {
+        return fakeDIContainer.getSignalProducer();
     }
 
     protected final FakeSignalJournal signalJournal() {
@@ -148,14 +148,15 @@ public class BaseTest {
         loggerProvider().clearLogs();
     }
 
+    protected void buildPipeline() {
+        intradayJournal().subscribe(signalScannerProcessor());
+    }
+
     protected void runWorkPipeline(DatasourceId datasourceId) {
+        buildPipeline();
         commandBus().execute(new PublishAggregatedHistory(getDatasourceId()));
+        signalScannerProcessor().init(datasourceId);
         commandBus().execute(new PublishIntradayData(datasourceId));
-        pipelineManager().init(getDatasourceId());
-        intradayJournal()
-            .stream()
-            .sorted()
-            .forEach(pipelineManager()::process);
     }
 
     protected void runWorkPipelineAndClearLogs(DatasourceId datasourceId) {

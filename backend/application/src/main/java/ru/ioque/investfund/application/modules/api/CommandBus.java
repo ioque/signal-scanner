@@ -26,7 +26,6 @@ public class CommandBus {
         });
     }
 
-    @Async
     @SuppressWarnings("unchecked")
     public void execute(Command command) {
         Optional

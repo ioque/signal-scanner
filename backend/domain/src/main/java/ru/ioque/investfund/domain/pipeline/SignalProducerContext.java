@@ -1,11 +1,11 @@
 package ru.ioque.investfund.domain.pipeline;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -20,14 +20,14 @@ import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
 import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class SignalScannerContext {
-    Map<ScannerId, SignalScanner> scanners = new ConcurrentHashMap<>();
-    Map<InstrumentId, Set<ScannerId>> subscribers = new ConcurrentHashMap<>();
-    Map<Ticker, InstrumentId> tickerToIdMap = new ConcurrentHashMap<>();
-    Map<InstrumentId, IntradayPerformance> intradayPerformances = new ConcurrentHashMap<>();
-    Map<InstrumentId, TreeSet<AggregatedTotals>> aggregatedTotals = new ConcurrentHashMap<>();
+public class SignalProducerContext {
+    Map<ScannerId, SignalScanner> scanners = new HashMap<>();
+    Map<InstrumentId, Set<ScannerId>> subscribers = new HashMap<>();
+    Map<Ticker, InstrumentId> tickerToIdMap = new HashMap<>();
+    Map<InstrumentId, IntradayPerformance> intradayPerformances = new HashMap<>();
+    Map<InstrumentId, TreeSet<AggregatedTotals>> aggregatedTotals = new HashMap<>();
 
-    public SignalScannerContext(
+    public SignalProducerContext(
         List<SignalScanner> scanners,
         List<Instrument> instruments,
         List<AggregatedTotals> aggregatedTotals) {
