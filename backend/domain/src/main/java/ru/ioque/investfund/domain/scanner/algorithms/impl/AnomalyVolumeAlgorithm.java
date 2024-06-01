@@ -48,7 +48,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     public List<Signal> findSignals(final List<InstrumentTradingState> instruments, final Instant watermark) {
         final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(instruments).isRiseToday();
-
         if (indexIsRiseToday.isEmpty()) {
             return signals;
         }

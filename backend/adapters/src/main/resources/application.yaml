@@ -2,8 +2,8 @@ spring:
   application:
     name: signal-scanner
   jpa:
-    hibernate.ddl-auto: none
-    generate-ddl: false
+    hibernate.ddl-auto: create-drop
+    generate-ddl: true
     properties:
       hibernate:
         jdbc:
@@ -12,7 +12,8 @@ spring:
         order_inserts: true
         order_updates: true
   liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    enabled: false
+  #    change-log: classpath:/db/changelog/db.changelog-master.yaml
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:54321}/${DB_NAME:postgres}?reWriteBatchedInserts=true
@@ -30,7 +31,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       group-id: ${spring.application.name}
       enable-auto-commit: false
-      auto-offset-reset: latest
+      auto-offset-reset: earliest
       properties:
         max.poll.records: 100
         fetch.max.wait.ms: 50

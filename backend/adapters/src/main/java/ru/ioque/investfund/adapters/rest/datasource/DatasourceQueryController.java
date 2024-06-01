@@ -51,7 +51,7 @@ public class DatasourceQueryController {
         @RequestParam(defaultValue = "0") Integer pageNumber,
         @RequestParam(defaultValue = "100") Integer pageSize,
         @RequestParam(defaultValue = "ASC") String orderValue,
-        @RequestParam(defaultValue = "ticker") String orderField
+        @RequestParam(defaultValue = "details.ticker") String orderField
     ) {
         return psqlDatasourceQueryService
             .getPagination(

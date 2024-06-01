@@ -138,8 +138,9 @@ public class StreamingAcceptanceTest extends DatasourceEmulatedTest {
                         .build()
         );
 
-        prepareDatasource(datasourceId);
-
+        synchronizeDatasource(datasourceId);
+        enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
+        updateAggregatedTotals(datasourceId);
         createScanner(
                 CreateScannerRequest.builder()
                         .workPeriodInMinutes(1)
@@ -156,13 +157,12 @@ public class StreamingAcceptanceTest extends DatasourceEmulatedTest {
                         .build()
         );
 
+        serviceClient().initializePipeline();
+
         final StreamingStorage streamingStorage = (StreamingStorage) datasetRepository.datasetStorage;
         streamingStorage.getStreamingThread().start();
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(() -> {
-            System.out.println(datasetRepository.getIntradayValuesBy("TGKN", 1).size());
-            executeDatasourceWork(datasourceId);
-        }, 0, 1, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(() -> publishIntradayData(datasourceId), 0, 10, TimeUnit.SECONDS);
         service.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
     }
 }

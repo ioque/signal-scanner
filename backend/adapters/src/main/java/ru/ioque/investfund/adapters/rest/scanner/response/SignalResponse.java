@@ -31,7 +31,7 @@ public class SignalResponse implements Serializable {
         return SignalResponse.builder()
             .price(signalEntity.getPrice())
             .isBuy(signalEntity.isBuy())
-            .ticker(instrument.getTicker())
+            .ticker(instrument.getDetails().getTicker())
             .summary(signalEntity.getSummary())
             .dateTime(signalEntity.getDateTime())
             .build();

@@ -12,7 +12,6 @@ import ru.ioque.core.datagenerator.core.PercentageGrowths;
 import ru.ioque.core.dataset.Dataset;
 import ru.ioque.core.dataset.DefaultInstrumentSet;
 import ru.ioque.core.dto.datasource.request.DatasourceRequest;
-import ru.ioque.core.dto.datasource.response.InstrumentResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -87,7 +86,7 @@ public class PerformanceAcceptanceTest extends DatasourceEmulatedTest {
         prepareDatasource(datasourceId);
 
         long startMills = System.currentTimeMillis();
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         long finishMills = System.currentTimeMillis();
         long seconds = ((finishMills - startMills) / 1000);
 

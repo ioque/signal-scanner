@@ -18,7 +18,6 @@ public class SignalsFinder implements Transformer<IntradayPerformance, List<Sign
 
     @Override
     public List<Signal> transform(IntradayPerformance intradayPerformance) {
-        System.out.println("SignalsFinder");
         if (!context.isInitialized()) {
             throw new IllegalStateException("Context is not initialized");
         }

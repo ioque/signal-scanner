@@ -102,7 +102,7 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         initDataset(instrumentList, List.of(), intradayValues);
 
         prepareDatasource(datasourceId);
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
 
         instrumentList.forEach(dto -> {
             InstrumentResponse instrumentResponse = getInstrumentBy(datasourceId, dto.getTicker());
@@ -145,10 +145,10 @@ public class TradingDataIntegrationAcceptanceTest extends DatasourceAcceptanceTe
         final List<IntradayValue> intradayValues = List.of(Deal.builder().number(1L).ticker("SBER").qnt(100).isBuy(true).price(270D).value(270000D).dateTime(LocalDateTime.parse("2024-03-22T10:00:00")).build());
         initDataset(instrumentList, List.of(), intradayValues);
         prepareDatasource(datasourceId);
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         assertEquals(1, getIntradayValues(0, 10).size());
         initDataset(instrumentList, List.of(), getIntradayValues());
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         assertEquals(4, getIntradayValues(0, 10).size());
     }
 

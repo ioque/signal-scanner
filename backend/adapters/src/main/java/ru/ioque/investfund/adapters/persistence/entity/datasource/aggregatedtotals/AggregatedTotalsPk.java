@@ -1,4 +1,4 @@
-package ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details;
+package ru.ioque.investfund.adapters.persistence.entity.datasource.aggregatedtotals;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -17,10 +18,11 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstrumentDetailsPk {
+public class AggregatedTotalsPk {
+    private LocalDate date;
     private UUID instrumentId;
 
-    public static InstrumentDetailsPk from(UUID instrumentId) {
-        return new InstrumentDetailsPk(instrumentId);
+    public static AggregatedTotalsPk from(UUID instrumentId, LocalDate date) {
+        return new AggregatedTotalsPk(date, instrumentId);
     }
 }

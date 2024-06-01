@@ -1,4 +1,4 @@
-package ru.ioque.investfund.application.modules.pipeline.sink;
+package ru.ioque.investfund.application.modules.pipeline.subscriber;
 
 import java.util.Collection;
 import java.util.HashMap;

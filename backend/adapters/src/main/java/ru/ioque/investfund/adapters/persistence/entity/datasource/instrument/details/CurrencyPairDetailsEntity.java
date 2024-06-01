@@ -22,6 +22,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("CurrencyPair")
 public class CurrencyPairDetailsEntity extends InstrumentDetailsEntity {
+
     Integer lotSize;
 
     String faceUnit;
@@ -29,12 +30,13 @@ public class CurrencyPairDetailsEntity extends InstrumentDetailsEntity {
     @Builder
     public CurrencyPairDetailsEntity(
         InstrumentEntity instrument,
+        String ticker,
         String shortName,
         String name,
         Integer lotSize,
         String faceUnit
     ) {
-        super(instrument, shortName, name);
+        super(instrument, ticker, shortName, name);
         this.lotSize = lotSize;
         this.faceUnit = faceUnit;
     }
@@ -42,7 +44,7 @@ public class CurrencyPairDetailsEntity extends InstrumentDetailsEntity {
     @Override
     public InstrumentDetail toDomain() {
         return CurrencyPairDetail.builder()
-            .ticker(Ticker.from(instrument.getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotSize(getLotSize())

@@ -26,12 +26,18 @@ public class KafkaIntradayDataJournal implements IntradayDataJournal {
     public void publish(IntradayData intradayData) {
         kafkaProducerTemplate
             .send(INTRADAY_DATA_TOPIC, intradayData.getTicker().getValue(), intradayData)
-            .doOnSuccess(senderResult -> log.info("sent {} offset : {}", intradayData, senderResult.recordMetadata().offset()))
+            .doOnError(e-> log.error("Send failed", e))
             .subscribe();
     }
 
     @Override
     public Flux<IntradayData> stream() {
-        return kafkaConsumerTemplate.receiveAutoAck().map(ConsumerRecord::value);
+        return kafkaConsumerTemplate
+            .receiveAutoAck()
+            .doOnError(throwable ->
+                log.error("Error receiving: {}", throwable.getMessage()))
+            .publish()
+            .autoConnect()
+            .map(ConsumerRecord::value);
     }
 }

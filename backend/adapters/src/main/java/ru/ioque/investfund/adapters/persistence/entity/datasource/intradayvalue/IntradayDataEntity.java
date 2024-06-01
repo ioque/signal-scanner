@@ -17,7 +17,7 @@ import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -26,16 +26,16 @@ import java.util.function.Function;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "intraday_value")
-@Entity(name = "IntradayValue")
+@Table(name = "intraday_data")
+@Entity(name = "IntradayData")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "INTRADAY_VALUE_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
-public abstract class IntradayValueEntity {
+@DiscriminatorColumn(name = "INTRADAY_DATA_TYPE", discriminatorType = DiscriminatorType.STRING, columnDefinition = "varchar(255)")
+public abstract class IntradayDataEntity {
     @EmbeddedId
     IntradayPk id;
 
     @Column(nullable = false)
-    LocalDateTime dateTime;
+    Instant timestamp;
 
     @Column(nullable = false)
     Double price;
@@ -43,26 +43,26 @@ public abstract class IntradayValueEntity {
     @Column(nullable = false)
     Double value;
 
-    public IntradayValueEntity(
+    public IntradayDataEntity(
         Long number,
-        LocalDateTime dateTime,
+        Instant timestamp,
         String ticker,
         Double price,
         Double value
     ) {
         this.id = new IntradayPk(number, ticker);
-        this.dateTime = dateTime;
+        this.timestamp = timestamp;
         this.price = price;
         this.value = value;
     }
 
     public abstract IntradayData toDomain();
 
-    public static IntradayValueEntity fromDomain(IntradayData intradayData) {
+    public static IntradayDataEntity fromDomain(IntradayData intradayData) {
         return mappers.get(intradayData.getClass()).apply(intradayData);
     }
 
-    private static Map<Class<? extends IntradayData>, Function<IntradayData, IntradayValueEntity>> mappers = Map.of(
+    private static Map<Class<? extends IntradayData>, Function<IntradayData, IntradayDataEntity>> mappers = Map.of(
         Deal.class, domain -> DealEntity.from((Deal) domain),
         Contract.class, domain -> ContractEntity.from((Contract) domain),
         Delta.class, domain -> DeltaEntity.from((Delta) domain)
@@ -72,7 +72,7 @@ public abstract class IntradayValueEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntradayValueEntity that = (IntradayValueEntity) o;
+        IntradayDataEntity that = (IntradayDataEntity) o;
         return Objects.equals(id, that.id);
     }
 

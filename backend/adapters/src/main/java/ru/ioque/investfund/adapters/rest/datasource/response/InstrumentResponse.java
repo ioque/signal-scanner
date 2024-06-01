@@ -33,7 +33,7 @@ public class InstrumentResponse implements Serializable {
     public static InstrumentResponse from(InstrumentEntity instrument) {
         return InstrumentResponse.builder()
             .id(instrument.getId())
-            .ticker(instrument.getTicker())
+            .ticker(instrument.getDetails().getTicker())
             .name(instrument.getDetails().getName())
             .shortName(instrument.getDetails().getShortName())
             .updatable(instrument.getUpdatable())

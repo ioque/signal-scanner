@@ -10,11 +10,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.InstrumentDetailsEntity;
@@ -30,6 +32,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Table(name = "instrument")
 @Entity(name = "Instrument")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstrumentEntity extends UuidIdentity {
     @ManyToOne
     @JoinColumn(name = "datasource_id")
@@ -39,9 +42,6 @@ public class InstrumentEntity extends UuidIdentity {
     @PrimaryKeyJoinColumn
     InstrumentDetailsEntity details;
 
-    @Column(nullable = false)
-    String ticker;
-
     Boolean updatable;
 
     @Enumerated(EnumType.STRING)
@@ -50,14 +50,12 @@ public class InstrumentEntity extends UuidIdentity {
     @Builder
     public InstrumentEntity(
         UUID id,
-        String ticker,
         Boolean updatable,
         InstrumentType type,
         DatasourceEntity datasource,
         InstrumentDetailsEntity details
     ) {
         super(id);
-        this.ticker = ticker;
         this.type = type;
         this.updatable = updatable;
         this.datasource = datasource;
@@ -75,7 +73,6 @@ public class InstrumentEntity extends UuidIdentity {
     public static InstrumentEntity fromDomain(Instrument domain) {
         InstrumentEntity instrumentEntity = InstrumentEntity.builder()
             .id(domain.getId().getUuid())
-            .ticker(domain.getTicker().getValue())
             .updatable(domain.getUpdatable())
             .type(domain.getType())
             .build();

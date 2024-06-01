@@ -23,6 +23,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("Stock")
 public class StockDetailsEntity extends InstrumentDetailsEntity {
+
     Integer lotSize;
 
     String isin;
@@ -34,6 +35,7 @@ public class StockDetailsEntity extends InstrumentDetailsEntity {
     @Builder
     public StockDetailsEntity(
         InstrumentEntity instrument,
+        String ticker,
         String shortName,
         String name,
         Integer lotSize,
@@ -41,7 +43,7 @@ public class StockDetailsEntity extends InstrumentDetailsEntity {
         String regNumber,
         Integer listLevel
     ) {
-        super(instrument, shortName, name);
+        super(instrument, ticker, shortName, name);
         this.lotSize = lotSize;
         this.isin = isin;
         this.regNumber = regNumber;
@@ -51,7 +53,7 @@ public class StockDetailsEntity extends InstrumentDetailsEntity {
     @Override
     public InstrumentDetail toDomain() {
         return StockDetail.builder()
-            .ticker(Ticker.from(instrument.getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotSize(getLotSize())

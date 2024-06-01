@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
+import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
 
@@ -58,6 +59,7 @@ public class AggregatedHistoryDto {
 
     public AggregatedTotals toAggregateHistory() {
         return AggregatedTotals.builder()
+            .ticker(Ticker.from(ticker))
             .date(tradeDate)
             .openPrice(openPrice)
             .closePrice(closePrice)

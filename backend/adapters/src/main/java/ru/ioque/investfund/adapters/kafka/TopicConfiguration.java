@@ -26,6 +26,16 @@ public class TopicConfiguration {
     public static final String TECHNICAL_LOG_TOPIC = "technical-log-topic";
 
     @Bean
+    public NewTopic intradayDataTopic() {
+        return TopicBuilder
+            .name(INTRADAY_DATA_TOPIC)
+            .partitions(1)
+            .replicas(1)
+            .build();
+    }
+
+
+    @Bean
     public NewTopic businessLogTopic() {
         return TopicBuilder
             .name(BUSINESS_LOG_TOPIC)
@@ -41,23 +51,5 @@ public class TopicConfiguration {
             .partitions(1)
             .replicas(1)
             .build();
-    }
-
-
-    @Bean
-    ReceiverOptions<String, String> kafkaReceiverOptions() {
-        Map<String, Object> configuration = new HashMap<>();
-        configuration.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        configuration.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-reactor");
-        configuration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
-        ReceiverOptions<String, String> options = ReceiverOptions.create(configuration);
-        return options.subscription(List.of(INTRADAY_DATA_TOPIC))
-            .withKeyDeserializer(new StringDeserializer())
-            .withValueDeserializer(new JsonDeserializer<>());
-    }
-
-    @Bean
-    Flux<ReceiverRecord<String, String>> reactiveKafkaReceiver(ReceiverOptions<String, String> kafkaReceiverOptions) {
-        return KafkaReceiver.create(kafkaReceiverOptions).receive();
     }
 }

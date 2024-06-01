@@ -15,20 +15,27 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository
 import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
 import ru.ioque.investfund.adapters.rest.service.request.InitDateTimeRequest;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
+import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
 
 @Hidden
 @RestController
 @Profile("!production")
 @AllArgsConstructor
-@Tag(name = "Служебный контролер", description = "Работает в окружении test, позволяет очищать стейт приложения.")
+@Tag(name = "Служебный контролер", description = "Работает в окружении test")
 public class ServiceController {
     JpaDatasourceRepository jpaDatasourceRepository;
     JpaInstrumentRepository jpaInstrumentRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaSignalRepository jpaSignalRepository;
     JpaScannerRepository jpaScannerRepository;
-    //JpaEmulatedPositionRepository jpaEmulatedPositionRepository;
     DateTimeProvider dateTimeProvider;
+    PipelineManager pipelineManager;
+
+    @PostMapping("/api/service/pipeline/initialize")
+    public void initializePipeline() {
+        pipelineManager.initializeContexts();
+        pipelineManager.runPipeline();
+    }
 
     @PostMapping("/api/service/date-time")
     public void initDateTime(@RequestBody InitDateTimeRequest request) {
@@ -37,12 +44,12 @@ public class ServiceController {
 
     @DeleteMapping("/api/service/state")
     public void clearState() {
-        //jpaEmulatedPositionRepository.deleteAll();
         jpaSignalRepository.deleteAll();
         jpaScannerRepository.deleteAll();
         jpaInstrumentRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
         jpaDatasourceRepository.deleteAll();
         dateTimeProvider.initToday(null);
+        pipelineManager.resetContexts();
     }
 }

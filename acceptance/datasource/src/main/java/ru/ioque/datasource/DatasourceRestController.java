@@ -31,7 +31,7 @@ public class DatasourceRestController {
 
     @SneakyThrows
     @GetMapping(value = "/api/instruments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Instrument> getInstruments() throws IllegalAccessException {
+    public List<Instrument> getInstruments() {
         log.info("received getInstruments request");
         if (datasetStorage == null) {
             throw new IllegalAccessException("Не иницилиазирован датасет");

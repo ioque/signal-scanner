@@ -62,7 +62,7 @@ public class DatasourceCommandController {
         commandBus.execute(new SynchronizeDatasource(DatasourceId.from(datasourceId)));
     }
 
-    @PostMapping("/api/datasource/{datasourceId}/aggregate-history")
+    @PostMapping("/api/datasource/{datasourceId}/aggregated-totals")
     public void runDatasource(@PathVariable UUID datasourceId) {
         commandBus.execute(new UpdateAggregatedTotals(DatasourceId.from(datasourceId)));
     }

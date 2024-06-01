@@ -17,9 +17,9 @@ import ru.ioque.investfund.application.modules.datasource.handler.RemoveDatasour
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
-import ru.ioque.investfund.application.modules.pipeline.sink.RiskManager;
-import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistry;
-import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistryContext;
+import ru.ioque.investfund.application.modules.pipeline.subscriber.RiskManager;
+import ru.ioque.investfund.application.modules.pipeline.subscriber.SignalRegistry;
+import ru.ioque.investfund.application.modules.pipeline.subscriber.SignalRegistryContext;
 import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculator;
 import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculatorContext;
 import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinder;

@@ -78,7 +78,7 @@ public abstract class DatasourceEmulatedTest {
         return clientFacade.getSignalScannerRestClient();
     }
 
-    private ServiceHttpClient serviceClient() {
+    protected ServiceHttpClient serviceClient() {
         return clientFacade.getServiceClient();
     }
 
@@ -142,7 +142,7 @@ public abstract class DatasourceEmulatedTest {
     protected void fullIntegrate(UUID datasourceId) {
         synchronizeDatasource(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
     }
 
     protected void synchronizeDatasource(UUID datasourceId) {
@@ -152,11 +152,11 @@ public abstract class DatasourceEmulatedTest {
     protected void prepareDatasource(UUID datasourceId) {
         synchronizeDatasource(datasourceId);
         enableUpdateInstrumentBy(datasourceId, getTickers(datasourceId));
-        runDatasource(datasourceId);
+        updateAggregatedTotals(datasourceId);
     }
 
-    protected void runDatasource(UUID datasourceId) {
-        datasourceClient().runDatasource(datasourceId);
+    protected void updateAggregatedTotals(UUID datasourceId) {
+        datasourceClient().updateAggregatedTotals(datasourceId);
     }
 
     protected void stopDatasource(UUID datasourceId) {
@@ -171,8 +171,8 @@ public abstract class DatasourceEmulatedTest {
         datasourceClient().disableUpdateInstruments(exchangeId, new DisableUpdateInstrumentRequest(tickers));
     }
 
-    protected void executeDatasourceWork(UUID datasourceId) {
-        datasourceClient().integrateTradingData(datasourceId);
+    protected void publishIntradayData(UUID datasourceId) {
+        datasourceClient().publishIntradayData(datasourceId);
     }
 
     protected List<InstrumentInListResponse> getInstruments(UUID exchangeId) {

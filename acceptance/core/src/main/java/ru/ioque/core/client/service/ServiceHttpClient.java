@@ -20,6 +20,11 @@ public class ServiceHttpClient extends JsonHttpClient {
     }
 
     @SneakyThrows
+    public void initializePipeline() {
+        post("/api/service/pipeline/initialize");
+    }
+
+    @SneakyThrows
     public void clearState() {
         delete("/api/service/state");
     }

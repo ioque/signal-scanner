@@ -49,7 +49,7 @@ public class BaseAlgorithmTest extends BaseTest {
             .map(performanceCalculator()::transform)
             .map(signalsFinder()::transform)
             .flatMap(Flux::fromIterable)
-            .subscribe(signalRegistry()::consume);
+            .subscribe(signalRegistry()::receive);
     }
 
     protected void assertSignals(List<Signal> signals, int size) {

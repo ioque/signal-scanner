@@ -1,5 +1,9 @@
 package ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiFunction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,10 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.domain.datasource.value.details.CurrencyPairDetail;
 import ru.ioque.investfund.domain.datasource.value.details.FuturesDetail;
@@ -19,20 +26,18 @@ import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.details.StockDetail;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.BiFunction;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Table(name = "instrument_details")
 @Entity(name = "InstrumentDetails")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class InstrumentDetailsEntity {
+
     @Id
     @Column(name = "instrument_id")
-    private UUID id;
+    UUID id;
 
     @MapsId
     @OneToOne
@@ -40,14 +45,18 @@ public abstract class InstrumentDetailsEntity {
     InstrumentEntity instrument;
 
     @Column(nullable = false)
+    String ticker;
+
+    @Column(nullable = false)
     String shortName;
 
     @Column(nullable = false)
     String name;
 
-    public InstrumentDetailsEntity(InstrumentEntity instrument, String shortName, String name) {
+    public InstrumentDetailsEntity(InstrumentEntity instrument, String ticker, String shortName, String name) {
         this.id = instrument.getId();
         this.instrument = instrument;
+        this.ticker = ticker;
         this.shortName = shortName;
         this.name = name;
     }
@@ -65,10 +74,13 @@ public abstract class InstrumentDetailsEntity {
         InstrumentType.INDEX, InstrumentDetailsEntity::toIndexDetails
     );
 
-    private static InstrumentDetailsEntity toIndexDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
-        IndexDetail details = (IndexDetail) instrumentDetail;
+    private static InstrumentDetailsEntity toIndexDetails(
+        InstrumentEntity instrument,
+        InstrumentDetail instrumentDetail) {
+        final IndexDetail details = (IndexDetail) instrumentDetail;
         return IndexDetailsEntity.builder()
             .instrument(instrument)
+            .ticker(details.getTicker().getValue())
             .name(details.getName())
             .annualLow(details.getAnnualLow())
             .shortName(details.getShortName())
@@ -76,10 +88,13 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toCurrencyPairDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
-        CurrencyPairDetail details = (CurrencyPairDetail) instrumentDetail;
+    private static InstrumentDetailsEntity toCurrencyPairDetails(
+        InstrumentEntity instrument,
+        InstrumentDetail instrumentDetail) {
+        final CurrencyPairDetail details = (CurrencyPairDetail) instrumentDetail;
         return CurrencyPairDetailsEntity.builder()
             .instrument(instrument)
+            .ticker(details.getTicker().getValue())
             .name(details.getName())
             .lotSize(details.getLotSize())
             .faceUnit(details.getFaceUnit())
@@ -87,10 +102,13 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toStockDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
-        StockDetail details = (StockDetail) instrumentDetail;
+    private static InstrumentDetailsEntity toStockDetails(
+        InstrumentEntity instrument,
+        InstrumentDetail instrumentDetail) {
+        final StockDetail details = (StockDetail) instrumentDetail;
         return StockDetailsEntity.builder()
             .instrument(instrument)
+            .ticker(details.getTicker().getValue())
             .name(details.getName())
             .lotSize(details.getLotSize())
             .listLevel(details.getListLevel())
@@ -100,10 +118,13 @@ public abstract class InstrumentDetailsEntity {
             .build();
     }
 
-    private static InstrumentDetailsEntity toFuturesDetails(InstrumentEntity instrument, InstrumentDetail instrumentDetail) {
-        FuturesDetail details = (FuturesDetail) instrumentDetail;
+    private static InstrumentDetailsEntity toFuturesDetails(
+        InstrumentEntity instrument,
+        InstrumentDetail instrumentDetail) {
+        final FuturesDetail details = (FuturesDetail) instrumentDetail;
         return FuturesDetailsEntity.builder()
             .instrument(instrument)
+            .ticker(details.getTicker().getValue())
             .name(details.getName())
             .lowLimit(details.getLowLimit())
             .assetCode(details.getAssetCode())

@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,13 +23,13 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("ContractEntity")
-public class ContractEntity extends IntradayValueEntity {
+public class ContractEntity extends IntradayDataEntity {
     Integer qnt;
 
     @Builder
     public ContractEntity(
         Long number,
-        LocalDateTime dateTime,
+        Instant dateTime,
         String ticker,
         Double price,
         Double value,
@@ -49,7 +50,7 @@ public class ContractEntity extends IntradayValueEntity {
             .build();
     }
 
-    public static IntradayValueEntity from(Contract contract) {
+    public static IntradayDataEntity from(Contract contract) {
         return ContractEntity.builder()
             .ticker(contract.getTicker().getValue())
             .number(contract.getNumber())

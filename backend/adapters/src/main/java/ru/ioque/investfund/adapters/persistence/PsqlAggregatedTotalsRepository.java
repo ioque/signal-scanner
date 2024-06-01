@@ -1,32 +1,37 @@
 package ru.ioque.investfund.adapters.persistence;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.aggregatedtotals.AggregatedTotalsEntity;
+import ru.ioque.investfund.adapters.persistence.repositories.JpaAggregatedTotalsRepository;
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Component
+@AllArgsConstructor
 public class PsqlAggregatedTotalsRepository implements AggregatedTotalsRepository {
-    private final Set<AggregatedTotals> histories = new HashSet<>();
+    private final JpaAggregatedTotalsRepository dao;
 
     @Override
+    @Transactional
     public void save(AggregatedTotals aggregatedTotals) {
-        histories.add(aggregatedTotals);
+        dao.save(AggregatedTotalsEntity.from(aggregatedTotals));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<AggregatedTotals> findAllBy(InstrumentId instrumentId) {
-        return List.of();
+        return dao.findAllBy(instrumentId.getUuid()).stream().map(AggregatedTotalsEntity::toDomain).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<AggregatedTotals> findActualBy(InstrumentId instrumentId) {
-        return Optional.empty();
+        return dao.findLastBy(instrumentId.getUuid()).map(AggregatedTotalsEntity::toDomain);
     }
 }

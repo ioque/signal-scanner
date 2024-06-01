@@ -39,8 +39,8 @@ public class DatasourceHttpClient extends JsonHttpClient {
     }
 
     @SneakyThrows
-    public void runDatasource(UUID datasourceId) {
-        post("/api/datasource/" + datasourceId + "/aggregated-history");
+    public void updateAggregatedTotals(UUID datasourceId) {
+        post("/api/datasource/" + datasourceId + "/aggregated-totals");
     }
 
     @SneakyThrows
@@ -49,7 +49,7 @@ public class DatasourceHttpClient extends JsonHttpClient {
     }
 
     @SneakyThrows
-    public void integrateTradingData(UUID datasourceId) {
+    public void publishIntradayData(UUID datasourceId) {
         post("/api/datasource/" + datasourceId + "/intraday-data");
     }
 

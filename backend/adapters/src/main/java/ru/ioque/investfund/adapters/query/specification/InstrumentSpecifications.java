@@ -18,7 +18,7 @@ public class InstrumentSpecifications {
 
     public static Specification<InstrumentEntity> tickerLike(String ticker) {
         if (ticker == null || ticker.isEmpty()) throw new RuntimeException();
-        return (instrument, cq, cb) -> cb.like(instrument.get("ticker"), "%" + ticker + "%");
+        return (instrument, cq, cb) -> cb.like(instrument.get("details").get("ticker"), "%" + ticker + "%");
     }
 
     public static Specification<InstrumentEntity> datasourceIdEqual(UUID datasourceId) {

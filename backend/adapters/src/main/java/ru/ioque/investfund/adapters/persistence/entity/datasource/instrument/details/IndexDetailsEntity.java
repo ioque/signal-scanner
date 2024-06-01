@@ -29,12 +29,13 @@ public class IndexDetailsEntity extends InstrumentDetailsEntity {
     @Builder
     public IndexDetailsEntity(
         InstrumentEntity instrument,
+        String ticker,
         String shortName,
         String name,
         Double annualHigh,
         Double annualLow
     ) {
-        super(instrument, shortName, name);
+        super(instrument, ticker, shortName, name);
         this.annualHigh = annualHigh;
         this.annualLow = annualLow;
     }
@@ -42,7 +43,7 @@ public class IndexDetailsEntity extends InstrumentDetailsEntity {
     @Override
     public InstrumentDetail toDomain() {
         return IndexDetail.builder()
-            .ticker(Ticker.from(instrument.getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .annualHigh(getAnnualHigh())

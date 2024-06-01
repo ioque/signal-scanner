@@ -8,12 +8,14 @@ import java.util.TreeSet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 public class InstrumentTradingState {
     private final Ticker ticker;

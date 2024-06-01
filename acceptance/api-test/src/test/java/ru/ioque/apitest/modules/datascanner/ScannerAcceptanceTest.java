@@ -298,7 +298,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
 
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         stopDatasource(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
@@ -407,7 +407,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .properties(new PrefSimplePropertiesDto(1.0))
                 .build()
         );
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -557,7 +557,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -649,7 +649,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -711,7 +711,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
 
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
@@ -738,7 +738,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
         );
 
         prepareDatasource(datasourceId);
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         assertTrue(waitOpenEmulatedPositions(0));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         final SignalResponse signal = getSignalsBy(getFirstScannerId()).get(0);
@@ -793,7 +793,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 )
                 .build()
         );
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         assertTrue(waitOpenEmulatedPositions(1));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
 
@@ -818,7 +818,7 @@ public class ScannerAcceptanceTest extends DatasourceEmulatedTest {
                 .build()
         );
         prepareDatasource(datasourceId);
-        executeDatasourceWork(datasourceId);
+        publishIntradayData(datasourceId);
         assertTrue(waitScanningFinishedEvent(LocalDateTime.parse("2024-03-22T13:00:00")));
         assertEquals(1, getSignalsBy(getFirstScannerId()).size());
         assertEquals(1, getSignalsBy(getFirstScannerId()).stream().filter(SignalResponse::getIsBuy).count());

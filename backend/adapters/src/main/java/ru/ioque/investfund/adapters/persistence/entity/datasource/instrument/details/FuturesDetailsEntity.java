@@ -22,6 +22,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("Futures")
 public class FuturesDetailsEntity extends InstrumentDetailsEntity {
+
     Integer lotVolume;
 
     Double initialMargin;
@@ -35,6 +36,7 @@ public class FuturesDetailsEntity extends InstrumentDetailsEntity {
     @Builder
     public FuturesDetailsEntity(
         InstrumentEntity instrument,
+        String ticker,
         String shortName,
         String name,
         Integer lotVolume,
@@ -43,7 +45,7 @@ public class FuturesDetailsEntity extends InstrumentDetailsEntity {
         Double lowLimit,
         String assetCode
     ) {
-        super(instrument, shortName, name);
+        super(instrument, ticker, shortName, name);
         this.lotVolume = lotVolume;
         this.initialMargin = initialMargin;
         this.highLimit = highLimit;
@@ -54,7 +56,7 @@ public class FuturesDetailsEntity extends InstrumentDetailsEntity {
     @Override
     public InstrumentDetail toDomain() {
         return FuturesDetail.builder()
-            .ticker(Ticker.from(instrument.getTicker()))
+            .ticker(Ticker.from(getTicker()))
             .name(getName())
             .shortName(getShortName())
             .lotVolume(getLotVolume())

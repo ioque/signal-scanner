@@ -7,9 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayValueEntity;
+import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayDataEntity;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,14 +23,14 @@ public class IntradayDtoResponse implements Serializable {
     Long number;
     Double price;
     String ticker;
-    LocalDateTime dateTime;
+    Instant dateTime;
 
-    public static IntradayDtoResponse from(IntradayValueEntity intradayValueEntity) {
+    public static IntradayDtoResponse from(IntradayDataEntity intradayDataEntity) {
         return IntradayDtoResponse.builder()
-            .price(intradayValueEntity.getPrice())
-            .dateTime(intradayValueEntity.getDateTime())
-            .ticker(intradayValueEntity.getId().getTicker())
-            .number(intradayValueEntity.getId().getNumber())
+            .price(intradayDataEntity.getPrice())
+            .dateTime(intradayDataEntity.getTimestamp())
+            .ticker(intradayDataEntity.getId().getTicker())
+            .number(intradayDataEntity.getId().getNumber())
             .build();
     }
 }

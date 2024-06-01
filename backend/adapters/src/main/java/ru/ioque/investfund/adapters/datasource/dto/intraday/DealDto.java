@@ -14,6 +14,7 @@ import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @NoArgsConstructor
@@ -31,13 +32,13 @@ public class DealDto extends IntradayDataDto {
     public DealDto(
         String ticker,
         Long number,
-        LocalDateTime dateTime,
+        LocalDateTime timestamp,
         Double price,
         Double value,
         Integer qnt,
         Boolean isBuy
     ) {
-        super(ticker, number, dateTime, price, value);
+        super(ticker, number, timestamp, price, value);
         this.qnt = qnt;
         this.isBuy = isBuy;
     }
@@ -47,7 +48,7 @@ public class DealDto extends IntradayDataDto {
         return Delta.builder()
             .ticker(Ticker.from(getTicker()))
             .number(getNumber())
-            .dateTime(getDateTime())
+            .timestamp(getDateTime().atZone(ZoneId.of("Europe/Moscow")).toInstant())
             .value(getValue())
             .price(getPrice())
             .build();

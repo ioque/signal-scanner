@@ -52,7 +52,7 @@ public class UiSeeder implements CommandLineRunner {
             .getSignalScannerRestClient()
             .createScanner(UiTestsDataset.getCorrelationSectoralScannerRequest(datasourceID));
         clientFacade.getSignalScannerRestClient().createScanner(UiTestsDataset.getSectoralRetardScannerRequest(datasourceID));
-        clientFacade.getDatasourceRestClient().integrateTradingData(datasourceID);
+        clientFacade.getDatasourceRestClient().publishIntradayData(datasourceID);
         log.info("UiTestStartup finish");
     }
 }

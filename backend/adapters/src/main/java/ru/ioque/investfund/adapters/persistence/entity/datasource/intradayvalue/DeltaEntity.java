@@ -13,6 +13,7 @@ import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,12 +23,12 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("IndexDeltaEntity")
-public class DeltaEntity extends IntradayValueEntity {
+public class DeltaEntity extends IntradayDataEntity {
 
     @Builder
     public DeltaEntity(
         Long number,
-        LocalDateTime dateTime,
+        Instant dateTime,
         String ticker,
         Double price,
         Double value
@@ -45,7 +46,7 @@ public class DeltaEntity extends IntradayValueEntity {
             .build();
     }
 
-    public static IntradayValueEntity from(Delta delta) {
+    public static IntradayDataEntity from(Delta delta) {
         return DeltaEntity.builder()
             .ticker(delta.getTicker().getValue())
             .number(delta.getNumber())

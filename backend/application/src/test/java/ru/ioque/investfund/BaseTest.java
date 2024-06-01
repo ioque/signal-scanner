@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
-import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistry;
+import ru.ioque.investfund.application.modules.pipeline.subscriber.SignalRegistry;
 import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculator;
 import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinder;
 import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinderContext;
