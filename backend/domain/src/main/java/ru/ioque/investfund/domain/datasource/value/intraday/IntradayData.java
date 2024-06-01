@@ -10,8 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class IntradayData implements Comparable<IntradayData> {
+    @Setter
+    InstrumentId instrumentId;
     @NotBlank(message = "Не заполнен тикер.")
     @Valid Ticker ticker;
     @NotNull(message = "Не указан номер.")
@@ -38,8 +42,17 @@ public abstract class IntradayData implements Comparable<IntradayData> {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
+    public IntradayData(Ticker ticker, Long number, LocalDateTime dateTime, Double price, Double value) {
+        this.ticker = ticker;
+        this.number = number;
+        this.dateTime = dateTime;
+        this.price = price;
+        this.value = value;
+    }
+
     @Override
     public int compareTo(IntradayData intradayData) {
         return Objects.compare(getNumber(), intradayData.getNumber(), Long::compareTo);
     }
+
 }

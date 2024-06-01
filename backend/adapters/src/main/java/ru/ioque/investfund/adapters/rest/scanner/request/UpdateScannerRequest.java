@@ -14,7 +14,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 import java.util.List;
 import java.util.UUID;

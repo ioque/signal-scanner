@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -38,37 +37,6 @@ public class InstrumentResponse implements Serializable {
             .name(instrument.getDetails().getName())
             .shortName(instrument.getDetails().getShortName())
             .updatable(instrument.getUpdatable())
-            .historyValues(instrument
-                .getHistory()
-                .stream()
-                .map(AggregatedHistoryResponse::fromDomain)
-                .toList()
-            )
-            .lastUpdate(
-                instrument
-                    .getTradingState()
-                    .map(TradingStateEntity::getDateTime)
-                    .orElse(null)
-            )
-            .todayValue(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getTodayValue)
-                .orElse(null)
-            )
-            .todayLastPrice(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getTodayLastPrice)
-                .orElse(null)
-            )
-            .todayFirstPrice(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getTodayFirstPrice)
-                .orElse(null)
-            )
-            .lastIntradayNumber(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getLastIntradayNumber)
-                .orElse(null))
             .build();
     }
 }

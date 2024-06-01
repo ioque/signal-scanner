@@ -10,8 +10,10 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.LocalDate;
@@ -24,6 +26,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AggregatedTotals implements Comparable<AggregatedTotals> {
+    @Setter
+    InstrumentId instrumentId;
     @NotBlank(message = "Не заполнен тикер.")
     @Valid Ticker ticker;
     @NotNull(message = "Не заполнена дата агрегированных итогов.")
@@ -46,6 +50,18 @@ public class AggregatedTotals implements Comparable<AggregatedTotals> {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
+    public AggregatedTotals(Ticker ticker, LocalDate date, Double lowPrice, Double highPrice, Double openPrice,
+        Double closePrice, Double waPrice, Double value) {
+        this.ticker = ticker;
+        this.date = date;
+        this.lowPrice = lowPrice;
+        this.highPrice = highPrice;
+        this.openPrice = openPrice;
+        this.closePrice = closePrice;
+        this.waPrice = waPrice;
+        this.value = value;
+    }
+
     @Override
     public int compareTo(AggregatedTotals aggregatedTotals) {
         return date.compareTo(aggregatedTotals.date);
@@ -54,4 +70,5 @@ public class AggregatedTotals implements Comparable<AggregatedTotals> {
     public boolean isBetween(LocalDate from, LocalDate to) {
         return from.compareTo(date) * date.compareTo(to) >= 0;
     }
+
 }

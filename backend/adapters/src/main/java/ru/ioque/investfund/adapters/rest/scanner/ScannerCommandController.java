@@ -17,7 +17,7 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.scanner.command.ActivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.DeactivateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 import java.util.UUID;
 

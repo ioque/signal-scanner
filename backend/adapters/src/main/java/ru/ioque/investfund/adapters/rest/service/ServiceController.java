@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
@@ -28,7 +27,7 @@ public class ServiceController {
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaSignalRepository jpaSignalRepository;
     JpaScannerRepository jpaScannerRepository;
-    JpaEmulatedPositionRepository jpaEmulatedPositionRepository;
+    //JpaEmulatedPositionRepository jpaEmulatedPositionRepository;
     DateTimeProvider dateTimeProvider;
 
     @PostMapping("/api/service/date-time")
@@ -38,7 +37,7 @@ public class ServiceController {
 
     @DeleteMapping("/api/service/state")
     public void clearState() {
-        jpaEmulatedPositionRepository.deleteAll();
+        //jpaEmulatedPositionRepository.deleteAll();
         jpaSignalRepository.deleteAll();
         jpaScannerRepository.deleteAll();
         jpaInstrumentRepository.deleteAll();

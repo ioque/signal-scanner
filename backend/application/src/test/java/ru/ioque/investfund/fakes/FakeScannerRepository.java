@@ -4,7 +4,7 @@ import lombok.Getter;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.HashMap;

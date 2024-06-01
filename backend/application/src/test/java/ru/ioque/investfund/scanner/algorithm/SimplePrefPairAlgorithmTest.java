@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
-import ru.ioque.investfund.domain.scanner.value.PrefSimplePair;
+import ru.ioque.investfund.domain.scanner.algorithms.impl.PrefSimplePair;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.SBER;

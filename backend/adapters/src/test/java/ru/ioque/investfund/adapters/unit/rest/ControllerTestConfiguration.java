@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
 import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
@@ -14,7 +13,7 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepo
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
+import ru.ioque.investfund.application.adapters.repository.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
 import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;
@@ -81,8 +80,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public EmulatedPositionJournal mockEmulatedPositionRepository() {
-        return mock(EmulatedPositionJournal.class);
+    public EmulatedPositionRepository mockEmulatedPositionRepository() {
+        return mock(EmulatedPositionRepository.class);
     }
 
     @Bean

@@ -8,11 +8,9 @@ import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
-import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
-import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.BRF4;
@@ -36,13 +34,13 @@ public class BaseAlgorithmTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        intradayJournal().stream().subscribe(signalProducer()::process);
+        buildDefaultTopology();
         loggerProvider().clearLogs();
     }
 
     protected void runPipeline(DatasourceId datasourceId) {
         commandBus().execute(new PublishAggregatedHistory(datasourceId));
-        pipelineManager().initializePipeline(datasourceId);
+        pipelineManager().start();
         commandBus().execute(new PublishIntradayData(datasourceId));
     }
 
@@ -61,48 +59,47 @@ public class BaseAlgorithmTest extends BaseTest {
             .toList();
     }
 
-    protected InstrumentPerformance getImoexPerformance() {
+    protected InstrumentTradingState getImoexPerformance() {
         return getInstrumentPerformanceBy(IMOEX);
     }
 
-    protected InstrumentPerformance getTgkbPerformance() {
+    protected InstrumentTradingState getTgkbPerformance() {
         return getInstrumentPerformanceBy(TGKB);
     }
 
-    protected InstrumentPerformance getTgknPerformance() {
+    protected InstrumentTradingState getTgknPerformance() {
         return getInstrumentPerformanceBy(TGKN);
     }
 
-    protected InstrumentPerformance getTatnPerformance() {
+    protected InstrumentTradingState getTatnPerformance() {
         return getInstrumentPerformanceBy(TATN);
     }
 
-    protected InstrumentPerformance getBrf4Performance() {
+    protected InstrumentTradingState getBrf4Performance() {
         return getInstrumentPerformanceBy(BRF4);
     }
 
-    protected InstrumentPerformance getRosnPerformance() {
+    protected InstrumentTradingState getRosnPerformance() {
         return getInstrumentPerformanceBy(ROSN);
     }
 
-    protected InstrumentPerformance getLkohPerformance() {
+    protected InstrumentTradingState getLkohPerformance() {
         return getInstrumentPerformanceBy(LKOH);
     }
 
-    protected InstrumentPerformance getSibnPerformance() {
+    protected InstrumentTradingState getSibnPerformance() {
         return getInstrumentPerformanceBy(SIBN);
     }
 
-    protected InstrumentPerformance getSberPerformance() {
+    protected InstrumentTradingState getSberPerformance() {
         return getInstrumentPerformanceBy(SBER);
     }
 
-    protected InstrumentPerformance getSberpPerformance() {
+    protected InstrumentTradingState getSberpPerformance() {
         return getInstrumentPerformanceBy(SBERP);
     }
 
-    protected InstrumentPerformance getInstrumentPerformanceBy(String ticker) {
-        final PipelineContext pipelineContext = pipelineManager().getPipelineContext();
-        return pipelineContext.getInstrumentPerformance(pipelineContext.findInstrumentId(new Ticker(ticker)));
+    protected InstrumentTradingState getInstrumentPerformanceBy(String ticker) {
+        return signalsFinderContext().getTradingState(getInstrumentId(ticker)).orElseThrow();
     }
 }

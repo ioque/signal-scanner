@@ -12,7 +12,6 @@ import ru.ioque.investfund.application.modules.datasource.command.PublishAggrega
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fixture.DataFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,6 +80,6 @@ public class PublishAggregatedTotalsTest extends BaseTest {
     }
 
     private List<AggregatedTotals> getHistoryValuesBy(String ticker) {
-        return aggregatedTotalsJournal().findAllBy(Ticker.from(ticker));
+        return aggregatedTotalsJournal().findAllBy(getInstrumentId(ticker));
     }
 }

@@ -287,6 +287,6 @@ public class PublishIntradayDataTest extends BaseTest {
     }
 
     private List<AggregatedTotals> getHistoryValuesBy(String ticker) {
-        return aggregatedTotalsJournal().findAllBy(Ticker.from(ticker));
+        return aggregatedTotalsJournal().findAllBy(getInstrumentId(ticker));
     }
 }

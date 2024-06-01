@@ -40,7 +40,7 @@ public class DatasourceHttpClient extends JsonHttpClient {
 
     @SneakyThrows
     public void runDatasource(UUID datasourceId) {
-        post("/api/datasource/" + datasourceId + "/run");
+        post("/api/datasource/" + datasourceId + "/aggregated-history");
     }
 
     @SneakyThrows

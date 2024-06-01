@@ -12,25 +12,17 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
-import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaEmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.ReportService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.List;
 
 @Component
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ExcelReportService implements ReportService {
-    JpaEmulatedPositionRepository emulatedPositionRepository;
     DecimalFormat formatter = new DecimalFormat("#,###.##");
 
     @Override
@@ -48,25 +40,26 @@ public class ExcelReportService implements ReportService {
         buildCell(header, 5, "Показатели", headerStyle);
         CellStyle style = getRowStyle(workbook);
         int rowIndex = 1;
-        for (EmulatedPositionEntity emulatedPositionEntity : getOpenEmulatedPositions()) {
-            Row row = sheet.createRow(rowIndex);
-            InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
-            ScannerEntity scanner = emulatedPositionEntity.getScanner();
-            SignalEntity signal = scanner
-                .getSignals()
-                .stream()
-                .filter(value -> value.getId().getInstrumentId().equals(instrument.getId()))
-                .findFirst().orElseThrow();
-            double closePrice = instrument.getTradingState().map(TradingStateEntity::getTodayLastPrice).orElse(emulatedPositionEntity.getLastPrice());
-            double profit = (closePrice/emulatedPositionEntity.getOpenPrice() - 1) * 100;
-            buildCell(row, 0, instrument.getTicker(), style);
-            buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
-            buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
-            buildCell(row, 3, formatter.format(closePrice), style);
-            buildCell(row, 4, formatter.format(profit), style);
-            buildCell(row, 5, signal.getSummary(), style);
-            rowIndex++;
-        }
+//        for (EmulatedPositionEntity emulatedPositionEntity : getOpenEmulatedPositions()) {
+//            Row row = sheet.createRow(rowIndex);
+//            InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
+//            ScannerEntity scanner = emulatedPositionEntity.getScanner();
+//            SignalEntity signal = scanner
+//                .getSignals()
+//                .stream()
+//                .filter(value -> value.getId().getInstrumentId().equals(instrument.getId()))
+//                .findFirst().orElseThrow();
+//            //double closePrice = instrument.getTradingState().map(TradingStateEntity::getTodayLastPrice).orElse(emulatedPositionEntity.getLastPrice());
+//            double closePrice = 10D;
+//            double profit = (closePrice/emulatedPositionEntity.getOpenPrice() - 1) * 100;
+//            buildCell(row, 0, instrument.getTicker(), style);
+//            buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
+//            buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
+//            buildCell(row, 3, formatter.format(closePrice), style);
+//            buildCell(row, 4, formatter.format(profit), style);
+//            buildCell(row, 5, signal.getSummary(), style);
+//            rowIndex++;
+//        }
         sheet.autoSizeColumn(0);
         sheet.autoSizeColumn(1);
         sheet.autoSizeColumn(2);
@@ -96,17 +89,17 @@ public class ExcelReportService implements ReportService {
         buildCell(header, 4, "Изменение цены", headerStyle);
         CellStyle style = getRowStyle(workbook);
         int rowIndex = 1;
-        for (EmulatedPositionEntity emulatedPositionEntity : getOpenEmulatedPositions()) {
-            Row row = sheet.createRow(rowIndex);
-            InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
-            ScannerEntity scanner = emulatedPositionEntity.getScanner();
-            buildCell(row, 0, instrument.getTicker(), style);
-            buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
-            buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
-            buildCell(row, 3, formatter.format(emulatedPositionEntity.getLastPrice()), style);
-            buildCell(row, 4, formatter.format(emulatedPositionEntity.getProfit()), style);
-            rowIndex++;
-        }
+//        for (EmulatedPositionEntity emulatedPositionEntity : getOpenEmulatedPositions()) {
+//            Row row = sheet.createRow(rowIndex);
+//            InstrumentEntity instrument = emulatedPositionEntity.getInstrument();
+//            ScannerEntity scanner = emulatedPositionEntity.getScanner();
+//            buildCell(row, 0, instrument.getTicker(), style);
+//            buildCell(row, 1, scanner.getAlgorithmProperties().getType().getName(), style);
+//            buildCell(row, 2, formatter.format(emulatedPositionEntity.getOpenPrice()), style);
+//            buildCell(row, 3, formatter.format(emulatedPositionEntity.getLastPrice()), style);
+//            buildCell(row, 4, formatter.format(emulatedPositionEntity.getProfit()), style);
+//            rowIndex++;
+//        }
         sheet.autoSizeColumn(0);
         sheet.autoSizeColumn(1);
         sheet.autoSizeColumn(2);
@@ -121,9 +114,9 @@ public class ExcelReportService implements ReportService {
         return new File(fileLocation);
     }
 
-    private List<EmulatedPositionEntity> getOpenEmulatedPositions() {
-        return emulatedPositionRepository.findAll().stream().filter(EmulatedPositionEntity::getIsOpen).toList();
-    }
+//    private List<EmulatedPositionEntity> getOpenEmulatedPositions() {
+//        return emulatedPositionRepository.findAll().stream().filter(EmulatedPositionEntity::getIsOpen).toList();
+//    }
 
     private CellStyle getRowStyle(XSSFWorkbook workbook) {
         CellStyle style = workbook.createCellStyle();

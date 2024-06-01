@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.risk.EmulatedPositionEntity;
 
 import java.util.UUID;
 
@@ -26,15 +25,15 @@ public class EmulatedPositionResponse {
     Boolean isOpen;
     Double profit;
 
-    public static EmulatedPositionResponse from(EmulatedPositionEntity emulatedPositionEntity) {
-        return EmulatedPositionResponse.builder()
-            .profit(emulatedPositionEntity.getProfit())
-            .isOpen(emulatedPositionEntity.getIsOpen())
-            .ticker(emulatedPositionEntity.getInstrument().getTicker())
-            .scannerId(emulatedPositionEntity.getScanner().getId())
-            .openPrice(emulatedPositionEntity.getOpenPrice())
-            .lastPrice(emulatedPositionEntity.getLastPrice())
-            .closePrice(emulatedPositionEntity.getClosePrice())
-            .build();
-    }
+//    public static EmulatedPositionResponse from(EmulatedPositionEntity emulatedPositionEntity) {
+//        return EmulatedPositionResponse.builder()
+//            .profit(emulatedPositionEntity.getProfit())
+//            .isOpen(emulatedPositionEntity.getIsOpen())
+//            .ticker(emulatedPositionEntity.getInstrument().getTicker())
+//            .scannerId(emulatedPositionEntity.getScanner().getId())
+//            .openPrice(emulatedPositionEntity.getOpenPrice())
+//            .lastPrice(emulatedPositionEntity.getLastPrice())
+//            .closePrice(emulatedPositionEntity.getClosePrice())
+//            .build();
+//    }
 }

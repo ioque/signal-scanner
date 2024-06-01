@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -35,16 +34,6 @@ public class InstrumentInListResponse implements Serializable {
             .id(instrument.getId())
             .ticker(instrument.getTicker())
             .shortName(instrument.getDetails().getShortName())
-            .todayValue(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getTodayValue)
-                .orElse(null)
-            )
-            .todayLastPrice(instrument
-                .getTradingState()
-                .map(TradingStateEntity::getTodayLastPrice)
-                .orElse(null)
-            )
             .build();
     }
 }

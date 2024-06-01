@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Getter
 @Builder
@@ -17,24 +16,18 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IntradayPerformance implements Comparable<IntradayPerformance> {
 
-    Ticker ticker;
-    Double todayValue;
-    Double todayLastPrice;
-    Double todayFirstPrice;
+    InstrumentId instrumentId;
+    @Builder.Default
+    Double todayValue = 0D;
+    @Builder.Default
+    Double todayLastPrice = 0D;
+    @Builder.Default
+    Double todayFirstPrice = 0D;
     LocalDateTime timestamp;
 
-    public static IntradayPerformance of(Ticker ticker) {
+    public static IntradayPerformance of(IntradayData data) {
         return IntradayPerformance.builder()
-            .ticker(ticker)
-            .todayValue(0D)
-            .todayLastPrice(0D)
-            .todayFirstPrice(0D)
-            .build();
-    }
-
-    public static IntradayPerformance from(IntradayData data) {
-        return IntradayPerformance.builder()
-            .ticker(data.getTicker())
+            .instrumentId(data.getInstrumentId())
             .timestamp(data.getDateTime())
             .todayLastPrice(data.getPrice())
             .todayValue(data.getValue())
@@ -42,16 +35,18 @@ public class IntradayPerformance implements Comparable<IntradayPerformance> {
             .build();
     }
 
+    public static IntradayPerformance empty(InstrumentId instrumentId) {
+        return IntradayPerformance.builder()
+            .instrumentId(instrumentId)
+            .build();
+    }
+
     public IntradayPerformance add(IntradayData data) {
-        final Ticker ticker = data.getTicker();
-        if (this.ticker != null && !this.ticker.equals(ticker)) {
-            throw new DomainException("Нельзя изменить ранее установленный тикер.");
-        }
         if(timestamp != null && data.getDateTime().toLocalDate().isAfter(timestamp.toLocalDate())) {
-            return IntradayPerformance.from(data);
+            return IntradayPerformance.of(data);
         }
         return IntradayPerformance.builder()
-            .ticker(ticker)
+            .instrumentId(data.getInstrumentId())
             .timestamp(data.getDateTime())
             .todayLastPrice(data.getPrice())
             .todayValue(todayValue + data.getValue())

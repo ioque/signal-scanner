@@ -11,7 +11,7 @@ import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.application.modules.scanner.command.UpdateScanner;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.util.List;

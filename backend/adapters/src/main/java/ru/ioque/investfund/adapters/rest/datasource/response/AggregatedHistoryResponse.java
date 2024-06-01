@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ public class AggregatedHistoryResponse implements Serializable {
     Double closePrice;
     LocalDate tradeDate;
 
-    public static AggregatedHistoryResponse fromDomain(AggregatedHistoryEntity aggregatedHistoryEntity) {
+    public static AggregatedHistoryResponse fromDomain(AggregatedTotals aggregatedHistoryEntity) {
         return AggregatedHistoryResponse.builder()
             .value(aggregatedHistoryEntity.getValue())
             .waPrice(aggregatedHistoryEntity.getWaPrice())
@@ -38,7 +38,7 @@ public class AggregatedHistoryResponse implements Serializable {
             .highPrice(aggregatedHistoryEntity.getHighPrice())
             .openPrice(aggregatedHistoryEntity.getOpenPrice())
             .closePrice(aggregatedHistoryEntity.getClosePrice())
-            .tradeDate(aggregatedHistoryEntity.getId().getDate())
+            .tradeDate(aggregatedHistoryEntity.getDate())
             .build();
     }
 }

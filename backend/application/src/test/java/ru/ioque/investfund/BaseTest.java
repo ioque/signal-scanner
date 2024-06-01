@@ -4,14 +4,19 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.pipeline.PipelineConfigurator;
-import ru.ioque.investfund.application.modules.pipeline.processor.PositionManager;
-import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
-import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
-import ru.ioque.investfund.application.modules.pipeline.processor.TelegramPublisher;
+import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.Topology;
+import ru.ioque.investfund.application.modules.pipeline.sink.RiskManagerSink;
+import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistry;
+import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistryContext;
+import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculator;
+import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculatorContext;
+import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinder;
+import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinderContext;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
@@ -19,8 +24,8 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fakes.FakeDIContainer;
 import ru.ioque.investfund.fakes.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
-import ru.ioque.investfund.fakes.FakeEmulatedPositionJournal;
-import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsJournal;
+import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
+import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsRepository;
 import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
 import ru.ioque.investfund.fakes.FakeScannerRepository;
@@ -76,7 +81,7 @@ public class BaseTest {
         return fakeDIContainer.getTelegramMessageSender();
     }
 
-    protected final FakeEmulatedPositionJournal emulatedPositionRepository() {
+    protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
         return fakeDIContainer.getEmulatedPositionJournal();
     }
 
@@ -84,39 +89,48 @@ public class BaseTest {
         return fakeDIContainer.getIntradayJournal();
     }
 
-    protected final FakeAggregatedTotalsJournal aggregatedTotalsJournal() {
+    protected final FakeAggregatedTotalsRepository aggregatedTotalsJournal() {
         return fakeDIContainer.getAggregatedTotalsJournal();
-    }
-
-    protected final SignalProducer signalProducer() {
-        return fakeDIContainer.getSignalProducer();
-    }
-
-    protected final RiskManager riskManager() {
-        return fakeDIContainer.getRiskManager();
-    }
-
-    protected final PositionManager positionManager() {
-        return fakeDIContainer.getPositionManager();
-    }
-
-    protected final TelegramPublisher telegramPublisher() {
-        return fakeDIContainer.getTelegramPublisher();
     }
 
     protected final FakeSignalJournal signalJournal() {
         return fakeDIContainer.getSignalJournal();
     }
 
-    protected final PipelineConfigurator pipelineManager() {
-        return fakeDIContainer.getPipelineConfigurator();
+    protected final PipelineManager pipelineManager() {
+        return fakeDIContainer.getPipelineManager();
     }
 
-    protected List<Instrument> getInstruments(DatasourceId datasourceId) {
-        return datasourceRepository()
-            .findBy(datasourceId)
-            .map(Datasource::getInstruments)
-            .orElse(new ArrayList<>());
+    protected final SignalsFinderContext signalsFinderContext() {
+        return fakeDIContainer.getSignalsFinderContext();
+    }
+
+    protected final SignalRegistryContext signalRegistryContext() {
+        return fakeDIContainer.getSignalRegistryContext();
+    }
+
+    protected final PerformanceCalculatorContext performanceCalculatorContext() {
+        return fakeDIContainer.getPerformanceCalculatorContext();
+    }
+
+    protected final SignalsFinder signalsFinder() {
+        return fakeDIContainer.getSignalsFinder();
+    }
+
+    protected final SignalRegistry signalRegistry() {
+        return fakeDIContainer.getSignalRegistry();
+    }
+
+    protected final PerformanceCalculator performanceCalculator() {
+        return fakeDIContainer.getPerformanceCalculator();
+    }
+
+    protected final RiskManagerSink riskManagerSink() {
+        return fakeDIContainer.getRiskManagerSink();
+    }
+
+    protected final void buildDefaultTopology() {
+        new Topology(intradayJournal(), performanceCalculator(), signalsFinder(), signalRegistry(), riskManagerSink());
     }
 
     protected void initTodayDateTime(String dateTime) {
@@ -139,12 +153,24 @@ public class BaseTest {
         datasourceStorage().initDealDatas(Arrays.asList(intradayData));
     }
 
-    protected DatasourceId getDatasourceId() {
-        return datasourceRepository().getAll().get(0).getId();
-    }
-
     protected void clearLogs() {
         loggerProvider().clearLogs();
+    }
+
+
+    protected EnableUpdateInstruments enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    }
+
+    protected EnableUpdateInstruments disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
+        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    }
+
+    protected List<Instrument> getInstruments(DatasourceId datasourceId) {
+        return datasourceRepository()
+            .findBy(datasourceId)
+            .map(Datasource::getInstruments)
+            .orElse(new ArrayList<>());
     }
 
     protected List<Ticker> getTickers(DatasourceId datasourceId) {
@@ -155,11 +181,16 @@ public class BaseTest {
         return exception.getConstraintViolations().stream().findFirst().map(ConstraintViolation::getMessage).orElseThrow();
     }
 
-    protected EnableUpdateInstruments enableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    protected DatasourceId getDatasourceId() {
+        return datasourceRepository().getAll().get(0).getId();
     }
 
-    protected EnableUpdateInstruments disableUpdateInstrumentCommandFrom(DatasourceId datasourceId, String... tickers) {
-        return new EnableUpdateInstruments(datasourceId, Arrays.stream(tickers).map(Ticker::from).toList());
+    protected InstrumentId getInstrumentId(String ticker) {
+        return getInstruments(getDatasourceId())
+            .stream()
+            .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
+            .findFirst()
+            .map(Instrument::getId)
+            .orElseThrow();
     }
 }

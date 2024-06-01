@@ -7,9 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 import java.time.LocalDateTime;
 

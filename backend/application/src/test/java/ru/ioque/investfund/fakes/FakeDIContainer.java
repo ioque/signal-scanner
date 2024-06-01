@@ -14,13 +14,14 @@ import ru.ioque.investfund.application.modules.datasource.handler.RemoveDatasour
 import ru.ioque.investfund.application.modules.datasource.handler.UpdateDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.SynchronizeDatasourceHandler;
 import ru.ioque.investfund.application.modules.datasource.handler.PublishIntradayDataHandler;
-import ru.ioque.investfund.application.modules.pipeline.PipelineContext;
-import ru.ioque.investfund.application.modules.pipeline.PipelineConfigurator;
-import ru.ioque.investfund.application.modules.pipeline.SignalRegistry;
-import ru.ioque.investfund.application.modules.pipeline.processor.PositionManager;
-import ru.ioque.investfund.application.modules.pipeline.processor.RiskManager;
-import ru.ioque.investfund.application.modules.pipeline.processor.SignalProducer;
-import ru.ioque.investfund.application.modules.pipeline.processor.TelegramPublisher;
+import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
+import ru.ioque.investfund.application.modules.pipeline.sink.RiskManagerSink;
+import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistryContext;
+import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistry;
+import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculator;
+import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculatorContext;
+import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinder;
+import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinderContext;
 import ru.ioque.investfund.application.modules.scanner.handler.ActivateScannerHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.CreateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.scanner.handler.DeactivateScannerHandler;
@@ -28,7 +29,7 @@ import ru.ioque.investfund.application.modules.scanner.handler.RemoveScannerHand
 import ru.ioque.investfund.application.modules.scanner.handler.UpdateScannerCommandHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.SubscribeHandler;
 import ru.ioque.investfund.application.modules.telegrambot.handler.UnsubscribeHandler;
-import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsJournal;
+import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsRepository;
 import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
 import ru.ioque.investfund.fakes.journal.FakeSignalJournal;
 
@@ -38,21 +39,21 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FakeDIContainer {
     DatasourceStorage datasourceStorage;
+    CommandBus commandBus;
+    Validator validator;
     FakeDateTimeProvider dateTimeProvider;
     FakeDatasourceProvider exchangeProvider;
     FakeLoggerProvider loggerProvider;
+    FakeTelegramMessageSender telegramMessageSender;
 
     FakeSignalJournal signalJournal;
     FakeIntradayJournal intradayJournal;
-    FakeAggregatedTotalsJournal aggregatedTotalsJournal;
-    FakeEmulatedPositionJournal emulatedPositionJournal;
-
+    FakeAggregatedTotalsRepository aggregatedTotalsJournal;
+    FakeEmulatedPositionRepository emulatedPositionJournal;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
     FakeInstrumentRepository instrumentRepository;
     FakeTelegramChatRepository telegramChatRepository;
-
-    FakeTelegramMessageSender telegramMessageSender;
 
     DisableUpdateInstrumentHandler disableUpdateInstrumentHandler;
     EnableUpdateInstrumentHandler enableUpdateInstrumentHandler;
@@ -70,35 +71,33 @@ public class FakeDIContainer {
     ActivateScannerHandler activateScannerHandler;
     PublishAggregatedHistoryHandler publishAggregatedHistoryHandler;
 
-    PipelineContext pipelineContext;
+    PipelineManager pipelineManager;
+    PerformanceCalculator performanceCalculator;
+    PerformanceCalculatorContext performanceCalculatorContext;
+    SignalsFinder signalsFinder;
+    SignalsFinderContext signalsFinderContext;
     SignalRegistry signalRegistry;
-    PipelineConfigurator pipelineConfigurator;
-    SignalProducer signalProducer;
-    RiskManager riskManager;
-    PositionManager positionManager;
-    TelegramPublisher telegramPublisher;
-
-    CommandBus commandBus;
-    Validator validator;
+    SignalRegistryContext signalRegistryContext;
+    RiskManagerSink riskManagerSink;
 
     public FakeDIContainer() {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
-        aggregatedTotalsJournal = new FakeAggregatedTotalsJournal();
-        intradayJournal = new FakeIntradayJournal();
-        signalJournal = new FakeSignalJournal();
-
         dateTimeProvider = new FakeDateTimeProvider();
         datasourceStorage = new DatasourceStorage();
         exchangeProvider = getFakeExchangeProvider();
         loggerProvider = new FakeLoggerProvider();
+        telegramMessageSender = new FakeTelegramMessageSender();
+
+        aggregatedTotalsJournal = new FakeAggregatedTotalsRepository();
+        intradayJournal = new FakeIntradayJournal();
+        signalJournal = new FakeSignalJournal();
         datasourceRepository = new FakeDatasourceRepository();
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
         scannerRepository = new FakeScannerRepository();
         telegramChatRepository = new FakeTelegramChatRepository();
-        emulatedPositionJournal = new FakeEmulatedPositionJournal();
-        telegramMessageSender = new FakeTelegramMessageSender();
+        emulatedPositionJournal = new FakeEmulatedPositionRepository();
 
         publishAggregatedHistoryHandler = new PublishAggregatedHistoryHandler(
             dateTimeProvider,
@@ -201,6 +200,7 @@ public class FakeDIContainer {
             telegramChatRepository,
             telegramMessageSender
         );
+
         commandBus = new CommandBus(
             List.of(
                 disableUpdateInstrumentHandler,
@@ -221,25 +221,23 @@ public class FakeDIContainer {
             )
         );
 
-        pipelineContext = new PipelineContext();
-        signalRegistry = new SignalRegistry();
-        pipelineConfigurator = new PipelineConfigurator(
-            pipelineContext,
-            signalRegistry,
+        performanceCalculatorContext = new PerformanceCalculatorContext();
+        signalsFinderContext = new SignalsFinderContext();
+        signalRegistryContext = new SignalRegistryContext();
+        performanceCalculator = new PerformanceCalculator(performanceCalculatorContext);
+        signalsFinder = new SignalsFinder(signalsFinderContext);
+        signalRegistry = new SignalRegistry(signalRegistryContext, signalJournal);
+        riskManagerSink = new RiskManagerSink();
+
+        pipelineManager = new PipelineManager(
+            signalJournal,
             scannerRepository,
-            instrumentRepository,
             aggregatedTotalsJournal,
-            signalJournal
+            datasourceRepository,
+            signalRegistryContext,
+            performanceCalculatorContext,
+            signalsFinderContext
         );
-        signalProducer = new SignalProducer(
-            pipelineContext,
-            signalRegistry,
-            dateTimeProvider,
-            signalJournal
-        );
-        riskManager = new RiskManager(pipelineContext);
-        positionManager = new PositionManager(pipelineContext, emulatedPositionJournal);
-        telegramPublisher = new TelegramPublisher(pipelineContext, telegramMessageSender, telegramChatRepository);
     }
 
     private FakeDatasourceProvider getFakeExchangeProvider() {

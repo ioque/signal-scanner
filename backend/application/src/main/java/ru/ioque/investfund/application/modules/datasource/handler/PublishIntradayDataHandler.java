@@ -51,6 +51,7 @@ public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayDa
                 .stream()
                 .filter(data -> data.getNumber() > from)
                 .forEach(intradayData -> {
+                    intradayData.setInstrumentId(instrument.getId());
                     intradayJournal.publish(intradayData);
                     numbers.put(instrument.getTicker(), intradayData.getNumber());
                 });

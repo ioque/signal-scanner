@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
+import ru.ioque.investfund.domain.scanner.algorithms.core.AlgorithmType;
 
 @Getter
 @Builder

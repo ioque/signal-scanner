@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.journal.EmulatedPositionJournal;
+import ru.ioque.investfund.application.adapters.repository.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.ReportService;
 import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyReport> {
     ReportService reportService;
-    EmulatedPositionJournal emulatedPositionJournal;
+    EmulatedPositionRepository emulatedPositionRepository;
     TelegramMessageSender telegramMessageSender;
     TelegramChatRepository telegramChatRepository;
 
@@ -32,13 +32,13 @@ public class PublishHourlyReportHandler extends CommandHandler<PublishHourlyRepo
         TelegramMessageSender telegramMessageSender,
         TelegramChatRepository telegramChatRepository,
         ReportService reportService,
-        EmulatedPositionJournal emulatedPositionJournal
+        EmulatedPositionRepository emulatedPositionRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.reportService = reportService;
         this.telegramMessageSender = telegramMessageSender;
         this.telegramChatRepository = telegramChatRepository;
-        this.emulatedPositionJournal = emulatedPositionJournal;
+        this.emulatedPositionRepository = emulatedPositionRepository;
     }
 
     @Override

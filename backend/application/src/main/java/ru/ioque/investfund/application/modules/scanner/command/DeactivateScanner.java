@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.Command;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 @Getter
 @Builder

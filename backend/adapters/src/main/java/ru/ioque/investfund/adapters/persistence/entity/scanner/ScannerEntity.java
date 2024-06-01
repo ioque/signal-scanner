@@ -21,23 +21,21 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.adapters.persistence.entity.UuidIdentity;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmType;
+import ru.ioque.investfund.domain.scanner.algorithms.core.AlgorithmType;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -89,8 +87,6 @@ public abstract class ScannerEntity extends UuidIdentity {
             .workPeriodInMinutes(getWorkPeriodInMinutes())
             .description(getDescription())
             .instrumentIds(getInstrumentIds().stream().map(InstrumentId::new).toList())
-            .lastExecutionDateTime(getLastExecutionDateTime())
-            .signals(getSignals().stream().map(SignalEntity::toDomain).collect(Collectors.toCollection(ArrayList::new)))
             .build();
     }
 
@@ -116,17 +112,10 @@ public abstract class ScannerEntity extends UuidIdentity {
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
             .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .scaleCoefficient(properties.getScaleCoefficient())
             .historyPeriod(properties.getHistoryPeriod())
             .indexTicker(properties.getIndexTicker().getValue())
             .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
         return scannerEntity;
     }
 
@@ -139,16 +128,9 @@ public abstract class ScannerEntity extends UuidIdentity {
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
             .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .historyScale(properties.getHistoryScale())
             .intradayScale(properties.getIntradayScale())
             .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
         return scannerEntity;
     }
 
@@ -161,17 +143,10 @@ public abstract class ScannerEntity extends UuidIdentity {
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
             .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .futuresOvernightScale(properties.getFuturesOvernightScale())
             .stockOvernightScale(properties.getStockOvernightScale())
             .futuresTicker(properties.getFuturesTicker().getValue())
             .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
         return scannerEntity;
     }
 
@@ -184,15 +159,8 @@ public abstract class ScannerEntity extends UuidIdentity {
             .description(scannerDomain.getDescription())
             .datasourceId(scannerDomain.getDatasourceId().getUuid())
             .instrumentIds(scannerDomain.getInstrumentIds().stream().map(InstrumentId::getUuid).toList())
-            .lastWorkDateTime(scannerDomain.getLastExecutionDateTime().orElse(null))
             .spreadParam(properties.getSpreadValue())
             .build();
-        List<SignalEntity> signals = scannerDomain
-            .getSignals()
-            .stream()
-            .map(signal -> SignalEntity.from(scannerEntity, signal))
-            .toList();
-        scannerEntity.setSignals(signals);
         return scannerEntity;
     }
 }

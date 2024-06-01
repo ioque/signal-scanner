@@ -12,10 +12,11 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.core.Domain;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.algorithms.AlgorithmFactory;
-import ru.ioque.investfund.domain.scanner.algorithms.ScannerAlgorithm;
+import ru.ioque.investfund.domain.scanner.algorithms.core.AlgorithmFactory;
+import ru.ioque.investfund.domain.scanner.algorithms.core.ScannerAlgorithm;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
+import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 
 @Getter
 @ToString(callSuper = true)
@@ -28,6 +29,7 @@ public class SignalScanner extends Domain<ScannerId> {
     final DatasourceId datasourceId;
     List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
+    ScannerAlgorithm algorithm;
     AlgorithmProperties properties;
 
     @Builder
@@ -47,6 +49,14 @@ public class SignalScanner extends Domain<ScannerId> {
         this.datasourceId = datasourceId;
         this.properties = properties;
         this.instrumentIds = instrumentIds;
+        this.algorithm = AlgorithmFactory.factoryBy(properties);
+    }
+
+    public synchronized List<Signal> scanning(List<InstrumentTradingState> instruments, LocalDateTime watermark) {
+        return algorithm.findSignals(instruments, watermark)
+            .stream()
+            .peek(signal -> signal.setScannerId(getId()))
+            .toList();
     }
 
     public void updateWorkPeriod(Integer workPeriodInMinutes) {
@@ -66,18 +76,6 @@ public class SignalScanner extends Domain<ScannerId> {
             throw new IllegalArgumentException("Невозможно изменить тип алгоритма.");
         }
         this.properties = properties;
-    }
-
-    public synchronized List<Signal> scanning(List<InstrumentPerformance> instruments, LocalDateTime watermark) {
-        return getScannerAlgorithm()
-            .findSignals(instruments, watermark).stream()
-            .peek(signal -> signal.setScannerId(getId()))
-            .toList();
-    }
-
-    private ScannerAlgorithm getScannerAlgorithm() {
-        final AlgorithmFactory algorithmFactory = new AlgorithmFactory();
-        return algorithmFactory.factoryBy(properties);
     }
 
     public boolean isActive() {

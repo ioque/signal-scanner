@@ -10,7 +10,7 @@ import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
-import ru.ioque.investfund.application.adapters.journal.AggregatedTotalsJournal;
+import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
@@ -23,7 +23,7 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
 
     DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
-    AggregatedTotalsJournal aggregatedTotalsJournal;
+    AggregatedTotalsRepository aggregatedTotalsRepository;
 
     public PublishAggregatedHistoryHandler(
         DateTimeProvider dateTimeProvider,
@@ -31,20 +31,20 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
         LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
         DatasourceRepository datasourceRepository,
-        AggregatedTotalsJournal aggregatedTotalsJournal
+        AggregatedTotalsRepository aggregatedTotalsRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.datasourceProvider = datasourceProvider;
         this.datasourceRepository = datasourceRepository;
-        this.aggregatedTotalsJournal = aggregatedTotalsJournal;
+        this.aggregatedTotalsRepository = aggregatedTotalsRepository;
     }
 
     @Override
     protected Result businessProcess(PublishAggregatedHistory command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         for (final Instrument instrument : datasource.getUpdatableInstruments()) {
-            final LocalDate from = aggregatedTotalsJournal
-                .findActualBy(instrument.getTicker())
+            final LocalDate from = aggregatedTotalsRepository
+                .findActualBy(instrument.getId())
                 .map(row -> row.getDate().plusDays(1))
                 .orElse(dateTimeProvider.nowDate().minusMonths(6));
             final LocalDate to = dateTimeProvider.nowDate().minusDays(1);
@@ -52,7 +52,10 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
                 .fetchAggregateHistory(datasource, instrument, from, to)
                 .stream()
                 .filter(row -> row.isBetween(from, to))
-                .forEach(aggregatedTotalsJournal::publish);
+                .forEach(aggregatedTotals -> {
+                    aggregatedTotals.setInstrumentId(instrument.getId());
+                    aggregatedTotalsRepository.publish(aggregatedTotals);
+                });
         }
         return Result.success();
     }

@@ -12,8 +12,7 @@ import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
-import ru.ioque.investfund.domain.scanner.value.InstrumentPerformance;
-import ru.ioque.investfund.domain.scanner.value.IntradayPerformance;
+import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.ioque.investfund.fixture.InstrumentDetailsFixture.IMOEX;
@@ -329,7 +328,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
     }
 
     public void assertFinInstrument(
-        InstrumentPerformance instrumentPerformance,
+        InstrumentTradingState instrumentTradingState,
         Double openPrice,
         Double lastPrice,
         Double todayValue,
@@ -338,13 +337,13 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
         Double prevPrevClosePrice,
         Boolean isRiseToday
     ) {
-        assertEquals(openPrice, instrumentPerformance.getIntradayPerformance().map(IntradayPerformance::getTodayFirstPrice).orElse(null));
-        assertEquals(lastPrice, instrumentPerformance.getIntradayPerformance().map(IntradayPerformance::getTodayLastPrice).orElse(null));
-        assertEquals(todayValue, instrumentPerformance.getIntradayPerformance().map(IntradayPerformance::getTodayValue).orElse(null));
-        assertEquals(historyMedianValue, instrumentPerformance.getHistoryMedianValue(HISTORY_PERIOD).orElse(null));
-        assertEquals(prevClosePrice, instrumentPerformance.getPrevClosePrice().orElse(null));
-        assertEquals(prevPrevClosePrice, instrumentPerformance.getPrevPrevClosePrice().orElse(null));
-        assertEquals(isRiseToday, instrumentPerformance.isRiseToday().orElse(null));
+        assertEquals(openPrice, instrumentTradingState.getIntradayPerformance().getTodayFirstPrice());
+        assertEquals(lastPrice, instrumentTradingState.getIntradayPerformance().getTodayLastPrice());
+        assertEquals(todayValue, instrumentTradingState.getIntradayPerformance().getTodayValue());
+        assertEquals(historyMedianValue, instrumentTradingState.getHistoryMedianValue(HISTORY_PERIOD).orElse(null));
+        assertEquals(prevClosePrice, instrumentTradingState.getPrevClosePrice().orElse(null));
+        assertEquals(prevPrevClosePrice, instrumentTradingState.getPrevPrevClosePrice().orElse(null));
+        assertEquals(isRiseToday, instrumentTradingState.isRiseToday().orElse(null));
     }
 
     private void initTgknBuySignalDataset() {

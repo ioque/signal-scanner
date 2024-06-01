@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface JpaInstrumentRepository extends JpaAbstractRepository<InstrumentEntity>, JpaSpecificationExecutor<InstrumentEntity> {
     List<InstrumentEntity> findAllByIdIn(List<UUID> ids);
 
-    @Query("select i from Instrument i left join i.history where i.datasource.id = :datasourceId and i.ticker = :ticker")
+    @Query("select i from Instrument i where i.datasource.id = :datasourceId and i.ticker = :ticker")
     Optional<InstrumentEntity> findBy(UUID datasourceId, String ticker);
 }

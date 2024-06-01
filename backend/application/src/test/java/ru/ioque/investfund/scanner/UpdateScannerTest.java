@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 import java.util.List;
 import java.util.UUID;

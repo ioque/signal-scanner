@@ -8,7 +8,7 @@ import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;

@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.application.modules.api.Command;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
-import ru.ioque.investfund.domain.scanner.entity.ScannerId;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
 import java.util.List;
 

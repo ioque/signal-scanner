@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.position.EmulatedPosition;
+import ru.ioque.investfund.domain.position.Position;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +20,8 @@ public class RemoveScannerTest extends BaseScannerCommandTest {
         """)
     void testCase1() {
         initScanner();
-        emulatedPositionRepository().publish(
-            EmulatedPosition.builder()
+        emulatedPositionRepository().save(
+            Position.builder()
                 .scannerId(getFirstScannerId())
                 .openPrice(10D)
                 .isOpen(true)
@@ -33,7 +33,7 @@ public class RemoveScannerTest extends BaseScannerCommandTest {
             () -> commandBus().execute(new RemoveScanner(getFirstScannerId()))
         );
         assertEquals("Удаление сканера невозможно, есть эмуляции позиций.", error.getMessage());
-        assertEquals(1, emulatedPositionRepository().emulatedPositions.size());
+        assertEquals(1, emulatedPositionRepository().positions.size());
         assertEquals(1, scannerRepository().scanners.size());
     }
 

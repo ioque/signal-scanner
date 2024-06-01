@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
-import ru.ioque.investfund.application.modules.pipeline.core.Processor;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 @Slf4j
