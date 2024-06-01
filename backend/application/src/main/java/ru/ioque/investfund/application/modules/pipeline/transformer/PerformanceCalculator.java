@@ -14,6 +14,7 @@ public class PerformanceCalculator implements Transformer<IntradayData, Intraday
 
     @Override
     public IntradayPerformance transform(IntradayData intradayData) {
+        System.out.println("PerformanceCalculator");
         if (!context.isInitialized()) {
             throw new IllegalStateException("Context is not initialized");
         }

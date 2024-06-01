@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -34,7 +34,7 @@ public abstract class IntradayData implements Comparable<IntradayData> {
     @Min(value = 0, message = "Номер должен быть больше нуля.")
     Long number;
     @NotNull(message = "Не указано время.")
-    LocalDateTime dateTime;
+    Instant timestamp;
     @NotNull(message = "Не указана цена.")
     @DecimalMin(value = "0", inclusive = false, message = "Цена не может быть отрицательной.")
     Double price;
@@ -42,10 +42,10 @@ public abstract class IntradayData implements Comparable<IntradayData> {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
-    public IntradayData(Ticker ticker, Long number, LocalDateTime dateTime, Double price, Double value) {
+    public IntradayData(Ticker ticker, Long number, Instant timestamp, Double price, Double value) {
         this.ticker = ticker;
         this.number = number;
-        this.dateTime = dateTime;
+        this.timestamp = timestamp;
         this.price = price;
         this.value = value;
     }

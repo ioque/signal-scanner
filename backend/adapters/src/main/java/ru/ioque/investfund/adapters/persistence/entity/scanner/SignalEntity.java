@@ -59,10 +59,8 @@ public class SignalEntity {
 
     public Signal toDomain() {
         return Signal.builder()
-            .isBuy(isBuy)
-            .price(getPrice())
+            .openPrice(getPrice())
             .summary(getSummary())
-            .watermark(getDateTime())
             .instrumentId(InstrumentId.from(getId().getInstrumentId()))
             .build();
     }
@@ -70,10 +68,8 @@ public class SignalEntity {
     public static SignalEntity from(ScannerEntity scanner, Signal signal) {
         return SignalEntity.builder()
             .scanner(scanner)
-            .isBuy(signal.isBuy())
-            .price(signal.getPrice())
+            .price(signal.getOpenPrice())
             .summary(signal.getSummary())
-            .dateTime(signal.getWatermark())
             .instrumentId(signal.getInstrumentId().getUuid())
             .build();
     }

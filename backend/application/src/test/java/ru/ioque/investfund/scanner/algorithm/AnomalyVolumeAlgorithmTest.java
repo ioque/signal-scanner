@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
@@ -39,7 +40,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 2,2, 0);
+        assertSignals(getSignals(), 2);
         assertFinInstrument(getTgknPerformance(), 100.0, 102.0, 13000.0, 1150.0, 100.0, 99.0, true);
         assertFinInstrument(getTgkbPerformance(), 100.0, 102.0, 15000.0, 1500.0, 100.0, 99.0, true);
         assertFinInstrument(getImoexPerformance(), 2800.0, 3100.0, 2_200_000.0, 1_500_000.0, 3000.0, 2900.0, true);
@@ -49,7 +50,9 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
         initScanner(datasourceId, TGKN, TGKB, IMOEX);
     }
 
+    //TODO перенести в тесты риск менеджера
     @Test
+    @Disabled
     @DisplayName("""
         T4. Создан сканер сигналов AnomalyVolumeScannerSignal для инструмента TGKN.
         Ранее был зарегистрирован сигнал к покупке. В текущем массиве данных
@@ -68,7 +71,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
         initTgknSellSignalDataset();
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 2, 1, 1);
+        assertSignals(getSignals(), 2);
         assertFinInstrument(getTgknPerformance(), 98.0, 96.0, 13000.0, 1450.0, 97.1, 99.1, false);
         assertFinInstrument(getImoexPerformance(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -104,7 +107,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0,0, 0);
+        assertSignals(getSignals(), 0);
         assertFinInstrument(getTgknPerformance(), 0.0, 0.0, 0.0, 1000.0, 100.0, 99.0, false);
         assertFinInstrument(getImoexPerformance(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -133,7 +136,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0,0, 0);
+        assertSignals(getSignals(),0);
         assertFinInstrument(getTgknPerformance(), 0.0, 0.0, 0.0, null, null, null, null);
         assertFinInstrument(getImoexPerformance(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -166,7 +169,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0,0, 0);
+        assertSignals(getSignals(), 0);
         assertFinInstrument(getTgknPerformance(), 100D, 100D, 469D, 1000D, 100.D, 99.D, false);
         assertFinInstrument(getImoexPerformance(), 3000.0, 2900.0, 3_000_000.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -196,7 +199,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0,0, 0);
+        assertSignals(getSignals(), 0);
         assertFinInstrument(getTgknPerformance(), 100D, 100D, 13000D, null, null, null, null);
         assertFinInstrument(getImoexPerformance(), 0.0, 0.0, 0.0, 1_500_000.0, 3000.0, 2900.0, false);
     }
@@ -228,7 +231,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0,0, 0);
+        assertSignals(getSignals(),0);
         assertFinInstrument(getTgknPerformance(), 100D, 103D, 13000D, 1000D, 100.D, 99.D, true);
         assertFinInstrument(getImoexPerformance(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
@@ -258,7 +261,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
         runPipeline(datasourceId);
 
         assertEquals(0, getSignals().size());
-        assertSignals(getSignals(),0,0, 0);
+        assertSignals(getSignals(),0);
         assertFinInstrument(getTgknPerformance(), 0.0, 0.0, 0.0, 1000D, 100.D, 99.D, false);
         assertFinInstrument(getImoexPerformance(), 2900D, 3000D, 3_000_000D, null, null, null, null);
     }
@@ -291,7 +294,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertFinInstrument(getTgknPerformance(), 100D, 103D, 13000D, null, 100.D, null, true);
         assertFinInstrument(getImoexPerformance(), 2900D, 3000D, 3_000_000D, 1_000_000D, 2800D, 2800D, true);
     }
@@ -322,7 +325,7 @@ public class AnomalyVolumeAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertFinInstrument(getTgknPerformance(), 100D, 100D, 13000D, null, 100.D, null, false);
         assertFinInstrument(getImoexPerformance(), 2800D, 3000D, 3_000_000D, null, 2800D, null, true);
     }

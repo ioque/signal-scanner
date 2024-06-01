@@ -1,6 +1,6 @@
 package ru.ioque.investfund.domain.scanner.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -24,12 +24,12 @@ import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignalScanner extends Domain<ScannerId> {
 
+    final DatasourceId datasourceId;
+    final ScannerAlgorithm algorithm;
     String description;
     ScannerStatus status;
-    final DatasourceId datasourceId;
     List<InstrumentId> instrumentIds;
     Integer workPeriodInMinutes;
-    ScannerAlgorithm algorithm;
     AlgorithmProperties properties;
 
     @Builder
@@ -52,7 +52,7 @@ public class SignalScanner extends Domain<ScannerId> {
         this.algorithm = AlgorithmFactory.factoryBy(properties);
     }
 
-    public synchronized List<Signal> scanning(List<InstrumentTradingState> instruments, LocalDateTime watermark) {
+    public synchronized List<Signal> scanning(List<InstrumentTradingState> instruments, Instant watermark) {
         return algorithm.findSignals(instruments, watermark)
             .stream()
             .peek(signal -> signal.setScannerId(getId()))

@@ -1,14 +1,27 @@
 package ru.ioque.investfund.adapters.kafka;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
+import reactor.core.publisher.Flux;
+import reactor.kafka.receiver.KafkaReceiver;
+import reactor.kafka.receiver.ReceiverOptions;
+import reactor.kafka.receiver.ReceiverRecord;
 
 @Configuration
 @Profile("!tests")
 public class TopicConfiguration {
+    public static final String INTRADAY_DATA_TOPIC = "intraday-data-topic";
     public static final String BUSINESS_LOG_TOPIC = "business-log-topic";
     public static final String TECHNICAL_LOG_TOPIC = "technical-log-topic";
 
@@ -28,5 +41,23 @@ public class TopicConfiguration {
             .partitions(1)
             .replicas(1)
             .build();
+    }
+
+
+    @Bean
+    ReceiverOptions<String, String> kafkaReceiverOptions() {
+        Map<String, Object> configuration = new HashMap<>();
+        configuration.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configuration.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-reactor");
+        configuration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        ReceiverOptions<String, String> options = ReceiverOptions.create(configuration);
+        return options.subscription(List.of(INTRADAY_DATA_TOPIC))
+            .withKeyDeserializer(new StringDeserializer())
+            .withValueDeserializer(new JsonDeserializer<>());
+    }
+
+    @Bean
+    Flux<ReceiverRecord<String, String>> reactiveKafkaReceiver(ReceiverOptions<String, String> kafkaReceiverOptions) {
+        return KafkaReceiver.create(kafkaReceiverOptions).receive();
     }
 }

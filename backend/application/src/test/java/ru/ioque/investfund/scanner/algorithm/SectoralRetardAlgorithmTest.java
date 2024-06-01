@@ -39,7 +39,7 @@ public class SectoralRetardAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0,0, 0);
+        assertSignals(getSignals(), 0);
         assertFalse(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getSibnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -61,7 +61,7 @@ public class SectoralRetardAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1,1, 0);
+        assertSignals(getSignals(), 1);
         assertTrue(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getSibnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
@@ -83,7 +83,7 @@ public class SectoralRetardAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),  0,0, 0);
+        assertSignals(getSignals(),  0);
         assertTrue(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
     }
@@ -103,7 +103,7 @@ public class SectoralRetardAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0,0, 0);
+        assertSignals(getSignals(), 0);
         assertTrue(getSibnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertTrue(getRosnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));
         assertFalse(getTatnPerformance().isRiseInLastTwoDay(historyScale, intradayScale));

@@ -5,7 +5,7 @@ import lombok.Getter;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -15,5 +15,5 @@ public abstract class ScannerAlgorithm {
     public ScannerAlgorithm(String name) {
         this.name = name;
     }
-    public abstract List<Signal> findSignals(List<InstrumentTradingState> instruments, LocalDateTime watermark);
+    public abstract List<Signal> findSignals(List<InstrumentTradingState> instruments, Instant watermark);
 }

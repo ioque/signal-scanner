@@ -13,7 +13,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumePro
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(final List<InstrumentTradingState> instruments, final LocalDateTime watermark) {
+    public List<Signal> findSignals(final List<InstrumentTradingState> instruments, final Instant watermark) {
         final List<Signal> signals = new ArrayList<>();
         final Optional<Boolean> indexIsRiseToday = getMarketIndex(instruments).isRiseToday();
 
@@ -67,7 +67,6 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                 signals.add(
                     Signal.builder()
                         .instrumentId(instrument.getInstrumentId())
-                        .isBuy(true)
                         .summary(createSummary(
                             formatter,
                             medianValue.get(),
@@ -75,25 +74,8 @@ public class AnomalyVolumeAlgorithm extends ScannerAlgorithm {
                             currentValueToMedianValue,
                             true
                         ))
-                        .watermark(watermark)
-                        .price(instrument.getIntradayPerformance().getTodayLastPrice())
-                        .build()
-                );
-            }
-            if (currentValueToMedianValue > scaleCoefficient && !instrument.isRiseToday().get()) {
-                signals.add(
-                    Signal.builder()
-                        .instrumentId(instrument.getInstrumentId())
-                        .isBuy(false)
-                        .watermark(watermark)
-                        .summary(createSummary(
-                            formatter,
-                            medianValue.get(),
-                            currentValue,
-                            currentValueToMedianValue,
-                            indexIsRiseToday.get()
-                        ))
-                        .price(instrument.getIntradayPerformance().getTodayLastPrice())
+                        .timestamp(watermark)
+                        .openPrice(instrument.getIntradayPerformance().getTodayLastPrice())
                         .build()
                 );
             }

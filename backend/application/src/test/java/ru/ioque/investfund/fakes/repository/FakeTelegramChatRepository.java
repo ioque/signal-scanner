@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes;
+package ru.ioque.investfund.fakes.repository;
 
 import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.domain.telegrambot.TelegramChat;

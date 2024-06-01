@@ -1,6 +1,6 @@
 package ru.ioque.investfund.domain.scanner.value;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,12 +23,12 @@ public class IntradayPerformance implements Comparable<IntradayPerformance> {
     Double todayLastPrice = 0D;
     @Builder.Default
     Double todayFirstPrice = 0D;
-    LocalDateTime timestamp;
+    Instant timestamp;
 
     public static IntradayPerformance of(IntradayData data) {
         return IntradayPerformance.builder()
             .instrumentId(data.getInstrumentId())
-            .timestamp(data.getDateTime())
+            .timestamp(data.getTimestamp())
             .todayLastPrice(data.getPrice())
             .todayValue(data.getValue())
             .todayFirstPrice(data.getPrice())
@@ -42,12 +42,9 @@ public class IntradayPerformance implements Comparable<IntradayPerformance> {
     }
 
     public IntradayPerformance add(IntradayData data) {
-        if(timestamp != null && data.getDateTime().toLocalDate().isAfter(timestamp.toLocalDate())) {
-            return IntradayPerformance.of(data);
-        }
         return IntradayPerformance.builder()
             .instrumentId(data.getInstrumentId())
-            .timestamp(data.getDateTime())
+            .timestamp(data.getTimestamp())
             .todayLastPrice(data.getPrice())
             .todayValue(todayValue + data.getValue())
             .todayFirstPrice(todayFirstPrice > 0 ? todayFirstPrice : data.getPrice())

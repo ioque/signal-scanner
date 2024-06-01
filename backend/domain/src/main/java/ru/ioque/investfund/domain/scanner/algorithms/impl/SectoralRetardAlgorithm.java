@@ -10,7 +10,7 @@ import ru.ioque.investfund.domain.scanner.value.InstrumentTradingState;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<InstrumentTradingState> instruments, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<InstrumentTradingState> instruments, Instant watermark) {
         final List<Signal> signals = new ArrayList<>();
         final List<InstrumentTradingState> riseInstruments = getRiseInstruments(instruments);
         final List<InstrumentTradingState> otherInstruments = getSectoralRetards(instruments, riseInstruments);
@@ -37,7 +37,6 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
             otherInstruments.forEach(snapshot -> signals.add(
                 Signal.builder()
                     .instrumentId(snapshot.getInstrumentId())
-                    .isBuy(true)
                     .summary(String.format(
                         """
                         Растущие инструменты сектора: %s
@@ -46,8 +45,8 @@ public class SectoralRetardAlgorithm extends ScannerAlgorithm {
                         riseInstruments.stream().map(InstrumentTradingState::getTicker).toList(),
                         otherInstruments.stream().map(InstrumentTradingState::getTicker).toList()
                     ))
-                    .watermark(watermark)
-                    .price(snapshot.getIntradayPerformance().getTodayLastPrice())
+                    .timestamp(watermark)
+                    .openPrice(snapshot.getIntradayPerformance().getTodayLastPrice())
                     .build()
             ));
         }

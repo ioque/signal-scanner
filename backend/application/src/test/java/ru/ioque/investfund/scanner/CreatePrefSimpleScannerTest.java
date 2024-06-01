@@ -1,6 +1,5 @@
 package ru.ioque.investfund.scanner;
 
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.scanner.command.CreateScanner;
@@ -133,7 +132,7 @@ public class CreatePrefSimpleScannerTest extends BaseScannerCommandTest {
             .build();
     }
 
-    private List<@Valid Ticker> getTickers() {
+    private List<Ticker> getTickers() {
         return List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX));
     }
 }

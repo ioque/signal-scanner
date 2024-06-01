@@ -12,7 +12,7 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProper
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<InstrumentTradingState> instruments, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<InstrumentTradingState> instruments, Instant watermark) {
         List<Signal> signals = new ArrayList<>();
         findAllPrefAndSimplePairs(instruments).forEach(pair -> {
             final double currentDelta = pair.getCurrentDelta();
@@ -39,7 +39,6 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
             if (multiplier > spreadValue) {
                 signals.add(Signal.builder()
                     .instrumentId(pair.getPref().getInstrumentId())
-                    .isBuy(true)
                     .summary(
                         String.format(
                             """
@@ -49,8 +48,8 @@ public class PrefCommonAlgorithm extends ScannerAlgorithm {
                             formatter.format(currentDelta), formatter.format(historyDelta), formatter.format(multiplier)
                         )
                     )
-                    .watermark(watermark)
-                    .price(pair.getPref().getIntradayPerformance().getTodayLastPrice())
+                    .timestamp(watermark)
+                    .openPrice(pair.getPref().getIntradayPerformance().getTodayLastPrice())
                     .build()
                 );
             }

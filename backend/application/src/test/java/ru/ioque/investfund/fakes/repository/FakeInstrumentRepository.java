@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes;
+package ru.ioque.investfund.fakes.repository;
 
 import lombok.AllArgsConstructor;
 import ru.ioque.investfund.application.adapters.repository.InstrumentRepository;

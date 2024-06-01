@@ -53,7 +53,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
-            .price(10D)
+            .openPrice(10D)
             .instrumentId(instrumentIds.get(0))
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -87,7 +87,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
-            .price(10D)
+            .openPrice(10D)
             .instrumentId(instrumentIds.get(0))
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -121,7 +121,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
-            .price(10D)
+            .openPrice(10D)
             .instrumentId(instrumentIds.get(0))
             .isBuy(true)
             .watermark(lastExecutionDateTime)
@@ -155,7 +155,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final Integer workPeriodInMinutes = 1;
         final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
         final Signal signal = Signal.builder()
-            .price(10D)
+            .openPrice(10D)
             .instrumentId(instrumentIds.get(0))
             .isBuy(true)
             .watermark(lastExecutionDateTime)

@@ -17,7 +17,7 @@ import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.DisableUpdateInstruments;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
-import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregatedTotals;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.datasource.command.RemoveDatasource;
@@ -64,7 +64,7 @@ public class DatasourceCommandController {
 
     @PostMapping("/api/datasource/{datasourceId}/aggregate-history")
     public void runDatasource(@PathVariable UUID datasourceId) {
-        commandBus.execute(new PublishAggregatedHistory(DatasourceId.from(datasourceId)));
+        commandBus.execute(new UpdateAggregatedTotals(DatasourceId.from(datasourceId)));
     }
 
     @PostMapping("/api/datasource/{datasourceId}/intraday-data")

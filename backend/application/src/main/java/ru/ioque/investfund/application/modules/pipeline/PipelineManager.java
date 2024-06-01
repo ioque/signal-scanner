@@ -5,7 +5,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.application.adapters.journal.SignalJournal;
+import ru.ioque.investfund.application.adapters.repository.SignalRepository;
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
@@ -22,7 +22,7 @@ import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 @AllArgsConstructor
 public class PipelineManager {
 
-    private final SignalJournal signalJournal;
+    private final SignalRepository signalRepository;
     private final ScannerRepository scannerRepository;
     private final AggregatedTotalsRepository aggregatedTotalsRepository;
     private final DatasourceRepository datasourceRepository;
@@ -31,8 +31,7 @@ public class PipelineManager {
     private final PerformanceCalculatorContext performanceCalculatorContext;
     private final SignalsFinderContext signalsFinderContext;
 
-
-    public void start() {
+    public void initializeContexts() {
         final List<Datasource> datasources = datasourceRepository.getAll();
         final List<Instrument> instruments = datasources
             .stream()
@@ -51,17 +50,13 @@ public class PipelineManager {
             .map(aggregatedTotalsRepository::findAllBy)
             .flatMap(Collection::stream)
             .toList();
-        final List<Signal> signals = scanners
-            .stream()
-            .map(scanner -> signalJournal.findAllBy(scanner.getId()))
-            .flatMap(Collection::stream)
-            .toList();
+        final List<Signal> signals = signalRepository.getAll();
         performanceCalculatorContext.initialize();
         signalRegistryContext.initialize(signals);
         signalsFinderContext.initialize(scanners, instruments, aggregatedTotals);
     }
 
-    public void stop() {
+    public void resetContexts() {
         performanceCalculatorContext.reset();
         signalRegistryContext.reset();
         signalsFinderContext.reset();

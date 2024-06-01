@@ -1,4 +1,4 @@
-package ru.ioque.investfund.fakes.journal;
+package ru.ioque.investfund.fakes.repository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,13 +9,12 @@ import java.util.stream.Stream;
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
-import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 public class FakeAggregatedTotalsRepository implements AggregatedTotalsRepository {
     private final Set<AggregatedTotals> histories = new HashSet<>();
 
     @Override
-    public void publish(AggregatedTotals aggregatedTotals) {
+    public void save(AggregatedTotals aggregatedTotals) {
         histories.add(aggregatedTotals);
     }
 

@@ -3,6 +3,7 @@ package ru.ioque.investfund.fixture;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class DataFactory {
         return Deal.builder()
             .ticker(Ticker.from(ticker))
             .number(number)
-            .dateTime(dateTime)
+            .timestamp(dateTime.toInstant(ZoneOffset.UTC))
             .value(value)
             .isBuy(isBuy)
             .qnt(qnt)
@@ -60,7 +61,7 @@ public class DataFactory {
         return Contract.builder()
             .ticker(Ticker.from(ticker))
             .number(number)
-            .dateTime(dateTime)
+            .timestamp(dateTime.toInstant(ZoneOffset.UTC))
             .price(price)
             .qnt(qnt)
             .value(value)
@@ -77,7 +78,7 @@ public class DataFactory {
         return Delta.builder()
             .ticker(Ticker.from(ticker))
             .number(number)
-            .dateTime(dateTime)
+            .timestamp(dateTime.toInstant(ZoneOffset.UTC))
             .value(value)
             .price(price)
             .build();
@@ -140,7 +141,7 @@ public class DataFactory {
         return Deal.builder()
             .ticker(Ticker.from(ticker))
             .number(number)
-            .dateTime(dateTime)
+            .timestamp(dateTime.toInstant(ZoneOffset.UTC))
             .value(10000.0)
             .isBuy(false)
             .qnt(1)

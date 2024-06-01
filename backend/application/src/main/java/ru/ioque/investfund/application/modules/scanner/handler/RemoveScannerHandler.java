@@ -5,41 +5,36 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.repository.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.repository.SignalRepository;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
-import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RemoveScannerHandler extends CommandHandler<RemoveScanner> {
     ScannerRepository scannerRepository;
-    EmulatedPositionRepository emulatedPositionRepository;
+    SignalRepository signalRepository;
 
     public RemoveScannerHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
         ScannerRepository scannerRepository,
-        EmulatedPositionRepository emulatedPositionRepository
+        SignalRepository signalRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.scannerRepository = scannerRepository;
-        this.emulatedPositionRepository = emulatedPositionRepository;
+        this.signalRepository = signalRepository;
     }
 
     @Override
     protected Result businessProcess(RemoveScanner command) {
-        final SignalScanner scanner = scannerRepository.getBy(command.getScannerId());
-        for (InstrumentId instrumentId : scanner.getInstrumentIds()) {
-            if (emulatedPositionRepository.findActualBy(instrumentId, command.getScannerId()).isPresent()) {
-                return Result.error(new DomainException("Удаление сканера невозможно, есть эмуляции позиций."));
-            }
+        if (!signalRepository.findAllBy(command.getScannerId()).isEmpty()) {
+            return Result.error(new DomainException("Удаление сканера невозможно, есть зафиксированные сигналы."));
         }
         scannerRepository.removeBy(command.getScannerId());
         return Result.success();

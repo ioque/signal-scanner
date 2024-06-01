@@ -40,7 +40,6 @@ public class DeltaEntity extends IntradayValueEntity {
         return Delta.builder()
             .ticker(Ticker.from(getId().getTicker()))
             .number(getId().getNumber())
-            .dateTime(dateTime)
             .price(price)
             .value(value)
             .build();
@@ -50,7 +49,6 @@ public class DeltaEntity extends IntradayValueEntity {
         return DeltaEntity.builder()
             .ticker(delta.getTicker().getValue())
             .number(delta.getNumber())
-            .dateTime(delta.getDateTime())
             .price(delta.getPrice())
             .value(delta.getValue())
             .build();

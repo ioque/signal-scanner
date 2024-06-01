@@ -1,12 +1,12 @@
 package ru.ioque.investfund.scanner.algorithm;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import reactor.core.publisher.Flux;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregatedTotals;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
@@ -34,29 +34,30 @@ public class BaseAlgorithmTest extends BaseTest {
                 .url("http://localhost:8080")
                 .build()
         );
-        buildDefaultTopology();
         loggerProvider().clearLogs();
     }
 
     protected void runPipeline(DatasourceId datasourceId) {
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
-        pipelineManager().start();
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
+        pipelineInit();
         commandBus().execute(new PublishIntradayData(datasourceId));
     }
 
-    protected void assertSignals(List<Signal> signals, int size, int buySize, int sellSize) {
+    private void pipelineInit() {
+        pipelineManager().initializeContexts();
+        intradayJournal().stream()
+            .map(performanceCalculator()::transform)
+            .map(signalsFinder()::transform)
+            .flatMap(Flux::fromIterable)
+            .subscribe(signalRegistry()::consume);
+    }
+
+    protected void assertSignals(List<Signal> signals, int size) {
         assertEquals(size, signals.size());
-        assertEquals(buySize, signals.stream().filter(Signal::isBuy).count());
-        assertEquals(sellSize, signals.stream().filter(row -> !row.isBuy()).count());
     }
 
     protected List<Signal> getSignals() {
-        return scannerRepository()
-            .findAllBy(getDatasourceId())
-            .stream()
-            .map(scanner -> signalJournal().findAllBy(scanner.getId()))
-            .flatMap(Collection::stream)
-            .toList();
+        return signalJournal().getAll();
     }
 
     protected InstrumentTradingState getImoexPerformance() {

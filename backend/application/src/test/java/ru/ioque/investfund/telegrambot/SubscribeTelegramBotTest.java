@@ -34,9 +34,9 @@ public class SubscribeTelegramBotTest extends BaseTest {
 
     @Test
     @DisplayName("""
-        T4. Повторная подписка на обновление.
+        T2. Повторная подписка на обновление.
         """)
-    void testCase4() {
+    void testCase2() {
         commandBus().execute(new Subscribe(1L, "kukusuku"));
         commandBus().execute(new Subscribe(1L, "kukusuku"));
 

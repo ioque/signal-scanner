@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -15,17 +16,17 @@ public class PsqlAggregatedTotalsRepository implements AggregatedTotalsRepositor
     private final Set<AggregatedTotals> histories = new HashSet<>();
 
     @Override
-    public void publish(AggregatedTotals aggregatedTotals) {
+    public void save(AggregatedTotals aggregatedTotals) {
         histories.add(aggregatedTotals);
     }
 
     @Override
-    public List<AggregatedTotals> findAllBy(Ticker ticker) {
-        return histories.stream().filter(row -> row.getTicker().equals(ticker)).toList();
+    public List<AggregatedTotals> findAllBy(InstrumentId instrumentId) {
+        return List.of();
     }
 
     @Override
-    public Optional<AggregatedTotals> findActualBy(Ticker ticker) {
-        return findAllBy(ticker).stream().max(AggregatedTotals::compareTo);
+    public Optional<AggregatedTotals> findActualBy(InstrumentId instrumentId) {
+        return Optional.empty();
     }
 }

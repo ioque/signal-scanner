@@ -22,13 +22,6 @@ public class CreateAnomalyVolumeScannerTest extends BaseScannerCommandTest {
         );
     }
 
-    private AnomalyVolumeProperties.AnomalyVolumePropertiesBuilder buildPropertiesWith() {
-        return AnomalyVolumeProperties.builder()
-            .historyPeriod(180)
-            .indexTicker(Ticker.from(IMOEX))
-            .scaleCoefficient(1.5);
-    }
-
     @Test
     @DisplayName("""
         T2. В команду на создание AnomalyVolumeScanner не передан параметр historyPeriod.
@@ -262,5 +255,12 @@ public class CreateAnomalyVolumeScannerTest extends BaseScannerCommandTest {
     
     private String historyPeriodIsNegative() {
         return "Параметр historyPeriod должен быть больше 0.";
+    }
+
+    private AnomalyVolumeProperties.AnomalyVolumePropertiesBuilder buildPropertiesWith() {
+        return AnomalyVolumeProperties.builder()
+            .historyPeriod(180)
+            .indexTicker(Ticker.from(IMOEX))
+            .scaleCoefficient(1.5);
     }
 }

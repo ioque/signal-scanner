@@ -3,9 +3,9 @@ dependencies {
 
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.projectreactor:reactor-core:3.6.6'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    implementation 'io.projectreactor:reactor-core:3.6.6'
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'

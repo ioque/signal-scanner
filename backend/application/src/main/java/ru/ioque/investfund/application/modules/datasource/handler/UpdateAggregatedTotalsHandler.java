@@ -13,19 +13,19 @@ import ru.ioque.investfund.application.adapters.LoggerProvider;
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
-import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregatedTotals;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggregatedHistory> {
+public class UpdateAggregatedTotalsHandler extends CommandHandler<UpdateAggregatedTotals> {
 
     DatasourceProvider datasourceProvider;
     DatasourceRepository datasourceRepository;
     AggregatedTotalsRepository aggregatedTotalsRepository;
 
-    public PublishAggregatedHistoryHandler(
+    public UpdateAggregatedTotalsHandler(
         DateTimeProvider dateTimeProvider,
         Validator validator,
         LoggerProvider loggerProvider,
@@ -40,7 +40,7 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
     }
 
     @Override
-    protected Result businessProcess(PublishAggregatedHistory command) {
+    protected Result businessProcess(UpdateAggregatedTotals command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
         for (final Instrument instrument : datasource.getUpdatableInstruments()) {
             final LocalDate from = aggregatedTotalsRepository
@@ -54,7 +54,7 @@ public class PublishAggregatedHistoryHandler extends CommandHandler<PublishAggre
                 .filter(row -> row.isBetween(from, to))
                 .forEach(aggregatedTotals -> {
                     aggregatedTotals.setInstrumentId(instrument.getId());
-                    aggregatedTotalsRepository.publish(aggregatedTotals);
+                    aggregatedTotalsRepository.save(aggregatedTotals);
                 });
         }
         return Result.success();

@@ -5,12 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.EnableUpdateInstruments;
 import ru.ioque.investfund.application.modules.pipeline.PipelineManager;
-import ru.ioque.investfund.application.modules.pipeline.Topology;
-import ru.ioque.investfund.application.modules.pipeline.sink.RiskManagerSink;
 import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistry;
-import ru.ioque.investfund.application.modules.pipeline.sink.SignalRegistryContext;
 import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculator;
-import ru.ioque.investfund.application.modules.pipeline.transformer.PerformanceCalculatorContext;
 import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinder;
 import ru.ioque.investfund.application.modules.pipeline.transformer.SignalsFinderContext;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
@@ -22,15 +18,14 @@ import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.fakes.FakeDIContainer;
-import ru.ioque.investfund.fakes.FakeDatasourceRepository;
+import ru.ioque.investfund.fakes.repository.FakeDatasourceRepository;
 import ru.ioque.investfund.fakes.FakeDateTimeProvider;
-import ru.ioque.investfund.fakes.FakeEmulatedPositionRepository;
-import ru.ioque.investfund.fakes.journal.FakeAggregatedTotalsRepository;
-import ru.ioque.investfund.fakes.journal.FakeIntradayJournal;
+import ru.ioque.investfund.fakes.repository.FakeAggregatedTotalsRepository;
+import ru.ioque.investfund.fakes.repository.FakeIntradayDataJournal;
 import ru.ioque.investfund.fakes.FakeLoggerProvider;
-import ru.ioque.investfund.fakes.FakeScannerRepository;
-import ru.ioque.investfund.fakes.journal.FakeSignalJournal;
-import ru.ioque.investfund.fakes.FakeTelegramChatRepository;
+import ru.ioque.investfund.fakes.repository.FakeScannerRepository;
+import ru.ioque.investfund.fakes.repository.FakeSignalRepository;
+import ru.ioque.investfund.fakes.repository.FakeTelegramChatRepository;
 import ru.ioque.investfund.fakes.FakeTelegramMessageSender;
 import ru.ioque.investfund.fakes.DatasourceStorage;
 import ru.ioque.investfund.fixture.AggregatedHistoryFixture;
@@ -81,20 +76,16 @@ public class BaseTest {
         return fakeDIContainer.getTelegramMessageSender();
     }
 
-    protected final FakeEmulatedPositionRepository emulatedPositionRepository() {
-        return fakeDIContainer.getEmulatedPositionJournal();
-    }
-
-    protected final FakeIntradayJournal intradayJournal() {
-        return fakeDIContainer.getIntradayJournal();
+    protected final FakeIntradayDataJournal intradayJournal() {
+        return fakeDIContainer.getIntradayDataRepository();
     }
 
     protected final FakeAggregatedTotalsRepository aggregatedTotalsJournal() {
         return fakeDIContainer.getAggregatedTotalsJournal();
     }
 
-    protected final FakeSignalJournal signalJournal() {
-        return fakeDIContainer.getSignalJournal();
+    protected final FakeSignalRepository signalJournal() {
+        return fakeDIContainer.getSignalRepository();
     }
 
     protected final PipelineManager pipelineManager() {
@@ -103,14 +94,6 @@ public class BaseTest {
 
     protected final SignalsFinderContext signalsFinderContext() {
         return fakeDIContainer.getSignalsFinderContext();
-    }
-
-    protected final SignalRegistryContext signalRegistryContext() {
-        return fakeDIContainer.getSignalRegistryContext();
-    }
-
-    protected final PerformanceCalculatorContext performanceCalculatorContext() {
-        return fakeDIContainer.getPerformanceCalculatorContext();
     }
 
     protected final SignalsFinder signalsFinder() {
@@ -123,14 +106,6 @@ public class BaseTest {
 
     protected final PerformanceCalculator performanceCalculator() {
         return fakeDIContainer.getPerformanceCalculator();
-    }
-
-    protected final RiskManagerSink riskManagerSink() {
-        return fakeDIContainer.getRiskManagerSink();
-    }
-
-    protected final void buildDefaultTopology() {
-        new Topology(intradayJournal(), performanceCalculator(), signalsFinder(), signalRegistry(), riskManagerSink());
     }
 
     protected void initTodayDateTime(String dateTime) {

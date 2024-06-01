@@ -26,13 +26,6 @@ public class CreateSectoralFuturesScannerTest extends BaseScannerCommandTest {
         );
     }
 
-    private SectoralFuturesProperties.SectoralFuturesPropertiesBuilder buildPropertiesWith() {
-        return SectoralFuturesProperties.builder()
-            .futuresTicker(new Ticker(BRF4))
-            .futuresOvernightScale(0.05)
-            .stockOvernightScale(0.05);
-    }
-
     @Test
     @DisplayName("""
         T2. В команду на создание CorrelationSectoralScanner не передан параметр stockOvernightScale.
@@ -315,5 +308,12 @@ public class CreateSectoralFuturesScannerTest extends BaseScannerCommandTest {
 
     private List<Ticker> getTickers() {
         return List.of(new Ticker(TGKN), new Ticker(TGKB), new Ticker(IMOEX));
+    }
+
+    private SectoralFuturesProperties.SectoralFuturesPropertiesBuilder buildPropertiesWith() {
+        return SectoralFuturesProperties.builder()
+            .futuresTicker(new Ticker(BRF4))
+            .futuresOvernightScale(0.05)
+            .stockOvernightScale(0.05);
     }
 }

@@ -12,7 +12,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.entity.Signal;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
     }
 
     @Override
-    public List<Signal> findSignals(List<InstrumentTradingState> instruments, LocalDateTime watermark) {
+    public List<Signal> findSignals(List<InstrumentTradingState> instruments, Instant watermark) {
         final List<Signal> signals = new ArrayList<>();
         final boolean futuresIsRiseOvernight = getFuturesStatistic(instruments).isRiseOvernight(futuresOvernightScale);
         for (final InstrumentTradingState instrument : analyzeInstruments(instruments)) {
@@ -44,12 +44,11 @@ public class SectoralFuturesAlgorithm extends ScannerAlgorithm {
                 signals.add(
                     Signal.builder()
                         .instrumentId(instrument.getInstrumentId())
-                        .isBuy(true)
                         .summary("""
                             Тренд инструмента растущий;
                             Тренд фьючерса растущий;""")
-                        .watermark(watermark)
-                        .price(instrument.getIntradayPerformance().getTodayLastPrice())
+                        .timestamp(watermark)
+                        .openPrice(instrument.getIntradayPerformance().getTodayLastPrice())
                         .build()
                 );
             }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import ru.ioque.investfund.application.adapters.DatasourceProvider;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.application.adapters.LoggerProvider;
+import ru.ioque.investfund.application.adapters.IntradayDataJournal;
 import ru.ioque.investfund.application.modules.api.CommandHandler;
 import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
@@ -23,7 +23,7 @@ import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayData> {
     DatasourceProvider datasourceProvider;
-    IntradayJournal intradayJournal;
+    IntradayDataJournal intradayDataJournal;
     DatasourceRepository datasourceRepository;
     Map<Ticker, Long> numbers = new HashMap<>();
 
@@ -32,12 +32,12 @@ public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayDa
         Validator validator,
         LoggerProvider loggerProvider,
         DatasourceProvider datasourceProvider,
-        IntradayJournal intradayJournal,
+        IntradayDataJournal intradayDataJournal,
         DatasourceRepository datasourceRepository
     ) {
         super(dateTimeProvider, validator, loggerProvider);
         this.datasourceProvider = datasourceProvider;
-        this.intradayJournal = intradayJournal;
+        this.intradayDataJournal = intradayDataJournal;
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -52,7 +52,7 @@ public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayDa
                 .filter(data -> data.getNumber() > from)
                 .forEach(intradayData -> {
                     intradayData.setInstrumentId(instrument.getId());
-                    intradayJournal.publish(intradayData);
+                    intradayDataJournal.publish(intradayData);
                     numbers.put(instrument.getTicker(), intradayData.getNumber());
                 });
         }

@@ -13,7 +13,6 @@ import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepo
 import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-import ru.ioque.investfund.application.adapters.repository.EmulatedPositionRepository;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
 import ru.ioque.investfund.application.adapters.repository.TelegramChatRepository;
 import ru.ioque.investfund.application.adapters.TelegramMessageSender;

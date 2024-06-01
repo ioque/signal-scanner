@@ -1,5 +1,9 @@
 package ru.ioque.investfund.adapters.persistence;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,13 +16,11 @@ import ru.ioque.investfund.domain.core.EntityNotFoundException;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Component
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PsqlDatasourceRepository implements DatasourceRepository {
+
     JpaDatasourceRepository jpaDatasourceRepository;
 
     @Override
@@ -55,5 +57,10 @@ public class PsqlDatasourceRepository implements DatasourceRepository {
     @Override
     public DatasourceId nextId() {
         return DatasourceId.from(UUID.randomUUID());
+    }
+
+    @Override
+    public List<Datasource> getAll() {
+        return jpaDatasourceRepository.findAll().stream().map(DatasourceEntity::toDomain).toList();
     }
 }

@@ -7,7 +7,7 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 public interface AggregatedTotalsRepository {
-    void publish(AggregatedTotals aggregatedTotals);
+    void save(AggregatedTotals aggregatedTotals);
     List<AggregatedTotals> findAllBy(InstrumentId instrumentId);
     Optional<AggregatedTotals> findActualBy(InstrumentId instrumentId);
 }

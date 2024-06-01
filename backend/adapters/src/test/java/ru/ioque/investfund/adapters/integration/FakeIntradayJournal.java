@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-import ru.ioque.investfund.application.adapters.journal.IntradayJournal;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 @Slf4j

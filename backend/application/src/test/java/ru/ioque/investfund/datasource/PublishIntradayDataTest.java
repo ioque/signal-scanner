@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.BaseTest;
 import ru.ioque.investfund.application.modules.datasource.command.CreateDatasource;
-import ru.ioque.investfund.application.modules.datasource.command.PublishAggregatedHistory;
+import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregatedTotals;
 import ru.ioque.investfund.application.modules.datasource.command.SynchronizeDatasource;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.application.modules.datasource.command.RemoveDatasource;
@@ -63,7 +63,7 @@ public class PublishIntradayDataTest extends BaseTest {
         clearLogs();
 
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(1, getInstruments(datasourceId).size());
@@ -93,7 +93,7 @@ public class PublishIntradayDataTest extends BaseTest {
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(3, getIntradayValuesBy(AFKS).size());
@@ -116,7 +116,7 @@ public class PublishIntradayDataTest extends BaseTest {
         );
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initTodayDateTime("2023-12-07T13:00:00");
@@ -147,7 +147,7 @@ public class PublishIntradayDataTest extends BaseTest {
         initAggregatedTotals(historyFixture.afksHistoryValue("2024-01-03", 10D, 10D, 10D, 10D));
 
         commandBus().execute(new SynchronizeDatasource(datasourceId));
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
 
         assertEquals(0, getHistoryValuesBy(AFKS).size());
@@ -168,7 +168,7 @@ public class PublishIntradayDataTest extends BaseTest {
         initIntradayData(intradayFixture.afksBuyDeal(1L, "10:00:00", 10D, 10D, 1));
         commandBus().execute(new SynchronizeDatasource(datasourceId));
         commandBus().execute(enableUpdateInstrumentCommandFrom(datasourceId, AFKS));
-        commandBus().execute(new PublishAggregatedHistory(datasourceId));
+        commandBus().execute(new UpdateAggregatedTotals(datasourceId));
         commandBus().execute(new PublishIntradayData(datasourceId));
         clearLogs();
         initIntradayData(
@@ -282,6 +282,7 @@ public class PublishIntradayDataTest extends BaseTest {
     private List<IntradayData> getIntradayValuesBy(String ticker) {
         return intradayJournal()
             .getAll()
+            .stream()
             .filter(row -> row.getTicker().equals(Ticker.from(ticker)))
             .toList();
     }

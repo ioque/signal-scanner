@@ -35,7 +35,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 1, 1, 0);
+        assertSignals(getSignals(), 1);
         assertEquals(1D, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -60,7 +60,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertEquals(0.09999999999999432, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.2599999999999909, getPrefSimplePair().getHistoryDelta());
     }
@@ -89,7 +89,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -118,7 +118,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -146,7 +146,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -174,7 +174,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -201,7 +201,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -228,7 +228,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -252,7 +252,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -275,7 +275,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -299,7 +299,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -322,7 +322,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),0, 0, 0);
+        assertSignals(getSignals(),0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }
@@ -342,7 +342,7 @@ public class SimplePrefPairAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertEquals(0.0, getPrefSimplePair().getCurrentDelta());
         assertEquals(0.0, getPrefSimplePair().getHistoryDelta());
     }

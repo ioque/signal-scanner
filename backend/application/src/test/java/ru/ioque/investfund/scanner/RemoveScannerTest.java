@@ -1,12 +1,17 @@
 package ru.ioque.investfund.scanner;
 
+import java.time.Instant;
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.ioque.investfund.application.modules.scanner.command.RemoveScanner;
 import ru.ioque.investfund.domain.core.DomainException;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
-import ru.ioque.investfund.domain.position.Position;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
+import ru.ioque.investfund.domain.scanner.entity.event.SignalRegistered;
+import ru.ioque.investfund.domain.scanner.entity.identifier.SignalId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,11 +25,13 @@ public class RemoveScannerTest extends BaseScannerCommandTest {
         """)
     void testCase1() {
         initScanner();
-        emulatedPositionRepository().save(
-            Position.builder()
+        signalJournal().save(
+            SignalRegistered.builder()
+                .signalId(SignalId.from(UUID.randomUUID()))
+                .instrumentId(InstrumentId.from(UUID.randomUUID()))
                 .scannerId(getFirstScannerId())
                 .openPrice(10D)
-                .isOpen(true)
+                .timestamp(Instant.now())
                 .instrumentId(getInstruments(getDatasourceId()).get(0).getId()).build()
         );
 
@@ -32,8 +39,7 @@ public class RemoveScannerTest extends BaseScannerCommandTest {
             DomainException.class,
             () -> commandBus().execute(new RemoveScanner(getFirstScannerId()))
         );
-        assertEquals("Удаление сканера невозможно, есть эмуляции позиций.", error.getMessage());
-        assertEquals(1, emulatedPositionRepository().positions.size());
+        assertEquals("Удаление сканера невозможно, есть зафиксированные сигналы.", error.getMessage());
         assertEquals(1, scannerRepository().scanners.size());
     }
 

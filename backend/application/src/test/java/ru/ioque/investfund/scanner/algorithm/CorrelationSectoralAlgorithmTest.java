@@ -37,7 +37,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),1, 1, 0);
+        assertSignals(getSignals(),1);
         assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
@@ -57,7 +57,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertFalse(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
@@ -82,7 +82,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertEquals(1, signalJournal().getAll().count());
+        assertEquals(1, signalJournal().getAll().size());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertFalse(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
@@ -129,7 +129,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertFalse(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
@@ -153,7 +153,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(), 0, 0, 0);
+        assertSignals(getSignals(), 0);
         assertFalse(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
@@ -178,7 +178,7 @@ public class CorrelationSectoralAlgorithmTest extends BaseAlgorithmTest {
 
         runPipeline(datasourceId);
 
-        assertSignals(getSignals(),1, 1, 0);
+        assertSignals(getSignals(),1);
         assertTrue(getTatnPerformance().isRiseOvernight(stockOvernightScale));
         assertTrue(getBrf4Performance().isRiseOvernight(futuresOvernightScale));
     }
