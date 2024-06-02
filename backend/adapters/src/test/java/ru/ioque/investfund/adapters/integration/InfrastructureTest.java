@@ -234,8 +234,9 @@ public abstract class InfrastructureTest {
             .build();
     }
 
-    protected IntradayData createDeal(Ticker ticker, Long number, Instant dateTime) {
+    protected IntradayData createDeal(InstrumentId instrumentId, Ticker ticker, Long number, Instant dateTime) {
         return Deal.builder()
+            .instrumentId(instrumentId)
             .ticker(ticker)
             .number(number)
             .timestamp(dateTime)

@@ -84,7 +84,7 @@ public class StreamingStorage implements DatasetStorage {
                     final var data = queue.poll();
                     intradayValues.add(data);
                 });
-            }, 0, 10, TimeUnit.MILLISECONDS);
+            }, 0, 500, TimeUnit.MILLISECONDS);
             try {
                 service.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
             } catch (InterruptedException e) {

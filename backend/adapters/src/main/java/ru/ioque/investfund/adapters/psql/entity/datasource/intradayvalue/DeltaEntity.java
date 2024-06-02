@@ -31,11 +31,11 @@ public class DeltaEntity extends IntradayDataEntity {
         Long number,
         UUID instrumentId,
         String ticker,
-        Instant dateTime,
+        Instant timestamp,
         Double price,
         Double value
     ) {
-        super(number, instrumentId, ticker, dateTime, price, value);
+        super(number, instrumentId, ticker, timestamp, price, value);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class DeltaEntity extends IntradayDataEntity {
             .number(getId().getNumber())
             .price(price)
             .value(value)
+            .timestamp(getTimestamp())
             .build();
     }
 
@@ -56,6 +57,7 @@ public class DeltaEntity extends IntradayDataEntity {
             .number(delta.getNumber())
             .price(delta.getPrice())
             .value(delta.getValue())
+            .timestamp(delta.getTimestamp())
             .build();
     }
 }

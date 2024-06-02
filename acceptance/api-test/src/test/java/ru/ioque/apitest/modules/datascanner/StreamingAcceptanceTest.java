@@ -162,7 +162,7 @@ public class StreamingAcceptanceTest extends DatasourceEmulatedTest {
         final StreamingStorage streamingStorage = (StreamingStorage) datasetRepository.datasetStorage;
         streamingStorage.getStreamingThread().start();
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(() -> publishIntradayData(datasourceId), 0, 10, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(() -> publishIntradayData(datasourceId), 0, 5, TimeUnit.SECONDS);
         service.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
     }
 }

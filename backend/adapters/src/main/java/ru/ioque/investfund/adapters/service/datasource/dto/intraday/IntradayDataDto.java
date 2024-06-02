@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import java.time.LocalDateTime;
@@ -54,5 +55,5 @@ public abstract class IntradayDataDto implements Comparable<IntradayData> {
         return Objects.compare(getNumber(), intradayData.getNumber(), Long::compareTo);
     }
 
-    public abstract IntradayData toIntradayData();
+    public abstract IntradayData toIntradayData(InstrumentId instrumentId);
 }

@@ -11,4 +11,9 @@ public class ValidationException extends RuntimeException {
     public ValidationException(List<ValidationError> validationErrors) {
         this.validationErrors = validationErrors;
     }
+
+    @Override
+    public String getMessage() {
+        return validationErrors.toString();
+    }
 }

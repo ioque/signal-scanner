@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
@@ -57,8 +58,9 @@ public class AggregatedHistoryDto {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
-    public AggregatedTotals toAggregateHistory() {
+    public AggregatedTotals toAggregateHistory(InstrumentId instrumentId) {
         return AggregatedTotals.builder()
+            .instrumentId(instrumentId)
             .ticker(Ticker.from(ticker))
             .date(tradeDate)
             .openPrice(openPrice)

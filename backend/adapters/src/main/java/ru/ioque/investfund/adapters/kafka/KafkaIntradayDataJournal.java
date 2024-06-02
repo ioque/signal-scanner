@@ -1,5 +1,8 @@
 package ru.ioque.investfund.adapters.kafka;
 
+import java.time.Instant;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +14,7 @@ import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import ru.ioque.investfund.application.adapters.IntradayDataJournal;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.INTRADAY_DATA_TOPIC;
@@ -41,5 +45,10 @@ public class KafkaIntradayDataJournal implements IntradayDataJournal {
             .publish()
             .autoConnect()
             .map(ConsumerRecord::value);
+    }
+
+    @Override
+    public List<IntradayData> findAllBy(InstrumentId instrumentId, Instant from, Instant to) {
+        return List.of();
     }
 }

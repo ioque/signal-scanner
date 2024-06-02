@@ -37,7 +37,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
         return moexClient
             .fetchHistory(datasource.getUrl(), instrument.getTicker().getValue(), from, to)
             .stream()
-            .map(AggregatedHistoryDto::toAggregateHistory)
+            .map(row -> row.toAggregateHistory(instrument.getId()))
             .toList();
     }
 
@@ -47,7 +47,7 @@ public class HttpDatasourceProvider implements DatasourceProvider {
         return moexClient
             .fetchIntradayValues(datasource.getUrl(), instrument.getTicker().getValue(), from)
             .stream()
-            .map(IntradayDataDto::toIntradayData)
+            .map(row -> row.toIntradayData(instrument.getId()))
             .toList();
     }
 }

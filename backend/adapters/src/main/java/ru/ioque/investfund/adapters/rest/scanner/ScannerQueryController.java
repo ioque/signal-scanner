@@ -13,8 +13,12 @@ import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
 import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
+import ru.ioque.investfund.application.modules.pipeline.subscriber.SignalRegistryContext;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
+import ru.ioque.investfund.domain.scanner.entity.Signal;
+import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +29,17 @@ import java.util.UUID;
 public class ScannerQueryController {
     JpaScannerRepository signalScannerEntityRepository;
     JpaInstrumentRepository instrumentEntityRepository;
+    SignalRegistryContext signalRegistryContext;
+
+    @GetMapping("/api/signals")
+    public List<Signal> getAllSignals() {
+        return signalScannerEntityRepository
+            .findAll()
+            .stream()
+            .map(scannerEntity -> signalRegistryContext.getSignalsBy(ScannerId.from(scannerEntity.getId())))
+            .flatMap(Collection::stream)
+            .toList();
+    }
 
     @GetMapping("/api/scanner")
     public List<SignalScannerInListResponse> getSignalScanners() {

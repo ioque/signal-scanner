@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;
 import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -44,8 +45,9 @@ public class DealDto extends IntradayDataDto {
     }
 
     @Override
-    public IntradayData toIntradayData() {
+    public IntradayData toIntradayData(InstrumentId instrumentId) {
         return Delta.builder()
+            .instrumentId(instrumentId)
             .ticker(Ticker.from(getTicker()))
             .number(getNumber())
             .timestamp(getDateTime().atZone(ZoneId.of("Europe/Moscow")).toInstant())

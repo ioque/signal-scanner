@@ -35,13 +35,13 @@ public class DealEntity extends IntradayDataEntity {
         Long number,
         UUID instrumentId,
         String ticker,
-        Instant dateTime,
+        Instant timestamp,
         Double price,
         Boolean isBuy,
         Integer qnt,
         Double value
     ) {
-        super(number, instrumentId, ticker, dateTime, price, value);
+        super(number, instrumentId, ticker, timestamp, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }
@@ -56,6 +56,7 @@ public class DealEntity extends IntradayDataEntity {
             .isBuy(isBuy)
             .qnt(qnt)
             .value(value)
+            .timestamp(getTimestamp())
             .build();
     }
 
@@ -68,6 +69,7 @@ public class DealEntity extends IntradayDataEntity {
             .isBuy(deal.getIsBuy())
             .qnt(deal.getQnt())
             .value(deal.getValue())
+            .timestamp(deal.getTimestamp())
             .build();
     }
 }

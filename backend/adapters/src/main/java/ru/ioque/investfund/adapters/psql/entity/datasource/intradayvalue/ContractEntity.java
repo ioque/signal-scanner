@@ -33,12 +33,12 @@ public class ContractEntity extends IntradayDataEntity {
         Long number,
         UUID instrumentId,
         String ticker,
-        Instant dateTime,
+        Instant timestamp,
         Double price,
         Double value,
         Integer qnt
     ) {
-        super(number, instrumentId, ticker, dateTime, price, value);
+        super(number, instrumentId, ticker, timestamp, price, value);
         this.qnt = qnt;
     }
 
@@ -51,6 +51,7 @@ public class ContractEntity extends IntradayDataEntity {
             .price(price)
             .value(value)
             .qnt(qnt)
+            .timestamp(getTimestamp())
             .build();
     }
 
@@ -59,7 +60,7 @@ public class ContractEntity extends IntradayDataEntity {
             .instrumentId(contract.getInstrumentId().getUuid())
             .ticker(contract.getTicker().getValue())
             .number(contract.getNumber())
-            .dateTime(contract.getTimestamp())
+            .timestamp(contract.getTimestamp())
             .price(contract.getPrice())
             .value(contract.getValue())
             .qnt(contract.getQnt())
