@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaDatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.modules.api.CommandBus;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;

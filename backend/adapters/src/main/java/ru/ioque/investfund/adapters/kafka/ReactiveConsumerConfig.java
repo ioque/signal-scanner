@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import reactor.kafka.receiver.ReceiverOptions;
@@ -16,6 +17,7 @@ import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 
 import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.INTRADAY_DATA_TOPIC;
 
+@Profile("kafka")
 @Configuration
 public class ReactiveConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")

@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ioque.investfund.adapters.integration.InfrastructureTest;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaAggregatedTotalsRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaTelegramChatRepository;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 
@@ -25,15 +27,21 @@ public abstract class DatabaseTest extends InfrastructureTest {
     protected JpaInstrumentRepository jpaInstrumentRepository;
     @Autowired
     protected JpaIntradayValueRepository jpaIntradayValueRepository;
+    @Autowired
+    protected JpaAggregatedTotalsRepository jpaAggregatedTotalsRepository;
+    @Autowired
+    protected JpaTelegramChatRepository jpaTelegramChatRepository;
 
     @BeforeEach
     void beforeEach() {
         jpaDatasourceRepository.deleteAll();
         jpaInstrumentRepository.deleteAll();
         jpaIntradayValueRepository.deleteAll();
+        jpaAggregatedTotalsRepository.deleteAll();
+        jpaTelegramChatRepository.deleteAll();
     }
 
-    protected void prepareState() {
+    protected void initializeDatasource() {
         dateTimeProvider.initToday(LocalDateTime.parse("2024-04-04T12:00:00"));
         datasourceRepository.save(moexDatasource());
         datasourceRepository.save(nasdaqDatasource());

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

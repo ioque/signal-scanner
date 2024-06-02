@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.Instant;
@@ -27,6 +28,7 @@ public class Deal extends IntradayData {
 
     @Builder
     public Deal(
+        InstrumentId instrumentId,
         Ticker ticker,
         Long number,
         Instant timestamp,
@@ -35,7 +37,7 @@ public class Deal extends IntradayData {
         Integer qnt,
         Double value
     ) {
-        super(ticker, number, timestamp, price, value);
+        super(instrumentId, ticker, number, timestamp, price, value);
         this.isBuy = isBuy;
         this.qnt = qnt;
     }

@@ -19,7 +19,7 @@ import reactor.kafka.receiver.ReceiverOptions;
 import reactor.kafka.receiver.ReceiverRecord;
 
 @Configuration
-@Profile("!tests")
+@Profile("kafka")
 public class TopicConfiguration {
     public static final String INTRADAY_DATA_TOPIC = "intraday-data-topic";
     public static final String BUSINESS_LOG_TOPIC = "business-log-topic";

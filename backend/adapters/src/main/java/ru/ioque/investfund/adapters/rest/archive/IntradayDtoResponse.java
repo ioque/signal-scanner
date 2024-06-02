@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.intradayvalue.IntradayDataEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.intradayvalue.IntradayDataEntity;
 
 import java.io.Serializable;
 import java.time.Instant;

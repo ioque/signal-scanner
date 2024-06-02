@@ -14,8 +14,8 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.det
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.IndexDetailsEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.StockDetailsEntity;
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
-import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
+import ru.ioque.investfund.adapters.service.view.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("DATASOURCE QUERY CONTROLLER TEST")
 public class DatasourceQueryControllerTest extends BaseControllerTest {
     @Autowired
-    PsqlDatasourceQueryService psqlDatasourceQueryService;
+    PsqlDatasourceViewService psqlDatasourceViewService;
     @Autowired
     DateTimeProvider dateTimeProvider;
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
@@ -54,7 +54,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .instruments(Set.of())
             .build();
         Mockito
-            .when(psqlDatasourceQueryService.findDatasourceBy(DATASOURCE_ID))
+            .when(psqlDatasourceViewService.findDatasourceBy(DATASOURCE_ID))
             .thenReturn(datasource);
         mvc
             .perform(MockMvcRequestBuilders.get("/api/datasource/" + DATASOURCE_ID))
@@ -84,7 +84,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         List<InstrumentEntity> instrumentInLists = datasource().getInstruments().stream().toList();
 
         Mockito
-            .when(psqlDatasourceQueryService.getPagination(new InstrumentFilterParams(
+            .when(psqlDatasourceViewService.getPagination(new InstrumentFilterParams(
                 DATASOURCE_ID,
                 null,
                 null,
@@ -138,7 +138,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .when(dateTimeProvider.nowDate())
             .thenReturn(date);
         Mockito
-            .when(psqlDatasourceQueryService.findInstrumentBy(DATASOURCE_ID,"TEST_STOCK"))
+            .when(psqlDatasourceViewService.findInstrumentBy(DATASOURCE_ID,"TEST_STOCK"))
             .thenReturn(stock);
 
         mvc

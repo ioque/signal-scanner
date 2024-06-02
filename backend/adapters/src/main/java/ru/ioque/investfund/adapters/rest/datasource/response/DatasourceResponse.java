@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.DatasourceEntity;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.telegrambot.TelegramChatEntity;
+import ru.ioque.investfund.adapters.psql.entity.telegrambot.TelegramChatEntity;
 
 import java.time.LocalDateTime;
 

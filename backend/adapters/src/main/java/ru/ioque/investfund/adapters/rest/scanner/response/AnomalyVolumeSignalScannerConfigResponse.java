@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.AnomalyVolumeScannerEntity;
 
 @Getter
 @NoArgsConstructor

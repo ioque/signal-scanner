@@ -1,10 +1,10 @@
 package ru.ioque.investfund.adapters.rest.scanner.response;
 
-import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralFuturesScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.SectoralRetardScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.AnomalyVolumeScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.PrefSimpleScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.SectoralFuturesScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.SectoralRetardScannerEntity;
 
 import java.util.Map;
 import java.util.function.Function;

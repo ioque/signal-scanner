@@ -4,13 +4,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaSignalRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaTelegramChatRepository;
-import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
+import ru.ioque.investfund.adapters.psql.dao.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaSignalRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaTelegramChatRepository;
+import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
 import ru.ioque.investfund.application.adapters.repository.ScannerRepository;
@@ -91,8 +91,8 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public PsqlDatasourceQueryService mockDatasourceQueryService() {
-        return mock(PsqlDatasourceQueryService.class);
+    public PsqlDatasourceViewService mockDatasourceQueryService() {
+        return mock(PsqlDatasourceViewService.class);
     }
 
     @Bean

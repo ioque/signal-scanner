@@ -51,8 +51,8 @@ public class FakeDIContainer {
     FakeLoggerProvider loggerProvider;
     FakeTelegramMessageSender telegramMessageSender;
 
+    FakeIntradayDataJournal intradayDataJournal;
     FakeSignalRepository signalRepository;
-    FakeIntradayDataJournal intradayDataRepository;
     FakeAggregatedTotalsRepository aggregatedTotalsJournal;
     FakeScannerRepository scannerRepository;
     FakeDatasourceRepository datasourceRepository;
@@ -95,7 +95,7 @@ public class FakeDIContainer {
         telegramMessageSender = new FakeTelegramMessageSender();
 
         aggregatedTotalsJournal = new FakeAggregatedTotalsRepository();
-        intradayDataRepository = new FakeIntradayDataJournal();
+        intradayDataJournal = new FakeIntradayDataJournal();
         signalRepository = new FakeSignalRepository();
         datasourceRepository = new FakeDatasourceRepository();
         instrumentRepository = new FakeInstrumentRepository(datasourceRepository);
@@ -154,7 +154,7 @@ public class FakeDIContainer {
             validator,
             loggerProvider,
             exchangeProvider,
-            intradayDataRepository,
+            intradayDataJournal,
             datasourceRepository
         );
         createDatasourceHandler = new CreateDatasourceHandler(
@@ -239,7 +239,12 @@ public class FakeDIContainer {
             datasourceRepository,
             signalRegistryContext,
             performanceCalculatorContext,
-            signalsFinderContext
+            signalsFinderContext,
+            intradayDataJournal,
+            performanceCalculator,
+            signalsFinder,
+            signalRegistry,
+            riskManager
         );
     }
 

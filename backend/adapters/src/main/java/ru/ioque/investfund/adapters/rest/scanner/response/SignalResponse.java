@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.SignalEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -12,8 +12,8 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.det
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.AnomalyVolumeSignalScannerConfigResponse;
 import ru.ioque.investfund.adapters.rest.scanner.response.SignalResponse;

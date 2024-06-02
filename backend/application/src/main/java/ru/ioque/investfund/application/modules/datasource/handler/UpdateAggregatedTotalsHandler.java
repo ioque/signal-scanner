@@ -1,6 +1,7 @@
 package ru.ioque.investfund.application.modules.datasource.handler;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
@@ -16,6 +17,9 @@ import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregatedTotals;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.validator.DomainValidator;
+import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
+import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -48,14 +52,14 @@ public class UpdateAggregatedTotalsHandler extends CommandHandler<UpdateAggregat
                 .map(row -> row.getDate().plusDays(1))
                 .orElse(dateTimeProvider.nowDate().minusMonths(6));
             final LocalDate to = dateTimeProvider.nowDate().minusDays(1);
-            datasourceProvider
+            final List<AggregatedTotals> aggregatedTotals = datasourceProvider
                 .fetchAggregateHistory(datasource, instrument, from, to)
                 .stream()
                 .filter(row -> row.isBetween(from, to))
-                .forEach(aggregatedTotals -> {
-                    aggregatedTotals.setInstrumentId(instrument.getId());
-                    aggregatedTotalsRepository.save(aggregatedTotals);
-                });
+                .toList();
+            final DomainValidator<AggregatedTotals> domainValidator = new DomainValidator<>(this.validator);
+            domainValidator.validate(aggregatedTotals);
+            aggregatedTotalsRepository.saveAll(aggregatedTotals);
         }
         return Result.success();
     }

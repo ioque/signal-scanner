@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.ioque.investfund.adapters.datasource.client.ExchangeRestClientException;
+import ru.ioque.investfund.adapters.service.datasource.client.ExchangeRestClientException;
 import ru.ioque.investfund.domain.core.EntityNotFoundException;
 
 import java.util.ArrayList;

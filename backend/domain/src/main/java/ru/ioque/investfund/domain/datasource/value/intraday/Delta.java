@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 import java.time.Instant;
@@ -19,12 +20,13 @@ import java.time.Instant;
 public class Delta extends IntradayData {
     @Builder
     public Delta(
+        InstrumentId instrumentId,
         Ticker ticker,
         Long number,
         Instant timestamp,
         Double price,
         Double value
     ) {
-        super(ticker, number, timestamp, price, value);
+        super(instrumentId, ticker, number, timestamp, price, value);
     }
 }

@@ -27,8 +27,9 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AggregatedTotals implements Comparable<AggregatedTotals> {
     @Setter
-    InstrumentId instrumentId;
-    @NotBlank(message = "Не заполнен тикер.")
+    @NotNull(message = "Не заполнен идентификатор инструмента.")
+    @Valid InstrumentId instrumentId;
+    @NotNull(message = "Не заполнен тикер.")
     @Valid Ticker ticker;
     @NotNull(message = "Не заполнена дата агрегированных итогов.")
     LocalDate date;
@@ -49,18 +50,6 @@ public class AggregatedTotals implements Comparable<AggregatedTotals> {
     @NotNull(message = "Не заполнен объем.")
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
-
-    public AggregatedTotals(Ticker ticker, LocalDate date, Double lowPrice, Double highPrice, Double openPrice,
-        Double closePrice, Double waPrice, Double value) {
-        this.ticker = ticker;
-        this.date = date;
-        this.lowPrice = lowPrice;
-        this.highPrice = highPrice;
-        this.openPrice = openPrice;
-        this.closePrice = closePrice;
-        this.waPrice = waPrice;
-        this.value = value;
-    }
 
     @Override
     public int compareTo(AggregatedTotals aggregatedTotals) {

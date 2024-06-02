@@ -40,6 +40,10 @@ spring:
   main:
     banner-mode: off
 
+
+eventstore-db:
+  url: esdb://localhost:2113?tls=false
+
 logging-config:
   level: ${ROOT_LOG_LEVEL:INFO}
   kafka_url: ${spring.kafka.bootstrap-servers}

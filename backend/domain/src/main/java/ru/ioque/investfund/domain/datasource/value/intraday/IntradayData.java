@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +22,12 @@ import java.util.Objects;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class IntradayData implements Comparable<IntradayData> {
     @Setter
-    InstrumentId instrumentId;
-    @NotBlank(message = "Не заполнен тикер.")
+    @NotNull(message = "Не заполнен идентификатор инструмента.")
+    @Valid InstrumentId instrumentId;
+    @NotNull(message = "Не заполнен тикер.")
     @Valid Ticker ticker;
     @NotNull(message = "Не указан номер.")
     @Min(value = 0, message = "Номер должен быть больше нуля.")
@@ -42,7 +41,14 @@ public abstract class IntradayData implements Comparable<IntradayData> {
     @DecimalMin(value = "0", inclusive = false, message = "Объем не может быть отрицательным.")
     Double value;
 
-    public IntradayData(Ticker ticker, Long number, Instant timestamp, Double price, Double value) {
+    public IntradayData(
+        InstrumentId instrumentId,
+        Ticker ticker,
+        Long number,
+        Instant timestamp,
+        Double price,
+        Double value) {
+        this.instrumentId = instrumentId;
         this.ticker = ticker;
         this.number = number;
         this.timestamp = timestamp;

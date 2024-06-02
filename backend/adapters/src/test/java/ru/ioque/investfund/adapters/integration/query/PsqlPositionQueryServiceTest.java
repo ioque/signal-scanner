@@ -10,10 +10,8 @@ import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEnti
 import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
 import ru.ioque.investfund.adapters.persistence.entity.scanner.PrefSimpleScannerEntity;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaScannerRepository;
-import ru.ioque.investfund.adapters.query.PsqlEmulatedPositionQueryService;
-import ru.ioque.investfund.adapters.query.filter.EmulatedPositionFilterParams;
+import ru.ioque.investfund.adapters.psql.dao.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
 import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import java.util.List;

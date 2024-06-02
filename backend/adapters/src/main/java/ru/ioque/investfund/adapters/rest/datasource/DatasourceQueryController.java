@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
+import ru.ioque.investfund.adapters.service.view.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
@@ -23,22 +23,22 @@ import java.util.UUID;
 @AllArgsConstructor
 @Tag(name = "DatasourceQueryController", description = "Контроллер запросов к модулю \"DATASOURCE\"")
 public class DatasourceQueryController {
-    PsqlDatasourceQueryService psqlDatasourceQueryService;
+    PsqlDatasourceViewService psqlDatasourceViewService;
     DateTimeProvider dateTimeProvider;
 
     @GetMapping("/api/datasource")
     public List<DatasourceResponse> getAllDatasource() {
-        return psqlDatasourceQueryService.getAllDatasource().stream().map(DatasourceResponse::from).toList();
+        return psqlDatasourceViewService.getAllDatasource().stream().map(DatasourceResponse::from).toList();
     }
 
     @GetMapping("/api/datasource/{datasourceId}")
     public DatasourceResponse getDatasourceBy(@PathVariable UUID datasourceId) {
-        return DatasourceResponse.from(psqlDatasourceQueryService.findDatasourceBy(datasourceId));
+        return DatasourceResponse.from(psqlDatasourceViewService.findDatasourceBy(datasourceId));
     }
 
     @GetMapping("/api/datasource/{datasourceId}/instrument/{ticker}")
     public InstrumentResponse getInstrumentBy(@PathVariable UUID datasourceId, @PathVariable String ticker) {
-        InstrumentEntity instrument = psqlDatasourceQueryService.findInstrumentBy(datasourceId, ticker);
+        InstrumentEntity instrument = psqlDatasourceViewService.findInstrumentBy(datasourceId, ticker);
         return InstrumentResponse.from(instrument);
     }
 
@@ -53,7 +53,7 @@ public class DatasourceQueryController {
         @RequestParam(defaultValue = "ASC") String orderValue,
         @RequestParam(defaultValue = "details.ticker") String orderField
     ) {
-        return psqlDatasourceQueryService
+        return psqlDatasourceViewService
             .getPagination(
                 InstrumentFilterParams.builder()
                     .datasourceId(datasourceId)

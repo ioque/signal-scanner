@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.ioque.investfund.adapters.persistence.PsqlScannerRepository;
+import ru.ioque.investfund.adapters.psql.PsqlScannerRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.DatasourceId;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
@@ -38,7 +38,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
 
     @BeforeEach
     void beforeEach() {
-        prepareState();
+        initializeDatasource();
     }
 
     @Test

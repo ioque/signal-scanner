@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import static ru.ioque.investfund.adapters.kafka.TopicConfiguration.INTRADAY_DAT
 
 @Slf4j
 @Component
+@Profile("kafka")
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class KafkaIntradayDataJournal implements IntradayDataJournal {

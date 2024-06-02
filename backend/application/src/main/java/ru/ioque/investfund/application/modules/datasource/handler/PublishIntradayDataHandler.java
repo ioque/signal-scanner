@@ -1,6 +1,7 @@
 package ru.ioque.investfund.application.modules.datasource.handler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Validator;
@@ -17,6 +18,8 @@ import ru.ioque.investfund.application.modules.api.Result;
 import ru.ioque.investfund.application.modules.datasource.command.PublishIntradayData;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
+import ru.ioque.investfund.domain.datasource.validator.DomainValidator;
+import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
 @Component
@@ -44,17 +47,19 @@ public class PublishIntradayDataHandler extends CommandHandler<PublishIntradayDa
     @Override
     protected Result businessProcess(PublishIntradayData command) {
         final Datasource datasource = datasourceRepository.getBy(command.getDatasourceId());
+        final DomainValidator<IntradayData> domainValidator = new DomainValidator<>(this.validator);
         for (final Instrument instrument : datasource.getUpdatableInstruments()) {
             final Long from = numbers.getOrDefault(instrument.getTicker(), 0L);
-            datasourceProvider
+            final List<IntradayData> intradayDataList = datasourceProvider
                 .fetchIntradayValues(datasource, instrument, from)
                 .stream()
                 .filter(data -> data.getNumber() > from)
-                .forEach(intradayData -> {
-                    intradayData.setInstrumentId(instrument.getId());
-                    intradayDataJournal.publish(intradayData);
-                    numbers.put(instrument.getTicker(), intradayData.getNumber());
-                });
+                .toList();
+            for (IntradayData intradayData : intradayDataList) {
+                domainValidator.validate(intradayData);
+                numbers.put(intradayData.getTicker(), intradayData.getNumber());
+                intradayDataJournal.publish(intradayData);
+            }
         }
         datasourceRepository.save(datasource);
         return Result.success();

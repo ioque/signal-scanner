@@ -5,12 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ioque.investfund.adapters.integration.InfrastructureTest;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaDatasourceRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.persistence.repositories.JpaIntradayValueRepository;
-import ru.ioque.investfund.adapters.query.PsqlDatasourceQueryService;
-import ru.ioque.investfund.adapters.query.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.psql.dao.JpaDatasourceRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaIntradayValueRepository;
+import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
+import ru.ioque.investfund.adapters.service.view.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.application.adapters.repository.DatasourceRepository;
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
@@ -26,20 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("PSQL DATASOURCE QUERY SERVICE TEST")
 public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
     private static final UUID DATASOURCE_ID = UUID.randomUUID();
-    PsqlDatasourceQueryService psqlDatasourceQueryService;
+    PsqlDatasourceViewService psqlDatasourceViewService;
     DatasourceRepository datasourceRepository;
     JpaDatasourceRepository jpaDatasourceRepository;
     JpaIntradayValueRepository jpaIntradayValueRepository;
     JpaInstrumentRepository jpaInstrumentRepository;
 
     public InstrumentEntityQueryServiceTest(
-        @Autowired PsqlDatasourceQueryService psqlDatasourceQueryService,
+        @Autowired PsqlDatasourceViewService psqlDatasourceViewService,
         @Autowired DatasourceRepository datasourceRepository,
         @Autowired JpaDatasourceRepository jpaDatasourceRepository,
         @Autowired JpaInstrumentRepository jpaInstrumentRepository,
         @Autowired JpaIntradayValueRepository jpaIntradayValueRepository
     ) {
-        this.psqlDatasourceQueryService = psqlDatasourceQueryService;
+        this.psqlDatasourceViewService = psqlDatasourceViewService;
         this.datasourceRepository = datasourceRepository;
         this.jpaDatasourceRepository = jpaDatasourceRepository;
         this.jpaInstrumentRepository = jpaInstrumentRepository;
@@ -59,7 +59,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         """)
     void testCase1() {
         saveExchangeWithStocks();
-        final Pagination<InstrumentEntity> pagination = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> pagination = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -82,8 +82,8 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         """)
     void testCase2() {
         saveExchangeWithStocks();
-        assertEquals("AFKS", psqlDatasourceQueryService.findInstrumentBy(DATASOURCE_ID, "AFKS").getTicker());
-        assertEquals("SBER", psqlDatasourceQueryService.findInstrumentBy(DATASOURCE_ID, "SBER").getTicker());
+        assertEquals("AFKS", psqlDatasourceViewService.findInstrumentBy(DATASOURCE_ID, "AFKS").getTicker());
+        assertEquals("SBER", psqlDatasourceViewService.findInstrumentBy(DATASOURCE_ID, "SBER").getTicker());
     }
 
     private void saveExchangeWithStocks() {
@@ -114,7 +114,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> stocks = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> stocks = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -122,7 +122,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .type(InstrumentType.STOCK)
                 .build()
             );
-        final Pagination<InstrumentEntity> indexes = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> indexes = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -155,7 +155,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> afks = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> afks = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -163,7 +163,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .ticker("AFKS")
                 .build()
             );
-        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -171,7 +171,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .ticker("IMOEX")
                 .build()
             );
-        final Pagination<InstrumentEntity> sbers = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> sbers = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -207,7 +207,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> instruments = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -238,7 +238,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> sber = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> sber = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -247,7 +247,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .type(InstrumentType.STOCK)
                 .build()
             );
-        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -282,7 +282,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> sberp = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> sberp = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -293,7 +293,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .build()
             );
 
-        final Pagination<InstrumentEntity> imoex = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> imoex = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -329,7 +329,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
             )
         );
         datasourceRepository.save(datasource);
-        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -338,7 +338,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .orderDirection("ASC")
                 .build()
             );
-        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(1)
@@ -347,7 +347,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .orderDirection("ASC")
                 .build()
             );
-        final Pagination<InstrumentEntity> instruments3 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments3 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(1)
@@ -356,7 +356,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .orderDirection("ASC")
                 .build()
             );
-        final Pagination<InstrumentEntity> instruments4 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments4 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -402,7 +402,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
         );
         datasourceRepository.save(datasource);
 
-        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments1 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)
@@ -411,7 +411,7 @@ public class InstrumentEntityQueryServiceTest extends InfrastructureTest {
                 .orderField("details.shortName")
                 .build()
             );
-        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceQueryService
+        final Pagination<InstrumentEntity> instruments2 = psqlDatasourceViewService
             .getPagination(InstrumentFilterParams
                 .builder()
                 .pageNumber(0)

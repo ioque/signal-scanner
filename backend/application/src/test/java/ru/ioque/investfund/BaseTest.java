@@ -77,7 +77,7 @@ public class BaseTest {
     }
 
     protected final FakeIntradayDataJournal intradayJournal() {
-        return fakeDIContainer.getIntradayDataRepository();
+        return fakeDIContainer.getIntradayDataJournal();
     }
 
     protected final FakeAggregatedTotalsRepository aggregatedTotalsJournal() {

@@ -1,9 +1,12 @@
 package ru.ioque.investfund.fakes.repository;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
@@ -11,24 +14,29 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 public class FakeAggregatedTotalsRepository implements AggregatedTotalsRepository {
-    private final Set<AggregatedTotals> histories = new HashSet<>();
+    private final Map<InstrumentId, TreeSet<AggregatedTotals>> histories = new HashMap<>();
 
     @Override
-    public void save(AggregatedTotals aggregatedTotals) {
-        histories.add(aggregatedTotals);
+    public void saveAll(List<AggregatedTotals> aggregatedTotals) {
+        for (AggregatedTotals aggregatedTotal : aggregatedTotals) {
+            if (!histories.containsKey(aggregatedTotal.getInstrumentId())) {
+                histories.put(aggregatedTotal.getInstrumentId(), new TreeSet<>());
+            }
+            histories.get(aggregatedTotal.getInstrumentId()).add(aggregatedTotal);
+        }
     }
 
     @Override
     public List<AggregatedTotals> findAllBy(InstrumentId instrumentId) {
-        return getAll().filter(row -> row.getInstrumentId().equals(instrumentId)).toList();
+        return histories.getOrDefault(instrumentId, new TreeSet<>()).stream().toList();
     }
 
     @Override
     public Optional<AggregatedTotals> findActualBy(InstrumentId instrumentId) {
-        return findAllBy(instrumentId).stream().max(AggregatedTotals::compareTo);
-    }
-
-    public Stream<AggregatedTotals> getAll() {
-        return histories.stream();
+        TreeSet<AggregatedTotals> aggregatedTotals = histories.get(instrumentId);
+        if (aggregatedTotals == null || aggregatedTotals.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(aggregatedTotals.last());
     }
 }

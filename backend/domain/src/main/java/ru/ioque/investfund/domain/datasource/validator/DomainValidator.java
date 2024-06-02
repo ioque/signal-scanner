@@ -16,6 +16,10 @@ import java.util.Set;
 public class DomainValidator<V> {
     Validator validator;
 
+    public void validate(@Valid V domain) {
+        this.validate(List.of(domain));
+    }
+
     public void validate(List<@Valid V> values) {
         final List<ValidationError> errors = new ArrayList<>();
         for (V value : values) {

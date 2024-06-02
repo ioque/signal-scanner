@@ -32,7 +32,11 @@ public class FakeDatasourceProvider implements DatasourceProvider {
         Instrument instrument,
         LocalDate from,
         LocalDate to) {
-        return datasourceStorage.getHistoryDataBy(instrument.getTicker());
+        return datasourceStorage
+            .getHistoryDataBy(instrument.getTicker())
+            .stream()
+            .peek(row -> row.setInstrumentId(instrument.getId()))
+            .toList();
     }
 
     @Override
@@ -40,6 +44,10 @@ public class FakeDatasourceProvider implements DatasourceProvider {
         Datasource datasource,
         Instrument instrument,
         Long from) {
-        return datasourceStorage.getDealsByTicker(instrument.getTicker());
+        return datasourceStorage
+            .getDealsByTicker(instrument.getTicker())
+            .stream()
+            .peek(row -> row.setInstrumentId(instrument.getId()))
+            .toList();
     }
 }
