@@ -19,8 +19,8 @@ public class PsqlAggregatedTotalsRepository implements AggregatedTotalsRepositor
 
     @Override
     @Transactional
-    public void save(AggregatedTotals aggregatedTotals) {
-        dao.save(AggregatedTotalsEntity.from(aggregatedTotals));
+    public void saveAll(List<AggregatedTotals> aggregatedTotals) {
+        dao.saveAll(aggregatedTotals.stream().map(AggregatedTotalsEntity::from).toList());
     }
 
     @Override

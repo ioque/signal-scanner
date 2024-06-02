@@ -18,7 +18,6 @@ import ru.ioque.investfund.application.modules.datasource.command.UpdateAggregat
 import ru.ioque.investfund.domain.datasource.entity.Datasource;
 import ru.ioque.investfund.domain.datasource.entity.Instrument;
 import ru.ioque.investfund.domain.datasource.validator.DomainValidator;
-import ru.ioque.investfund.domain.datasource.value.details.InstrumentDetail;
 import ru.ioque.investfund.domain.datasource.value.history.AggregatedTotals;
 
 @Component

@@ -1,39 +1,38 @@
 package ru.ioque.investfund.adapters.unit.rest.datasource;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.DatasourceEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.historyvalue.AggregatedHistoryEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.CurrencyPairDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.FuturesDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.IndexDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.StockDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.tradingstate.TradingStateEntity;
-import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
-import ru.ioque.investfund.adapters.service.view.filter.InstrumentFilterParams;
+import ru.ioque.investfund.adapters.psql.entity.datasource.DatasourceEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.CurrencyPairDetailsEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.FuturesDetailsEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.IndexDetailsEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.StockDetailsEntity;
 import ru.ioque.investfund.adapters.rest.Pagination;
 import ru.ioque.investfund.adapters.rest.datasource.response.DatasourceResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
 import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentResponse;
+import ru.ioque.investfund.adapters.service.view.PsqlDatasourceViewService;
+import ru.ioque.investfund.adapters.service.view.filter.InstrumentFilterParams;
 import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
 import ru.ioque.investfund.application.adapters.DateTimeProvider;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("DATASOURCE QUERY CONTROLLER TEST")
 public class DatasourceQueryControllerTest extends BaseControllerTest {
+
     @Autowired
     PsqlDatasourceViewService psqlDatasourceViewService;
     @Autowired
@@ -138,7 +137,7 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
             .when(dateTimeProvider.nowDate())
             .thenReturn(date);
         Mockito
-            .when(psqlDatasourceViewService.findInstrumentBy(DATASOURCE_ID,"TEST_STOCK"))
+            .when(psqlDatasourceViewService.findInstrumentBy(DATASOURCE_ID, "TEST_STOCK"))
             .thenReturn(stock);
 
         mvc
@@ -177,40 +176,17 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         InstrumentEntity currencyPair = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .datasource(datasource)
-            .ticker("TEST_CURRENCY_PAIR")
+            .updatable(false)
+            .type(InstrumentType.CURRENCY_PAIR)
             .build();
         currencyPair.setDetails(
             CurrencyPairDetailsEntity.builder()
+                .ticker("TEST_CURRENCY_PAIR")
                 .instrument(currencyPair)
                 .name("ТЕСТОВАЯ ВАЛЮТНАЯ ПАРА")
                 .lotSize(1)
                 .faceUnit("RUR")
                 .build()
-        );
-        currencyPair.setTradingState(
-            new TradingStateEntity(
-                currencyPair,
-                LocalDateTime.now(),
-                10D,
-                10D,
-                10D,
-                1L
-            )
-        );
-        currencyPair.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(currencyPair)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
         );
         return currencyPair;
     }
@@ -219,10 +195,12 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         InstrumentEntity futures = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .datasource(datasource)
-            .ticker("TEST_FUTURES")
+            .updatable(false)
+            .type(InstrumentType.FUTURES)
             .build();
         futures.setDetails(
             FuturesDetailsEntity.builder()
+                .ticker("TEST_FUTURES")
                 .instrument(futures)
                 .name("ТЕСТОВЫЙ ФЬЮЧЕРС")
                 .shortName("ФЬЮЧЕРС")
@@ -232,31 +210,6 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 .lotVolume(1)
                 .build()
         );
-        futures.setTradingState(
-            new TradingStateEntity(
-                futures,
-                LocalDateTime.now(),
-                10D,
-                10D,
-                10D,
-                1L
-            )
-        );
-        futures.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(futures)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
-        );
         return futures;
     }
 
@@ -264,41 +217,18 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         InstrumentEntity index = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .datasource(datasource)
-            .ticker("TEST_INDEX")
+            .updatable(false)
+            .type(InstrumentType.INDEX)
             .build();
         index.setDetails(
             IndexDetailsEntity.builder()
+                .ticker("TEST_INDEX")
                 .instrument(index)
                 .name("ТЕСТОВЫЙ ИНДЕКС")
                 .shortName("ИНДЕКС")
                 .annualHigh(1D)
                 .annualLow(1D)
                 .build()
-        );
-        index.setTradingState(
-            new TradingStateEntity(
-                index,
-                LocalDateTime.now(),
-                10D,
-                10D,
-                10D,
-                1L
-            )
-        );
-        index.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(index)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
         );
         return index;
     }
@@ -307,10 +237,12 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
         InstrumentEntity stock = InstrumentEntity.builder()
             .id(UUID.randomUUID())
             .datasource(datasource)
-            .ticker("TEST_STOCK")
+            .updatable(false)
+            .type(InstrumentType.STOCK)
             .build();
         stock.setDetails(
             StockDetailsEntity.builder()
+                .ticker("TEST_STOCK")
                 .instrument(stock)
                 .name("ТЕСТОВАЯ АКЦИЯ")
                 .shortName("АКЦИЯ")
@@ -319,31 +251,6 @@ public class DatasourceQueryControllerTest extends BaseControllerTest {
                 .listLevel(1)
                 .regNumber("REG_NUMBER")
                 .build()
-        );
-        stock.setTradingState(
-            new TradingStateEntity(
-                stock,
-                LocalDateTime.now(),
-                10D,
-                10D,
-                10D,
-                1L
-            )
-        );
-        stock.setHistory(
-            List.of(
-                AggregatedHistoryEntity
-                    .builder()
-                    .instrument(stock)
-                    .date(LocalDate.now())
-                    .highPrice(1D)
-                    .lowPrice(1D)
-                    .openPrice(1D)
-                    .closePrice(1D)
-                    .value(1D)
-                    .waPrice(1D)
-                    .build()
-            )
         );
         return stock;
     }

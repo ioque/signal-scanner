@@ -73,18 +73,6 @@ public class ControllerTestConfiguration {
 
     @Bean
     @Primary
-    public JpaEmulatedPositionRepository mockJpaEmulatedPositionRepository() {
-        return mock(JpaEmulatedPositionRepository.class);
-    }
-
-    @Bean
-    @Primary
-    public EmulatedPositionRepository mockEmulatedPositionRepository() {
-        return mock(EmulatedPositionRepository.class);
-    }
-
-    @Bean
-    @Primary
     public DatasourceRepository mockExchangeRepository() {
         return mock(DatasourceRepository.class);
     }

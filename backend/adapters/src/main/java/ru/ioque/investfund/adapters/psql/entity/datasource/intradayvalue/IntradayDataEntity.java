@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.intraday.Contract;
 import ru.ioque.investfund.domain.datasource.value.intraday.Deal;
 import ru.ioque.investfund.domain.datasource.value.intraday.Delta;

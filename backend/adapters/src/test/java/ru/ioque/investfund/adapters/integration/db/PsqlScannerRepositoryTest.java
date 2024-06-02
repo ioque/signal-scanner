@@ -10,7 +10,6 @@ import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 import ru.ioque.investfund.domain.scanner.entity.identifier.ScannerId;
 import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
-import ru.ioque.investfund.domain.scanner.entity.Signal;
 import ru.ioque.investfund.domain.scanner.entity.SignalScanner;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AlgorithmProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.AnomalyVolumeProperties;
@@ -18,8 +17,6 @@ import ru.ioque.investfund.domain.scanner.algorithms.properties.PrefCommonProper
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralFuturesProperties;
 import ru.ioque.investfund.domain.scanner.algorithms.properties.SectoralRetardProperties;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,13 +48,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final AnomalyVolumeProperties properties = createAnomalyVolumeProperties(1.5, 180, IMOEX);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
-        final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = Signal.builder()
-            .openPrice(10D)
-            .instrumentId(instrumentIds.get(0))
-            .isBuy(true)
-            .watermark(lastExecutionDateTime)
-            .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .status(ScannerStatus.ACTIVE)
@@ -65,9 +55,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
-            .signals(new ArrayList<>(List.of(signal)))
             .workPeriodInMinutes(workPeriodInMinutes)
-            .lastExecutionDateTime(lastExecutionDateTime)
             .build();
 
         psqlScannerRepository.save(scanner);
@@ -85,13 +73,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final PrefCommonProperties properties = createPrefCommonProperties(1.5);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
-        final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = Signal.builder()
-            .openPrice(10D)
-            .instrumentId(instrumentIds.get(0))
-            .isBuy(true)
-            .watermark(lastExecutionDateTime)
-            .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .status(ScannerStatus.ACTIVE)
@@ -99,9 +80,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
-            .signals(new ArrayList<>(List.of(signal)))
             .workPeriodInMinutes(workPeriodInMinutes)
-            .lastExecutionDateTime(lastExecutionDateTime)
             .build();
 
         psqlScannerRepository.save(scanner);
@@ -119,13 +98,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final SectoralFuturesProperties properties = createSectoralFuturesProperties(0.015, 0.015, BRF4);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
-        final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = Signal.builder()
-            .openPrice(10D)
-            .instrumentId(instrumentIds.get(0))
-            .isBuy(true)
-            .watermark(lastExecutionDateTime)
-            .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .status(ScannerStatus.ACTIVE)
@@ -133,9 +105,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
-            .signals(new ArrayList<>(List.of(signal)))
             .workPeriodInMinutes(workPeriodInMinutes)
-            .lastExecutionDateTime(lastExecutionDateTime)
             .build();
 
         psqlScannerRepository.save(scanner);
@@ -153,13 +123,6 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
         final SectoralRetardProperties properties = createSectoralRetardProperties(0.015, 0.015);
         final String desc = "description";
         final Integer workPeriodInMinutes = 1;
-        final LocalDateTime lastExecutionDateTime = LocalDateTime.parse("2024-01-01T10:00:00");
-        final Signal signal = Signal.builder()
-            .openPrice(10D)
-            .instrumentId(instrumentIds.get(0))
-            .isBuy(true)
-            .watermark(lastExecutionDateTime)
-            .build();
         final SignalScanner scanner = SignalScanner.builder()
             .id(scannerId)
             .status(ScannerStatus.ACTIVE)
@@ -167,9 +130,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .instrumentIds(instrumentIds)
             .properties(properties)
             .description(desc)
-            .signals(new ArrayList<>(List.of(signal)))
             .workPeriodInMinutes(workPeriodInMinutes)
-            .lastExecutionDateTime(lastExecutionDateTime)
             .build();
 
         psqlScannerRepository.save(scanner);
@@ -221,9 +182,7 @@ public class PsqlScannerRepositoryTest extends DatabaseTest {
             .instrumentIds(instrumentIds)
             .properties(properties)
             .description("desc")
-            .signals(new ArrayList<>())
             .workPeriodInMinutes(1)
-            .lastExecutionDateTime(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
     }
 

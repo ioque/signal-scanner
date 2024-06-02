@@ -15,6 +15,6 @@ public interface JpaAggregatedTotalsRepository extends JpaRepository<AggregatedT
     @Query("select i from AggregatedTotals i where i.id.instrumentId = :instrumentId")
     List<AggregatedTotalsEntity> findAllBy(UUID instrumentId);
 
-    @Query("select i from AggregatedTotals i where i.id.instrumentId = :instrumentId order by i.id.date limit 1")
+    @Query("select i from AggregatedTotals i where i.id.instrumentId = :instrumentId order by i.id.date DESC limit 1")
     Optional<AggregatedTotalsEntity> findLastBy(UUID instrumentId);
 }

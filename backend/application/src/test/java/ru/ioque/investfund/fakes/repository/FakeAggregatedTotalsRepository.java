@@ -1,13 +1,10 @@
 package ru.ioque.investfund.fakes.repository;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 
 import ru.ioque.investfund.application.adapters.repository.AggregatedTotalsRepository;
 import ru.ioque.investfund.domain.datasource.entity.identity.InstrumentId;

@@ -1,38 +1,40 @@
 package ru.ioque.investfund.adapters.unit.rest.scanner;
 
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.InstrumentEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.IndexDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.datasource.instrument.details.StockDetailsEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.AnomalyVolumeScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.ScannerEntity;
-import ru.ioque.investfund.adapters.persistence.entity.scanner.SignalEntity;
-import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
-import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
-import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.AnomalyVolumeSignalScannerConfigResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
-import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
-import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
-import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.ioque.investfund.adapters.psql.dao.JpaInstrumentRepository;
+import ru.ioque.investfund.adapters.psql.dao.JpaScannerRepository;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.InstrumentEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.IndexDetailsEntity;
+import ru.ioque.investfund.adapters.psql.entity.datasource.instrument.details.StockDetailsEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.AnomalyVolumeScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.ScannerEntity;
+import ru.ioque.investfund.adapters.psql.entity.scanner.SignalEntity;
+import ru.ioque.investfund.adapters.rest.datasource.response.InstrumentInListResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.AnomalyVolumeSignalScannerConfigResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerInListResponse;
+import ru.ioque.investfund.adapters.rest.scanner.response.SignalScannerResponse;
+import ru.ioque.investfund.adapters.unit.rest.BaseControllerTest;
+import ru.ioque.investfund.domain.datasource.value.types.InstrumentType;
+import ru.ioque.investfund.domain.scanner.entity.ScannerStatus;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("SCANNER QUERY REST CONTROLLER")
 public class ScannerQueryControllerTest extends BaseControllerTest {
+
     @Autowired
     JpaScannerRepository signalScannerEntityRepository;
     @Autowired
@@ -147,11 +149,12 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     private static InstrumentEntity createImoex() {
         final InstrumentEntity instrument = InstrumentEntity.builder()
             .id(IMOEX_ID)
-            .ticker("IMOEX")
+            .type(InstrumentType.INDEX)
             .updatable(true)
             .build();
         instrument.setDetails(
             IndexDetailsEntity.builder()
+                .ticker("IMOEX")
                 .instrument(instrument)
                 .shortName("IMOEX")
                 .name("IMOEX")
@@ -165,11 +168,13 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
     private static InstrumentEntity createAfks() {
         InstrumentEntity instrument = InstrumentEntity.builder()
             .id(AFKS_ID)
-            .ticker("AFKS")
+            .type(InstrumentType.STOCK)
+            .updatable(true)
             .updatable(true)
             .build();
         instrument.setDetails(
             StockDetailsEntity.builder()
+                .ticker("AFKS")
                 .instrument(instrument)
                 .shortName("AFKS")
                 .name("AFKS")
@@ -197,12 +202,12 @@ public class ScannerQueryControllerTest extends BaseControllerTest {
             "IMOEX"
         );
         scanner.getSignals().add(SignalEntity.builder()
-                .scanner(scanner)
-                .price(10D)
-                .isBuy(true)
-                .summary("summary")
-                .dateTime(NOW)
-                .instrumentId(AFKS_ID)
+            .scanner(scanner)
+            .price(10D)
+            .isBuy(true)
+            .summary("summary")
+            .dateTime(NOW)
+            .instrumentId(AFKS_ID)
             .build());
         return List.of(scanner);
     }

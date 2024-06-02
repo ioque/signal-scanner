@@ -14,8 +14,8 @@ import ru.ioque.investfund.domain.datasource.value.intraday.IntradayData;
 import ru.ioque.investfund.domain.datasource.value.types.Isin;
 import ru.ioque.investfund.domain.datasource.value.types.Ticker;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -234,11 +234,11 @@ public abstract class InfrastructureTest {
             .build();
     }
 
-    protected IntradayData createDeal(Ticker ticker, Long number, LocalDateTime dateTime) {
+    protected IntradayData createDeal(Ticker ticker, Long number, Instant dateTime) {
         return Deal.builder()
             .ticker(ticker)
             .number(number)
-            .dateTime(dateTime)
+            .timestamp(dateTime)
             .value(1.0)
             .price(1.0)
             .qnt(1)
